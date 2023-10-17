@@ -1,13 +1,13 @@
-package cafe.neer;
+package caca.coco;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class YouApplication {
+public class CocoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(YouApplication.class, args);
+		SpringApplication.run(CocoApplication.class, args);
 	}
 
 }
