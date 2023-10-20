@@ -4,11 +4,11 @@ server:
 spring:
   application:
     name: pay-service
-#  datasource:
-#    url: jdbc:mysql://15.165.116.170:3306/pay_db
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    username: coco
-#    password: d102d102
+  datasource:
+    url: jdbc:mysql://15.165.116.170:3306/pay_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: coco
+    password: d102d102
 
   jpa:
     hibernate:
