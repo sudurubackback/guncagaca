@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: owner-service
+  profiles:
+    active: local
+  config:
+    import: optional:configserver:http://localhost:8088
+server:
+  port: 9001
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
