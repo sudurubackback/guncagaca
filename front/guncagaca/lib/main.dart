@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:guncagaca/common/layout/default_layout.dart';
+import 'package:guncagaca/common/view/root_tab.dart';
 import 'package:guncagaca/landingpage.dart';
 
 void main() {
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
     ));
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LandingPage(),
+      home: DefaultLayout(child: RootTab()),
       theme: ThemeData(
           fontFamily: 'omu'),
       themeMode: ThemeMode.system,
