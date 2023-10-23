@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class StoreReviewResponse {
+    private String nickname;
     private int star;
     private String content;
 }

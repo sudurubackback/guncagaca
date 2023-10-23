@@ -17,7 +17,7 @@ public interface StoreService {
     StoreResponse cafeDetail(Long memberId, Long cafeId);
     List<StoreMenuResponse> cafeMenu(Long memberId, Long cafeId);
     StoreMenuResponse cafeMenuDetail(Long memberId, Long cafeId, Long menuIndex);
-    ShowStoreResponse cafeDescription(Long memberId, Long cafeId);
-    List<StoreReviewResponse> cafeReview(Long memberId, Long cafeId);
+    // ShowStoreResponse cafeDescription(Long memberId, Long cafeId);
+    List<StoreReviewResponse> cafeReview(String nickname, Long cafeId);
 
 }

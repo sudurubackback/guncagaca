@@ -25,9 +25,10 @@ public class StoreController {
 
 
     //TODO 이거 API통신으로 memberId 받아와야함.
+    // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이
     @GetMapping("/cafe-list")
-    public List<NeerStoreResponse> cafeList(@RequestBody Long memberId, @RequestBody LocateRequest request){
-        return null;
+    public List<NeerStoreResponse> cafeList(@RequestParam Long memberId, @RequestBody LocateRequest request){
+        return storeService.cafeList(memberId, request);
     }
 
     @GetMapping("/cafe/{cafe_id}")
@@ -47,15 +48,15 @@ public class StoreController {
         return null;
     }
 
-    //TODO 이거 API통신으로 memberId 받아와야함.
-    @GetMapping("/cafe/{cafe_id}/detail")
-    public ShowStoreResponse cafeDescription(@RequestBody Long memberId, @PathVariable Long cafe_id){
-        return null;
-    }
 
+    // @GetMapping("/cafe/{cafe_id}/detail")
+    // public ShowStoreResponse cafeDescription(@RequestBody Long memberId, @PathVariable Long cafe_id){
+    //     return storeService.cafeDescription(memberId, cafe_id);
+    // }
+
+    // TODO member Nickname을 넣어야하는데 어떻게 호출해서 넣을것인가; 닉네임은 중복이 가능한데 이거에 대해서 어떻게 진행하지?
     @GetMapping("/cafe/{cafe_id}/review")
-    public List<StoreReviewResponse> cafeReview(@RequestBody Long memberId, @PathVariable Long cafe_id){
-        return storeService.cafeReview(memberId, cafe_id);
+    public List<StoreReviewResponse> cafeReview(@RequestBody String nickname, @PathVariable Long cafe_id){
+        return storeService.cafeReview(nickname, cafe_id);
     }
-
 }
