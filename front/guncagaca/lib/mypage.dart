@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/passwordchange.dart';
 
 import 'order.dart';
 
@@ -359,6 +360,13 @@ class _MypageState extends State<Mypage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PasswordPage()), // PasswordChangePage로 이동
+                );
+              },
             child: const Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -375,6 +383,7 @@ class _MypageState extends State<Mypage> {
               ),
 
             ),
+          ),
           ),
 
           Container(
