@@ -16,7 +16,7 @@ public class JwtProvider {
     private final MemberRepository memberRepository;
 
     private String secret = "zxcvbnmasdfghjklzxcvbnmasdfghjkl";
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60L; // 1 hours
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30L; // 1 hours -> 테스트 편의성을 위해 30 days
     private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30L; // 30 days
 
     /**

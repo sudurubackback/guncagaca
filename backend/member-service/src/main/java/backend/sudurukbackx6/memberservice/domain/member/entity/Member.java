@@ -1,11 +1,10 @@
 package backend.sudurukbackx6.memberservice.domain.member.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -13,6 +12,7 @@ import javax.persistence.Id;
 public class Member {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -21,4 +21,12 @@ public class Member {
     private String email;
 
     private String tel;
+
+    @Builder
+    public Member(Long id, String nickname, String email, String tel) {
+        this.id = id;
+        this.nickname = nickname;
+        this.email = email;
+        this.tel = tel;
+    }
 }
