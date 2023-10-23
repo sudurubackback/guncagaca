@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.storeservice;
+package backend.sudurukbackx6.payservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class StoreServiceApplication {
+public class PayServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(StoreServiceApplication.class, args);
+		SpringApplication.run(PayServiceApplication.class, args);
 	}
 
 }
