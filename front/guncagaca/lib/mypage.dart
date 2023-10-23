@@ -5,6 +5,7 @@ import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
 
 import 'mypage/point.dart';
+import 'mypage/review.dart';
 import 'order.dart';
 
 class Mypage extends StatefulWidget {
@@ -267,7 +268,7 @@ class _MypageState extends State<Mypage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => JjimPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => ReviewPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
                           );
                         },
                         child: Image.asset(
@@ -280,7 +281,7 @@ class _MypageState extends State<Mypage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => JjimPage()),
+                            MaterialPageRoute(builder: (context) => ReviewPage()),
                           );
                         },
                         child: const Text(
@@ -293,14 +294,30 @@ class _MypageState extends State<Mypage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 위 아래 간격 조정
                     children: [
-                      Image.asset(
-                        'assets/image/jjim.png',
-                        width: 80,
-                        height: 80,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => JjimPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/image/jjim.png',
+                          width: 80,
+                          height: 80,
+                        ),
                       ),
-                      const Text(
-                        '나의 찜',
-                        style: TextStyle(fontSize: 20.0),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => JjimPage()),
+                          );
+                        },
+                        child: const Text(
+                          '찜',
+                          style: TextStyle(fontSize: 20.0),
+                        ),
                       ),
                     ],
                   ),
