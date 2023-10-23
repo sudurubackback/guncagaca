@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
 
+import 'mypage/point.dart';
 import 'order.dart';
 
 class Mypage extends StatefulWidget {
@@ -301,21 +302,29 @@ class _MypageState extends State<Mypage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '포인트',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    '>',
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
-              ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PointPage()), // PasswordChangePage로 이동
+                );
+              },
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '포인트',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
 
+              ),
             ),
           ),
           
