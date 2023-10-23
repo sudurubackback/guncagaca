@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name = "onwers")
+@Table(name = "owners")
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,12 +17,22 @@ public class Owners extends TimeEntity {
     @Id //Primary Key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "owner_id")
-    private Long onwerId;
+    private Long ownerId;
 
-    @OneToOne(mappedBy = "onwers", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Business business;
 
     private String password;
     private String email;
     private String tel;
+
+    public Owners(String email, String password, String tel) {
+        this.email = email;
+        this.password = password;
+        this.tel = tel;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

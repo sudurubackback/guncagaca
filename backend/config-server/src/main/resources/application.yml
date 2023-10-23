@@ -1,0 +1,74 @@
+server:
+  port: 8088    # Spring Cloud Config Server 포트
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: git@github.com:sudurubackback/sudurukbackx6_config.git   # private Repsoitory의 경우 ssh 키 발급해서 사용
+          ignore-local-ssh-settings: true
+          private-key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            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
+            -----END RSA PRIVATE KEY-----
+          timeout: 4
+
+# actuator 기본 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true

@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.ownerservice.domain.business.entity;
 
 import backend.sudurukbackx6.ownerservice.common.entity.TimeEntity;
+import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorVailidateReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,7 @@ public class Business extends TimeEntity {
     private Owners owner;
 
     @Column(name = "business_number")
-    private int businessNum;
+    private String businessNum;
 
     @Column(name = "account_number")
     private String accountNum;
@@ -37,4 +38,13 @@ public class Business extends TimeEntity {
 
     @Column(name = "owner_name")
     private String name;
+
+    //builer생성
+    public Business(Owners owner, VendorVailidateReqDto dto) {
+        this.owner = owner;
+        this.businessNum = dto.getBusiness_number();
+        this.accountNum = dto.getAccount_number();
+        this.openDate = LocalDate.parse(dto.getOpen_date());
+        this.name = dto.getOwner_name();
+    }
 }

@@ -1,14 +1,18 @@
 spring:
   application:
-    name: owner-service
+    name: owner
   profiles:
-    active: local
+    active: dev
   config:
     import: optional:configserver:http://localhost:8088
 server:
-  port: 9001
+  port: 8086
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+logging:
+  level:
+    org.hibernate.type: tracegi
