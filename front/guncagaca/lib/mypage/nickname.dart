@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:guncagaca/mypage.dart';
 
-class PasswordPage extends StatefulWidget {
+class NicknamePage extends StatefulWidget {
   @override
-  _PasswordState createState() => _PasswordState();
+  _NicknameState createState() => _NicknameState();
 }
 
-class _PasswordState extends State<PasswordPage> {
-  bool _isObscured = true;
+class _NicknameState extends State<NicknamePage> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +39,10 @@ class _PasswordState extends State<PasswordPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.13, top: 20.0),
-                  child: Center(
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.18, top: 20.0),
+                  child: const Center(
                     child: Text(
-                    '비밀번호 변경',
+                    '닉네임 변경',
                     style: TextStyle(color: Colors.black, fontSize: 29.0),
                     textAlign: TextAlign.center,
                   ),
@@ -72,100 +72,24 @@ class _PasswordState extends State<PasswordPage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Center(
+            child: const Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: TextField(
-                      obscureText: _isObscured, // 상태 변수에 따라 가려지거나 나타남
-                      enableSuggestions: _isObscured,
-                      autocorrect: _isObscured,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: '현재 비밀번호를 입력하세요'
+                        hintText: '새로운 닉네임을 입력하세요'
                       ),
                     ),
 
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      _isObscured ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscured = !_isObscured; // 토글
-                      });
-                    },
                   ),
                 ],
               ),
             ),
           ),
 
-          Container(
-            margin: const EdgeInsets.only(top: 20.0,),
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.08,
-            padding: EdgeInsets.only(left: 30.0, right: 20.0),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Color(0xff9B5748),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      obscureText: _isObscured, // 상태 변수에 따라 가려지거나 나타남
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '새로운 비밀번호를 입력하세요'
-                      ),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          Container(
-            margin: const EdgeInsets.only(top: 20.0,),
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.08,
-            padding: EdgeInsets.only(left: 30.0, right: 20.0),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Color(0xff9B5748),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      obscureText: _isObscured, // 상태 변수에 따라 가려지거나 나타남
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '다시 한 번 입력하세요'
-                      ),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
 
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
@@ -182,7 +106,7 @@ class _PasswordState extends State<PasswordPage> {
             ),
             child: InkWell(
               onTap: () {
-                print("비밀번호변경 완료");
+                print("닉네임 변경 완료");
                 Navigator.pop(context);
               },
               child: const Center(
@@ -199,7 +123,6 @@ class _PasswordState extends State<PasswordPage> {
               ),
             ),
           ),
-          
         ],
       ),
     ),

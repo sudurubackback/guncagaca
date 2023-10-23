@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:guncagaca/passwordchange.dart';
+import 'package:guncagaca/mypage/nickname.dart';
+import 'package:guncagaca/mypage/passwordchange.dart';
 
 import 'order.dart';
 
@@ -330,21 +331,29 @@ class _MypageState extends State<Mypage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '닉네임 변경',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    '>',
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
-              ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NicknamePage()), // PasswordChangePage로 이동
+                );
+              },
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '닉네임 변경',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
 
+              ),
             ),
           ),
 
