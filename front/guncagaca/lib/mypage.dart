@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/mypage/jjim.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
 
@@ -262,14 +263,30 @@ class _MypageState extends State<Mypage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 위 아래 간격 조정
                     children: [
-                      Image.asset(
-                        'assets/image/review.png',
-                        width: 80,
-                        height: 80,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => JjimPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/image/review.png',
+                          width: 80,
+                          height: 80,
+                        ),
                       ),
-                      const Text(
-                        '리뷰',
-                        style: TextStyle(fontSize: 20.0),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => JjimPage()),
+                          );
+                        },
+                        child: const Text(
+                          '리뷰',
+                          style: TextStyle(fontSize: 20.0),
+                        ),
                       ),
                     ],
                   ),
