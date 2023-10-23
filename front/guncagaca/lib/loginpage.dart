@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:guncagaca/common/layout/default_layout.dart';
+import 'package:guncagaca/common/view/root_tab.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
     print('버튼 클릭 완료');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
     );
   }
 
