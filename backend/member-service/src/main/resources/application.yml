@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: member-service
+  datasource:
+    url: jdbc:mysql://15.165.116.170:3306/member_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: coco
+    password: d102d102
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
