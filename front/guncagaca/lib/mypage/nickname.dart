@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 
+
 class NicknamePage extends StatefulWidget {
   @override
   _NicknameState createState() => _NicknameState();
@@ -17,7 +18,11 @@ class _NicknameState extends State<NicknamePage> {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return Scaffold(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child : Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
         child: AppBar(
@@ -126,6 +131,7 @@ class _NicknameState extends State<NicknamePage> {
         ],
       ),
     ),
+      ),
     );
   }
 

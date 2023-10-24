@@ -17,7 +17,11 @@ class _PasswordState extends State<PasswordPage> {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return Scaffold(
+    return GestureDetector(
+        onTap: () {
+      FocusScope.of(context).unfocus();
+    },
+    child :Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
         child: AppBar(
@@ -202,6 +206,7 @@ class _PasswordState extends State<PasswordPage> {
           
         ],
       ),
+    ),
     ),
     );
   }
