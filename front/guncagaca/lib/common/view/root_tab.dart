@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../home/component/map_provider.dart';
 import 'package:guncagaca/mypage/view/mypage_view.dart';
-import 'package:guncagaca/order/order.dart';
+import 'package:guncagaca/order/view/order_view.dart';
 
 class RootTab extends StatefulWidget {
   const RootTab({Key? key}) : super(key: key);
@@ -75,7 +75,8 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         physics: NeverScrollableScrollPhysics(), // 상하로만 스크롤
         controller: controller,
         children: [
-          OrderPage(),
+
+          OrderView(),
           ChangeNotifierProvider<MapProvider>(
             create: (context) => MapProvider(), // MapProvider의 인스턴스 생성 로직에 따라 적절히 수정해야 합니다.
             child: HomeScreen(),

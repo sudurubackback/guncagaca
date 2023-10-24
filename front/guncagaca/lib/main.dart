@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
+import 'package:guncagaca/login/landingpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,9 +21,11 @@ class MyApp extends StatelessWidget {
     ));
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DefaultLayout(child: RootTab()),
+      // home: DefaultLayout(child: RootTab()),
+      home: LandingPage(),
       theme: ThemeData(
-          fontFamily: 'omu'),
+          fontFamily: 'omu',
+      ),
       themeMode: ThemeMode.system,
     );
   }
