@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
 import 'package:guncagaca/landingpage.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 void main() {
+  KakaoSdk.init(nativeAppKey: 'a401e9c33cb071b374c233a8f026060c');
   runApp(const MyApp());
 }
 
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
     ));
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DefaultLayout(child: RootTab()),
+      home: LandingPage(),
       theme: ThemeData(
           fontFamily: 'omu'),
       themeMode: ThemeMode.system,
