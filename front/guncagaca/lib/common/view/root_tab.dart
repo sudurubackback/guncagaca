@@ -46,10 +46,12 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      // title : '근카가카',
+      title : '근카 ? 가카 !',
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: current_index,
         onTap:(int index) {
+          FocusScope.of(context).unfocus();
+
           controller.animateTo(index);
         },
         selectedItemColor: PRIMARY_COLOR,
