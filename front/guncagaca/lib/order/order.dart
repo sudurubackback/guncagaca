@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guncagaca/common/view/root_tab.dart';
 
 class OrderPage extends StatelessWidget {
   @override
@@ -20,8 +21,14 @@ class OrderPage extends StatelessWidget {
           preferredSize: Size.fromHeight(1.0),
         ),
       ),
-      body: Center(
-        child: Text('주문 내역 화면'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Center(
+              child: Text('주문 내역 화면'),
+            ),
+          ],
+        ),
       ),
     );
   }

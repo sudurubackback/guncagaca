@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
-import 'package:guncagaca/landingpage.dart';
 
 void main() {
   runApp(const MyApp());

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:guncagaca/loginpage.dart';
+import 'package:guncagaca/login/loginpage.dart';
 
-import '../order.dart';
+import '../order/order.dart';
 
 class OrderCompletePage extends StatefulWidget {
 
