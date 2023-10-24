@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guencagaca_onwer/login/screen/signpage.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -145,7 +146,12 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          // 회원가입 링크를 눌렀을 때의 동작 추가
+                          // 회원가입 링크를 눌렀을 때의 동작
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => SignPage(),
+                            )
+                          );
                         },
                         child: Text('회원가입'),
                       ),
