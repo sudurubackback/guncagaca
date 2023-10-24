@@ -16,8 +16,8 @@ public class JwtProvider {
     private final MemberRepository memberRepository;
 
     private String secret = "zxcvbnmasdfghjklzxcvbnmasdfghjkl";
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30L; // 1 hours -> 테스트 편의성을 위해 30 days
-    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30L; // 30 days
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 2L; // 2 hours -> 테스트 편의성을 위해 30 days
+    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24L; // 1 days
 
     /**
      * AccessToken 생성
@@ -25,7 +25,7 @@ public class JwtProvider {
     public TokenDto createAccessToken(String nickname, String email) {
         HashMap<String, Object> claim = new HashMap<>();
         claim.put("nickname", nickname);
-        claim.put("provider", email);
+        claim.put("email", email);
         return createJwt("ACCESS_TOKEN", ACCESS_TOKEN_EXPIRATION_TIME, claim);
     }
 
@@ -35,7 +35,7 @@ public class JwtProvider {
     public TokenDto createRefreshToken(String nickname, String email) {
         HashMap<String, Object> claim = new HashMap<>();
         claim.put("nickname", nickname);
-        claim.put("provider", email);
+        claim.put("email", email);
         return createJwt("REFRESH_TOKEN", REFRESH_TOKEN_EXPIRATION_TIME, claim);
     }
 
@@ -89,13 +89,24 @@ public class JwtProvider {
     /**
      * 사용자 추출
      */
-    public Member extractUser(HttpServletRequest httpServletRequest) {
-        String header = httpServletRequest.getHeader("Authorization");
-        String token = header.substring(7);
-        String email = (String) get(token).get("email");
+    public Member extractUser(String token) {
+        String refreshToken = token.substring(7);
+        String email = (String) get(refreshToken).get("email");
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 이메일을 찾을수 없습니다."));
         return member;
+    }
+
+    /**
+     * 이메일 추출
+     */
+    public String extractEmail(String token) {
+        String refreshToken = token.substring(7);
+        String email = (String) get(refreshToken).get("email");
+
+        memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 이메일을 찾을수 없습니다."));
+        return email;
     }
 }
