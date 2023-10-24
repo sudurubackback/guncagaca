@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 17.0),
+                  SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       // 로그인 로직을 추가
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12.0), // 로그인 버튼과 추가 요소 사이 간격 조절
+                  SizedBox(height: 10.0), // 로그인 버튼과 추가 요소 사이 간격 조절
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -153,14 +153,24 @@ class _LoginPageState extends State<LoginPage> {
                             )
                           );
                         },
-                        child: Text('회원가입'),
+                        child: Text(
+                          '회원가입',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                       SizedBox(width: 240), // 간격 조정
                       TextButton(
                         onPressed: () {
                           // 비밀번호 찾기 링크를 눌렀을 때의 동작 추가
                         },
-                        child: Text('비밀번호 찾기'),
+                        child: Text(
+                          '비밀번호 찾기',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ],
                   ),

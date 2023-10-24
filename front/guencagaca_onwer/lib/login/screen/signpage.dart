@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'loginpage.dart';
 
 class SignPage extends StatefulWidget {
 
@@ -85,9 +86,32 @@ class _SignPageState extends State<SignPage> {
               ),
               SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    // 회원가입 로직 추가
-                    // 이메일, 비밀번호, 닉네임을 사용하여 회원가입 처리
+                  onPressed: () async {
+                    // // 이메일, 비밀번호, 닉네임을 변수에 저장합니다.
+                    // email = '';
+                    // password = '';
+                    // tel = '';
+                    // // 이메일, 비밀번호, 닉네임을 서버에 보내고, 서버에서 회원가입 처리를 수행합니다.
+                    // // 이 예제에서는 비동기 작업을 시뮬레이션하기 위해 await를 사용합니다.
+                    // bool signSuccess = await signUser(email, password, tel);
+                    //
+                    // if (signSuccess) {
+                    //   // 회원가입이 완료되면 로그인 화면으로 이동
+                    //   Navigator.of(context).pushReplacement(
+                    //     MaterialPageRoute(
+                    //       builder: (context) => LoginPage(),
+                    //     ),
+                    //   );
+                    // } else {
+                    //   // 회원가입 실패 시 에러 처리 로직 추가
+                    //   // 예를 들어, 사용자에게 실패 메시지를 보여줄 수 있습니다.
+                    //   // 또는 로그를 기록할 수 있습니다.
+                    // }
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
                   },
                   style: ButtonStyle(
                     // 버튼의 최소 크기 설정
