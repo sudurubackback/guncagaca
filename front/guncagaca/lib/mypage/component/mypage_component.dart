@@ -41,15 +41,15 @@ class MypageComponent extends StatelessWidget {
         children: [
           Container(
             color: Colors.white,
-            padding: EdgeInsets.only(
-              top: 70.0,
+            padding: const EdgeInsets.only(
+              top: 10.0,
               left: 40.0,
               right: 40.0,
-              bottom: 30.0,
+              bottom: 10.0,
             ),
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: Text(
                     '000님 안녕하세요',
                     style: TextStyle(fontSize: 29.0),
