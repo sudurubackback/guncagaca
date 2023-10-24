@@ -12,24 +12,8 @@ class OrderComponent extends StatelessWidget {
         child: Column(
         children: [
           Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(
-              top: 70.0,
-              left: 40.0,
-              right: 40.0,
-              bottom: 30.0,
-            ),
-            child: Row(
+            child: const Row(
               children: [
-                Expanded(
-                  child: Text(
-                    '주문내역',
-                    style: TextStyle(fontSize: 29.0),
-                    textAlign: TextAlign.center,
-                  ),
-
-                ),
-
 
               ],
             ),

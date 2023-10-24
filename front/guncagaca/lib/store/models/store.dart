@@ -6,6 +6,7 @@ class Store {
   final double distance;      // 거리
   final double rating;        // 평점
   final int reviewCount;      // 리뷰 수
+  final String description;
 
   Store({
     required this.image,
@@ -13,5 +14,6 @@ class Store {
     required this.distance,
     required this.rating,
     required this.reviewCount,
+    required this.description,
   });
 }

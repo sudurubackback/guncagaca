@@ -34,6 +34,10 @@ class DefaultLayout extends StatelessWidget {
         elevation: 0,
         title: Text(
           title!,
+          style: TextStyle(
+            fontSize: 20.0,
+            color: Colors.black,
+          ),
         ),
         foregroundColor: Colors.black,
         actions: <Widget>[
