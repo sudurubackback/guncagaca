@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart'; // RatingBar 패키지 추가
+import 'reviewcreate_component.dart';
+
 
 class ReviewCreatePage extends StatefulWidget {
   @override
@@ -8,7 +9,8 @@ class ReviewCreatePage extends StatefulWidget {
 }
 
 class _ReviewCreateState extends State<ReviewCreatePage> {
-  double _rating = 3.0; // 초기 별점 설정
+  double _rating = 3.0;
+  TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,8 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
         child: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0, // 밑 줄 제거
-          automaticallyImplyLeading: false, // leading 영역을 자동으로 생성하지 않도록 설정
+          elevation: 0,
+          automaticallyImplyLeading: false,
           flexibleSpace: Center(
             child: Row(
               children: <Widget>[
@@ -53,71 +55,30 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
               ],
             ),
           ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(2.0),
+            child: Container(
+              color: Color(0xff9B5748),
+              height: 2.0,
+            ),
+          ),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: Color(0xff9B5748),
-              height: 2.0,
-            ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.05),
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                children: [
-                  Text(
-                    "근카가카 구미인동점",
-                    style: TextStyle(fontSize: 20, color: Color(0xff000000)),
-                    textAlign: TextAlign.center,
-                  ),
-                  RatingBar.builder(
-                    initialRating: _rating,
-                    minRating: 0.5,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    unratedColor: Color(0xffD9D9D9),
-                    onRatingUpdate: (rating) {
-                      setState(() {
-                        _rating = rating;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.25,
-              padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(0xff9B5748),
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: TextField(
-                textAlignVertical: TextAlignVertical.top,
-                maxLines: null, // 여러 줄 입력 가능하도록 설정
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: '리뷰를 작성해주세요',
-                  hintStyle: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.grey,
-                  ),
-                  contentPadding: EdgeInsets.zero,
-                ),
-                textInputAction: TextInputAction.newline, // 엔터 키를 눌렀을 때 줄바꿈
+              child: ReviewInputComponent(
+                rating: _rating,
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    _rating = rating;
+                  });
+                },
+                textEditingController: _textEditingController,
               ),
             ),
             Container(

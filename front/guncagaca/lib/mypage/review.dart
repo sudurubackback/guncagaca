@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:guncagaca/mypage/reivewcreate.dart';
+
+import '../review/reviewcreate_view.dart';
+
 
 
 class ReviewPage extends StatefulWidget {

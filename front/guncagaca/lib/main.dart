@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
       // home: DefaultLayout(child: RootTab()),
       home: LandingPage(),
       theme: ThemeData(
-          fontFamily: 'omu'),
+          fontFamily: 'omu',
+      ),
       themeMode: ThemeMode.system,
     );
   }
