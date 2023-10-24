@@ -39,7 +39,7 @@ class _PasswordState extends State<PasswordPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.14, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1, top: 20.0),
                   child: Center(
                     child: Text(
                     '비밀번호 변경',

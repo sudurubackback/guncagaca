@@ -39,7 +39,7 @@ class _ReviewState extends State<ReviewPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.20, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.18, top: 20.0),
                   child: const Row(
                     children: [
                       Text(

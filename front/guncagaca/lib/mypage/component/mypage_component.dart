@@ -4,7 +4,6 @@ import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
 import 'package:guncagaca/mypage/point.dart';
 import 'package:guncagaca/mypage/review.dart';
-import 'package:guncagaca/mypage/view/mypage_view.dart';
 import 'package:guncagaca/order/order.dart';
 
 class MypageComponent extends StatelessWidget {

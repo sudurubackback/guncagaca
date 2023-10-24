@@ -3,7 +3,7 @@ import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagaca/home/view/home_screen.dart';
 import 'package:guncagaca/mypage/view/mypage_view.dart';
-import 'package:guncagaca/order/order.dart';
+import 'package:guncagaca/order/view/order_view.dart';
 
 class RootTab extends StatefulWidget {
   const RootTab({Key? key}) : super(key: key);
@@ -72,7 +72,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         physics: NeverScrollableScrollPhysics(), // 상하로만 스크롤
         controller: controller,
         children: [
-          OrderPage(),
+          OrderView(),
           HomeScreen(),
           MypageView(),
         ],

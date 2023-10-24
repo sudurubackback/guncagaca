@@ -39,7 +39,7 @@ class _NicknameState extends State<NicknamePage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.18, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.14, top: 20.0),
                   child: const Center(
                     child: Text(
                     '닉네임 변경',
