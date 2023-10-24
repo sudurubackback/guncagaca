@@ -1,29 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/common/const/colors.dart';
 
+import '../models/store.dart';
+
 class StoreCard extends StatelessWidget {
-  // 이미지
-  final ImageProvider image;
-  // 가게 이름
-  final String name;
-  // 거리
-  final String distance;
-  // 평점
-  final double rating;
-  // 리뷰 수
-  final int reviewCount;
+  final Store store;
 
   const StoreCard({
-    required this.image,
-    // 가게 이름
-    required this.name,
-    // 거리
-    required this.distance,
-    // 평점
-    required this.rating,
-    // 리뷰 수
-    required this.reviewCount,
-    Key? key}) : super(key: key);
+    required this.store,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +19,9 @@ class StoreCard extends StatelessWidget {
         ClipRRect(
           //borderRadius: BorderRadius.circular(15.0),
           child: Image(
-            image: image,
-            width: 100,  // 원하는 이미지의 넓이로 조절하세요.
-            height: 100, // 원하는 이미지의 높이로 조절하세요.
+            image: store.image,
+            width: 80,  // 원하는 이미지의 넓이로 조절하세요.
+            height: 80, // 원하는 이미지의 높이로 조절하세요.
             fit: BoxFit.cover,
           ),
         ),
@@ -44,22 +30,21 @@ class StoreCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 13.0),
-              Text(name,
+              Text(store.name,
               style: const TextStyle(
                 fontSize: 20.0, fontWeight: FontWeight.w500,
               ),),
               SizedBox(height: 15.0),
-              Text('$distance'),
+              Text('${store.distance} km'),
               SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
-                  _IconText(icon: Icons.star, label: rating.toString()),
+                  _IconText(icon: Icons.star, label: store.rating.toString()),
                   SizedBox(width: 10.0),
-                  _IconText(icon: Icons.receipt, label: '$reviewCount 개')
+                  _IconText(icon: Icons.receipt, label: '${store.reviewCount} 개')
                 ],
               ),
             ],
