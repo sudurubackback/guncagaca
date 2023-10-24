@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/mypage/jjim.dart';
+import 'package:guncagaca/mypage/nickname.dart';
+import 'package:guncagaca/mypage/passwordchange.dart';
 
+import 'mypage/point.dart';
+import 'mypage/review.dart';
 import 'order.dart';
 
 class Mypage extends StatefulWidget {
@@ -259,28 +264,60 @@ class _MypageState extends State<Mypage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 위 아래 간격 조정
                     children: [
-                      Image.asset(
-                        'assets/image/review.png',
-                        width: 80,
-                        height: 80,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ReviewPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/image/review.png',
+                          width: 80,
+                          height: 80,
+                        ),
                       ),
-                      const Text(
-                        '리뷰',
-                        style: TextStyle(fontSize: 20.0),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ReviewPage()),
+                          );
+                        },
+                        child: const Text(
+                          '리뷰',
+                          style: TextStyle(fontSize: 20.0),
+                        ),
                       ),
                     ],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 위 아래 간격 조정
                     children: [
-                      Image.asset(
-                        'assets/image/jjim.png',
-                        width: 80,
-                        height: 80,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => JjimPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/image/jjim.png',
+                          width: 80,
+                          height: 80,
+                        ),
                       ),
-                      const Text(
-                        '나의 찜',
-                        style: TextStyle(fontSize: 20.0),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => JjimPage()),
+                          );
+                        },
+                        child: const Text(
+                          '찜',
+                          style: TextStyle(fontSize: 20.0),
+                        ),
                       ),
                     ],
                   ),
@@ -299,21 +336,29 @@ class _MypageState extends State<Mypage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '포인트',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    '>',
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
-              ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PointPage()), // PasswordChangePage로 이동
+                );
+              },
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '포인트',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
 
+              ),
             ),
           ),
           
@@ -329,21 +374,29 @@ class _MypageState extends State<Mypage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '닉네임 변경',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    '>',
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
-              ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NicknamePage()), // PasswordChangePage로 이동
+                );
+              },
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '닉네임 변경',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
 
+              ),
             ),
           ),
 
@@ -359,6 +412,13 @@ class _MypageState extends State<Mypage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PasswordPage()), // PasswordChangePage로 이동
+                );
+              },
             child: const Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -375,6 +435,7 @@ class _MypageState extends State<Mypage> {
               ),
 
             ),
+          ),
           ),
 
           Container(
