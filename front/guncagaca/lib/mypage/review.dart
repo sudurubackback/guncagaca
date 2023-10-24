@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/mypage/reivewcreate.dart';
 
 
 class ReviewPage extends StatefulWidget {
@@ -55,20 +56,29 @@ class _ReviewState extends State<ReviewPage> {
           ),
         ),
       ),
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
-        children: [
-          Container(
-            color: Color(0xff9B5748),
-            height: 2.0,
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+          children: [
+            Container(
+              color: Color(0xff9B5748),
+              height: 2.0,
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
 
-        ],
+            // ReviewCreate 페이지로 이동하는 버튼
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReviewCreatePage()), // ReviewCreate 페이지로 이동
+                );
+              },
+              child: Text('리뷰 작성하기'),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
-
 }
 
