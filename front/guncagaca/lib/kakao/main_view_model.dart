@@ -1,7 +1,7 @@
 import 'dart:math';
 
+import 'package:guncagaca/kakao/social_login.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:kakao_login/social_login.dart';
 
 class MainViewModel {
   final SocialLogin _socialLogin;
