@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:guncagaca/loginpage.dart';
+import 'package:guncagaca/login/loginpage.dart';
 
 class LandingPage extends StatefulWidget {
 
