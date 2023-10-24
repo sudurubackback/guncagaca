@@ -1,0 +1,45 @@
+PODS:
+  - Flutter (1.0.0)
+  - location (0.0.1):
+    - Flutter
+  - naver_map_plugin (0.9.4):
+    - Flutter
+    - NMapsMap
+  - NMapsGeometry (1.0.1)
+  - NMapsMap (3.17.0):
+    - NMapsGeometry
+  - permission_handler_apple (9.1.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - location (from `.symlinks/plugins/location/ios`)
+  - naver_map_plugin (from `.symlinks/plugins/naver_map_plugin/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+
+SPEC REPOS:
+  trunk:
+    - NMapsGeometry
+    - NMapsMap
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  location:
+    :path: ".symlinks/plugins/location/ios"
+  naver_map_plugin:
+    :path: ".symlinks/plugins/naver_map_plugin/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  naver_map_plugin: d1d67733c56b20b88270d9da51218e18fa916232
+  NMapsGeometry: 53c573ead66466681cf123f99f698dc8071a4b83
+  NMapsMap: a5b909a31b6f3d27a670f6eb2ddc913c38975474
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
+
+PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+
+COCOAPODS: 1.13.0
