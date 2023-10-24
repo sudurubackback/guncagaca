@@ -25,7 +25,7 @@ public interface OwnerService {
     boolean checkValidEmail(String email);
 
     //5. 로그인
-    SignInResDto signIn(String email, String password);
+    boolean signIn(String email, String password);
 
     //6. 비밀번호 초기화, 이메일로 초기화된 비밀번호 전송
     void resetPassword(String email) throws MessagingException;
@@ -34,7 +34,7 @@ public interface OwnerService {
     void changePassword(String token, UpdatePwReqDto updatePwReqDto);
 
     //8. accesstoen 갱신
-    String refreshAccessToken(String header);
+//    String refreshAccessToken(String header);
 
     Owners findByEmail(String email);
 

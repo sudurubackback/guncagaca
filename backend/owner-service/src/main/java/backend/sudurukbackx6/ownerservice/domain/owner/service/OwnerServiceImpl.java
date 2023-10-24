@@ -32,7 +32,6 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnersRepository ownersRepository;
     private final PasswordEncoder passwordEncoder;
     public final MailSenderService mailSenderService;
-//    private final TokenService tokenService;
     private final JwtTokenProvider tokenProvider;
 
     @Override
@@ -63,26 +62,19 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public boolean checkValidEmail(String email) {
         Optional<Owners> exitOwner = ownersRepository.findByEmail(email);
+
         if(exitOwner.isPresent()) return false;
 
         //존재 한다면 이메일 양식이 맞는지 확인
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
     }
 
-//    @Override
-//    public SignInResDto signIn(String email, String password) {
-//        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
-//        if (!passwordEncoder.matches(password, owner.getPassword())) {
-//            throw new BadRequestException(ErrorCode.USER_NOT_MATCH);
-//        }
-//        //토큰 생성
-//        SignInResDto req = tokenService.createRefreshToken(owner);
-//        return req;
-//    }
-
-    public SignInResDto signIn(String email, String password){
-        return null;
+    @Override
+    public boolean signIn(String email, String password) {
+        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
+        return passwordEncoder.matches(password, owner.getPassword());
     }
+
 
     @Override
     public void resetPassword(String email) throws MessagingException {
@@ -95,23 +87,13 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public void changePassword(String token, UpdatePwReqDto updatePwReqDto) {
         Owners owner = findByToken(token);
-        if (!passwordEncoder.matches(updatePwReqDto.getOldpassword(), owner.getPassword())) {
+        if (!passwordEncoder.matches(updatePwReqDto.getPassword(), owner.getPassword())) {
             throw new BadRequestException(ErrorCode.USER_NOT_MATCH);
         }
         owner.changePassword(passwordEncoder.encode(updatePwReqDto.getNewpassword()));
     }
 
 
-//    @Override
-//    public String refreshAccessToken(String header) {
-//        //refresh토큰을 활용하여 accesstoken 갱신
-//        String refreshToken = header.substring("Bearer ".length()).trim();
-//        return tokenService.createAccessToken(refreshToken);
-//    }
-
-    public String refreshAccessToken(String header) {
-        return null;
-    }
 
     @Override
     public Owners findByEmail(String email) {
@@ -122,7 +104,6 @@ public class OwnerServiceImpl implements OwnerService {
     public Owners findByToken(String requestHeader) {
         String parsedToken = requestHeader.substring("Bearer ".length()).trim();
         String email = tokenProvider.getUserEmail(parsedToken);
-
         return findByEmail(email);
     }
 

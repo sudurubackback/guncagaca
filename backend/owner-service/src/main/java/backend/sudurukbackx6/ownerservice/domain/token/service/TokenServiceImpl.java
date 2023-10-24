@@ -24,14 +24,16 @@ public class TokenServiceImpl implements TokenService{
         String accessToken = tokenProvider.generateToken(owners, Duration.ofHours(2));
         redisUtil.saveRefreshToken(owners.getEmail(), refreshToken);
 
-        return null;
+        return new SignInResDto(refreshToken, accessToken);
     }
 
     @Override
-    public String createAccessToken(String refreshToken) {
-        String email = tokenProvider.getUserEmail(refreshToken);
-
-        if (redisUtil.isMatchToken(email, refreshToken)) {
+    public String createAccessToken(String header) {
+        String parsedToken = header.substring("Bearer ".length()).trim();
+        System.out.println(parsedToken);
+        String email = tokenProvider.getUserEmail(parsedToken);
+        System.out.println(email);
+        if (redisUtil.isMatchToken(email, parsedToken)) {
             Owners owner = ownerService.findByEmail(email);
             return tokenProvider.generateToken(owner, Duration.ofHours(2));
         } else {

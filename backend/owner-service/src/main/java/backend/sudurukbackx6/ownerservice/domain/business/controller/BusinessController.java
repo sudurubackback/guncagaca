@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class BusinessController {
 
     @Operation(summary = "사업자 인증", description = "사업자 인증이 완료 되면 회원 가입 완료 \n\n")
     @PostMapping("/cert")
-    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody VendorVailidateReqDto reqDto) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody VendorVailidateReqDto reqDto) throws IOException, URISyntaxException {
         boolean flag = businessService.checkBusinessValidation(reqDto);
         if (flag) {
             return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(200, "사업자 인증 성공"));

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdatePwReqDto {
     String newpassword;
-    String oldpassword;
+    String password;
 }

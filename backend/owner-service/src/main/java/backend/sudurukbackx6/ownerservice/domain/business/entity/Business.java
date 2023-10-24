@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Entity
@@ -44,7 +45,11 @@ public class Business extends TimeEntity {
         this.owner = owner;
         this.businessNum = dto.getBusiness_number();
         this.accountNum = dto.getAccount_number();
-        this.openDate = LocalDate.parse(dto.getOpen_date());
+//        this.openDate = LocalDate.parse(dto.getOpen_date());
+
+        // 'yyyyMMdd' 포맷의 문자열을 LocalDate로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        this.openDate = LocalDate.parse(dto.getOpen_date(), formatter);
         this.name = dto.getOwner_name();
     }
 }

@@ -39,15 +39,16 @@ public class JwtTokenProvider {
                 .setExpiration(expiy)   /*  토큰의 만료 시간을 설정 */
                 .setSubject(owner.getEmail())   /* 토큰의 subject(토큰이 대상으로 하는 주체)를 설정 */
                 .claim("identification", "ROLE_OWNER")   /*  JWT에 커스텀 클레임을 추가 */
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())   /* HS256 알고리즘과 제공된 시크릿 키를 사용하여 JWT에 서명(서명은 JWT의 무결성을 보장하는데 사용) */
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret())   /* HS256 알고리즘과 제공된 시크릿 키를 사용하여 JWT에 서명(서명은 JWT의 무결성을 보장하는데 사용) */
                 .compact(); /* JWT를 생성하고, 생성된 JWT를 문자열로 직렬화 */
     }
 
     // 토큰 유효성 검증
     public boolean validToken(String token) {
+//        String parsedToken = token.substring("Bearer ".length()).trim();
         try{
             Jwts.parser()
-                    .setSigningKey(jwtProperties.getSecretKey()) /* 비밀값으로 복호화 */
+                    .setSigningKey(jwtProperties.getSecret()) /* 비밀값으로 복호화 */
                     .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
@@ -66,14 +67,14 @@ public class JwtTokenProvider {
     // 클레임 조회
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecretKey())
+                .setSigningKey(jwtProperties.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
     }
 
     public String getUserEmail(String token) {
         Claims claims = getClaims(token);
-        return claims.get("identification", String.class);
+        return claims.getSubject();
     }
 
 }

@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URISyntaxException;
+
 @Service("BusinessService")
 @Transactional
 @RequiredArgsConstructor
@@ -21,16 +23,19 @@ public class BusinessServiceImpl implements BusinessService{
     private final BusinessRepository businessRepository;
     private final OwnerService ownerService;
     @Override
-    public boolean checkBusinessValidation(VendorVailidateReqDto reqDto) {
-        boolean isValidate =  vendorService.checkVendorValidation(reqDto);
+    public boolean checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException {
+        int isValidate =  vendorService.checkVendorValidation(reqDto);
 
-        if(isValidate){
-            Owners owner = ownerService.findByEmail(reqDto.getEmail());
-            businessRepository.save(new Business(owner, reqDto));
-        }else{
-            ownerService.deletedOwner(reqDto.getEmail());
-        }
+        System.out.println(isValidate);
 
-        return isValidate;
+//        if(isValidate){
+//            Owners owner = ownerService.findByEmail(reqDto.getEmail());
+//            businessRepository.save(new Business(owner, reqDto));
+//        }else{
+//            ownerService.deletedOwner(reqDto.getEmail());
+//        }
+//
+//        return isValidate;
+        return isValidate==1;
     }
 }
