@@ -2,6 +2,8 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagaca/home/view/home_screen.dart';
+import 'package:guncagaca/mypage/view/mypage_view.dart';
+import 'package:guncagaca/order/order.dart';
 
 class RootTab extends StatefulWidget {
   const RootTab({Key? key}) : super(key: key);
@@ -41,7 +43,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title : '근카가카',
+      // title : '근카가카',
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: current_index,
         onTap:(int index) {
@@ -70,9 +72,9 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         physics: NeverScrollableScrollPhysics(), // 상하로만 스크롤
         controller: controller,
         children: [
-          Center(child: Container(child: Text('주문내역'))),
+          OrderPage(),
           HomeScreen(),
-          Center(child: Container(child: Text('마이페이지'))),
+          MypageView(),
         ],
       ),
     );

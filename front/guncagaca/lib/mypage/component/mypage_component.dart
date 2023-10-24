@@ -1,193 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:guncagaca/mypage/jjim.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
+import 'package:guncagaca/mypage/point.dart';
+import 'package:guncagaca/mypage/review.dart';
+import 'package:guncagaca/mypage/view/mypage_view.dart';
+import 'package:guncagaca/order/order.dart';
 
-import 'mypage/point.dart';
-import 'mypage/review.dart';
-import 'order.dart';
+class MypageComponent extends StatelessWidget {
 
-class Mypage extends StatefulWidget {
-  @override
-  _MypageState createState() => _MypageState();
-}
-
-class _MypageState extends State<Mypage> {
-
-  // 회원 탈퇴
-  Future<void> _showDialogOut(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          contentPadding: EdgeInsets.all(20.0),
-          content: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.2,
-            child: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  SizedBox(height: 10),
-                  const Center(
-                    child:
-                    Text(
-                      '회원탈퇴 하시겠습니까?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Center(
-                    child: Image.asset(
-                      'assets/image/close.png',
-                      width: 100,
-                      height: 100,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
-              children: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
-                  ),
-                  child: Text('확인', style: TextStyle(color: Color(0xffffffff))),
-                  onPressed: () {
-                    // 여기에 로그아웃 로직을 추가할 수 있습니다.
-                    print("로그아웃 완료");
-                    // ...
-                    Navigator.of(context).pop();
-                  },
-                ),
-                SizedBox(width: 30), // 버튼 사이 간격 조절
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
-                  ),
-                  child: Text('취소', style: TextStyle(color: Color(0xffffffff))),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
-          ],
-        );
-      },
-    );
-  }
-
-  // 로그아웃
-  Future<void> _showDialogLogOut(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          contentPadding: EdgeInsets.all(20.0),
-          content: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.2,
-            child: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  SizedBox(height: 10),
-                  const Center(
-                    child:
-                    Text(
-                      '로그아웃 하시겠습니까?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Center(
-                    child: Image.asset(
-                      'assets/image/logout.png',
-                      width: 100,
-                      height: 100,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
-              children: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
-                  ),
-                  child: Text('확인', style: TextStyle(color: Color(0xffffffff))),
-                  onPressed: () {
-                    // 여기에 로그아웃 로직을 추가할 수 있습니다.
-                    print("로그아웃 완료");
-                    // ...
-                    Navigator.of(context).pop();
-                  },
-                ),
-                SizedBox(width: 30), // 버튼 사이 간격 조절
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
-                  ),
-                  child: Text('취소', style: TextStyle(color: Color(0xffffffff))),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
-          ],
-        );
-      },
-    );
-  }
+  final Function onOrderTap;
+  final Function onReviewTap;
+  final Function onJjimTap;
+  final Function onPointTap;
+  final Function onNicknameTap;
+  final Function onPasswordTap;
+  final Function onLogoutTap;
+  final Function onWithdrawalTap;
+  final Function showDialogLogOut;
+  final Function showOut;
 
 
+  MypageComponent({
+    required this.onOrderTap,
+    required this.onReviewTap,
+    required this.onJjimTap,
+    required this.onPointTap,
+    required this.onNicknameTap,
+    required this.onPasswordTap,
+    required this.onLogoutTap,
+    required this.onWithdrawalTap,
+    required this.showDialogLogOut,
+    required this.showOut,
+  });
 
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xfff8e9d7),
-      statusBarIconBrightness: Brightness.dark,
-    ));
-
-    return Scaffold(
-      appBar: null,
-      body:SingleChildScrollView(
-        child: Column(
+    return SingleChildScrollView(
+      child: Column(
         children: [
           Container(
             color: Colors.white,
-            padding: EdgeInsets.only(top: 70.0, left: 40.0, right: 40.0, bottom: 30.0), // 위 아래 간격 조정
+            padding: EdgeInsets.only(
+              top: 70.0,
+              left: 40.0,
+              right: 40.0,
+              bottom: 30.0,
+            ),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     '000님 안녕하세요',
                     style: TextStyle(fontSize: 29.0),
@@ -254,10 +117,10 @@ class _MypageState extends State<Mypage> {
                             MaterialPageRoute(builder: (context) => OrderPage()),
                           );
                         },
-                      child: const Text(
-                        '주문내역',
-                        style: TextStyle(fontSize: 20.0),
-                      ),
+                        child: const Text(
+                          '주문내역',
+                          style: TextStyle(fontSize: 20.0),
+                        ),
                       ),
                     ],
                   ),
@@ -361,7 +224,6 @@ class _MypageState extends State<Mypage> {
               ),
             ),
           ),
-          
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.08,
@@ -399,7 +261,6 @@ class _MypageState extends State<Mypage> {
               ),
             ),
           ),
-
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.08,
@@ -419,25 +280,24 @@ class _MypageState extends State<Mypage> {
                   MaterialPageRoute(builder: (context) => PasswordPage()), // PasswordChangePage로 이동
                 );
               },
-            child: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '비밀번호 변경',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    '>',
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
-              ),
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '비밀번호 변경',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
 
+              ),
             ),
           ),
-          ),
-
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.08,
@@ -452,7 +312,7 @@ class _MypageState extends State<Mypage> {
             ),
             child: InkWell(
               onTap: () {
-                _showDialogLogOut(context);
+                showDialogLogOut(context);
               },
               child: const Center(
                 child: Row(
@@ -471,7 +331,6 @@ class _MypageState extends State<Mypage> {
               ),
             ),
           ),
-
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.08,
@@ -486,30 +345,29 @@ class _MypageState extends State<Mypage> {
             ),
             child: InkWell(
               onTap: () {
-                _showDialogOut(context);
+                showOut(context);
               },
-            child: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '회원탈퇴',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    '>',
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '회원탈퇴',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
               ),
-            ),
             ),
           ),
         ],
       ),
-    ),
     );
+
   }
 
 }
-

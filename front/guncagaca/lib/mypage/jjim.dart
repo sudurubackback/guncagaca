@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:guncagaca/mypage.dart';
+
 
 class JjimPage extends StatefulWidget {
   @override
