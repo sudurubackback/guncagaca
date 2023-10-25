@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../menu/menu.dart';
+
 
 class OrderPage extends StatefulWidget {
   @override
@@ -69,6 +71,15 @@ class _OrderState extends State<OrderPage> {
               height: 2.0,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DetailPage()), // ReviewCreate 페이지로 이동
+                );
+              },
+              child: Text('메뉴디테일'),
+            ),
 
           ],
         ),
