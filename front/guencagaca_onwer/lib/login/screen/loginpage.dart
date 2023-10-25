@@ -13,6 +13,14 @@ class _LoginPageState extends State<LoginPage> {
   Color mainColor = Color(0xFF9B5748);
   bool loginState = false;
 
+  //입력 값을 받기 위한 controller
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  //입력 받을 변수
+  String email ="";
+  String password="";
+
   void toggleLoginState() {
     setState(() {
       loginState = !loginState;
@@ -49,6 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       },
                       child: TextFormField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(
@@ -73,6 +82,8 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       },
                       child: TextFormField(
+                        obscureText: true,
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           labelStyle: TextStyle(
@@ -119,8 +130,39 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 20.0),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async{
                       // 로그인 로직을 추가
+                      email = _emailController.text;
+                      password = _passwordController.text;
+
+                      //둘 중 하나라도 비었을 경우에는 모두 입력하라는 창 표시
+                      if(email.isEmpty || password.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('이메일과 비밀번호 모두 입력하세요'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      //=====================================================
+
+
+                      else {
+                        // 로그인 성공 시
+                        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        //   builder: (context) => MainPage(),
+                        // ));
+                      }
 
                       // Navigator.of(context).pushReplacement(MaterialPageRoute(
                       //   builder: (context) => MainPage(),
