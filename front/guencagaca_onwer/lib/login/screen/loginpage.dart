@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guencagaca_onwer/login/screen/signpage.dart';
+import 'package:guencagaca_onwer/store/screen/storepage.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -122,9 +123,9 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       // 로그인 로직을 추가
 
-                      // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      //   builder: (context) => MainPage(),
-                      // ));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => StorePage(),
+                      ));
                     },
                     style: ButtonStyle(
                       // 버튼의 최소 크기 설정
