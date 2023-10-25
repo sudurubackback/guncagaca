@@ -23,8 +23,8 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
   bool isFavorite = false;
 
   List<Menu> sampleMenus = [
-    Menu(name: '메뉴 아이템 1', price: 10000, icon: Icons.fastfood),
-    Menu(name: '메뉴 아이템 2', price: 12000, icon: Icons.fastfood),
+    Menu(name: '메뉴 아이템 1', price: 10000, imagePath: 'assets/image/coffeebean.png', description: '메뉴설명'),
+    Menu(name: '메뉴 아이템 2', price: 12000, imagePath: 'assets/image/coffeebean.png', description: '메뉴설명'),
     // ...
   ];
 
