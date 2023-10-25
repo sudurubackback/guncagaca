@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/menu/menu.dart';
 import '../models/menu.dart';
+import 'menu_card.dart';
 
 class MenuTabWidget extends StatelessWidget {
   final List<Menu> menus;
@@ -9,6 +10,8 @@ class MenuTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CartController cartController = Get.put(CartController());
+
     return ListView.builder(
       itemCount: menus.length,
       itemBuilder: (BuildContext context, int index) {
