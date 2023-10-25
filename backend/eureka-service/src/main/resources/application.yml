@@ -9,7 +9,7 @@ server:
 eureka:
   client:
     service-url:
-      defualtZone: http://13.209.198.194:8761/eureka/
+      defualtZone: http://127.0.0.1:8761/eureka
     register-with-eureka: false # 유레카 서버에 본인 서비스를 등록할 건지 여부
     fetch-registry: false # 유레카 서버로부터 서비스 목록을 로컬 캐시에 저장할 건지 여부
   server:
