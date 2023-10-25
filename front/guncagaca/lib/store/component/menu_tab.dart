@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
-import '../../cart/controller/cart_controller.dart';
+import 'package:guncagaca/menu/menu.dart';
 import '../models/menu.dart';
 import 'menu_card.dart';
 
 class MenuTabWidget extends StatelessWidget {
   final List<Menu> menus;
 
-  const MenuTabWidget({super.key, required this.menus});
+  MenuTabWidget({Key? key, required this.menus}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +15,18 @@ class MenuTabWidget extends StatelessWidget {
     return ListView.builder(
       itemCount: menus.length,
       itemBuilder: (BuildContext context, int index) {
-        return MenuCard(
-          menu: menus[index],
-          onAddToCart: () {
-            cartController.addToCart(menus[index]);
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DetailPage()),
+            );
           },
+          child: ListTile(
+            leading: Icon(menus[index].icon),
+            title: Text(menus[index].name),
+            trailing: Text('₩${menus[index].price}'),
+          ),
         );
       },
     );
