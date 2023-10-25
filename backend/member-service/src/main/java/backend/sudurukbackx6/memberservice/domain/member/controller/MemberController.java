@@ -13,7 +13,12 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-    
+
+    @GetMapping("/health")
+    public ResponseEntity<String> getHealth() {
+        return ResponseEntity.ok("Member is okay");
+    }
+
     @PostMapping("/sign")
     public ResponseEntity<SignResponseDto> getSign(@RequestBody SignRequestDto signRequestDto) {
         return ResponseEntity.ok(memberService.getSign(signRequestDto));
