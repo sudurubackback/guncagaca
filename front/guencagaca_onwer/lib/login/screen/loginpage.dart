@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guencagaca_onwer/login/screen/passwordrecoverypage.dart';
 import 'package:guencagaca_onwer/login/screen/signpage.dart';
 import 'package:guencagaca_onwer/store/screen/storepage.dart';
 
@@ -137,7 +138,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       'Login',
                       style: TextStyle(
-                        color: Colors.white, // 텍스트 색상
+                        color: Colors.white,
+                        fontSize: 28,// 텍스트 색상
                       ),
                     ),
                   ),
@@ -164,7 +166,11 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(width: 240), // 간격 조정
                       TextButton(
                         onPressed: () {
-                          // 비밀번호 찾기 링크를 눌렀을 때의 동작 추가
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => PasswordRecoveryPage(),
+                              )
+                          );
                         },
                         child: Text(
                           '비밀번호 찾기',
