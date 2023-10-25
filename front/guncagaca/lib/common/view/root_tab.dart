@@ -2,6 +2,11 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagaca/home/view/home_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../home/component/map_provider.dart';
+import 'package:guncagaca/mypage/view/mypage_view.dart';
+import 'package:guncagaca/order/view/order_view.dart';
 
 class RootTab extends StatefulWidget {
   const RootTab({Key? key}) : super(key: key);
@@ -41,10 +46,12 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title : '근카가카',
+      // title : '근카 ? 가카 !',
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: current_index,
         onTap:(int index) {
+          FocusScope.of(context).unfocus();
+
           controller.animateTo(index);
         },
         selectedItemColor: PRIMARY_COLOR,
@@ -70,9 +77,13 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         physics: NeverScrollableScrollPhysics(), // 상하로만 스크롤
         controller: controller,
         children: [
-          Center(child: Container(child: Text('주문내역'))),
-          HomeScreen(),
-          Center(child: Container(child: Text('마이페이지'))),
+
+          OrderView(),
+          ChangeNotifierProvider<MapProvider>(
+            create: (context) => MapProvider(), // MapProvider의 인스턴스 생성 로직에 따라 적절히 수정해야 합니다.
+            child: HomeScreen(),
+          ),
+          MypageView(),
         ],
       ),
     );

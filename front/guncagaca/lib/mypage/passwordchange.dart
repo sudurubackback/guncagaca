@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:guncagaca/mypage.dart';
+
 
 class PasswordPage extends StatefulWidget {
   @override
@@ -17,7 +17,11 @@ class _PasswordState extends State<PasswordPage> {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return Scaffold(
+    return GestureDetector(
+        onTap: () {
+      FocusScope.of(context).unfocus();
+    },
+    child :Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
         child: AppBar(
@@ -39,7 +43,7 @@ class _PasswordState extends State<PasswordPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.14, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1, top: 20.0),
                   child: Center(
                     child: Text(
                     '비밀번호 변경',
@@ -202,6 +206,7 @@ class _PasswordState extends State<PasswordPage> {
           
         ],
       ),
+    ),
     ),
     );
   }
