@@ -16,3 +16,4 @@ management:
 logging:
   level:
     org.hibernate.type: trace
+
