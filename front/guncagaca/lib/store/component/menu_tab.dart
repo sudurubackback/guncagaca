@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
+import '../../cart/controller/cart_controller.dart';
 import '../models/menu.dart';
+import 'menu_card.dart';
 
 class MenuTabWidget extends StatelessWidget {
   final List<Menu> menus;
@@ -9,13 +13,16 @@ class MenuTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CartController cartController = Get.put(CartController());
+
     return ListView.builder(
       itemCount: menus.length,
       itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          leading: Icon(menus[index].icon),
-          title: Text(menus[index].name),
-          trailing: Text('₩${menus[index].price}'),
+        return MenuCard(
+          menu: menus[index],
+          onAddToCart: () {
+            cartController.addToCart(menus[index]);
+          },
         );
       },
     );
