@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/home/component/store_card.dart';
 
-import '../models/store.dart';
+import '../../store/models/store.dart';
 
 
 class StoreCardList extends StatelessWidget {

@@ -19,6 +19,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   late TabController controller;
 
   int current_index = 1;
+  final List<String> tabTitles = ['주문내역', '근카 ? 가카 !', '마이페이지'];
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      // title : '근카 ? 가카 !',
+      title : tabTitles[current_index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: current_index,
         onTap:(int index) {

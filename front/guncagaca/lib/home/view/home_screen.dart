@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../component/store_card_list.dart';
-import '../models/store.dart';
+import '../../store/models/store.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       distance: 1.5,
       rating: 4.5,
       reviewCount: 10,
+      description: '가게 소개입니다.'
     ),
     Store(
       image: AssetImage('assets/image/cafe.PNG'), // 예시 이미지 경로
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       distance: 3,
       rating: 4.0,
       reviewCount: 5,
+      description: '가게 소개'
     ),
     Store(
       image: AssetImage('assets/image/cafe.PNG'), // 예시 이미지 경로
@@ -46,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       distance: 3,
       rating: 4.0,
       reviewCount: 5,
+      description: '가게 소개'
     ),
     Store(
       image: AssetImage('assets/image/cafe.PNG'), // 예시 이미지 경로
@@ -53,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
       distance: 3,
       rating: 4.0,
       reviewCount: 5,
+      description: '가게 소개'
     ),
     Store(
       image: AssetImage('assets/image/cafe.PNG'), // 예시 이미지 경로
@@ -60,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       distance: 3,
       rating: 4.0,
       reviewCount: 5,
+      description: '가게 소개'
     ),
   ];
 
