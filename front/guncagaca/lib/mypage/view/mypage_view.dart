@@ -6,7 +6,7 @@ import 'package:guncagaca/mypage/passwordchange.dart';
 import 'package:guncagaca/mypage/point.dart';
 import 'package:guncagaca/mypage/review.dart';
 
-import '../../order/order.dart';
+import '../../order/view/order_page.dart';
 
 
 

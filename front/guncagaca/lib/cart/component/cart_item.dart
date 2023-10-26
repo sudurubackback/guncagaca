@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import '../../store/models/menu.dart';
+import '../../menu/menu.dart';
+import '../../menu/option.dart';
+import '../../order/models/order.dart';
 import '../controller/cart_controller.dart';
 
 class CartItem extends StatelessWidget {
-  final Menu item;
+  final Order item;
 
   CartItem({required this.item});
 
@@ -20,7 +22,7 @@ class CartItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(item.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(item.menu.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {
@@ -42,26 +44,26 @@ class CartItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage(item.imagePath),
+                    image: AssetImage(item.menu.imagePath),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               SizedBox(width: 20),
               Expanded(
-                child: Text("• ICE (2잔) 보통"),
+                child: _buildOptionList(item.selectedOptions),
               ),
               SizedBox(width: 20), // 추가된 코드: 가격과 버튼 사이의 간격
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Obx(()=> Text('₩${item.price * (controller.itemQuantities[item] ?? 1)}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+                  Obx(()=> Text('₩${item.menu.initPrice * (item.quantity.value)}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
                   Row(
                     children: [
                       IconButton(icon: Icon(Icons.remove), onPressed: () {
                         Get.find<CartController>().decreaseQuantity(item);
                       }),
-                      Obx(() => Text('${controller.itemQuantities[item] ?? 1}', style: TextStyle(fontSize: 18))),
+                      Obx(() => Text('${item.quantity.value}', style: TextStyle(fontSize: 18))),
                       IconButton(icon: Icon(Icons.add), onPressed: () {
                         Get.find<CartController>().increaseQuantity(item);
                       }),
@@ -75,5 +77,18 @@ class CartItem extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildOptionList(List<Option> options) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: options.map((option) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          child: Text('- ${option.label}', style: TextStyle(color: Colors.grey)),
+        );
+      }).toList(),
+    );
+  }
+
 }
 

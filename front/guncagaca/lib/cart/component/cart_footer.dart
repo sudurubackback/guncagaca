@@ -10,7 +10,12 @@ class CartFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 1, blurRadius: 10)],
+        border: Border(top: BorderSide(color: Colors.grey[200]!, width: 1.0)),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 8.0),
       child: Column(
         children: [
@@ -84,7 +89,7 @@ class CartFooter extends StatelessWidget {
               },
               child: Text("결제하기"),
             ),
-          )
+          ),
         ],
       ),
     );

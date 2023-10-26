@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/common/const/colors.dart';
 
-import '../../store/models/menu.dart';
+import '../../menu/menu.dart';
 import '../controller/cart_controller.dart';
 import 'cart_item.dart';
 
