@@ -61,6 +61,17 @@ public class MemberService {
                 .build();
     }
 
+    public MypageResponseDto getMypage(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+
+        return MypageResponseDto.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .build();
+    }
+
     public MypageResponseDto changeNickname(String email, String nickname) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
@@ -72,6 +83,5 @@ public class MemberService {
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .build();
-
     }
 }
