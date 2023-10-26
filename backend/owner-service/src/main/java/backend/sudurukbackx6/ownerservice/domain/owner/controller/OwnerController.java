@@ -6,16 +6,10 @@ import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.response.SignInResDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.service.OwnerService;
-import backend.sudurukbackx6.ownerservice.domain.token.config.JwtProperties;
-import backend.sudurukbackx6.ownerservice.domain.token.service.TokenService;
+import backend.sudurukbackx6.ownerservice.jwt.JwtProvider;
+import backend.sudurukbackx6.ownerservice.jwt.TokenDto;
 import backend.sudurukbackx6.ownerservice.redis.config.RedisProperties;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +21,6 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,18 +29,6 @@ import java.util.Optional;
 public class OwnerController {
 
     private final OwnerService ownerService;
-    private final RedisProperties redisProperties;
-    private final TokenService tokenService;
-    private final JwtProperties jwtProperties;
-
-    @GetMapping("/test")
-    public ResponseEntity<? extends BaseResponseBody> test() throws IOException {
-
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "test성공", jwtProperties.getSecret()));
-
-    }
-
-    //Security Requirement
 
     @Operation(summary = "회원가입", description = "email, password, tel을 활용해서 회원가입 진행 \n\n")
     //무슨 인자가 필요한지만 설명
@@ -60,13 +41,8 @@ public class OwnerController {
     @Operation(summary = "로그인", description = "로그인 \n\n")
     @PostMapping("/signin")
     public ResponseEntity<? extends BaseResponseBody> signin(@RequestBody SignInReqDto signInReqDto) throws IOException, InterruptedException {
-        boolean flag = ownerService.signIn(signInReqDto.getEmail(), signInReqDto.getPassword());
-
-        if (flag) {
-            SignInResDto signInResDto = tokenService.createRefreshToken(ownerService.findByEmail(signInReqDto.getEmail()));
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "로그인 성공", signInResDto));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(400, "아이디 혹은 비밀번호를 확인하세요"));
+        SignInResDto signInResDto = ownerService.signIn(signInReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "로그인 성공", signInResDto));
     }
 
     @Operation(summary = "이메일로 인증 코드 전송", description = "이메일 인증로 인증 코드 전송\n\n")
@@ -122,9 +98,11 @@ public class OwnerController {
     @Operation(summary = "accesstoken 갱신", description = "refresh token을 사용해서 accasstoken 갱신\n\n")
     @PostMapping("/refresh")
     public ResponseEntity<? extends BaseResponseBody> refreshAccessToken(@RequestHeader("Authorization") String token) throws IOException, InterruptedException, MessagingException {
-        String newAccessToken = tokenService.createAccessToken(token);
+
         Map<String, String> map = new HashMap<>();
-        map.put("accessToken", newAccessToken);
+        String newAccessToken = ownerService.refreshAccessToken(token);
+        map.put("access_token", newAccessToken);
+
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "accesstoken갱신 성공", map));
     }
 
