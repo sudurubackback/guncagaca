@@ -30,7 +30,7 @@ class _NotiListState extends State<NotiList> {
       itemCount: widget.notifications.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
-          margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+          margin: EdgeInsets.only(top: 15, left: 10, right: 10),
           decoration: BoxDecoration(
             border: Border.all(
               color: PRIMARY_COLOR,
