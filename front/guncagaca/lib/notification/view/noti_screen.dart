@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 
-class NotificationPage extends StatefulWidget {
-  @override
-  _NotificationState createState() => _NotificationState();
-}
+import '../component/noti_list.dart';
 
-class _NotificationState extends State<NotificationPage> {
-
+class NotiScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class _NotificationState extends State<NotificationPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.26, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.23, top: 20.0),
                   child: Row(
                     children: [
                       const Text(
@@ -59,22 +55,21 @@ class _NotificationState extends State<NotificationPage> {
               ],
             ),
           ),
-        ),
-      ),
-      body:SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(2.0),
+            child: Container(
               color: Color(0xff9B5748),
               height: 2.0,
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
-          ],
+          ),
         ),
       ),
+      body:
+        CartList(),
     );
   }
 
 }
+
+
 

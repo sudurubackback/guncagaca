@@ -10,7 +10,7 @@ class MenuTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CartController cartController = Get.put(CartController());
+    // final CartController cartController = Get.put(CartController());
 
     return ListView.builder(
       itemCount: menus.length,
@@ -23,7 +23,7 @@ class MenuTabWidget extends StatelessWidget {
             );
           },
           child: ListTile(
-            leading: Icon(menus[index].icon),
+            // leading: Icon(menus[index].icon),
             title: Text(menus[index].name),
             trailing: Text('₩${menus[index].price}'),
           ),
