@@ -25,6 +25,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        //security관련 설정 모두 비활성화
+        http.cors().disable()
+                .csrf().disable()
+                .formLogin().disable()
+                .headers().frameOptions().disable();
+
+        return http.build();
+    }
+
+/*
     private final JwtTokenProvider tokenProvider;
 
     @Bean
@@ -49,6 +62,9 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+*/
+
+
 
     // password encoder로 사용할 빈 등록
     @Bean
@@ -64,7 +80,7 @@ public class SecurityConfig {
 
 
     //CORS 설정
-    @Bean
+/*    @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8086"));
@@ -76,5 +92,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
-    }
+    }*/
 }
