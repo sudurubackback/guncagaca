@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
@@ -8,8 +9,9 @@ import 'package:guncagaca/login/landingpage.dart';
 
 import 'cart/controller/cart_controller.dart';
 
-void main() {
-  KakaoSdk.init(nativeAppKey: 'a401e9c33cb071b374c233a8f026060c');
+void main() async {
+  await dotenv.load(fileName: ".env");	// .env 파일 Path
+  KakaoSdk.init(nativeAppKey: dotenv.env['appkey']);
   runApp(const MyApp());
 }
 
