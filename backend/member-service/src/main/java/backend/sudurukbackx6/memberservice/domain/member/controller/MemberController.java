@@ -30,6 +30,11 @@ public class MemberController {
         return ResponseEntity.ok(memberService.refreshAccessToken(email));
     }
 
+    @GetMapping("/mypage")
+    public ResponseEntity<MypageResponseDto> getMypage(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.getMypage(email));
+    }
+
     @PutMapping("/mypage/change-nickname")
     public ResponseEntity<MypageResponseDto> changeNickname(@RequestHeader("Email") String email, @RequestParam String nickname) {
         return ResponseEntity.ok(memberService.changeNickname(email, nickname));
