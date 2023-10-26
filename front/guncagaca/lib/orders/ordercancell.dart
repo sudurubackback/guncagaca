@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guncagaca/login/loginpage.dart';
 
-import '../order/order.dart';
+import '../order/view/order_page.dart';
 
 class OrderCancellPage extends StatefulWidget {
 

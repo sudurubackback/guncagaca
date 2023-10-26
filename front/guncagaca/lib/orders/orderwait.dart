@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../order/order.dart';
+import '../order/view/order_page.dart';
 
 class OrderWaitPage extends StatefulWidget {
 
