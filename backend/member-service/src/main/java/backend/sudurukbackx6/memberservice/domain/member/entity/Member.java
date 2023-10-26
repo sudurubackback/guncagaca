@@ -20,13 +20,10 @@ public class Member {
 
     private String email;
 
-    private String tel;
-
     @Builder
-    public Member(Long id, String nickname, String email, String tel) {
+    public Member(Long id, String nickname, String email) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
-        this.tel = tel;
     }
 }
