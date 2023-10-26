@@ -70,7 +70,6 @@ class NotiScreen extends StatelessWidget {
           Expanded(
             child: NotiList(notifications: notifications),
           ),
-          SizedBox(height: 20), // 여기에 SizedBox 추가
         ],
       ),
     );
