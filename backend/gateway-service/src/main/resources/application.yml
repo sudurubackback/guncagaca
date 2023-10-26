@@ -23,9 +23,14 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates: # 조건절
-            - Path=/api/member/**  # 권한 검증을 진행하지 않는다.
+            - Path=/api/member/sign
+            - Method=POST
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates: # 조건절
+            - Path=/api/member/**
           filters:
-            - AddRequestHeader=first-request, first-request-header2
+            - AuthorizationHeaderFilter
         - id: notification-service
           uri: http://localhost:8082/
           predicates: # 조건절
@@ -50,6 +55,17 @@ spring:
             - Path=/api/store/**  # 권한 검증을 진행하지 않는다.
           filters:
             - AddRequestHeader=first-request, first-request-header2
+
+  # Redis 설정
+  redis:
+    host: k9d102a.p.ssafy.io
+    port: 6379
+  session:
+    timeout: 600
+    store-type: redis
+    redis:
+      namespace: spring:session
+      flush-mode: on-save
 
 eureka:
   client:
