@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../component/noti_list.dart';
 
+class NotiScreen extends StatelessWidget {
+  final List<Map<String, dynamic>> notifications;
 
-class NotificationPage extends StatefulWidget {
-  @override
-  _NotificationState createState() => _NotificationState();
-}
-
-class _NotificationState extends State<NotificationPage> {
-
+  NotiScreen({required this.notifications});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +36,7 @@ class _NotificationState extends State<NotificationPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.26, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.23, top: 20.0),
                   child: Row(
                     children: [
                       const Text(
@@ -59,22 +56,21 @@ class _NotificationState extends State<NotificationPage> {
               ],
             ),
           ),
-        ),
-      ),
-      body:SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(2.0),
+            child: Container(
               color: Color(0xff9B5748),
               height: 2.0,
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
-          ],
+          ),
         ),
       ),
+      body:
+        NotiList(notifications: notifications),
     );
   }
 
 }
+
+
 

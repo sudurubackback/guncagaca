@@ -18,10 +18,7 @@ class OrderComponent extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            color: Color(0xff9B5748),
-            height: 2.0,
-          ),
+
           ]
         )
     );
