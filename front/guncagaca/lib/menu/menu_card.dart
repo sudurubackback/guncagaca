@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../models/menu.dart';
+import 'menu.dart';
 
 class MenuCard extends StatelessWidget {
   final Menu menu;
-  final Function() onAddToCart;
 
-  MenuCard({required this.menu, required this.onAddToCart});
+  MenuCard({required this.menu});
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +33,7 @@ class MenuCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('₩${menu.price}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                      IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
-                        onPressed: onAddToCart,
-                      ),
+                      Text('₩${menu.initPrice}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ],

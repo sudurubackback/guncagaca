@@ -5,7 +5,9 @@ import 'package:guncagaca/store/component/intro_tab.dart';
 import 'package:guncagaca/store/component/menu_tab.dart';
 import 'package:guncagaca/store/component/review_tab.dart';
 
-import '../models/menu.dart';
+import '../../menu/menu.dart';
+import '../../menu/menu_option.dart';
+import '../../menu/option.dart';
 import '../models/review.dart';
 import '../models/store.dart';
 
@@ -22,17 +24,63 @@ class StoreDetailScreen extends StatefulWidget {
 class _StoreDetailScreenState extends State<StoreDetailScreen> {
   bool isFavorite = false;
 
-  List<Menu> sampleMenus = [
-    Menu(name: '메뉴 아이템 1', price: 10000, imagePath: 'assets/image/coffeebean.png', description: '메뉴설명'),
-    Menu(name: '메뉴 아이템 2', price: 12000, imagePath: 'assets/image/coffeebean.png', description: '메뉴설명'),
-    // ...
+  List<MenuOption> shotOptions = [
+    MenuOption(
+      optionName: "샷",
+      subOptions: [
+        Option(label: "1샷", price: 0),
+        Option(label: "2샷", price: 100),
+        Option(label: "3샷", price: 200),
+      ],
+    ),
+    MenuOption(
+      optionName: "사이즈",
+      subOptions: [
+        Option(label: "tall", price: 0),
+        Option(label: "grande", price: 300),
+        Option(label: "venti", price: 600),
+      ],
+    ),
+    // 여기에 다른 옵션 그룹을 추가할 수 있습니다.
   ];
+
+  List<Menu> sampleMenus = [];
+
 
   List<Review> sampleReviews = [
     Review(title: '리뷰 제목 1', content: '리뷰 내용...', rating: 4.5),
     Review(title: '리뷰 제목 2', content: '리뷰 내용...', rating: 3.5),
     // ...
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    sampleMenus = [
+      Menu(
+        name: '아메리카노',
+        initPrice: 5000,
+        imagePath: 'assets/image/coffeebean.png',
+        description: '전통적인 블랙 커피',
+        options: shotOptions,
+      ),
+      Menu(
+        name: '라떼',
+        initPrice: 6000,
+        imagePath: 'assets/image/coffeebean.png',
+        description: '부드러운 우유와 커피의 조화',
+        options: shotOptions,
+      ),
+      Menu(
+        name: '카푸치노',
+        initPrice: 6500,
+        imagePath: 'assets/image/coffeecup.png',
+        description: '폼 우유와 함께하는 커피',
+        options: shotOptions,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +152,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                       height: 400, // 필요에 따라 조절
                       child: TabBarView(
                         children: [
-                          MenuTabWidget(menus: sampleMenus),
+                          MenuTabWidget(menus: sampleMenus, storeName: widget.store.name,),
                           IntroTabWidget(store: widget.store),
                           ReviewTabWidget(reviews: sampleReviews),
                         ],
