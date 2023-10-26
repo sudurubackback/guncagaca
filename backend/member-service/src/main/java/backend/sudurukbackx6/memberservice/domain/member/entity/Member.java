@@ -26,4 +26,13 @@ public class Member {
         this.nickname = nickname;
         this.email = email;
     }
+
+
+    /**
+    * 비즈니스 로직
+     */
+    // 닉네임 수정
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
