@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.ownerservice.domain.menu.entity;
+package backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

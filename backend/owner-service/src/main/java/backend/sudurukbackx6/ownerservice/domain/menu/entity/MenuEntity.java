@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.entity;
 
+import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

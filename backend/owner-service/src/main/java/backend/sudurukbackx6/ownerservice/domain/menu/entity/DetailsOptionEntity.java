@@ -21,6 +21,9 @@ public class DetailsOptionEntity {
     @Id
     private String id;
 
+    @Column(name = "detail_option_name")
+    private String detailOptionName;
+
     @Column(name = "additional_price")
     private int additionalPrice;
 

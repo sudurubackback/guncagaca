@@ -1,5 +1,5 @@
 server:
-  port: 8088    # Spring Cloud Config Server 포트
+  port: 8888    # Spring Cloud Config Server 포트
 spring:
   application:
     name: config-server
