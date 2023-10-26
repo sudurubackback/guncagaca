@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
+import 'package:guncagaca/kakao/kakao_login.dart';
+import 'package:guncagaca/kakao/main_view_model.dart';
+import 'package:guncagaca/kakao/social_login.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -9,12 +12,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  void _onKakaoButtonPressed() {
-    print('버튼 클릭 완료');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
-    );
+  final mainViewModel = MainViewModel(KakaoLogin());
+  
+  void _onKakaoButtonPressed() async {
+    await mainViewModel.login();
+    if (mainViewModel.isLogined) {
+      print(mainViewModel.user?.kakaoAccount?.profile?.nickname);
+      print(mainViewModel.user?.kakaoAccount?.email);
+      print('버튼 클릭 완료');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+      );
+    } else {
+      print('로그인 실패');
+    }
+
   }
 
   Widget _buildTitleText(String text) {
