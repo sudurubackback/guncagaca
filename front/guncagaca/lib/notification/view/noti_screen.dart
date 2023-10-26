@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-
 import '../component/noti_list.dart';
 
 class NotiScreen extends StatelessWidget {
+  final List<Map<String, dynamic>> notifications;
+
+  NotiScreen({required this.notifications});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class NotiScreen extends StatelessWidget {
         ),
       ),
       body:
-        CartList(),
+        NotiList(notifications: notifications),
     );
   }
 

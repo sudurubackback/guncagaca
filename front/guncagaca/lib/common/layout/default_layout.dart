@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:guncagaca/notification/models/noti_widget.dart';
 
 import '../../cart/models/cart_widget.dart';
-import '../../notification/controller/noti_controller.dart';
+
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
@@ -33,7 +33,6 @@ class DefaultLayout extends StatelessWidget {
         if (title == null) {
           return null;
         } else {
-          Get.put(NotiController());
 
           return AppBar(
             backgroundColor: Colors.white,
@@ -48,7 +47,7 @@ class DefaultLayout extends StatelessWidget {
                   child: Text(
                     title!,
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 18.0,
                       color: Colors.black,
                     ),
                   ),
