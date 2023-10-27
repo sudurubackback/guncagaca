@@ -65,11 +65,15 @@ class NotiScreen extends StatelessWidget {
           ),
         ),
       ),
-      body:
-        NotiList(notifications: notifications),
+      body: Column(
+        children: [
+          Expanded(
+            child: NotiList(notifications: notifications),
+          ),
+        ],
+      ),
     );
   }
-
 }
 
 

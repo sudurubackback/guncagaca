@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/const/colors.dart';
+
 class NotiList extends StatefulWidget {
   final List<Map<String, dynamic>> notifications;
 
@@ -27,10 +28,14 @@ class _NotiListState extends State<NotiList> {
       ),
     )
         : ListView.builder(
-      itemCount: widget.notifications.length,
+      itemCount: widget.notifications.length + 1, // 한 개를 추가합니다.
       itemBuilder: (BuildContext context, int index) {
+        if (index == widget.notifications.length) {
+          return SizedBox(height: 20); // 마지막 아이템일 때 공간을 추가합니다.
+        }
+
         return Container(
-          margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+          margin: EdgeInsets.only(top: 15, left: 10, right: 10),
           decoration: BoxDecoration(
             border: Border.all(
               color: PRIMARY_COLOR,
@@ -71,5 +76,3 @@ class _NotiListState extends State<NotiList> {
     );
   }
 }
-
-
