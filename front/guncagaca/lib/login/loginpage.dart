@@ -56,7 +56,8 @@ class _LoginPageState extends State<LoginPage> {
       final email = mainViewModel.user?.kakaoAccount?.email;
       print('버튼 클릭 완료');
 
-      final tokens = await _fetchTokens(nickname, email);
+      // final tokens = await _fetchTokens(nickname, email);
+      final tokens = null;
       print(tokens);
       if (tokens != null) {
         // 토큰들을 얻었을 경우, 저장하고 다음 화면으로 이동
