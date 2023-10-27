@@ -112,11 +112,11 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                     onRatingUpdate: (rating) {},
                   ),
                   SizedBox(width: 8),
-                  Text('${widget.store.rating}/5', style: TextStyle(fontSize: 16)),
+                  Text('${widget.store.rating}/5', style: TextStyle(fontSize: 12)),
                   SizedBox(width: 25),
-                  Text(" 리뷰 ${widget.store.reviewCount} 개", style: TextStyle(fontSize: 16)),
+                  Text(" 리뷰 ${widget.store.reviewCount} 개", style: TextStyle(fontSize: 12)),
                   SizedBox(width: 20),
-                  Text(" 찜", style: TextStyle(fontSize: 16)),
+                  Text(" 찜", style: TextStyle(fontSize: 12)),
                   SizedBox(width: 5),
                   // 찜 toggle
                   GestureDetector(
