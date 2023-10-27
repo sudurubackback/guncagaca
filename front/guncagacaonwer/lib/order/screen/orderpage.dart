@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/common/layout/default_layout.dart';
-import 'package:guncagacaonwer/menu/screen/menuallpage.dart';
-import 'package:guncagacaonwer/menu/screen/menuregistrationpage.dart';
-import 'package:guncagacaonwer/order/screen/orderpage.dart';
+import 'package:guncagacaonwer/menu/screen/menupage.dart';
+import 'package:guncagacaonwer/order/screen/orderprocessingpage.dart';
+import 'package:guncagacaonwer/order/screen/orderwaitingpage.dart';
 import 'package:guncagacaonwer/store/screen/storepage.dart';
 
-class MenuPage extends StatefulWidget {
+class OrderPage extends StatefulWidget {
   @override
-  _MenuPageState createState() => _MenuPageState();
+  _OrderPageState createState() => _OrderPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _OrderPageState extends State<OrderPage> {
   int selectedButtonIndex = 0;
 
   Widget buildRightContent() {
     switch (selectedButtonIndex) {
       case 0:
-        return MenuAllPage();
+        return OrderWaitingPage();
     // return Center(child: Text("메뉴 전체보기의 내용"));
       case 1:
-        return MenuRegistrationPage();
+        return OrderProcessingPage();
     // return Center(child: Text("메뉴 신규 등록의 내용"));
+      case 2:
+      // return MenuRegistrationPage();
+        return Center(child: Text("메뉴 신규 등록의 내용"));
+      case 3:
+      // return MenuRegistrationPage();
+        return Center(child: Text("메뉴 신규 등록의 내용"));
       default:
         return Center(child: Text("나머지 영역의 내용"));
     }
@@ -28,15 +34,15 @@ class _MenuPageState extends State<MenuPage> {
 
   void navigateToPage(int pageIndex) {
     switch (pageIndex) {
-      case 0:
-        Navigator.of(context).push(PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => OrderPage(),
-          settings: RouteSettings(name: 'OrderPage'),
-        ));
-        break;
       case 1:
         Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => StorePage(),
+          settings: RouteSettings(name: 'StorePage'),
+        ));
+        break;
+      case 2:
+        Navigator.of(context).push(PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => MenuPage(),
           settings: RouteSettings(name: 'StorePage'),
         ));
         break;
@@ -55,13 +61,13 @@ class _MenuPageState extends State<MenuPage> {
             children: [
               InkWell(
                 onTap: () {
-                  navigateToPage(0);
                 },
                 child: Container(
                   width: 250,
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF828282)),
+                    color: Color(0xFF831800),
                   ),
                   child: Center(
                     child: Text(
@@ -95,13 +101,13 @@ class _MenuPageState extends State<MenuPage> {
               ),
               InkWell(
                 onTap: () {
+                  navigateToPage(2);
                 },
                 child: Container(
                   width: 250,
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF828282)),
-                    color: Color(0xFF831800),
                   ),
                   child: Center(
                     child: Text(
@@ -120,7 +126,7 @@ class _MenuPageState extends State<MenuPage> {
       child: Row(
         children: [
           Container(
-            width: 170,
+            width: 130,
             color: Color(0xFFD9D9D9),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -132,13 +138,18 @@ class _MenuPageState extends State<MenuPage> {
                     });
                   },
                   child: Container(
-                    width: 170,
-                    height: 50,
-                    color: selectedButtonIndex == 0 ? Color(0xFF831800) : Color(0xFF828282),
-                    padding: EdgeInsets.all(4),
+                    width: 130,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      color: selectedButtonIndex == 0 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
+                      border: selectedButtonIndex == 0 ? null : Border.all(
+                        color: Color(0xFF828282), // 외각선 색상
+                        width: 0.5, // 외각선 두께
+                      ),
+                    ),
                     child: Center(
                       child: Text(
-                        "메뉴 전체보기",
+                        "주문대기",
                         style: TextStyle(
                           fontSize: 24,
                         ),
@@ -146,7 +157,6 @@ class _MenuPageState extends State<MenuPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 60),
                 InkWell(
                   onTap: () {
                     setState(() {
@@ -154,13 +164,73 @@ class _MenuPageState extends State<MenuPage> {
                     });
                   },
                   child: Container(
-                    width: 170,
-                    height: 50,
-                    color: selectedButtonIndex == 1 ? Color(0xFF831800) : Color(0xFF828282),
+                    width: 130,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      color: selectedButtonIndex == 1 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
+                      border: selectedButtonIndex == 1 ? null : Border.all(
+                        color: Color(0xFF828282), // 외각선 색상
+                        width: 0.5, // 외각선 두께
+                      ),
+                    ),
                     padding: EdgeInsets.all(4),
                     child: Center(
                       child: Text(
-                        "메뉴 신규 등록",
+                        "처리중",
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedButtonIndex = 2;
+                    });
+                  },
+                  child: Container(
+                    width: 130,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      color: selectedButtonIndex == 2 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
+                      border: selectedButtonIndex == 2 ? null : Border.all(
+                        color: Color(0xFF828282), // 외각선 색상
+                        width: 0.5, // 외각선 두께
+                      ),
+                    ),
+                    padding: EdgeInsets.all(4),
+                    child: Center(
+                      child: Text(
+                        "주문완료",
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedButtonIndex = 3;
+                    });
+                  },
+                  child: Container(
+                    width: 130,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      color: selectedButtonIndex == 3 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
+                      border: selectedButtonIndex == 3 ? null : Border.all(
+                        color: Color(0xFF828282), // 외각선 색상
+                        width: 0.5, // 외각선 두께
+                      ),
+                    ),
+                    padding: EdgeInsets.all(4),
+                    child: Center(
+                      child: Text(
+                        "주문조회",
                         style: TextStyle(
                           fontSize: 24,
                         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/common/layout/default_layout.dart';
 import 'package:guncagacaonwer/menu/screen/menupage.dart';
-// import 'package:guncagacaonwer/order/screen/orderpage.dart';
+import 'package:guncagacaonwer/order/screen/orderpage.dart';
 import 'package:guncagacaonwer/store/screen/mypage.dart';
 import 'package:guncagacaonwer/store/screen/reviewpage.dart';
 import 'package:guncagacaonwer/store/screen/infopage.dart';
@@ -33,11 +33,11 @@ class _StorePageState extends State<StorePage> {
   void navigateToPage(int pageIndex) {
     switch (pageIndex) {
       case 0:
-        // Navigator.of(context).push(PageRouteBuilder(
-        //   pageBuilder: (context, animation, secondaryAnimation) => OrderPage(),
-        //   settings: RouteSettings(name: 'OrderPage'),
-        // ));
-        // break;
+        Navigator.of(context).push(PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => OrderPage(),
+          settings: RouteSettings(name: 'OrderPage'),
+        ));
+        break;
       case 2:
         Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => MenuPage(),
