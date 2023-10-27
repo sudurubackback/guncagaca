@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/mypage/component/mypage_component.dart';
-import 'package:guncagaca/mypage/jjim.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
-import 'package:guncagaca/mypage/point.dart';
-import 'package:guncagaca/mypage/review.dart';
+import 'package:guncagaca/myreview/review.dart';
+import 'package:guncagaca/myreview/view/review_screen.dart';
+import 'package:guncagaca/point/view/point_screen.dart';
 
+import '../../jjim/view/jjim_screen.dart';
 import '../../order/view/order_page.dart';
 
 
@@ -26,19 +27,19 @@ class MypageView extends StatelessWidget {
         onReviewTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ReviewPage()),
+            MaterialPageRoute(builder: (context) => ReviewScreen()),
           );
         },
         onJjimTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => JjimPage()),
+            MaterialPageRoute(builder: (context) => JjimScreen()),
           );
         },
         onPointTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PointPage()),
+            MaterialPageRoute(builder: (context) => PointScreen()),
           );
         },
         onNicknameTap: () {

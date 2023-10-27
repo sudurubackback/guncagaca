@@ -7,9 +7,9 @@ import 'package:guncagaca/login/landingpage.dart';
 
 import 'cart/controller/cart_controller.dart';
 
-void main() async{
-  await dotenv.load(fileName: ".env");
-  KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_SDK_NATIVE_KEY']!);
+void main() async {
+  await dotenv.load(fileName: ".env");	// .env 파일 Path
+  KakaoSdk.init(nativeAppKey: dotenv.env['appkey']);
   runApp(const MyApp());
 }
 
