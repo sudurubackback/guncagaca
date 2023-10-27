@@ -9,7 +9,8 @@ import 'package:guncagaca/mypage/view/mypage_view.dart';
 import 'package:guncagaca/order/view/order_view.dart';
 
 class RootTab extends StatefulWidget {
-  const RootTab({Key? key}) : super(key: key);
+  final int initialIndex;
+  const RootTab({Key? key, this.initialIndex = 1}) : super(key: key);
 
   @override
   State<RootTab> createState() => _RootTabState();
@@ -23,14 +24,11 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
 
   @override
   void initState() {
-
     super.initState();
-
-    controller = TabController(initialIndex:1, length: 3, vsync: this); // 홈을 첫 화면으로
-
+    current_index = widget.initialIndex;
+    controller = TabController(initialIndex: widget.initialIndex, length: 3, vsync: this); // initialIndex를 사용
     controller.addListener((tabListener));
   }
-
   @override
   void dispose() {
     controller.removeListener(tabListener);
