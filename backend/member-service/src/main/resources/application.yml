@@ -1,22 +1,27 @@
-server:
-  port: 8081
-
 spring:
   application:
-    name: member-service
-  datasource:
-    url: jdbc:mysql://15.165.116.170:3306/member_db
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: coco
-    password: d102d102
+    name: member
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://localhost:8888
+server:
+  port: 8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    generate-ddl: true
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+logging:
+  level:
+    org.hibernate.type: trace

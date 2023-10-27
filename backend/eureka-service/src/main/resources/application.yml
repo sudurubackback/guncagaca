@@ -1,16 +1,19 @@
-
 spring:
   application:
-    name: Eureka Server
-
+    name: eureka
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://localhost:8888
 server:
-  port: 8761 # Eureka default port 8761 사용
+  port: 8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
-eureka:
-  client:
-    service-url:
-      defualtZone: http://13.209.198.194:8761/eureka/
-    register-with-eureka: false # 유레카 서버에 본인 서비스를 등록할 건지 여부
-    fetch-registry: false # 유레카 서버로부터 서비스 목록을 로컬 캐시에 저장할 건지 여부
-  server:
-    enable-self-preservation: true
+logging:
+  level:
+    org.hibernate.type: trace
+

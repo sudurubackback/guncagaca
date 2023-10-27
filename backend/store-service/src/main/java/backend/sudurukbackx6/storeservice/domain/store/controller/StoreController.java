@@ -24,27 +24,24 @@ public class StoreController {
     }
 
 
-    //TODO 이거 API통신으로 memberId 받아와야함.
     // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이
     @GetMapping("/cafe-list")
-    public List<NeerStoreResponse> cafeList(@RequestParam Long memberId, @RequestBody LocateRequest request){
-        return storeService.cafeList(memberId, request);
+    public List<NeerStoreResponse> cafeList( @RequestBody LocateRequest request){
+        return storeService.cafeList(request);
     }
 
     @GetMapping("/cafe/{cafe_id}")
-    public StoreResponse cafeDetail(@RequestBody Long memberId, @PathVariable Long cafe_id){
-        return storeService.cafeDetail(memberId, cafe_id);
+    public StoreResponse cafeDetail(@PathVariable Long cafe_id){
+        return storeService.cafeDetail(cafe_id);
     }
 
-    //TODO 이거 API통신으로 memberId 받아와야함.
     @GetMapping("/cafe/{cafe_id}/menu")
-    public List<StoreMenuResponse> cafeMenu (@RequestBody Long memberId, @PathVariable Long cafe_id){
+    public List<StoreMenuResponse> cafeMenu (@RequestHeader("Authorization") String token, @PathVariable Long cafe_id){
         return null;
     }
 
-    //TODO 이거 API통신으로 memberId 받아와야함
     @GetMapping("/cafe/{cafe_id}/menu/{index}")
-    public StoreMenuResponse cafeMenuDetail(@RequestBody Long memberId, @PathVariable Long cafe_id, @PathVariable Long index){
+    public StoreMenuResponse cafeMenuDetail(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id, @PathVariable Long index){
         return null;
     }
 
@@ -54,9 +51,8 @@ public class StoreController {
     //     return storeService.cafeDescription(memberId, cafe_id);
     // }
 
-    // TODO member Nickname을 넣어야하는데 어떻게 호출해서 넣을것인가; 닉네임은 중복이 가능한데 이거에 대해서 어떻게 진행하지?
     @GetMapping("/cafe/{cafe_id}/review")
-    public List<StoreReviewResponse> cafeReview(@RequestBody String nickname, @PathVariable Long cafe_id){
-        return storeService.cafeReview(nickname, cafe_id);
+    public List<StoreReviewResponse> cafeReview(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id){
+        return storeService.cafeReview(token, cafe_id);
     }
 }

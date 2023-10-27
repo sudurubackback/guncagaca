@@ -1,8 +1,12 @@
 package backend.sudurukbackx6.storeservice.domain.store.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
+import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,7 @@ public class StoreServiceImpl implements StoreService {
     private static final double EARTH_RADIUS = 6371.0;
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberServiceClient memberServiceClient;
 
     @Override
     public void cafeSave(StoreRequest request) {
@@ -53,7 +58,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request) {
+    public List<NeerStoreResponse> cafeList(LocateRequest request) {
         List<Store> allStores = storeRepository.findAll();
         List<NeerStoreResponse> nearCafes = new ArrayList<>();
 
@@ -62,7 +67,6 @@ public class StoreServiceImpl implements StoreService {
             Result result = getResult(store.getId());
 
             double c = getLocate(request, store);
-
             double distance = EARTH_RADIUS * c;
 
             if(distance <= 1.5) {  // If distance is less than or equal to 1.5km
@@ -73,11 +77,14 @@ public class StoreServiceImpl implements StoreService {
                     .starTotal(result.star_adding)
                     .reviewCount(result.reviewList.size())
                     .img(store.getImg())
+                    .distance(distance)
                     .build();
 
                 nearCafes.add(cafe);
             }
         }
+
+        // TODO: nearCafes에 들어있는 객체들이 distance 순으로 오름차순 정렬 필요
 
         return nearCafes;
     }
@@ -96,7 +103,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResponse cafeDetail(Long memberId, Long cafeId) {
+    public StoreResponse cafeDetail(Long cafeId) {
         Result result = getResult(cafeId);
 
         return StoreResponse.builder()
@@ -108,13 +115,14 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreMenuResponse> cafeMenu(Long memberId, Long cafeId) {
-
+    public List<StoreMenuResponse> cafeMenu(String token, Long cafeId) {
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         return null;
     }
 
     @Override
-    public StoreMenuResponse cafeMenuDetail(Long memberId, Long cafeId, Long menuIndex) {
+    public StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex) {
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         return null;
     }
 
@@ -134,14 +142,15 @@ public class StoreServiceImpl implements StoreService {
 
 
     @Override
-    public List<StoreReviewResponse> cafeReview(String nickname, Long cafeId) {
+    public List<StoreReviewResponse> cafeReview(String token, Long cafeId) {
         Result result = getResult(cafeId);
-
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         List<StoreReviewResponse> reviewResponses = new ArrayList<>();
 
         List<Review> reviewList = result.reviewList;
         for (Review review : reviewList) {
             StoreReviewResponse build = StoreReviewResponse.builder()
+                    .nickname(memberInfo.getNickname())
                     .star(review.getStar())
                     .content(review.getComment())
                     .build();
