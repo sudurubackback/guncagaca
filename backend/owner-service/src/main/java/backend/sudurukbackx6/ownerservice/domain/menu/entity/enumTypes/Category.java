@@ -1,5 +1,10 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public enum Category {
 
     COFFEE("커피"),
@@ -16,4 +21,7 @@ public enum Category {
         this.category = category;
     }
 
+    public String getKey() {
+        return category;
+    }
 }

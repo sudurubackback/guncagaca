@@ -15,7 +15,6 @@ import javax.persistence.Column;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "details_option")
 public class DetailsOptionEntity {
 
     @Id
