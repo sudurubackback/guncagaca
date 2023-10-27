@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../component/jjim_list.dart';
 
 
-class PointPage extends StatefulWidget {
-  @override
-  _PointState createState() => _PointState();
-}
-
-class _PointState extends State<PointPage> {
-
+class JjimScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Color(0xfff8e9d7),
       statusBarIconBrightness: Brightness.dark,
@@ -39,17 +36,17 @@ class _PointState extends State<PointPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.20, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.23, top: 20.0),
                   child: Row(
                     children: [
                       const Text(
-                        '포인트',
+                        '찜',
                         style: TextStyle(color: Colors.black, fontSize: 29.0),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(width: 10.0), // 이미지와 텍스트 사이 간격 조절
                       Image.asset(
-                        'assets/image/point.png', // 이미지 파일 경로 설정
+                        'assets/image/jjim.png', // 이미지 파일 경로 설정
                         width: 30.0, // 이미지 너비 설정
                         height: 30.0, // 이미지 높이 설정
                       ),
@@ -59,22 +56,26 @@ class _PointState extends State<PointPage> {
               ],
             ),
           ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(2.0),
+            child: Container(
+              color: Color(0xff9B5748),
+              height: 2.0,
+            ),
+          ),
         ),
       ),
-      body:SingleChildScrollView(
-        child: Column(
+      body: Column(
         children: [
-          Container(
-            color: Color(0xff9B5748),
-            height: 2.0,
+          Expanded(
+            child: JjimList(),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
         ],
       ),
-    ),
     );
-  }
 
+  }
 }
+
+
 

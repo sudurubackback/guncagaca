@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:guncagaca/mypage/jjim.dart';
+import 'package:guncagaca/jjim/jjim.dart';
+import 'package:guncagaca/jjim/view/jjim_screen.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
-import 'package:guncagaca/point/point.dart';
 import 'package:guncagaca/mypage/review.dart';
 import 'package:guncagaca/order/view/order_page.dart';
 
@@ -162,7 +162,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => JjimPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => JjimScreen()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
                           );
                         },
                         child: Image.asset(
@@ -175,7 +175,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => JjimPage()),
+                            MaterialPageRoute(builder: (context) => JjimScreen()),
                           );
                         },
                         child: const Text(
