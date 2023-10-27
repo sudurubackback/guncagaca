@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.memberservice.domain.member.service;
 
+import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.entity.Member;
@@ -11,11 +12,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
@@ -43,12 +46,9 @@ public class MemberService {
                 .build();
     }
 
-    public SignResponseDto refreshAccessToken(String token) {
-        String email = jwtProvider.extractEmail(token);
-        String refreshTokens = redisUtil.getRefreshTokens(email);
-        log.info(refreshTokens);
-
-        Member member = jwtProvider.extractUser(token);
+    public SignResponseDto refreshAccessToken(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
 
         TokenDto accessToken = jwtProvider.createAccessToken(member.getNickname(), member.getEmail());
         TokenDto refreshToken = jwtProvider.createRefreshToken(member.getNickname(), member.getEmail());
@@ -58,6 +58,30 @@ public class MemberService {
         return SignResponseDto.builder()
                 .accessToken(accessToken.getToken())
                 .refreshToken(refreshToken.getToken())
+                .build();
+    }
+
+    public MypageResponseDto getMypage(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+
+        return MypageResponseDto.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .build();
+    }
+
+    public MypageResponseDto changeNickname(String email, String nickname) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+
+        member.changeNickname(nickname);
+
+        return MypageResponseDto.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
                 .build();
     }
 }
