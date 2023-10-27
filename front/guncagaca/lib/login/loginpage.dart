@@ -78,6 +78,10 @@ class _LoginPageState extends State<LoginPage> {
       }
     } else {
       print('로그인 실패');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+      );
     }
   }
 

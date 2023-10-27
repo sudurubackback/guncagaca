@@ -5,6 +5,6 @@ import 'package:guncagaca/order/component/order_component.dart';
 class OrderView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return OrderComponent();
+    return OrderList();
   }
 }

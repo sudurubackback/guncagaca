@@ -20,6 +20,8 @@ class _NotiListState extends State<NotiList> {
 
   @override
   Widget build(BuildContext context) {
+    print('All points: ${widget.notifications}');
+
     return widget.notifications.isEmpty
         ? Center(
       child: Text(

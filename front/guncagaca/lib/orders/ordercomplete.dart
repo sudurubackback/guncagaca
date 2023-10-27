@@ -17,7 +17,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
 
   Widget _buildTitleText(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       child: Text(
         text,
         style: const TextStyle(
