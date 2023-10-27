@@ -5,8 +5,6 @@ spring:
     active: dev
   config:
     import: optional:configserver:http://localhost:8888
-server:
-  port: 8085
 
 management:
   endpoints:
@@ -17,4 +15,3 @@ management:
 logging:
   level:
     org.hibernate.type: trace
-        include: "*"

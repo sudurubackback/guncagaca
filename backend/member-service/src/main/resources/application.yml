@@ -5,22 +5,21 @@ spring:
     active: dev
   config:
     import: optional:configserver:http://localhost:8888
-server:
-  port: 8081
+
 management:
   endpoints:
     web:
       exposure:
         include: "*"
 
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+#eureka:
+#  instance:
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://127.0.0.1:8761/eureka
 
 logging:
   level:
