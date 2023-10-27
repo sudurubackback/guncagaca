@@ -25,6 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class StoreServiceImpl implements StoreService {
 
+    /**
+     * 메뉴 부분 기능 개발
+     * 카페 리스트 거리순으로 오름차순
+     * API 호출
+     * 인가를 어떻게 할지 -> 인가를 통해서 Bearer 처리를 하고, 이 다음 service 메서드를 진행한다.
+     */
+
     private static final double EARTH_RADIUS = 6371.0;
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
@@ -146,7 +153,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-
+    // cafe에 달린 review, review의 별점의 평균을 구하기 위함.
     private Result getResult(Long cafeId) {
         Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
 

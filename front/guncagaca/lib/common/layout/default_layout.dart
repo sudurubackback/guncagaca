@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../cart/models/cart_widget.dart';
+
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
   final Widget child;
@@ -18,13 +20,13 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor ?? Colors.white,
-      appBar: renderAppBar(),
+      appBar: renderAppBar(context),
       body: child,
       bottomNavigationBar: bottomNavigationBar,
     );
   }
 
-  AppBar? renderAppBar() {
+  AppBar? renderAppBar(BuildContext context) {
     if (title == null) {
       return null;
     } else {
@@ -33,8 +35,15 @@ class DefaultLayout extends StatelessWidget {
         elevation: 0,
         title: Text(
           title!,
+          style: TextStyle(
+            fontSize: 20.0,
+            color: Colors.black,
+          ),
         ),
         foregroundColor: Colors.black,
+        actions: <Widget>[
+          CartIconWidget(),
+        ],
       );
     }
   }

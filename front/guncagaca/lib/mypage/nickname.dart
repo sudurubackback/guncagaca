@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 
+
 class NicknamePage extends StatefulWidget {
   @override
   _NicknameState createState() => _NicknameState();
@@ -17,7 +18,11 @@ class _NicknameState extends State<NicknamePage> {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return Scaffold(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child : Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
         child: AppBar(
@@ -39,7 +44,7 @@ class _NicknameState extends State<NicknamePage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.18, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.14, top: 20.0),
                   child: const Center(
                     child: Text(
                     '닉네임 변경',
@@ -126,6 +131,7 @@ class _NicknameState extends State<NicknamePage> {
         ],
       ),
     ),
+      ),
     );
   }
 
