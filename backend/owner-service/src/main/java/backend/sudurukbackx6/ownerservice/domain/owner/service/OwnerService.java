@@ -34,7 +34,7 @@ public interface OwnerService {
     void changePassword(String token, UpdatePwReqDto updatePwReqDto);
 
     //8. accesstoen 갱신
-    String refreshAccessToken(String header);
+    SignInResDto refreshAccessToken(String header);
 
     Owners findByEmail(String email);
 

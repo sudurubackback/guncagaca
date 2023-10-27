@@ -118,7 +118,7 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public String refreshAccessToken(String header) {
+    public SignInResDto refreshAccessToken(String header) {
         //refresh token이 살아있는지 확인하고 accesstoken을 발급한다.
         String email = jwtProvider.extractEmail(header);
         String redisToken = redisUtil.getRefreshTokens(email);
@@ -127,12 +127,15 @@ public class OwnerServiceImpl implements OwnerService {
         }
         //이제 검증 완료! 그럼 새로 acceestoken발급 시작!
         TokenDto accessToken = jwtProvider.createAccessToken(email);
-//        TokenDto refreshToken = jwtProvider.createRefreshToken(email);
+        TokenDto refreshToken = jwtProvider.createRefreshToken(email);
 
         //refreshtoken redis저장 및 갱신
-//        redisUtil.saveRefreshToken();
+        redisUtil.saveRefreshToken(email, refreshToken.getToken());
 
-        return accessToken.getToken();
+        return SignInResDto.builder()
+                .accessToken(accessToken.getToken())
+                .refreshToken(refreshToken.getToken())
+                .build();
     }
 
 

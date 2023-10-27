@@ -100,10 +100,9 @@ public class OwnerController {
     public ResponseEntity<? extends BaseResponseBody> refreshAccessToken(@RequestHeader("Authorization") String token) throws IOException, InterruptedException, MessagingException {
 
         Map<String, String> map = new HashMap<>();
-        String newAccessToken = ownerService.refreshAccessToken(token);
-        map.put("access_token", newAccessToken);
+        SignInResDto newAccessToken = ownerService.refreshAccessToken(token);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "accesstoken갱신 성공", map));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "accesstoken갱신 성공", newAccessToken));
     }
 
 
