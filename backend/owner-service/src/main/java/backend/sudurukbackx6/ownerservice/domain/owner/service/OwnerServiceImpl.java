@@ -98,6 +98,13 @@ public class OwnerServiceImpl implements OwnerService {
                 .build();
     }
 
+    @Override
+    public void signOut(String header) {
+        //로그아웃
+        String email = jwtProvider.extractEmail(header);
+        redisUtil.deleteRefreshToken(email);
+    }
+
 
     @Override
     public void resetPassword(String email) throws MessagingException {
@@ -122,8 +129,9 @@ public class OwnerServiceImpl implements OwnerService {
         //refresh token이 살아있는지 확인하고 accesstoken을 발급한다.
         String email = jwtProvider.extractEmail(header);
         String redisToken = redisUtil.getRefreshTokens(email);
-        if(redisToken==null || redisToken.isEmpty() || redisUtil.isMatchToken(email, header)){
-            new BadRequestException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
+        System.out.println("redisToken : "+redisToken);
+        if(redisToken==null || redisToken.isEmpty() || !ㄴredisUtil.isMatchToken(email, header)){
+            throw new BadRequestException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
         }
         //이제 검증 완료! 그럼 새로 acceestoken발급 시작!
         TokenDto accessToken = jwtProvider.createAccessToken(email);

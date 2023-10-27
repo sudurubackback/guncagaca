@@ -45,6 +45,13 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "로그인 성공", signInResDto));
     }
 
+    @Operation(summary = "로그아웃", description = "로그아웃 \n\n")
+    @PostMapping("/signout")
+    public ResponseEntity<? extends BaseResponseBody> signout(@RequestHeader("Authorization") String header) throws IOException, InterruptedException {
+        ownerService.signOut(header);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "로그아웃 성공"));
+    }
+
     @Operation(summary = "이메일로 인증 코드 전송", description = "이메일 인증로 인증 코드 전송\n\n")
     @PostMapping("/sendcode")
     public ResponseEntity<? extends BaseResponseBody> sendCode(@RequestBody Map<String, String> map) throws IOException, InterruptedException, MessagingException {

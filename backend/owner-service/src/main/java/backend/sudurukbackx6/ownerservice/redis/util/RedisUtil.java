@@ -39,5 +39,11 @@ public class RedisUtil {
         return redisToken != null && redisToken.equals(header.substring(7));
     }
 
+    //redis에 있는 refreshtoken을 삭제해준다,
+    public void deleteRefreshToken(String email) {
+        System.out.println("deleteRefreshToken email = "+email);
+        redisTemplate.opsForHash().delete("email:token", email);
+    }
+
 
 }
