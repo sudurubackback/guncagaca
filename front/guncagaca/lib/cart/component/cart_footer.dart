@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:guncagaca/pay/pay.dart';
 
 import '../../common/const/colors.dart';
 import '../controller/cart_controller.dart';
@@ -85,7 +86,7 @@ class CartFooter extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 12.0),
               ),
               onPressed: () {
-                // 결제 로직
+                Get.to(TotalPayment());
               },
               child: Text("결제하기"),
             ),

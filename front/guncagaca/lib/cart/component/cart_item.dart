@@ -13,7 +13,7 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CartController controller = Get.find<CartController>();
+    CartController controller = Get.find<CartController>();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -27,7 +27,7 @@ class CartItem extends StatelessWidget {
                 icon: Icon(Icons.close),
                 onPressed: () {
                   // 장바구니에서 삭제
-                  CartController controller = Get.find<CartController>();
+                  controller = Get.find<CartController>();
                   controller.removeFromCart(item);
                 },
               ),
