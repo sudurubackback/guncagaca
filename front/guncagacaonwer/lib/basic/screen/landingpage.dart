@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:guncagacaonwer/login/screen/loginpage.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -7,6 +9,16 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+
+  @override
+  void initState() {
+    Timer(Duration(seconds: 2), (){
+      Get.offAll(LoginPage());
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
