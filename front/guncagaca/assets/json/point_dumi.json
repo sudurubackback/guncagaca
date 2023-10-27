@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "근카가카 구미인동점",
+    "img" : "https://mblogthumb-phinf.pstatic.net/MjAyMTEyMTRfODUg/MDAxNjM5NDgwMjE3MTM2.LtR9jiHgER2fi572LaPgIX5ZkVCcsc8ZXuNLWIeui4og.nn8VAWHT-92I-JHC5bQprfKFLC7He7_Zvb5GFqmo8V0g.JPEG.wlsl8869/IMG_7516.jpg?type=w800",
+    "point": 700
+  },
+  {
+    "id": 2,
+    "name": "커피비치 구미인동점",
+    "img" : "https://mblogthumb-phinf.pstatic.net/MjAyMTEyMTRfODUg/MDAxNjM5NDgwMjE3MTM2.LtR9jiHgER2fi572LaPgIX5ZkVCcsc8ZXuNLWIeui4og.nn8VAWHT-92I-JHC5bQprfKFLC7He7_Zvb5GFqmo8V0g.JPEG.wlsl8869/IMG_7516.jpg?type=w800",
+    "point": 1500
+  },
+  {
+    "id": 3,
+    "name": "Nerd 교동점",
+    "img" : "https://mblogthumb-phinf.pstatic.net/MjAyMTEyMTRfODUg/MDAxNjM5NDgwMjE3MTM2.LtR9jiHgER2fi572LaPgIX5ZkVCcsc8ZXuNLWIeui4og.nn8VAWHT-92I-JHC5bQprfKFLC7He7_Zvb5GFqmo8V0g.JPEG.wlsl8869/IMG_7516.jpg?type=w800",
+    "point": 0
+  }
+]

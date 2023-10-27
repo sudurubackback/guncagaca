@@ -3,7 +3,7 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/notification/view/noti_screen.dart';
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle; // 추가
+// import 'package:flutter/services.dart' show rootBundle; // 추가
 
 class NotiIconWidget extends StatelessWidget {
   @override

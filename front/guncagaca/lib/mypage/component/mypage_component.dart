@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:guncagaca/mypage/jjim.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
-import 'package:guncagaca/mypage/point.dart';
+import 'package:guncagaca/point/point.dart';
 import 'package:guncagaca/mypage/review.dart';
 import 'package:guncagaca/order/view/order_page.dart';
+
+import '../../point/view/point_screen.dart';
 
 class MypageComponent extends StatelessWidget {
 
@@ -202,7 +204,7 @@ class MypageComponent extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PointPage()), // PasswordChangePage로 이동
+                  MaterialPageRoute(builder: (context) => PointScreen()), // PasswordChangePage로 이동
                 );
               },
               child: const Center(
