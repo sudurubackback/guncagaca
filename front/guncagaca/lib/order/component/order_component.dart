@@ -69,40 +69,31 @@ class _OrderListState extends State<OrderList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          dummyOderss[index]['time_history'].toString(),
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    Expanded(
+                      child: Text(
+                        dummyOderss[index]['time_history'].toString(),
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(
-                            width:
-                            MediaQuery.of(context).size.width * 0.27),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: dummyOderss[index]['takeoutYn']
-                                  ? Colors.green
-                                  : Colors.red,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 2),
-                          child: Text(
-                            dummyOderss[index]['takeoutYn']
-                                ? '테이크아웃'
-                                : '매장',
-                            style: TextStyle(fontSize: 12.0),
-                          ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: dummyOderss[index]['takeoutYn']
+                              ? Colors.green
+                              : Colors.red,
+                          width: 1.0,
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                      child: Text(
+                        dummyOderss[index]['takeoutYn'] ? '테이크아웃' : '매장',
+                        style: TextStyle(fontSize: 12.0),
+                      ),
                     ),
                   ],
                 ),

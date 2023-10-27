@@ -9,7 +9,7 @@ import 'cart/controller/cart_controller.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");	// .env 파일 Path
-  KakaoSdk.init(nativeAppKey: dotenv.env['appkey']);
+  KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_SDK_NATIVE_KEY']);
   runApp(const MyApp());
 }
 
