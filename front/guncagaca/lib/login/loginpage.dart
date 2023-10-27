@@ -17,14 +17,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final mainViewModel = MainViewModel(KakaoLogin());
-
   late SharedPreferences prefs;
 
   @override
   void initState() {
     super.initState();
     _initSharedPreferences();
-    _tryAutoLogin();
+    // _tryAutoLogin();
   }
 
   // SharedPreferences 초기화
@@ -32,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     prefs = await SharedPreferences.getInstance();
   }
 
-  // 자동 로그인 시도
+  //자동 로그인 시도
   void _tryAutoLogin() {
     final accessToken = prefs.getString('accessToken');
     final refreshToken = prefs.getString('refreshToken');
@@ -42,6 +41,10 @@ class _LoginPageState extends State<LoginPage> {
       // 예: 서버로 토큰을 보내 인증 수행
       // 인증이 성공하면 홈 화면으로 이동
       // 실패하면 로그인 화면으로 유지
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+      );
     }
   }
 
@@ -58,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
         // 토큰들을 얻었을 경우, 저장하고 다음 화면으로 이동
         // tokens['access'] 및 tokens['refresh']를 SharedPreference에 저장
         // 저장 후 홈 화면으로 이동
+
         print('Access Token: ${tokens['accessToken']}');
         print('Refresh Token: ${tokens['refreshToken']}');
         prefs.setString('accessToken', tokens['accessToken']);
@@ -77,13 +81,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
-    final url = 'http://localhost:8080/api/member/sign'; // 서버 엔드포인트 URL로 수정
-    final response = await http.post(Uri.parse(url), body: {
-      'nickname': nickname,
-      'email': email,
-    });
+    final url = 'http://10.0.2.2:8080/api/member/sign'; // 서버 엔드포인트 URL로 수정
+    final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
+        },
+        body: jsonEncode({
+          'nickname': nickname,
+          'email': email,
+        }),
+    );
 
     if (response.statusCode == 200) {
+      print("200");
       final Map<String, dynamic> tokens = json.decode(response.body);
       return tokens;
     } else {
