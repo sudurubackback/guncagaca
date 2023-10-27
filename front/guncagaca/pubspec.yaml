@@ -45,18 +45,13 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   flutter_dotenv: ^5.1.0
 
-#  webview_flutter: ^4.4.1
+  webview_flutter: 4.0.7
 
   fluttertoast: ^8.2.1
 
-  flutter_dotenv: ^5.0.2
   uuid: ^3.0.7
 
-  bootpay: ^4.7.1
-  bootpay_bio: ^4.6.4
-
-dependency_overrides:
-  js: 0.6.4
+  bootpay: 4.7.1
 
 dev_dependencies:
   flutter_test:

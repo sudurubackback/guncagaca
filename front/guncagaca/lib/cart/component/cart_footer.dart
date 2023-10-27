@@ -86,7 +86,7 @@ class CartFooter extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 12.0),
               ),
               onPressed: () {
-                Get.to(TotalPayment());
+                PaymentService().bootpayTest(context);
               },
               child: Text("결제하기"),
             ),

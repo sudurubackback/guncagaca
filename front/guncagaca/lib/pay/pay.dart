@@ -17,23 +17,10 @@ import '../common/view/root_tab.dart';
 import '../order/models/order.dart';
 import '../order/view/order_view.dart';
 
-class TotalPayment extends StatelessWidget {
+class PaymentService {
 
   String androidApplicationId = dotenv.env['ANDROID_APPLICATION_ID']!;
   String iosApplicationId = dotenv.env['IOS_APPLICATION_ID']!;
-
-  @override
-  Widget build(context) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) => bootpayTest(context));
-
-    return const Scaffold(
-        body: SafeArea(
-            child: Center(
-                child: Text('결제를 진행 중입니다...', style: TextStyle(fontSize: 16.0))
-            )
-        )
-    );
-  }
 
   void bootpayTest(BuildContext context) {
 
@@ -118,7 +105,7 @@ class TotalPayment extends StatelessWidget {
     payload.iosApplicationId = iosApplicationId; // ios application id
 
 
-    // payload.pg = 'toss';
+    // payload.pg = '';
     // payload.method = '카드';
     // payload.methods = ['card', 'phone', 'vbank', 'bank', 'kakao'];
     payload.orderName = getOrderName(itemList);
