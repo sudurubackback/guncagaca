@@ -17,7 +17,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "options")
 public class OptionsEntity {
 
     @Id

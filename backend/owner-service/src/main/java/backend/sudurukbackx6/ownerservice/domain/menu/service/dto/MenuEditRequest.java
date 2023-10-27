@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class MenuRegisterRequest {
-	private Long cafeId;
+public class MenuEditRequest {
+	private String id;
 	private String name;
 	private int price;
 	private String img;
 	private Category category;
 	private List<OptionsEntity> optionsList;
-
 }
