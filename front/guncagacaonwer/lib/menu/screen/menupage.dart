@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/common/layout/default_layout.dart';
-import 'package:guncagacaonwer/menu/screen/menupage.dart';
+import 'package:guncagacaonwer/menu/screen/menuallpage.dart';
+import 'package:guncagacaonwer/menu/screen/menuregistrationpage.dart';
 // import 'package:guncagacaonwer/order/screen/orderpage.dart';
-import 'package:guncagacaonwer/store/screen/mypage.dart';
-import 'package:guncagacaonwer/store/screen/reviewpage.dart';
-import 'package:guncagacaonwer/store/screen/infopage.dart';
+import 'package:guncagacaonwer/store/screen/storepage.dart';
 
-class StorePage extends StatefulWidget {
+class MenuPage extends StatefulWidget {
   @override
-  _StorePageState createState() => _StorePageState();
+  _MenuPageState createState() => _MenuPageState();
 }
 
-class _StorePageState extends State<StorePage> {
+class _MenuPageState extends State<MenuPage> {
   int selectedButtonIndex = 0;
 
   Widget buildRightContent() {
     switch (selectedButtonIndex) {
       case 0:
-        return MyPageScreen();
-    // return Center(child: Text("나머지 영역의 내용"));
+        return MenuAllPage();
+    // return Center(child: Text("메뉴 전체보기의 내용"));
       case 1:
-        return ReviewPage();
-    // return Center(child: Text("나머지 영역의 내용"));
-      case 2:
-        return StoreInfoPage();
-    // return Center(child: Text("나머지 영역의 내용"));
+        return MenuRegistrationPage();
+    // return Center(child: Text("메뉴 신규 등록의 내용"));
       default:
         return Center(child: Text("나머지 영역의 내용"));
     }
@@ -38,10 +34,10 @@ class _StorePageState extends State<StorePage> {
         //   settings: RouteSettings(name: 'OrderPage'),
         // ));
         // break;
-      case 2:
+      case 1:
         Navigator.of(context).push(PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => MenuPage(),
-          settings: RouteSettings(name: 'MenuPage'),
+          pageBuilder: (context, animation, secondaryAnimation) => StorePage(),
+          settings: RouteSettings(name: 'StorePage'),
         ));
         break;
     // 추가적인 case문을 여기에 추가해서 다른 버튼에 대한 페이지로의 이동을 처리할 수 있습니다.
@@ -78,13 +74,14 @@ class _StorePageState extends State<StorePage> {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  navigateToPage(1);
+                },
                 child: Container(
                   width: 250,
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF828282)),
-                    color: Color(0xFF831800),
                   ),
                   child: Center(
                     child: Text(
@@ -98,13 +95,13 @@ class _StorePageState extends State<StorePage> {
               ),
               InkWell(
                 onTap: () {
-                  navigateToPage(2);
                 },
                 child: Container(
                   width: 250,
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF828282)),
+                    color: Color(0xFF831800),
                   ),
                   child: Center(
                     child: Text(
@@ -141,7 +138,7 @@ class _StorePageState extends State<StorePage> {
                     padding: EdgeInsets.all(4),
                     child: Center(
                       child: Text(
-                        "마이페이지",
+                        "메뉴 전체보기",
                         style: TextStyle(
                           fontSize: 24,
                         ),
@@ -163,29 +160,7 @@ class _StorePageState extends State<StorePage> {
                     padding: EdgeInsets.all(4),
                     child: Center(
                       child: Text(
-                        "리뷰 보기",
-                        style: TextStyle(
-                          fontSize: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 60),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedButtonIndex = 2;
-                    });
-                  },
-                  child: Container(
-                    width: 170,
-                    height: 50,
-                    color: selectedButtonIndex == 2 ? Color(0xFF831800) : Color(0xFF828282),
-                    padding: EdgeInsets.all(4),
-                    child: Center(
-                      child: Text(
-                        "가게 정보 수정",
+                        "메뉴 신규 등록",
                         style: TextStyle(
                           fontSize: 24,
                         ),
