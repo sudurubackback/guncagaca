@@ -24,8 +24,9 @@ public interface OwnerService {
     //4. 이메일 중복 확인
     boolean checkValidEmail(String email);
 
-    //5. 로그인
+    //5. 로그인 & 로그아웃
     SignInResDto signIn(SignInReqDto request);
+    void signOut(String header);
 
     //6. 비밀번호 초기화, 이메일로 초기화된 비밀번호 전송
     void resetPassword(String email) throws MessagingException;
