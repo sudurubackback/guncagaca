@@ -22,8 +22,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _initSharedPreferences();
-    // _tryAutoLogin();
+    _initSharedPreferences().then((_) {
+      _tryAutoLogin();
+    });
   }
 
   // SharedPreferences 초기화
@@ -35,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   void _tryAutoLogin() {
     final accessToken = prefs.getString('accessToken');
     final refreshToken = prefs.getString('refreshToken');
-
+    print(accessToken);
     if (accessToken != null && refreshToken != null) {
       // 저장된 토큰을 사용해 로그인 시도
       // 예: 서버로 토큰을 보내 인증 수행
