@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/store/models/review.dart';
+import '../component/review_list.dart';
 
 
-class JjimPage extends StatefulWidget {
-  @override
-  _JjimState createState() => _JjimState();
-}
-
-class _JjimState extends State<JjimPage> {
-
+class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Color(0xfff8e9d7),
       statusBarIconBrightness: Brightness.dark,
@@ -39,19 +37,13 @@ class _JjimState extends State<JjimPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.26, top: 20.0),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.23, top: 20.0),
                   child: Row(
                     children: [
                       const Text(
-                        '찜',
+                        '나의 리뷰',
                         style: TextStyle(color: Colors.black, fontSize: 29.0),
                         textAlign: TextAlign.center,
-                      ),
-                      SizedBox(width: 10.0), // 이미지와 텍스트 사이 간격 조절
-                      Image.asset(
-                        'assets/image/box.png', // 이미지 파일 경로 설정
-                        width: 30.0, // 이미지 너비 설정
-                        height: 30.0, // 이미지 높이 설정
                       ),
                     ],
                   ),
@@ -59,22 +51,26 @@ class _JjimState extends State<JjimPage> {
               ],
             ),
           ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(2.0),
+            child: Container(
+              color: Color(0xff9B5748),
+              height: 2.0,
+            ),
+          ),
         ),
       ),
-      body:SingleChildScrollView(
-        child: Column(
+      body: Column(
         children: [
-          Container(
-            color: Color(0xff9B5748),
-            height: 2.0,
+          Expanded(
+            child: ReviewList(),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
         ],
       ),
-    ),
     );
-  }
 
+  }
 }
+
+
 

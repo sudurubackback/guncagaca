@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/mypage/component/mypage_component.dart';
-import 'package:guncagaca/jjim/jjim.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
-import 'package:guncagaca/mypage/review.dart';
+import 'package:guncagaca/myreview/review.dart';
+import 'package:guncagaca/myreview/view/review_screen.dart';
 import 'package:guncagaca/point/view/point_screen.dart';
 
 import '../../jjim/view/jjim_screen.dart';
@@ -27,7 +27,7 @@ class MypageView extends StatelessWidget {
         onReviewTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ReviewPage()),
+            MaterialPageRoute(builder: (context) => ReviewScreen()),
           );
         },
         onJjimTap: () {
