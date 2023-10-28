@@ -1,5 +1,9 @@
 HELP.md
 .gradle
+<<<<<<< HEAD
+.yml
+=======
+>>>>>>> origin/backend-store
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -35,6 +39,8 @@ out/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
+=======
 
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,flutter,dart,xcode
@@ -527,3 +533,4 @@ Front/
 Frontend/
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
+>>>>>>> origin/backend-store

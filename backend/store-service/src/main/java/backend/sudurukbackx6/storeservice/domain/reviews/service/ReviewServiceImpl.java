@@ -3,6 +3,8 @@ package backend.sudurukbackx6.storeservice.domain.reviews.service;
 import java.util.List;
 import java.util.Objects;
 
+import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
+import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberServiceClient memberServiceClient;
 
     /**
      * 리뷰를 썼는지 확인 주문 메뉴에 해당하는 true값으로
@@ -31,14 +34,16 @@ public class ReviewServiceImpl implements ReviewService{
      */
 
     @Override
-    public void reviewSave(Long memberId, Long cafeId, ReviewSaveRequest request) {
+    public void reviewSave(String token, Long cafeId, ReviewSaveRequest request) {
         Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
 
+        log.info("memberInfo={}", memberInfo.getEmail());
         Review review = Review.builder()
                 .star(request.getStar())
                 .comment(request.getContent())
                 .store(store)
-                .memberId(memberId)
+                .memberId(memberInfo.getId())
                 .build();
 
         reviewRepository.save(review);
@@ -46,17 +51,12 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public void reviewDelete(Long memberId, Long cafeId, Long reviewId) {
-        Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
-
-        /**
-         * 이 아래 부분은 그냥 deleteById로 해도 되겠다.
-         */
-
-        List<Review> reviewList = store.getReview();
-
-        for (Review review : reviewList) {
-            if(Objects.equals(reviewId, review.getId())) reviewRepository.delete(review);
+    public void reviewDelete(String token, Long cafeId, Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        if(!Objects.equals(review.getMemberId(), memberInfo.getId())){
+            throw new RuntimeException();
         }
+        reviewRepository.deleteById(reviewId);
     }
 }
