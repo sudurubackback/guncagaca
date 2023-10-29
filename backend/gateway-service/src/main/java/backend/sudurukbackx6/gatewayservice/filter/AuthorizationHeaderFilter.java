@@ -24,9 +24,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private RedisUtil redisUtil;
-
     Environment env;
 
     public AuthorizationHeaderFilter(Environment env) {

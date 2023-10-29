@@ -13,5 +13,5 @@ public class OrderRequestDto {
 
     private String storeId;
 
-    private List<Menu> menus;
+    private List<MenuRequestDto> menus;
 }
