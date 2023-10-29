@@ -1,9 +1,10 @@
 package backend.sudurukbackx6.storeservice.domain.reviews.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import backend.sudurukbackx6.storeservice.domain.reviews.service.ReviewServiceImpl;
-import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.ReviewSaveRequest;
+import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,14 +16,18 @@ public class ReviewController {
 
     private final ReviewServiceImpl reviewService;
 
-    @PostMapping("/{cafe_id}/review/add")
-    public void save(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id, @RequestBody ReviewSaveRequest request){
+    // 리뷰 등록
+    @PostMapping("/{cafeId}/review/{orderId}")
+    public ReviewDto.Response saveReview(@RequestHeader("Authorization") String token, @PathVariable Long cafeId,
+                                         @PathVariable Long orderId, @RequestBody ReviewDto.Request request){
         log.info("token = {}", token);
-        reviewService.reviewSave(token, cafe_id, request);
+        return reviewService.reviewSave(token, cafeId, orderId, request);
     }
 
-    @DeleteMapping("/{cafe_id}/review/delete/{review_id}/{member_id}")
-    public void delete(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id, @PathVariable Long review_id){
-        reviewService.reviewDelete(token, cafe_id, review_id);
+    // 리뷰 삭제
+    @DeleteMapping("/{cafeId}/review/{reviewId}")
+    public ResponseEntity<String> deleteReview(@RequestHeader("Authorization") String token, @PathVariable Long cafeId, @PathVariable Long reviewId){
+        reviewService.reviewDelete(token, cafeId, reviewId);
+        return ResponseEntity.ok(String.format("%d번 리뷰 삭제", reviewId));
     }
 }
