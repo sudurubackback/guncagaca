@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class NeerStoreResponse {
+
+    private Long storeId;
     private String cafeName;
     private Double latitude;
     private Double longitude;

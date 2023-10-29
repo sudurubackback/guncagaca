@@ -28,10 +28,10 @@ public class Store {
     @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String name;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double latitude;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double longitude;
 
     @Column(nullable = false,columnDefinition = "VARCHAR(500)")
@@ -46,6 +46,8 @@ public class Store {
     @Column(nullable = false)
     private String description;
 
+    private Double starPoint;
+
     @OneToMany(mappedBy = "store")
     private List<Review> review;
 
@@ -59,6 +61,7 @@ public class Store {
         this.address = address;
         this.tel = tel;
         this.img = img;
+        this.starPoint = 0.0;
         this.description = description;
         this.review = review;
     }

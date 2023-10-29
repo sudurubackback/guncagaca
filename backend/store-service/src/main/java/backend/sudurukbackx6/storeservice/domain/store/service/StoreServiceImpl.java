@@ -1,14 +1,16 @@
 package backend.sudurukbackx6.storeservice.domain.store.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import backend.sudurukbackx6.storeservice.domain.likes.repository.LikeRepository;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
+import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
+import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +33,6 @@ public class StoreServiceImpl implements StoreService {
 
     /**
      * 메뉴 부분 기능 개발
-     * 카페 리스트 거리순으로 오름차순
      * API 호출
      * 인가를 어떻게 할지 -> 인가를 통해서 Bearer 처리를 하고, 이 다음 service 메서드를 진행한다.
      */
@@ -39,15 +40,38 @@ public class StoreServiceImpl implements StoreService {
     private static final double EARTH_RADIUS = 6371.0;
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
+    private final LikeRepository likeRepository;
+    private final StoreGeocoding storeGeocoding;
     private final MemberServiceClient memberServiceClient;
 
+    @Value("${ncp.clientId}")
+    private String id;
+
+    @Value("${ncp.secret}")
+    private String secret;
+
+    // 카페 등록
     @Override
     public void cafeSave(StoreRequest request) {
 
+        GeocodingDto.Response response = getCoordinate(request.getAddress());
+
+        String latitude = null;
+        String longitude = null;
+
+        // 죄표 추출
+        if (!response.getAddresses().isEmpty()) {
+            GeocodingDto.Response.Address firstAddress = response.getAddresses().get(0);
+            latitude = firstAddress.getX();
+            longitude = firstAddress.getY();
+        } // TODO : 좌표 없을 때 예외 처리
+        log.info("위도 : {}", latitude);
+        log.info("경도 : {}", longitude);
+
         Store store = Store.builder()
                 .name(request.getStoreName())
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
+                .latitude(Double.valueOf(latitude))
+                .longitude(Double.valueOf(longitude))
                 .address(request.getAddress())
                 .tel(request.getTel())
                 .img(request.getImg())
@@ -57,6 +81,7 @@ public class StoreServiceImpl implements StoreService {
         storeRepository.save(store);
     }
 
+    // 주변 카페 리스트
     @Override
     public List<NeerStoreResponse> cafeList(LocateRequest request) {
         List<Store> allStores = storeRepository.findAll();
@@ -64,18 +89,18 @@ public class StoreServiceImpl implements StoreService {
 
         for (Store store : allStores) {
 
-            Result result = getResult(store.getId());
-
+            // 거리 구하기
             double c = getLocate(request, store);
             double distance = EARTH_RADIUS * c;
 
             if(distance <= 1.5) {  // If distance is less than or equal to 1.5km
                 NeerStoreResponse cafe = NeerStoreResponse.builder()
+                        .storeId(store.getId())
                     .cafeName(store.getName())
                     .latitude(store.getLatitude())
                     .longitude(store.getLongitude())
-                    .starTotal(result.star_adding)
-                    .reviewCount(result.reviewList.size())
+                    .starTotal(store.getStarPoint())
+                    .reviewCount(store.getReview().size())
                     .img(store.getImg())
                     .distance(distance)
                     .build();
@@ -84,11 +109,15 @@ public class StoreServiceImpl implements StoreService {
             }
         }
 
-        // TODO: nearCafes에 들어있는 객체들이 distance 순으로 오름차순 정렬 필요
+        // 거리 기준 오름차순 정렬
+        List<NeerStoreResponse> sortedCafes = nearCafes.stream()
+                .sorted(Comparator.comparingDouble(NeerStoreResponse::getDistance))
+                .collect(Collectors.toList());
 
-        return nearCafes;
+        return sortedCafes;
     }
 
+    // 현재위치와 카페 사이 거리
     private static double getLocate(LocateRequest request, Store store) {
         double dLat = Math.toRadians(request.getLatitude() - store.getLatitude());
         double dLon = Math.toRadians(request.getLongitude() - store.getLongitude());

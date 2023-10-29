@@ -1,10 +1,14 @@
 package backend.sudurukbackx6.storeservice.domain.store.controller;
 
+import backend.sudurukbackx6.storeservice.domain.likes.service.LikeServiceImpl;
+import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
+import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.store.service.StoreServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,43 +20,51 @@ import java.util.List;
 public class StoreController {
 
     private final StoreServiceImpl storeService;
+    private final LikeServiceImpl likeService;
+    private final MemberServiceClient memberServiceClient;
 
 
+    // 카페 등록
     @PostMapping("/save")
     public void cafeSave(@RequestBody StoreRequest request){
         storeService.cafeSave(request);
     }
 
-
     // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이
+    // 주변 카페 리스트
     @GetMapping("/cafe-list")
     public List<NeerStoreResponse> cafeList( @RequestBody LocateRequest request){
         return storeService.cafeList(request);
     }
 
-    @GetMapping("/cafe/{cafe_id}")
-    public StoreResponse cafeDetail(@PathVariable Long cafe_id){
-        return storeService.cafeDetail(cafe_id);
+    // 카페 상세(소개)
+    @GetMapping("/cafe/{cafeId}")
+    public StoreResponse cafeDetail(@RequestHeader("Authorization") String token, @PathVariable Long cafeId){
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        // TODO token에서 memberId 추출해서 찜 여부 판단
+        return storeService.cafeDetail(memberInfo.getId(), cafeId);
     }
 
-    @GetMapping("/cafe/{cafe_id}/menu")
-    public List<StoreMenuResponse> cafeMenu (@RequestHeader("Authorization") String token, @PathVariable Long cafe_id){
-        return null;
+    // 카페 리뷰 조회
+    @GetMapping("/cafe/{cafeId}/review")
+    public List<StoreReviewResponse> cafeReview(@PathVariable Long cafeId){
+        return storeService.cafeReview(cafeId);
     }
 
-    @GetMapping("/cafe/{cafe_id}/menu/{index}")
-    public StoreMenuResponse cafeMenuDetail(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id, @PathVariable Long index){
-        return null;
+    // 찜 등록/해제
+    @PostMapping("/cafe/{cafeId}/like")
+    public ResponseEntity<String> cafeLike(@RequestHeader("Authorization") String token, @PathVariable Long cafeId) {
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        if (likeService.toggleLike(memberInfo.getId(), cafeId)) {
+            return ResponseEntity.ok(String.format("%d번 가게 찜 등록", cafeId));
+        } else {
+            return ResponseEntity.ok(String.format("%d번 가게 찜 해제", cafeId));
+        }
     }
 
-
-    // @GetMapping("/cafe/{cafe_id}/detail")
-    // public ShowStoreResponse cafeDescription(@RequestBody Long memberId, @PathVariable Long cafe_id){
-    //     return storeService.cafeDescription(memberId, cafe_id);
-    // }
-
-    @GetMapping("/cafe/{cafe_id}/review")
-    public List<StoreReviewResponse> cafeReview(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id){
-        return storeService.cafeReview(token, cafe_id);
-    }
+//    // 카페 메뉴 상세 몽고db에서 바로 가져오는게?
+//    @GetMapping("/cafe/{cafe_id}/menu/{index}")
+//    public StoreMenuResponse cafeMenuDetail(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id, @PathVariable Long index){
+//        return null;
+//    }
 }
