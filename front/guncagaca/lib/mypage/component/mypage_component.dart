@@ -107,8 +107,8 @@ class MypageComponent extends StatelessWidget {
                         },
                         child: Image.asset(
                           'assets/image/order.png',
-                          width: 80,
-                          height: 80,
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.1,
                         ),
                       ),
                       GestureDetector(
@@ -137,8 +137,8 @@ class MypageComponent extends StatelessWidget {
                         },
                         child: Image.asset(
                           'assets/image/review.png',
-                          width: 80,
-                          height: 80,
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.1,
                         ),
                       ),
                       GestureDetector(
@@ -167,8 +167,8 @@ class MypageComponent extends StatelessWidget {
                         },
                         child: Image.asset(
                           'assets/image/jjim.png',
-                          width: 80,
-                          height: 80,
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.1,
                         ),
                       ),
                       GestureDetector(

@@ -105,7 +105,7 @@ class _OrderListState extends State<OrderList> {
                           dummyOderss[index]['name'].toString() + ' ＞',
                           style: TextStyle(fontSize: 18.0),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.width * 0.02,),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
                         Text(
                           dummyOderss[index]['order_memu'][0].toString() +
                               " 외 " +
@@ -117,24 +117,41 @@ class _OrderListState extends State<OrderList> {
                           style: TextStyle(fontSize: 15.0),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.width * 0.02,),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: dummyOderss[index]['takeoutYn']
-                                  ? Colors.green
-                                  : Colors.red,
-                              width: 1.0,
+                        Row(
+                          children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: PRIMARY_COLOR,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
-                            borderRadius: BorderRadius.circular(5.0),
+                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                            child: Text(
+                              dummyOderss[index]['order_status'],
+                              style: TextStyle(fontSize: 12.0),
+                            ),
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                          child: Text(
-                            dummyOderss[index]['takeoutYn'] ? '테이크아웃' : '매장',
-                            style: TextStyle(fontSize: 12.0),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: dummyOderss[index]['takeoutYn']
+                                    ? Colors.green
+                                    : Colors.red,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                            child: Text(
+                              dummyOderss[index]['takeoutYn'] ? '테이크아웃' : '매장',
+                              style: TextStyle(fontSize: 12.0),
+                            ),
                           ),
+                          ],
                         ),
-
-
                       ],
                     ),
                   ],
@@ -147,7 +164,6 @@ class _OrderListState extends State<OrderList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: dummyOderss[index]['reviewYn']
                               ? ElevatedButton(
