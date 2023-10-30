@@ -18,16 +18,3 @@ management:
 logging:
   level:
     org.hibernate.type: trace
-
-springdoc:
-  api-docs:
-    path: /store-service/v3/api-docs
-  swagger-ui:
-    path: /store-service/swagger-ui.html
-
-openapi:
-  service:
-    title: 근카가카 - 가게 서비스 #title that you will want to display in the swagger ui
-    version: 1.0.0
-    # API Gateway 포트
-    url: http://k9d102.p.ssafy.io:8000
