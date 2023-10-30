@@ -24,9 +24,8 @@ class CartIconWidget extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DefaultLayout(
-                    title: '장바구니',
-                    child: CartScreen()),
+                builder: (context) =>
+                   CartScreen(),
               ),
             );
           },

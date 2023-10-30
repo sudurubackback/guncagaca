@@ -19,7 +19,6 @@ class CartList extends StatelessWidget {
 
       return Column(
         children: [
-          Divider(color: PRIMARY_COLOR, thickness: 4.0,),
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
@@ -27,7 +26,7 @@ class CartList extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Divider(color: PRIMARY_COLOR, thickness: 4.0,),
+          Divider(color: PRIMARY_COLOR, thickness: 2.0,),
           Expanded(
             child: ListView.builder(
               itemCount: cartController.cartItems.length,
@@ -35,7 +34,8 @@ class CartList extends StatelessWidget {
                 return Column(
                   children: [
                     CartItem(item: cartController.cartItems[index]),  // 여러분의 CartItem 위젯
-                    Divider(color: Colors.grey, thickness: 1.0,),  // 마지막 아이템에는 구분선을 추가하지 않음
+                    if (index != cartController.cartItems.length - 1)  // 마지막 아이템이 아닐 때만 구분선 추가
+                      Divider(color: Colors.grey, thickness: 1.0,),
                   ],
                 );
               },
@@ -46,4 +46,5 @@ class CartList extends StatelessWidget {
     });
   }
 }
+
 
