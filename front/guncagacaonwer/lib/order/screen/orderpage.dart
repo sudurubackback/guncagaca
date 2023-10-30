@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/common/layout/default_layout.dart';
 import 'package:guncagacaonwer/menu/screen/menupage.dart';
+import 'package:guncagacaonwer/order/screen/ordercompletepage.dart';
 import 'package:guncagacaonwer/order/screen/orderprocessingpage.dart';
+import 'package:guncagacaonwer/order/screen/ordertrackingpage.dart';
 import 'package:guncagacaonwer/order/screen/orderwaitingpage.dart';
 import 'package:guncagacaonwer/store/screen/storepage.dart';
 
@@ -22,11 +24,11 @@ class _OrderPageState extends State<OrderPage> {
         return OrderProcessingPage();
     // return Center(child: Text("메뉴 신규 등록의 내용"));
       case 2:
-      // return MenuRegistrationPage();
-        return Center(child: Text("메뉴 신규 등록의 내용"));
+        return OrderCompletePage();
+        // return Center(child: Text("메뉴 신규 등록의 내용"));
       case 3:
-      // return MenuRegistrationPage();
-        return Center(child: Text("메뉴 신규 등록의 내용"));
+        return OrderTrackingPage();
+        // return Center(child: Text("메뉴 신규 등록의 내용"));
       default:
         return Center(child: Text("나머지 영역의 내용"));
     }
