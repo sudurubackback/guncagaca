@@ -6,9 +6,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient("owner-service")
+@FeignClient(name="owner-service")
 public interface OwnerServiceClient {
 
-    @GetMapping("/menu/order")
+    @GetMapping("/api/ceo/menu/order")
     OrderIndexResponseDto getOrder(@RequestBody OrderRequestDto orderRequestDto);
 }

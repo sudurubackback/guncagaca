@@ -8,7 +8,7 @@ import backend.sudurukbackx6.ownerservice.domain.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/ceo")
+@RequestMapping("/api/ceo")
 @RequiredArgsConstructor
 public class MenuController {
 	private final MenuService menuService;
