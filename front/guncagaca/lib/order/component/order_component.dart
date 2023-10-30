@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/review_create/reviewcreate_view.dart';
 
+import '../../orderdetail/view/orderdetail_screen.dart';
+
 class OrderList extends StatefulWidget {
   @override
   _OrderListState createState() => _OrderListState();
@@ -101,9 +103,19 @@ class _OrderListState extends State<OrderList> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          dummyOderss[index]['name'].toString() + ' ＞',
-                          style: TextStyle(fontSize: 18.0),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OrderDetailScreen(id: dummyOderss[index]["id"]),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            dummyOderss[index]['name'].toString() + ' ＞',
+                            style: TextStyle(fontSize: 18.0),
+                          ),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
                         Text(
