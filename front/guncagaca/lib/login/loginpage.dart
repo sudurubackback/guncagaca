@@ -76,6 +76,10 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         print('토큰 얻기 실패');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+        );
       }
     } else {
       print('로그인 실패');

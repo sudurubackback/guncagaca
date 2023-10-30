@@ -24,6 +24,7 @@ class ReviewScreen extends StatelessWidget {
           automaticallyImplyLeading: false, // leading 영역을 자동으로 생성하지 않도록 설정
           flexibleSpace: Center(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 20.0, top: 20),
@@ -37,7 +38,7 @@ class ReviewScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.23, top: 20.0),
+                  padding: EdgeInsets.only( top: 20.0),
                   child: Row(
                     children: [
                       const Text(
@@ -46,6 +47,19 @@ class ReviewScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0, top: 20),
+                  child: Opacity(
+                    opacity: 0.0, // 아이콘을 투명하게 만듭니다.
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      iconSize: 30.0,
+                      color: Color(0xff000000),
+                      onPressed: () {
+                      },
+                    ),
                   ),
                 ),
               ],

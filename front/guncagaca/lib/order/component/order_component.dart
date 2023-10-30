@@ -79,22 +79,6 @@ class _OrderListState extends State<OrderList> {
                         ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: dummyOderss[index]['takeoutYn']
-                              ? Colors.green
-                              : Colors.red,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                      child: Text(
-                        dummyOderss[index]['takeoutYn'] ? '테이크아웃' : '매장',
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                    ),
                   ],
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
@@ -132,6 +116,24 @@ class _OrderListState extends State<OrderList> {
                               "원",
                           style: TextStyle(fontSize: 15.0),
                         ),
+                        SizedBox(height: MediaQuery.of(context).size.width * 0.02,),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: dummyOderss[index]['takeoutYn']
+                                  ? Colors.green
+                                  : Colors.red,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                          child: Text(
+                            dummyOderss[index]['takeoutYn'] ? '테이크아웃' : '매장',
+                            style: TextStyle(fontSize: 12.0),
+                          ),
+                        ),
+
 
                       ],
                     ),
