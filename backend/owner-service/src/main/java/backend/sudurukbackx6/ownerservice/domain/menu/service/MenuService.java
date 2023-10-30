@@ -1,6 +1,9 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.service;
 
 
+import backend.sudurukbackx6.ownerservice.domain.menu.entity.DetailsOptionEntity;
+import backend.sudurukbackx6.ownerservice.domain.menu.entity.OptionsEntity;
+import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -9,11 +12,14 @@ import org.springframework.stereotype.Service;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.MenuEntity;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.StatusMenu;
 import backend.sudurukbackx6.ownerservice.domain.menu.repository.MenuRepository;
-import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuEditRequest;
-import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuRegisterRequest;
 import backend.sudurukbackx6.ownerservice.domain.owner.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -64,5 +70,56 @@ public class MenuService {
 	public void deleteMenu(String id) {
 		MenuEntity menuEntity = menuRepository.findById(id).orElseThrow();
 		menuRepository.delete(menuEntity);
+	}
+
+	public OrderResponseDto getOrder(OrderRequestDto orderRequestDto) {
+		List<MenuRequestDto> menus = orderRequestDto.getMenus();
+
+		List<MenuResponseDto> menuList = new ArrayList<>();
+		for (MenuRequestDto menuRequestDto : menus) {
+			MenuEntity menuEntity = menuRepository.findById(menuRequestDto.getMenuId()).orElseThrow();
+
+			List<int[]> optionsList = new ArrayList<>();
+
+			// 옵션
+			List<OptionsEntity> optionsEntity = menuEntity.getOptionsEntity();
+			for (int i = 0; i<optionsEntity.size(); i++) {
+				for (OptionRequestDto optionRequestDto : menuRequestDto.getOptions()) {
+					if (optionsEntity.get(i).getId().equals(optionRequestDto.getOptionId())) {
+						// 인덱스 설정
+						int[] arr = new int[2];
+						arr[0] = i;
+
+						// 디테일 옵션
+						List<DetailsOptionEntity> detailsOptions = optionsEntity.get(i).getDetailsOptions();
+						for (int j = 0; j<detailsOptions.size(); j++) {
+							for (DetailOptionRequestDto detailOptionRequestDto : optionRequestDto.getDetailsOptions()) {
+								if (detailsOptions.get(j).getId().equals(detailOptionRequestDto.getDetailOptionId())) {
+									arr[1] = j;
+									optionsList.add(arr);
+								}
+							}
+						}
+					}
+				}
+			}
+			MenuResponseDto menuResponseDto = MenuResponseDto.builder()
+					.menuId(menuRequestDto.getMenuId())
+					.name(menuRequestDto.getName())
+					.price(menuRequestDto.getPrice())
+					.totalPrice(menuRequestDto.getTotalPrice())
+					.img(menuRequestDto.getImg())
+					.category(menuRequestDto.getCategory())
+					.options(optionsList)
+					.build();
+			menuList.add(menuResponseDto);
+		}
+
+		return OrderResponseDto.builder()
+				.memberId(orderRequestDto.getMemberId())
+				.storeId(orderRequestDto.getStoreId())
+				.orderPrice(orderRequestDto.getOrderPrice())
+				.menus(menuList)
+				.build();
 	}
 }
