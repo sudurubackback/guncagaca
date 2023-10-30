@@ -7,20 +7,13 @@ spring:
     import: optional:configserver:http://localhost:8888
 server:
   port: 8085
-<<<<<<< HEAD
-=======
-
->>>>>>> eabcdafdd40069617c3aa999259e234b55dc2429
 management:
   endpoints:
     web:
       exposure:
-<<<<<<< HEAD
         include: "*"
 
 logging:
   level:
     org.hibernate.type: trace
-=======
-        include: "*"
->>>>>>> eabcdafdd40069617c3aa999259e234b55dc2429
+    include: "*"
