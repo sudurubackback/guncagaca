@@ -79,6 +79,6 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://13.209.198.194:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost#euraka client 등록 설정

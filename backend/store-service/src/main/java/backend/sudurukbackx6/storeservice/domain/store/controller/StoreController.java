@@ -33,7 +33,10 @@ public class StoreController {
     // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이
     // 주변 카페 리스트
     @GetMapping("/cafe-list")
-    public List<NeerStoreResponse> cafeList( @RequestBody LocateRequest request){
+    public List<NeerStoreResponse> cafeList(@RequestParam("lat") Double latitude, @RequestParam("lon") Double longitude){
+        LocateRequest request = new LocateRequest();
+        request.setLatitude(latitude);
+        request.setLongitude(longitude);
         return storeService.cafeList(request);
     }
 

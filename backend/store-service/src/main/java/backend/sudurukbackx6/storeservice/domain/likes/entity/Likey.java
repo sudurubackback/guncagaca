@@ -1,6 +1,5 @@
 package backend.sudurukbackx6.storeservice.domain.likes.entity;
 
-import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +8,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class Likey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +20,7 @@ public class Like {
     private Long storeId;
 
     @Builder
-    public Like(Long id, Long memberId, Long storeId) {
+    public Likey(Long id, Long memberId, Long storeId) {
         this.id = id;
         this.memberId = memberId;
         this.storeId = storeId;
