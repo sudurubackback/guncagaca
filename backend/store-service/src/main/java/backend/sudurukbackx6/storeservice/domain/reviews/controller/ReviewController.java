@@ -20,13 +20,13 @@ public class ReviewController {
 
     private final ReviewServiceImpl reviewService;
 
-    @PostMapping("/{cafe_id}/review/add")
-    public void save(@PathVariable Long cafe_id, @RequestBody ReviewSaveRequest request){
-        reviewService.reviewSave(cafe_id, request);
+    @PostMapping("/{cafe_id}/review/add/{member_id}")
+    public void save(@PathVariable Long member_id, @PathVariable Long cafe_id, @RequestBody ReviewSaveRequest request){
+        reviewService.reviewSave(member_id, cafe_id, request);
     }
 
-    @DeleteMapping("/{cafe_id}/review/delete/{review_id}")
-    public void delete(@PathVariable Long cafe_id, @PathVariable Long review_id){
-        reviewService.reviewDelete(cafe_id, review_id);
+    @DeleteMapping("/{cafe_id}/review/delete/{review_id}/{member_id}")
+    public void delete(@PathVariable Long member_id, @PathVariable Long cafe_id, @PathVariable Long review_id){
+        reviewService.reviewDelete(member_id, cafe_id, review_id);
     }
 }

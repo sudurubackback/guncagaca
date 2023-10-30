@@ -4,9 +4,8 @@ spring:
   profiles:
     active: dev
   config:
-    import: optional:configserver:http://localhost:8088
-server:
-  port: 8086
+    import: optional:configserver:http://localhost:8888
+
 management:
   endpoints:
     web:
