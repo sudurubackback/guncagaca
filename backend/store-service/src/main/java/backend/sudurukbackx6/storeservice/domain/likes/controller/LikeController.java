@@ -21,7 +21,7 @@ public class LikeController {
     private final MemberServiceClient memberServiceClient;
 
     // 멤버가 찜한 목록 조회
-    @GetMapping("/like-store")
+    @GetMapping("/mypage/like-store")
     public ResponseEntity<List<Store>> LikedStoresByMemberId(@RequestHeader("Authorization") String token, @PathVariable Long memberId){
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         return ResponseEntity.ok(likeService.getLikedStoresByMemberId(memberInfo.getId()));
