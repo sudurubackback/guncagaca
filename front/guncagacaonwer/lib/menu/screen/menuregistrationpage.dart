@@ -32,6 +32,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
 
   void _addItem() {
     setState(() {
+      int index = itemWidgets.length;
       itemWidgets.add(Row(
         children: [
           Expanded(
@@ -59,9 +60,8 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
             icon: Icon(Icons.clear),
             onPressed: () {
               setState(() {
-                itemWidgets.removeAt(itemWidgets.length - 1);
-                // 해당 항목을 optionList에서도 제거
-                optionList.removeAt(optionList.length - 1);
+                itemWidgets.removeAt(index); // 해당 항목을 삭제
+                optionList.removeAt(index); // 해당 항목의 데이터도 삭제
               });
             },
           ),

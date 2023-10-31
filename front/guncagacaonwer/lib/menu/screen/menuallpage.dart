@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guncagacaonwer/menu/screen/menueditpage.dart';
 
 class MenuAllPage extends StatefulWidget {
   @override
@@ -14,9 +15,9 @@ class _MenuAllPageState extends State<MenuAllPage> {
       'image': 'assets/americano.jpg',
       'category': '커피',
       'options': {
-        '샷추가': ['1샷추가', '2샷추가', '3샷추가'],
-        '얼음추가': ['얼음 조금', '얼음 보통', '얼음 많이'],
-        '시럽추가': ['시럽 1', '시럽 2', '시럽 3'],
+        '샷추가': '500',
+        '얼음추가': '0',
+        '시럽추가': '0',
       },
       'price': '4,500원',
     },
@@ -25,8 +26,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
       'image': 'assets/cafelatte.jpg',
       'category': '커피',
       'options': {
-        '샷추가': ['1샷추가', '2샷추가', '3샷추가'],
-        '시럽추가': ['시럽 1', '시럽 2', '시럽 3'],
+        '샷추가': '500',
+        '시럽추가': '0',
       },
       'price': '5,000원',
     },
@@ -35,12 +36,11 @@ class _MenuAllPageState extends State<MenuAllPage> {
       'image': 'assets/chocochipfrappuccino.jpg',
       'category': '논커피',
       'options': {
-        '얼음추가': ['얼음 조금', '얼음 보통', '얼음 많이'],
-        '휘핑크림추가': ['휘핑크림 1', '휘핑크림 2', '휘핑크림 3'],
+        '얼음추가': '0',
+        '휘핑크림추가': '500',
       },
       'price': '6,000원',
     },
-    // 나머지 박스 정보도 추가
   ];
 
   // void _editMenuItem(Map<String, dynamic> menuItem) {
@@ -104,7 +104,14 @@ class _MenuAllPageState extends State<MenuAllPage> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // _editMenuItem(box);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MenuEditPage(menuData: box); // MenuEditPage는 메뉴 수정 페이지의 위젯입니다.
+                            },
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Color(0xFF038527),
@@ -113,7 +120,37 @@ class _MenuAllPageState extends State<MenuAllPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // "버튼 2"을 눌렀을 때의 동작 추가
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('삭제 확인'),
+                              content: Text('정말 삭제하시겠습니까?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    // "삭제" 버튼을 누를 때 해당 항목을 리스트에서 제거하고 화면을 업데이트
+                                    setState(() {
+                                      // 리스트에서 항목 삭제하는 코드 (여기서는 예시로 index를 이용)
+                                      int index = boxes.indexOf(box); // order는 삭제하려는 항목
+                                      if (index != -1) {
+                                        boxes.removeAt(index);
+                                      }
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('삭제'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('취소'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Color(0xFFFF5E5E), // 버튼 1의 배경색을 빨간색으로 설정
