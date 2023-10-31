@@ -17,4 +17,5 @@ public class StoreResponse {
     private int reviewCount;
     private String img;
     private boolean isLiked;
+    private String description;
 }

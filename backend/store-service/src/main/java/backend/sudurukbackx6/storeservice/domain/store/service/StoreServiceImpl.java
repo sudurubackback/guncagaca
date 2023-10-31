@@ -93,7 +93,8 @@ public class StoreServiceImpl implements StoreService {
             double c = getLocate(request, store);
             double distance = EARTH_RADIUS * c;
 
-            if(distance <= 1.5) {  // If distance is less than or equal to 1.5km
+
+            if(distance > 0) {  // If distance is less than or equal to 1.5km
                 NeerStoreResponse cafe = NeerStoreResponse.builder()
                         .storeId(store.getId())
                     .cafeName(store.getName())
@@ -146,6 +147,7 @@ public class StoreServiceImpl implements StoreService {
                 .reviewCount(store.getReview().size())
                 .img(store.getImg())
                 .isLiked(isLiked)
+                .description(store.getDescription())
                 .build();
     }
 

@@ -32,7 +32,7 @@ public class StoreController {
 
     // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이
     // 주변 카페 리스트
-    @GetMapping("/cafe-list")
+    @GetMapping("/list")
     public List<NeerStoreResponse> cafeList(@RequestParam("lat") Double latitude, @RequestParam("lon") Double longitude){
         LocateRequest request = new LocateRequest();
         request.setLatitude(latitude);
@@ -41,7 +41,7 @@ public class StoreController {
     }
 
     // 카페 상세(소개)
-    @GetMapping("/cafe/{cafeId}")
+    @GetMapping("/{cafeId}")
     public StoreResponse cafeDetail(@RequestHeader("Authorization") String token, @PathVariable Long cafeId){
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         // TODO token에서 memberId 추출해서 찜 여부 판단
@@ -49,13 +49,13 @@ public class StoreController {
     }
 
     // 카페 리뷰 조회
-    @GetMapping("/cafe/{cafeId}/review")
+    @GetMapping("/{cafeId}/review")
     public List<StoreReviewResponse> cafeReview(@PathVariable Long cafeId){
         return storeService.cafeReview(cafeId);
     }
 
     // 찜 등록/해제
-    @PostMapping("/cafe/{cafeId}/like")
+    @PostMapping("/{cafeId}/like")
     public ResponseEntity<String> cafeLike(@RequestHeader("Authorization") String token, @PathVariable Long cafeId) {
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         if (likeService.toggleLike(memberInfo.getId(), cafeId)) {
