@@ -25,9 +25,11 @@ public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
 
     @Override
-    public void pointPlus(Long memberId, Long cafeId, PointSaveRequest request) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("멤버 정보가 존재하지 않습니다."));
+    public void pointPlus(String email, Long cafeId, PointSaveRequest request) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+
+        Long memberId = member.getId();
 
         Point point = Point.builder()
                 .point(request.getPoint())
@@ -57,9 +59,11 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    public void pointMinus(Long memberId, Long cafeId, PointSaveRequest request) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("멤버 정보가 존재하지 않습니다."));
+    public void pointMinus(String email, Long cafeId, PointSaveRequest request) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+
+        Long memberId = member.getId();
 
         Point point = Point.builder()
                 .point(request.getPoint())

@@ -14,14 +14,14 @@ public class PointController {
 
     private final PointServiceImpl pointService;
 
-    @PostMapping("/{member_id}/plus/{cafe_id}")
-    public void plus(@PathVariable Long member_id, @PathVariable Long cafe_id, @RequestBody PointSaveRequest request){
-        pointService.pointPlus(member_id, cafe_id, request);
+    @PostMapping("/plus/{cafe_id}")
+    public void plus(@RequestHeader("Email") String email, @PathVariable Long cafe_id, @RequestBody PointSaveRequest request){
+        pointService.pointPlus(email, cafe_id, request);
     }
 
-    @PostMapping("/{member_id}/minus/{cafe_id}")
-    public void minus(@PathVariable Long member_id, @PathVariable Long cafe_id, @RequestBody PointSaveRequest request){
-        pointService.pointMinus(member_id, cafe_id, request);
+    @PostMapping("/minus/{cafe_id}")
+    public void minus(@RequestHeader("Email") String email, @PathVariable Long cafe_id, @RequestBody PointSaveRequest request){
+        pointService.pointMinus(email, cafe_id, request);
     }
 
 }
