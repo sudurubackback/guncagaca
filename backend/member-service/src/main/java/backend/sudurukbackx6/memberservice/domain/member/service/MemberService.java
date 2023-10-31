@@ -2,10 +2,7 @@ package backend.sudurukbackx6.memberservice.domain.member.service;
 
 import backend.sudurukbackx6.memberservice.domain.member.client.StoreFeignClient;
 import backend.sudurukbackx6.memberservice.domain.member.client.response.StoreResponse;
-import backend.sudurukbackx6.memberservice.domain.member.dto.MyPointsResponse;
-import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
-import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
-import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
+import backend.sudurukbackx6.memberservice.domain.member.dto.*;
 import backend.sudurukbackx6.memberservice.domain.member.entity.Member;
 import backend.sudurukbackx6.memberservice.domain.member.repository.MemberRepository;
 import backend.sudurukbackx6.memberservice.domain.points.entity.Point;
@@ -71,24 +68,24 @@ public class MemberService {
                 .build();
     }
 
-    public MypageResponseDto getMypage(String email) {
+    public MypageResponse getMypage(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
 
-        return MypageResponseDto.builder()
+        return MypageResponse.builder()
                 .memberId(member.getId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .build();
     }
 
-    public MypageResponseDto changeNickname(String email, String nickname) {
+    public MypageResponse changeNickname(String email, String nickname) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
 
         member.changeNickname(nickname);
 
-        return MypageResponseDto.builder()
+        return MypageResponse.builder()
                 .memberId(member.getId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
@@ -134,5 +131,28 @@ public class MemberService {
         }
 
         return myPointsResponses;
+    }
+
+    public PointStoreResponse pointStore(String email, Long cafeId) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+
+        // 특정 카페 ID의 포인트 정보 가져오기
+        Optional<Point> optionalPoint = member.getPoints().stream()
+                .filter(p -> cafeId.equals(p.getStoreId()))
+                .findFirst();
+
+        if (optionalPoint.isPresent()) {
+            Point point = optionalPoint.get();
+
+            // pointStoreResponse를 생성해서 정보 설정
+            PointStoreResponse pointStoreResponse = new PointStoreResponse();
+            pointStoreResponse.setPoint(point.getPoint());
+            pointStoreResponse.setStoreId(point.getStoreId());
+
+            return pointStoreResponse;
+        } else {
+            throw new IllegalArgumentException("해당 멤버의 카페 포인트 정보가 없습니다.");
+        }
     }
 }
