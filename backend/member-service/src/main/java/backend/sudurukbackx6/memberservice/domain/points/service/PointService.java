@@ -5,5 +5,6 @@ import backend.sudurukbackx6.memberservice.domain.points.service.dto.PointSaveRe
 
 public interface PointService {
     void pointPlus(Long memberId, Long cafeId, PointSaveRequest request);
+    void pointMinus(Long memberId, Long cafeId, PointSaveRequest request);
 
 }

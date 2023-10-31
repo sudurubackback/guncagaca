@@ -39,9 +39,10 @@ public class PointServiceImpl implements PointService {
 
         // 해당 멤버의 포인트 업데이트
         int currentPoints = member.getPoints().stream()
-                .filter(p -> Objects.equals(p.getStoreId(), cafeId)) // 해당 카페의 포인트만 선택
+                .filter(p -> Objects.equals(p.getStoreId(), cafeId))
                 .map(Point::getPoint)
-                .reduce(0, Integer::sum); // 해당 카페의 현재 포인트 합계 계산
+                .findFirst()
+                .orElse(0);
 
         int newPoints = currentPoints + request.getPoint(); // 새로운 포인트 계산
 
@@ -52,6 +53,44 @@ public class PointServiceImpl implements PointService {
         if (!cafePoints.isEmpty()) {
             cafePoints.get(0).setPoint(newPoints);
             pointRepository.save(cafePoints.get(0));
+        }
+    }
+
+    @Override
+    public void pointMinus(Long memberId, Long cafeId, PointSaveRequest request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("멤버 정보가 존재하지 않습니다."));
+
+        Point point = Point.builder()
+                .point(request.getPoint())
+                .member(member)
+                .storeId(cafeId)
+                .build();
+
+        pointRepository.save(point);
+
+        // 해당 멤버의 포인트 업데이트
+        int currentPoints = member.getPoints().stream()
+                .filter(p -> Objects.equals(p.getStoreId(), cafeId))
+                .map(Point::getPoint)
+                .findFirst()
+                .orElse(0);
+
+        int newPoints = currentPoints - request.getPoint(); // 새로운 포인트 계산
+
+        if (newPoints < 0) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        else{
+            // 해당 카페의 포인트 업데이트
+            List<Point> cafePoints = member.getPoints().stream()
+                    .filter(p -> Objects.equals(p.getStoreId(), cafeId))
+                    .collect(Collectors.toList());
+            if (!cafePoints.isEmpty()) {
+                cafePoints.get(0).setPoint(newPoints);
+                pointRepository.save(cafePoints.get(0));
+
+            }
         }
     }
 }
