@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/store")
+@RequestMapping("/api/store")
 @RequiredArgsConstructor
 public class StoreController {
 
