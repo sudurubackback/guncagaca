@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.storeservice.domain.controller;
+package backend.sudurukbackx6.storeservice.domain.likes.controller;
 
 import backend.sudurukbackx6.storeservice.domain.likes.service.LikeServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;

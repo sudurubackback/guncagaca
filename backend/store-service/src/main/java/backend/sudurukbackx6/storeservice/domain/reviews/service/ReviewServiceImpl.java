@@ -1,9 +1,13 @@
 package backend.sudurukbackx6.storeservice.domain.reviews.service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
+import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.MyReviewResponse;
 import backend.sudurukbackx6.storeservice.domain.store.service.StoreServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,4 +69,24 @@ public class ReviewServiceImpl implements ReviewService{
         }
         reviewRepository.deleteById(reviewId);
     }
+
+    @Override
+    public List<MyReviewResponse> getReviewByMemberId(Long memberId) {
+        List<Review> reviews = reviewRepository.getReviewByMemberId(memberId);
+
+        return reviews.stream().map(review -> {
+            MyReviewResponse response = new MyReviewResponse();
+            response.setStar(review.getStar());
+            response.setComment(review.getComment());
+
+            // 가게 정보 설정
+            Store store = review.getStore();
+            if (store != null) {
+                response.setStore(storeRepository.findById(store.getId()).orElse(null));
+            }
+
+            return response;
+        }).collect(Collectors.toList());
+    }
+
 }
