@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.memberservice.domain.points.client.response;
+package backend.sudurukbackx6.memberservice.domain.member.client.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

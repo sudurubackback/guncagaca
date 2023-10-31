@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.memberservice.config;
+package backend.sudurukbackx6.memberservice.global.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;
