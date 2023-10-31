@@ -104,6 +104,7 @@ public class StoreServiceImpl implements StoreService {
                     .reviewCount(store.getReview().size())
                     .img(store.getImg())
                     .distance(distance)
+                        .address(store.getAddress())
                     .build();
 
                 nearCafes.add(cafe);

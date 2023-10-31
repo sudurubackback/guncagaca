@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.likes.entity;
 
+import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,12 +18,13 @@ public class Likey {
 
     private Long memberId;
 
-    private Long storeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Store store;
 
     @Builder
-    public Likey(Long id, Long memberId, Long storeId) {
+    public Likey(Long id, Long memberId, Store store) {
         this.id = id;
         this.memberId = memberId;
-        this.storeId = storeId;
+        this.store = store;
     }
 }

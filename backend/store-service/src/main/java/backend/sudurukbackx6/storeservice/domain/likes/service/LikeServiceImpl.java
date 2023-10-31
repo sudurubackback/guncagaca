@@ -2,9 +2,15 @@ package backend.sudurukbackx6.storeservice.domain.likes.service;
 
 import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.likes.repository.LikeRepository;
+import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
+import backend.sudurukbackx6.storeservice.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -12,11 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeServiceImpl implements LikeService{
 
     private final LikeRepository likeRepository;
+    private final StoreRepository storeRepository;
 
     // 찜 토글
     @Override
     public boolean toggleLike(Long memberId, Long storeId) {
         boolean exists = likeRepository.existsByMemberIdAndStoreId(memberId, storeId);
+
+        Optional<Store> optionalStore = storeRepository.findById(storeId);
+
+        Store store = optionalStore.get();
 
         if (exists) {
             // 이미 찜한 상태라면 찜 해제
@@ -28,10 +39,19 @@ public class LikeServiceImpl implements LikeService{
             // 찜이 없다면 새로 찜 등록
             Likey likey = Likey.builder()
                     .memberId(memberId)
-                    .storeId(storeId)
+                    .store(store)
                     .build();
             likeRepository.save(likey);
             return true;
         }
+    }
+
+    @Override
+    public List<Store> getLikedStoresByMemberId(Long memberId) {
+        List<Likey> likeys = likeRepository.findByMemberId(memberId);
+
+        return likeys.stream()
+                .map(Likey::getStore)
+                .collect(Collectors.toList());
     }
 }

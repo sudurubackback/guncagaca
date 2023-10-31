@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -50,6 +51,9 @@ public class Store {
 
     @OneToMany(mappedBy = "store")
     private List<Review> review;
+
+    @OneToMany(mappedBy = "store")
+    private List<Likey> likeys;
 
     @Builder
     public Store(Long id, String name, Double latitude, Double longitude, String address, String tel, String img,

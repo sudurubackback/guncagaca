@@ -19,4 +19,5 @@ public class NeerStoreResponse {
     private int reviewCount;
     private String img;
     private Double distance;
+    private String address;
 }
