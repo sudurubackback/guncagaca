@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="owner-service")
+@FeignClient(url = "k9d102.p.ssafy.io:8086/", name="owner-service")
 public interface OwnerServiceClient {
 
     @GetMapping("/api/ceo/menu/order")
