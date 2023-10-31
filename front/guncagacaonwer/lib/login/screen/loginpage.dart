@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/login/screen/passwordrecoverypage.dart';
-import 'package:guncagacaonwer/login/screen/signpage.dart';
+import 'package:guncagacaonwer/basic/screen/signpage.dart';
 import 'package:guncagacaonwer/store/screen/storepage.dart';
 
 
