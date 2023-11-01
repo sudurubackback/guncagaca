@@ -9,9 +9,14 @@ class DefaultLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: MediaQuery.of(context).size.height * 0.04,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.08 * (deviceHeight / standardDeviceHeight),
         backgroundColor: APPBAR_COLOR1,
         title: Text(
           "근카가카",

@@ -85,31 +85,33 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-                height: 30
-            ),
             Container(
-              margin: EdgeInsets.only(left: 150),
-              height: 40,
+              margin: EdgeInsets.only(left: 60 * (deviceWidth / standardDeviceWidth)),
+              height: 22 * (deviceHeight / standardDeviceHeight),
               child: Row(
                 children: [
                   Text(
                     "메뉴명",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
                     ),
                   ),
-                  SizedBox(width: 72),
+                  SizedBox(width: 30 * (deviceWidth / standardDeviceWidth)),
                   Container(
                     margin: EdgeInsets.only(top: 10),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                       borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                     ),
-                    width: 500, // 가로 길이 설정
+                    width: 200 * (deviceWidth / standardDeviceWidth), // 가로 길이 설정
                     child: TextField(
                       controller: textController1,
                       decoration: InputDecoration(
@@ -121,27 +123,27 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 7 * (deviceHeight / standardDeviceHeight),
             ),
             Container(
-              margin: EdgeInsets.only(left: 150),
-              height: 40,
+              margin: EdgeInsets.only(left: 60 * (deviceWidth / standardDeviceWidth)),
+              height: 22 * (deviceHeight / standardDeviceHeight),
               child: Row(
                 children: [
                   Text(
                     "기본 가격",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
                     ),
                   ),
-                  SizedBox(width: 45),
+                  SizedBox(width: 19 * (deviceWidth / standardDeviceWidth)),
                   Container(
                     margin: EdgeInsets.only(top: 10),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                       borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                     ),
-                    width: 500, // 가로 길이 설정
+                    width: 200 * (deviceWidth / standardDeviceWidth), // 가로 길이 설정
                     child: TextField(
                       controller: textController2,
                       decoration: InputDecoration(
@@ -153,22 +155,22 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 7 * (deviceHeight / standardDeviceHeight),
             ),
             Container(
-              margin: EdgeInsets.only(left: 150),
-              height: 40,
+              margin: EdgeInsets.only(left: 60 * (deviceWidth / standardDeviceWidth)),
+              height: 22 * (deviceHeight / standardDeviceHeight),
               child: Row(
                 children: [
                   Text(
                     "카테고리",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
                     ),
                   ),
-                  SizedBox(width: 50),
+                  SizedBox(width: 22 * (deviceWidth / standardDeviceWidth)),
                   Container(
-                    width: 200, // 원하는 너비 설정
+                    width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
                     child: DropdownButton(
                       isExpanded: true, // 이 속성을 true로 설정
                       value: selectedCategory,
@@ -189,36 +191,38 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 7 * (deviceHeight / standardDeviceHeight),
             ),
             Container(
-              margin: EdgeInsets.only(left: 150),
-              height: 40,
+              margin: EdgeInsets.only(left: 60 * (deviceWidth / standardDeviceWidth)),
+              height: 22 * (deviceHeight / standardDeviceHeight),
               child: Row(
                 children: [
                   Text(
                     "사진첨부",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
                     ),
                   ),
-                  SizedBox(width: 50),
+                  SizedBox(width: 22 * (deviceWidth / standardDeviceWidth)),
                   ElevatedButton(
                     onPressed: _pickImage,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Color(0xFFE54816)), // 버튼 배경 색상 변경
-                      minimumSize: MaterialStateProperty.all(Size(120, 40)), // 버튼 최소 크기 설정
+                      minimumSize: MaterialStateProperty.all(Size(
+                          50 * (deviceWidth / standardDeviceWidth),
+                          20 * (deviceHeight / standardDeviceHeight))), // 버튼 최소 크기 설정
                     ),
                     child: Text(
                       "이미지 선택",
                       style: TextStyle(
                         color: Colors.white, // 텍스트 색상 변경
-                        fontSize: 20, // 텍스트 크기 변경
+                        fontSize: 10 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
                   ),
                   SizedBox(
-                    width: 30,
+                    width: 10 * (deviceWidth / standardDeviceWidth),
                   ),
                   // 선택된 이미지 파일명 표시
                   Text(selectedImage),
@@ -226,12 +230,12 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 7 * (deviceHeight / standardDeviceHeight),
             ),
             Container(
-              margin: EdgeInsets.only(right: 100),
-              width: 650,
-              height: 250,
+              margin: EdgeInsets.only(right: 50 * (deviceWidth / standardDeviceWidth)),
+              width: 267 * (deviceWidth / standardDeviceWidth),
+              height: 90 * (deviceHeight / standardDeviceHeight),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
               ),
@@ -241,16 +245,16 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                     Row(
                       children: [
                         SizedBox(
-                          width: 20,
+                          width: 12 * (deviceWidth / standardDeviceWidth),
                         ),
                         Text(
                           "옵션",
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 12 * (deviceWidth / standardDeviceWidth),
                           ),
                         ),
                         SizedBox(
-                          width: 500,
+                          width: 195 * (deviceWidth / standardDeviceWidth),
                         ),
                         ElevatedButton(
                           onPressed: _addItem, // + 버튼 클릭 시 항목 추가
@@ -260,14 +264,14 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                           child: Text(
                             '+',
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 13 * (deviceWidth / standardDeviceWidth),
                               color: Colors.white,
                             ),),
                         ),
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 7 * (deviceHeight / standardDeviceHeight),
                     ),
                     ...itemWidgets, // 기존 항목 위젯 추가
                   ],
@@ -275,10 +279,10 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 7 * (deviceHeight / standardDeviceHeight),
             ),
             Container(
-              margin: EdgeInsets.only(right: 50),
+              margin: EdgeInsets.only(right: 20 * (deviceWidth / standardDeviceWidth)),
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {
@@ -304,12 +308,14 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Color(0xFFCDABA4)), // 버튼 배경 색상 변경
-                  minimumSize: MaterialStateProperty.all(Size(200, 60)), // 버튼 최소 크기 설정
+                  minimumSize: MaterialStateProperty.all(Size(
+                      70 * (deviceWidth / standardDeviceWidth),
+                      25 * (deviceHeight / standardDeviceHeight))), // 버튼 최소 크기 설정
                 ),
                 child: Text(
                   "등록",
                   style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 12 * (deviceWidth / standardDeviceWidth),
                       color: Color(0xFF9B5748)// 버튼 텍스트 크기 변경
                   ),
                 ),

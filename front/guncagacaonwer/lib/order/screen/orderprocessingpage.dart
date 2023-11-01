@@ -95,10 +95,14 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: processingOrders.length,
@@ -122,11 +126,11 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                   timeOfDay = "오전";
                 }
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,
-                    width: 150,
-                    height: 130,
+                    width: 70 * (deviceWidth / standardDeviceWidth),
+                    height: 65 * (deviceHeight / standardDeviceHeight),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -138,8 +142,10 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          width: 150,
-                          margin: EdgeInsets.only(top: 15, left: 10),
+                          width: 60 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(
+                              top: 7 * (deviceHeight / standardDeviceHeight),
+                              left: 7 * (deviceWidth / standardDeviceWidth)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -147,79 +153,81 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 '$hour:${time.split(":")[1]}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 36,
+                                  fontSize: 13 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 30,
+                          width: 13 * (deviceWidth / standardDeviceWidth),
                         ),
                         Container(
-                          width: 350,
-                          margin: EdgeInsets.only(top: 15),
+                          width: 160 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(top: 3 * (deviceHeight / standardDeviceHeight)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                height: 4 * (deviceHeight / standardDeviceHeight),
+                              ),
                               Text(
                                 '메뉴 [${processingOrder.totalMenuCount}]개 / ' +
-                                    formattedTotalPrice +
-                                    "원",
+                                    formattedTotalPrice + "원",
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
                                 '닉네임 : ${processingOrder.nickname}',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                   color: Color(0xFF9B5748),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
                                 "도착 예정 시간: " +
                                     timeOfDay +
                                     ' $hour:${time.split(":")[1]}',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 30,
+                          width: 38 * (deviceWidth / standardDeviceWidth),
                         ),
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                width: 90,
-                                height: 110,
+                                width: 40 * (deviceWidth / standardDeviceWidth),
+                                height: 60 * (deviceHeight / standardDeviceHeight),
                                 child: ElevatedButton(
                                   onPressed: () {
                                     showDialog(
@@ -228,8 +236,8 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                         return AlertDialog(
                                           contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                                           content: Container(
-                                            width: 400,
-                                            height: 600,
+                                            width: 200 * (deviceWidth / standardDeviceWidth),
+                                            height: 280 * (deviceHeight / standardDeviceHeight),
                                             child: SingleChildScrollView( // 스크롤 가능한 영역 추가
                                               child: Column(
                                                 children: [
@@ -265,11 +273,11 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 ),
                               ),
                               SizedBox(
-                                width: 5,
+                                width: 2 * (deviceWidth / standardDeviceWidth),
                               ),
                               Container(
-                                width: 90,
-                                height: 110,
+                                width: 40 * (deviceWidth / standardDeviceWidth),
+                                height: 60 * (deviceHeight / standardDeviceHeight),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -283,7 +291,9 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                             ? Colors.orange
                                             : Colors.green)
                                             : Colors.grey,
-                                        minimumSize: Size(90, 110),
+                                        minimumSize: Size(
+                                            40 * (deviceWidth / standardDeviceWidth),
+                                            60 * (deviceHeight / standardDeviceHeight)),
                                       ),
                                       child: Text(
                                         processingOrder.inProgress
@@ -297,7 +307,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                               ? Colors.white
                                               : Colors.white)
                                               : Colors.black,
-                                          fontSize: 18,
+                                          fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                         ),
                                       ),
                                     ),
@@ -305,67 +315,69 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 ),
                               ),
                               SizedBox(
-                                width: 5,
+                                width: 2 * (deviceWidth / standardDeviceWidth),
                               ),
                               Container(
-                                width: 90,
-                                height: 110,
+                                width: 40 * (deviceWidth / standardDeviceWidth),
+                                height: 60 * (deviceHeight / standardDeviceHeight),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     processingOrder.inProgress
-                                        ? Column(
-                                      children: [
-                                        StreamBuilder<int>(
-                                          stream: processingOrder.timerStream,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              int remainingTime = snapshot.data!;
-                                              int minutes = remainingTime ~/ 60;
-                                              int seconds = remainingTime % 60;
-                                              return Text(
-                                                '$minutes:${seconds.toString().padLeft(2, '0')}',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 22,
-                                                ),
-                                              );
-                                            } else {
-                                              return Text('00:00', style: TextStyle(color: Colors.black, fontSize: 18));
-                                            }
-                                          },
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                      ],
-                                    )
-                                        : ElevatedButton(
-                                      onPressed: () {
-                                        if (!processingOrder.inProgress) {
-                                          setState(() {
-                                            processingOrder.currentTime = processingOrder.initialTime;
-                                            processingOrder.inProgress = true;
-                                            processingOrder.startTimer();
-                                          });
+                                      ? Column(
+                                        children: [
+                                          StreamBuilder<int>(
+                                            stream: processingOrder.timerStream,
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasData) {
+                                                int remainingTime = snapshot.data!;
+                                                int minutes = remainingTime ~/ 60;
+                                                int seconds = remainingTime % 60;
+                                                return Text(
+                                                  '$minutes:${seconds.toString().padLeft(2, '0')}',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 8 * (deviceWidth / standardDeviceWidth),
+                                                  ),
+                                                );
+                                              } else {
+                                                return Text('00:00', style: TextStyle(color: Colors.black, fontSize: 8 * (deviceWidth / standardDeviceWidth)));
+                                              }
+                                            },
+                                          ),
+                                          SizedBox(
+                                            height: 9 * (deviceHeight / standardDeviceHeight),
+                                          ),
+                                        ],
+                                      )
+                                      : ElevatedButton(
+                                        onPressed: () {
+                                          if (!processingOrder.inProgress) {
+                                            setState(() {
+                                              processingOrder.currentTime = processingOrder.initialTime;
+                                              processingOrder.inProgress = true;
+                                              processingOrder.startTimer();
+                                            });
 
-                                          // 타이머가 다 지날 때 모달 창을 열도록 호출
-                                          Future.delayed(Duration(seconds: processingOrder.initialTime), () {
-                                            _showModal(processingOrder); // 모달 창을 열어줄 함수 호출
-                                          });
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: processingOrder.inProgress
-                                            ? Color(0xFF406AD6)
-                                            : Color(0xFF406AD6),
-                                        minimumSize: Size(90, 110),
+                                            // 타이머가 다 지날 때 모달 창을 열도록 호출
+                                            Future.delayed(Duration(seconds: processingOrder.initialTime), () {
+                                              _showModal(processingOrder); // 모달 창을 열어줄 함수 호출
+                                            });
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: processingOrder.inProgress
+                                              ? Color(0xFF406AD6)
+                                              : Color(0xFF406AD6),
+                                          minimumSize: Size(
+                                            40 * (deviceWidth / standardDeviceWidth),
+                                            60 * (deviceHeight / standardDeviceHeight)),
+                                        ),
+                                        child: Text(
+                                          processingOrder.inProgress ? '제작' : '제작',
+                                          style: TextStyle(color: Colors.white, fontSize: 18),
+                                        ),
                                       ),
-                                      child: Text(
-                                        processingOrder.inProgress ? '제작' : '제작',
-                                        style: TextStyle(color: Colors.white, fontSize: 18),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),

@@ -33,17 +33,18 @@ class _MenuEditPageState extends State<MenuEditPage> {
       itemWidgets.add(Row(
         children: [
           Expanded(
-            child: Container(
-              width: 150,
-              child: TextField(
-                controller: TextEditingController(text: optionName),
-                decoration: InputDecoration(
-                  hintText: '옵션 명',
+            child:
+              Container(
+                width: 150 ,
+                child: TextField(
+                  controller: TextEditingController(text: optionName),
+                  decoration: InputDecoration(
+                    hintText: '옵션 명',
+                  ),
                 ),
               ),
-            ),
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 10),
           Expanded(
             child: Container(
               width: 150,
@@ -89,21 +90,26 @@ class _MenuEditPageState extends State<MenuEditPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     Map<String, dynamic> menuData = widget.menuData;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF9B5748),
         title: Text(
-          "근카가카",
-          style: TextStyle(fontSize: 30),
+          "메뉴 수정",
+          style: TextStyle(fontSize: 14 * (deviceWidth / standardDeviceWidth)),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height: 30,
+              height: 16 * (deviceHeight / standardDeviceHeight),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -112,7 +118,15 @@ class _MenuEditPageState extends State<MenuEditPage> {
                   children: [
                     Column(
                       children: [
-                        Text('대표사진'),
+                        Text('대표사진',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 3 * (deviceHeight / standardDeviceHeight),
+                        ),
                         ElevatedButton(
                           onPressed: () {
                             // 이미지 변경 버튼을 눌렀을 때의 동작 추가
@@ -121,32 +135,34 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      width: 5 * (deviceWidth / standardDeviceWidth),
+                    ),
                     Image.asset(menuData['image']), // 이미지 표시
                   ],
                 ),
                 SizedBox(
-                  width: 50,
+                  width: 20 * (deviceWidth / standardDeviceWidth),
                 ),
                 Container(
-                  width: 500,
-                  height: 200,
-                  color: Colors.green,
+                  width: 200 * (deviceWidth / standardDeviceWidth),
+                  height: 90 * (deviceHeight / standardDeviceHeight),
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 150),
-                        height: 40,
+                        margin: EdgeInsets.only(left: 25 * (deviceWidth / standardDeviceWidth)),
+                        height: 22 * (deviceHeight / standardDeviceHeight),
                         child: Row(
                           children: [
                             Text(
                               "카테고리",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 10 * (deviceWidth / standardDeviceWidth),
                               ),
                             ),
-                            SizedBox(width: 50),
+                            SizedBox(width: 20 * (deviceWidth / standardDeviceWidth)),
                             Container(
-                              width: 200, // 원하는 너비 설정
+                              width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
                               child: DropdownButton(
                                 isExpanded: true, // 이 속성을 true로 설정
                                 value: selectedCategory,
@@ -167,27 +183,29 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 4 * (deviceHeight / standardDeviceHeight),
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 150),
-                        height: 40,
+                        margin: EdgeInsets.only(left: 25 * (deviceWidth / standardDeviceWidth)),
+                        height: 22 * (deviceHeight / standardDeviceHeight),
                         child: Row(
                           children: [
                             Text(
                               "메뉴명",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 10 * (deviceWidth / standardDeviceWidth),
                               ),
                             ),
-                            SizedBox(width: 66),
+                            SizedBox(width: 28 * (deviceWidth / standardDeviceWidth)),
                             Container(
-                              margin: EdgeInsets.only(top: 10),
+                              margin: EdgeInsets.only(
+                                  top: 4 * (deviceHeight / standardDeviceHeight),
+                                  bottom: 3 * (deviceHeight / standardDeviceHeight)),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                                 borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                               ),
-                              width: 200, // 가로 길이 설정
+                              width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
                               child: TextField(
                                 controller: textController1,
                                 decoration: InputDecoration(
@@ -199,27 +217,30 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 4 * (deviceHeight / standardDeviceHeight),
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 150),
-                        height: 40,
+                        margin: EdgeInsets.only(left: 25 * (deviceWidth / standardDeviceWidth)),
+                        height: 22 * (deviceHeight / standardDeviceHeight),
                         child: Row(
                           children: [
                             Text(
                               "기본 가격",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 10 * (deviceWidth / standardDeviceWidth),
                               ),
                             ),
-                            SizedBox(width: 43),
+                            SizedBox(width: 16.5 * (deviceWidth / standardDeviceWidth)),
                             Container(
-                              margin: EdgeInsets.only(top: 10),
+                              margin: EdgeInsets.only(
+                                  top: 4 * (deviceHeight / standardDeviceHeight),
+                                  bottom: 3 * (deviceHeight / standardDeviceHeight)),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                                 borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                               ),
-                              width: 200, // 가로 길이 설정
+                              width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
+                              height: 20 * (deviceHeight / standardDeviceHeight),
                               child: TextField(
                                 controller: textController2,
                                 decoration: InputDecoration(
@@ -236,12 +257,11 @@ class _MenuEditPageState extends State<MenuEditPage> {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 10 * (deviceHeight / standardDeviceHeight),
             ),
             Container(
-              margin: EdgeInsets.only(right: 100),
-              width: 650,
-              height: 250,
+              width: 300 * (deviceWidth / standardDeviceWidth),
+              height: 130 * (deviceHeight / standardDeviceHeight),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.0),
               ),
@@ -251,16 +271,16 @@ class _MenuEditPageState extends State<MenuEditPage> {
                     Row(
                       children: [
                         SizedBox(
-                          width: 20,
+                          width: 10 * (deviceWidth / standardDeviceWidth),
                         ),
                         Text(
                           "옵션",
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 13 * (deviceWidth / standardDeviceWidth),
                           ),
                         ),
                         SizedBox(
-                          width: 500,
+                          width: 225 * (deviceWidth / standardDeviceWidth),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -272,7 +292,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           child: Text(
                             '+',
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 14 * (deviceWidth / standardDeviceWidth),
                               color: Colors.white,
                             ),
                           ),
@@ -280,52 +300,53 @@ class _MenuEditPageState extends State<MenuEditPage> {
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 4 * (deviceHeight / standardDeviceHeight),
                     ),
                     ...itemWidgets, // 기존 항목 위젯 추가
                   ],
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                // "취소" 버튼을 눌렀을 때의 동작 추가 (뒤로 가기)
-                Navigator.pop(context);
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.red),
-              ),
-              child: Text(
-                '취소',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
+            SizedBox(
+              height: 10 * (deviceHeight / standardDeviceHeight),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // "확인" 버튼을 눌렀을 때의 동작 추가 (데이터 저장)
-                // 여기에서 데이터를 수정하고 저장하는 로직을 구현합니다.
-                // 저장이 완료되면 페이지를 닫을 수 있습니다.
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.green),
-              ),
-              child: Text(
-                '확인',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // "취소" 버튼을 눌렀을 때의 동작 추가 (뒤로 가기)
+                    Navigator.pop(context);
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                  ),
+                  child: Text(
+                    '취소',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+                ElevatedButton(
+                  onPressed: () {
+                    // "확인" 버튼을 눌렀을 때의 동작 추가 (데이터 저장)
+                    // 여기에서 데이터를 수정하고 저장하는 로직을 구현합니다.
+                    // 저장이 완료되면 페이지를 닫을 수 있습니다.
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                  ),
+                  child: Text(
+                    '확인',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

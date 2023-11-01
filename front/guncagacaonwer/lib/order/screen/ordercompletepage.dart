@@ -39,10 +39,14 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: processingOrders.length,
@@ -65,11 +69,11 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                   timeOfDay = "오전";
                 }
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,
-                    width: 150,
-                    height: 130,
+                    width: 70 * (deviceWidth / standardDeviceWidth),
+                    height: 65 * (deviceHeight / standardDeviceHeight),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -82,8 +86,10 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                       children: [
                         // 첫번째 컨테이너 (주문 시간)
                         Container(
-                          width: 150,
-                          margin: EdgeInsets.only(top: 15, left: 10),
+                          width: 60 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(
+                              top: 7 * (deviceHeight / standardDeviceHeight),
+                              left: 7 * (deviceWidth / standardDeviceWidth)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -91,68 +97,70 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 '$hour:${time.split(":")[1]}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 36,
+                                  fontSize: 13 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 30,
+                          width: 13 * (deviceWidth / standardDeviceWidth),
                         ),
-                        // 두번째 컨테이너 (메뉴 총 개수, 메뉴-개수, 도착 예정 시간)
                         Container(
-                          width: 350,
-                          margin: EdgeInsets.only(top: 15),
+                          width: 160 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(top: 3 * (deviceHeight / standardDeviceHeight)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                height: 4 * (deviceHeight / standardDeviceHeight),
+                              ),
                               Text(
                                 '메뉴 [${processingorder["totalMenuCount"]}]개 / '+formattedTotalPrice+"원",
                                 style: TextStyle(
-                                    fontSize: 18
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
                                 '닉네임 : ${processingorder['nickname']}',
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color(0xFF9B5748)
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
+                                  color: Color(0xFF9B5748),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
                                 "도착 예정 시간: " + timeOfDay + ' $hour:${time.split(":")[1]}',
                                 style: TextStyle(
-                                    fontSize: 18
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 150,
+                          width: 80 * (deviceWidth / standardDeviceWidth),
                         ),
                         // 세번째 컨테이너 (버튼)
                         Container(
@@ -160,8 +168,8 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                             mainAxisAlignment: MainAxisAlignment.center, // 컨테이너를 가로로 배치
                             children: [
                               Container(
-                                width: 140,
-                                height: 110,
+                                width: 80 * (deviceWidth / standardDeviceWidth),
+                                height: 110 * (deviceHeight / standardDeviceHeight),
                                 child: ElevatedButton(
                                   onPressed: () {
                                     showDialog(
@@ -170,8 +178,8 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                         return AlertDialog(
                                           contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                                           content: Container(
-                                            width: 400,
-                                            height: 600,
+                                            width: 200 * (deviceWidth / standardDeviceWidth),
+                                            height: 280 * (deviceHeight / standardDeviceHeight),
                                             child: SingleChildScrollView( // 스크롤 가능한 영역 추가
                                               child: Column(
                                                 children: [
@@ -201,7 +209,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                     '주문표'+'\n'+'  확인',
                                     style: TextStyle(
                                       color: Colors.white, // 버튼 텍스트 색상
-                                      fontSize: 24, // 버튼 텍스트 크기
+                                      fontSize: 12 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
                                     ),
                                   ),
                                 ),

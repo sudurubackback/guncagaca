@@ -28,13 +28,18 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 30,
+              height: 10 * (deviceHeight / standardDeviceHeight),
             ),
             Container(
               alignment: Alignment.centerLeft, // 왼쪽 정렬
@@ -52,21 +57,21 @@ class _MyPageScreenState extends State<MyPageScreen> {
               ),
             ), // 상단의 텍스트
             SizedBox(
-              height: 40,
+              height: 10 * (deviceHeight / standardDeviceHeight),
             ),
             Wrap(
               alignment: WrapAlignment.start,
-              spacing: 30.0, // 가로 간격 조절
-              runSpacing: 1.0, // 세로 간격 조절
+              spacing: 15 * (deviceWidth / standardDeviceWidth), // 가로 간격 조절
+              runSpacing: 0.3 * (deviceHeight / standardDeviceHeight), // 세로 간격 조절
               children: textInfoList.map((textInfo) {
                 return Container(
-                  width: 500, // 원하는 가로 크기로 조정
-                  height: 100, // 원하는 세로 크기로 조정
+                  width: 200 * (deviceWidth / standardDeviceWidth), // 원하는 가로 크기로 조정
+                  height: 40 * (deviceHeight / standardDeviceHeight), // 원하는 세로 크기로 조정
                   child: Center(
                     child: Text(
                       textInfo.text,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 11 * (deviceWidth / standardDeviceWidth),
                         color: Colors.black,
                       ),
                     ),
@@ -74,11 +79,10 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 );
               }).toList(),
             ),
-            SizedBox(
-              height: 30,
-            ),
             Container(
-              margin: EdgeInsets.only(top: 40, right: 60), // 오른쪽에 마진을 줍니다
+              margin: EdgeInsets.only(
+                  top: 15 * (deviceWidth / standardDeviceWidth),
+                  right: 30 * (deviceHeight / standardDeviceHeight)), // 오른쪽에 마진을 줍니다
               alignment: Alignment.centerRight, // 오른쪽 정렬
               child: ElevatedButton(
                 onPressed: () {
@@ -93,14 +97,16 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   );
                 },
                 style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(200, 60)),
+                  minimumSize: MaterialStateProperty.all(Size(
+                      80 * (deviceWidth / standardDeviceWidth),
+                      30 * (deviceHeight / standardDeviceHeight))),
                   backgroundColor: MaterialStateProperty.all(Color(0xFFD9D9D9)),
                 ),
                 child: Text(
                   '비밀번호 변경',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24,
+                    fontSize: 12 * (deviceWidth / standardDeviceWidth),
                   ),
                 ),
               ),

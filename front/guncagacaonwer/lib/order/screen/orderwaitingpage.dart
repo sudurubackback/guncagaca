@@ -41,10 +41,14 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: orders.length,
@@ -67,11 +71,11 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                   timeOfDay = "오전";
                 }
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,
-                    width: 150,
-                    height: 130,
+                    width: 70 * (deviceWidth / standardDeviceWidth),
+                    height: 65 * (deviceHeight / standardDeviceHeight),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -84,8 +88,10 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                       children: [
                         // 첫번째 컨테이너 (주문 시간)
                         Container(
-                          width: 150,
-                          margin: EdgeInsets.only(top: 15, left: 10),
+                          width: 60 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(
+                              top: 7 * (deviceHeight / standardDeviceHeight),
+                              left: 7 * (deviceWidth / standardDeviceWidth)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -93,115 +99,125 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 '$hour:${time.split(":")[1]}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 36,
+                                  fontSize: 13 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 30,
+                          width: 13 * (deviceWidth / standardDeviceWidth),
                         ),
                         // 두번째 컨테이너 (메뉴 총 개수, 메뉴-개수, 도착 예정 시간)
                         Container(
-                          width: 500,
-                          margin: EdgeInsets.only(top: 15),
+                          width: 230 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(top: 3 * (deviceHeight / standardDeviceHeight)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                height: 4 * (deviceHeight / standardDeviceHeight),
+                              ),
                               Text(
                                 '메뉴 [${order["totalMenuCount"]}]개 / '+formattedTotalPrice+"원",
                                 style: TextStyle(
-                                    fontSize: 18
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
                                 '${order["menuList"].join(" / ")}',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                     color: Color(0xFF9B5748)
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
                                 "도착 예정 시간: " + timeOfDay + ' $hour:${time.split(":")[1]}',
                                 style: TextStyle(
-                                    fontSize: 18
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 50,
+                          width: 24 * (deviceWidth / standardDeviceWidth),
                         ),
                         // 세번째 컨테이너 (버튼)
                         Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  // 접수하기 버튼 클릭 시 수행할 동작 추가
-                                  setState(() {
-                                    processingOrders.add(order);
-                                    orders.removeAt(index);
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color(0xFF406AD6), // 버튼의 배경색
-                                  minimumSize: Size(120,55), // 버튼의 최소 크기
-                                ),
-                                child: Text(
-                                  '접수하기',
-                                  style: TextStyle(
-                                    color: Colors.white, // 버튼 텍스트 색상
-                                    fontSize: 18, // 버튼 텍스트 크기
+                          child : Align(
+                            alignment: Alignment.centerRight,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // 접수하기 버튼 클릭 시 수행할 동작 추가
+                                    setState(() {
+                                      processingOrders.add(order);
+                                      orders.removeAt(index);
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xFF406AD6), // 버튼의 배경색
+                                    minimumSize: Size(
+                                        60 * (deviceWidth / standardDeviceWidth),
+                                        28 * (deviceHeight / standardDeviceHeight)), // 버튼의 최소 크기
+                                  ),
+                                  child: Text(
+                                    '접수하기',
+                                    style: TextStyle(
+                                      color: Colors.white, // 버튼 텍스트 색상
+                                      fontSize: 10 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: 5), // 버튼 사이의 간격 조절
-                              ElevatedButton(
-                                onPressed: () {
-                                  // 주문 취소 버튼 클릭 시 수행할 동작 추가
-                                  setState(() {
-                                    orders.removeAt(index);
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color(0xFFD63737), // 버튼의 배경색
-                                  minimumSize: Size(120, 55), // 버튼의 최소 크기
-                                ),
-                                child: Text(
-                                  '주문 취소',
-                                  style: TextStyle(
-                                    color: Colors.white, // 버튼 텍스트 색상
-                                    fontSize: 18, // 버튼 텍스트 크기
+                                SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)), // 버튼 사이의 간격 조절
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // 주문 취소 버튼 클릭 시 수행할 동작 추가
+                                    setState(() {
+                                      orders.removeAt(index);
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xFFD63737), // 버튼의 배경색
+                                    minimumSize: Size(
+                                      60 * (deviceWidth / standardDeviceWidth),
+                                      28 * (deviceHeight / standardDeviceHeight)), // 버튼의 최소 크기
+                                  ),
+                                  child: Text(
+                                    '주문 취소',
+                                    style: TextStyle(
+                                      color: Colors.white, // 버튼 텍스트 색상
+                                      fontSize: 10 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],

@@ -28,11 +28,16 @@ class _SignPageState extends State<SignPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF9B5748),
         title: Text(
-          "근카가카",
+          "회원가입",
           style: TextStyle(fontSize: 30),
         ),
       ),
@@ -44,11 +49,11 @@ class _SignPageState extends State<SignPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: 100,
+                  height: 40 * (deviceHeight / standardDeviceHeight),
                 ),
                 Container(
-                  width: 500,
-                  height: 100,
+                  width: 250 * (deviceWidth / standardDeviceWidth),
+                  height: 50 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -64,10 +69,10 @@ class _SignPageState extends State<SignPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
                 Container(
-                  width: 500,
-                  height: 100,
+                  width: 250 * (deviceWidth / standardDeviceWidth),
+                  height: 50 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -83,10 +88,10 @@ class _SignPageState extends State<SignPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
                 Container(
-                  width: 500,
-                  height: 100,
+                  width: 250 * (deviceWidth / standardDeviceWidth),
+                  height: 50 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Tel',
@@ -102,7 +107,7 @@ class _SignPageState extends State<SignPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
                 ElevatedButton(
                   onPressed: () async {
                     // try {
@@ -153,7 +158,10 @@ class _SignPageState extends State<SignPage> {
                   },
                   style: ButtonStyle(
                     // 버튼의 최소 크기 설정
-                    minimumSize: MaterialStateProperty.all(Size(400, 60)), // 가로 150, 세로 50
+                    minimumSize: MaterialStateProperty.all(
+                        Size(
+                          180 * (deviceWidth / standardDeviceWidth),
+                          30 * (deviceHeight / standardDeviceHeight))), // 가로 150, 세로 50
 
                     // 버튼의 배경 색상 설정
                     backgroundColor: MaterialStateProperty.all(Color(0xFF9B5748).withOpacity(0.5)), // 배경 색상
@@ -162,7 +170,7 @@ class _SignPageState extends State<SignPage> {
                     '회원가입',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 30,// 텍스트 색상
+                      fontSize: 15 * (deviceWidth / standardDeviceWidth),// 텍스트 색상
                     ),
                   ),
                 ),
