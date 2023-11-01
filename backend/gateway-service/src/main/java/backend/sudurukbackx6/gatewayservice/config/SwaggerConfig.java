@@ -38,7 +38,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("http://localhost:8000"))
+                .addServersItem(new Server().url("http://k9d102.p.ssaty.io:8000"))
 //                .components(new Components().addSecuritySchemes("Bearer",
 //                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
 //                .addSecurityItem(new SecurityRequirement().addList("Bearer"))
