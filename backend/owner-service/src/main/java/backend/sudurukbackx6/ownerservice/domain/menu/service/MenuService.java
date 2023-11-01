@@ -1,14 +1,11 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.service;
 
 
-<<<<<<< HEAD
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.DetailsOptionEntity;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.OptionsEntity;
 import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.*;
-=======
 import backend.sudurukbackx6.ownerservice.common.s3.S3Uploader;
 import org.springframework.beans.factory.annotation.Value;
->>>>>>> f8498daa15bcd18ee612b2b3bba6eadfe4977eb2
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -104,7 +101,6 @@ public class MenuService {
 		menuRepository.delete(menuEntity);
 	}
 
-<<<<<<< HEAD
 	public OrderResponseDto getOrder(OrderRequestDto orderRequestDto) {
 		List<MenuRequestDto> menus = orderRequestDto.getMenus();
 
@@ -117,7 +113,7 @@ public class MenuService {
 
 			// 옵션
 			List<OptionsEntity> optionsEntity = menuEntity.getOptionsEntity();
-			for (int i = 0; i<optionsEntity.size(); i++) {
+			for (int i = 0; i < optionsEntity.size(); i++) {
 				for (OptionRequestDto optionRequestDto : menuRequestDto.getOptions()) {
 					if (optionsEntity.get(i).getOptionName().equals(optionRequestDto.getOptionName())) {
 						log.info("in option");
@@ -127,7 +123,7 @@ public class MenuService {
 
 						// 디테일 옵션
 						List<DetailsOptionEntity> detailsOptions = optionsEntity.get(i).getDetailsOptions();
-						for (int j = 0; j<detailsOptions.size(); j++) {
+						for (int j = 0; j < detailsOptions.size(); j++) {
 							for (DetailOptionRequestDto detailOptionRequestDto : optionRequestDto.getDetailOptions()) {
 								log.info(detailsOptions.get(j).getDetailOptionName());
 								log.info(detailOptionRequestDto.getDetailOptionName());
@@ -161,12 +157,11 @@ public class MenuService {
 				.orderPrice(orderRequestDto.getOrderPrice())
 				.menus(menuList)
 				.build();
-=======
+	}
 	public String uploadTest(MultipartFile multipartFile) throws IOException {
 
 		String upload = s3Uploader.upload(multipartFile, "Test");
 
 		return "성공 " + upload;
->>>>>>> f8498daa15bcd18ee612b2b3bba6eadfe4977eb2
 	}
 }
