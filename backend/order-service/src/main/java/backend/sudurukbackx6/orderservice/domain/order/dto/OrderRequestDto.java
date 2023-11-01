@@ -10,6 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequestDto {
 
+    private Long memberId;
+
     private Long storeId;
 
     private boolean takeoutYn;
