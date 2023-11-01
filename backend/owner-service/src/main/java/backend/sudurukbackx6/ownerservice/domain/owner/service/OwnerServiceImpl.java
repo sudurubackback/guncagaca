@@ -130,7 +130,7 @@ public class OwnerServiceImpl implements OwnerService {
         String email = jwtProvider.extractEmail(header);
         String redisToken = redisUtil.getRefreshTokens(email);
         System.out.println("redisToken : "+redisToken);
-        if(redisToken==null || redisToken.isEmpty() || !ㄴredisUtil.isMatchToken(email, header)){
+        if(redisToken==null || redisToken.isEmpty() || !redisUtil.isMatchToken(email, header)){
             throw new BadRequestException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
         }
         //이제 검증 완료! 그럼 새로 acceestoken발급 시작!
