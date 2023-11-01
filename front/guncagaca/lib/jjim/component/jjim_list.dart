@@ -1,12 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../common/utils/dio_client.dart';
+
 class JjimList extends StatefulWidget {
+
   @override
   _JjimListState createState() => _JjimListState();
 }
 
 class _JjimListState extends State<JjimList> {
+  late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyJjims = [];
   List<bool> toggleList = [];
 
@@ -17,15 +24,41 @@ class _JjimListState extends State<JjimList> {
   }
 
   void loadDummyJjims() async {
-    try {
-      String jsonString = await DefaultAssetBundle.of(context)
-          .loadString('assets/json/jjim_dumi.json');
-      dummyJjims = List<Map<String, dynamic>>.from(json.decode(jsonString));
-      toggleList = List.generate(dummyJjims.length, (index) => false);
-      setState(() {});
-    } catch (e) {
-      print('Error decoding JSON: $e');
+    final token = prefs.getString('accessToken');
+
+    if (token != null) {
+      // String baseUrl = dotenv.env['BASE_URL']!;
+      Dio dio = DioClient.getInstance();
+      print(token);
+      print("통신");
+
+      try {
+        Response response = await dio.get(
+          "http://k9d102.p.ssafy.io:8085/api/like/mypage/like-store",
+          options: Options(
+            headers: <String, String>{
+              'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
+              'Authorization': token.toString(),
+            },
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          List<dynamic> jsonData = json.decode(response.data);
+          dummyJjims = List<Map<String, dynamic>>.from(jsonData);
+          print(dummyJjims);
+          print("제대로 옴");
+          setState(() {});
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('에러: $e');
+      }
+    } else {
+      print(token);
     }
+
   }
 
   void _toggleImage(int id) {
