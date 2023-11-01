@@ -48,7 +48,6 @@ class PaymentService {
         if (!isPaymentDone) {
           Bootpay().dismiss(context);
           Get.back();
-          Get.back();
         } //명시적으로 부트페이 뷰 종료 호출
       },
       onIssued: (String data) {

@@ -16,4 +16,14 @@ class Menu {
     required this.imagePath,
     required this.description,
   });
+
+  factory Menu.fromMap(Map<String, dynamic> map) {
+    return Menu(
+      name: map['name'],
+      initPrice: map['initPrice'],
+      imagePath: map['imagePath'],
+      description: map['description'],
+      options: (map['options'] as List).map((e) => MenuOption.fromMap(e)).toList(),
+    );
+  }
 }
