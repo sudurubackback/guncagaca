@@ -30,6 +30,8 @@ public class MenuEntity {
 
     private String img;
 
+    private String description;
+
     private Category category;
 
     private List<OptionsEntity> optionsEntity;
@@ -58,5 +60,9 @@ public class MenuEntity {
 
     public void setStatus(StatusMenu statusMenu) {
         this.status = statusMenu;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

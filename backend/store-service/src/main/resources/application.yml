@@ -4,9 +4,7 @@ spring:
   profiles:
     active: dev
   config:
-    import: optional:configserver:http://localhost:8888
-server:
-  port: 8085
+    import: optional:configserver:http://k9d102.p.ssafy.io:8888
 
 management:
   endpoints:
@@ -17,4 +15,3 @@ management:
 logging:
   level:
     org.hibernate.type: trace
-        include: "*"
