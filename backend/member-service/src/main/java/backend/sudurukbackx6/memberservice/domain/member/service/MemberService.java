@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.memberservice.domain.member.service;
 
 import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
+import backend.sudurukbackx6.memberservice.domain.member.dto.MemberInfoResponse;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.entity.Member;
@@ -80,6 +81,14 @@ public class MemberService {
 
         return MypageResponseDto.builder()
                 .memberId(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .build();
+    }
+    public MemberInfoResponse getMemberInfo(String token){
+        Member member = jwtProvider.extractUser(token);
+        return MemberInfoResponse.builder()
+                .id(member.getId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .build();

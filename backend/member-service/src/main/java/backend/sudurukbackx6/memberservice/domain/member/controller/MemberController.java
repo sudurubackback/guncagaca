@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.memberservice.domain.member.controller;
 
 import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
+import backend.sudurukbackx6.memberservice.domain.member.dto.MemberInfoResponse;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.service.MemberService;
@@ -38,5 +39,11 @@ public class MemberController {
     @PutMapping("/mypage/change-nickname")
     public ResponseEntity<MypageResponseDto> changeNickname(@RequestHeader("Email") String email, @RequestParam String nickname) {
         return ResponseEntity.ok(memberService.changeNickname(email, nickname));
+    }
+
+    /* OpenFeign을 통해 받아올 떄 안에 memberId, email, nickname을 반환*/
+    @GetMapping("/memberInfo")
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(memberService.getMemberInfo(token));
     }
 }

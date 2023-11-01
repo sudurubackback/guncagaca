@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class StoreRequest {
     private String storeName;
-    private Double latitude;
-    private Double longitude;
     private String address;
     private String tel;
     private String img;

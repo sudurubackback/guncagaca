@@ -1,18 +1,17 @@
-package backend.sudurukbackx6.storeservice.domain.store.service.dto;
+package backend.sudurukbackx6.memberservice.domain.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
-public class StoreReviewResponse {
+public class MemberInfoResponse {
 
-    private Long reviewId;
+    private String email;
+    private Long id;
     private String nickname;
-    private Double star;
-    private String content;
 }
