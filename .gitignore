@@ -37,6 +37,7 @@ out/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,flutter,dart,xcode
 
@@ -289,3 +290,7 @@ fabric.properties
 iOSInjectionProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
+=======
+front/
+frontend/
+>>>>>>> dd8c08da04cb070c828b4169b2892b83d925862e

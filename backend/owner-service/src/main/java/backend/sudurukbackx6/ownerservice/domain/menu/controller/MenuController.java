@@ -1,18 +1,18 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.controller;
 
 import org.springframework.http.MediaType;
+import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import backend.sudurukbackx6.ownerservice.domain.menu.service.MenuService;
-import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuEditRequest;
-import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/ceo")
+@RequestMapping("/api/ceo")
 @RequiredArgsConstructor
 public class MenuController {
 	private final MenuService menuService;
@@ -42,4 +42,8 @@ public class MenuController {
 		return menuService.uploadTest(file);
 	}
 
+	@PostMapping("/menu/order")
+	public ResponseEntity<OrderResponseDto> getOrder(@RequestBody OrderRequestDto orderRequestDto) {
+		return ResponseEntity.ok(menuService.getOrder(orderRequestDto));
+	}
 }
