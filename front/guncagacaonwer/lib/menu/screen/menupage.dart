@@ -46,9 +46,14 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return DefaultLayout(
       customAppBarBottom: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.08),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.02 * (deviceHeight / standardDeviceHeight)),
         child: Container(
           color: Color(0xFF626262),
           child: Row(
@@ -58,7 +63,7 @@ class _MenuPageState extends State<MenuPage> {
                   navigateToPage(0);
                 },
                 child: Container(
-                  width: 250,
+                  width: 100 * (deviceWidth / standardDeviceWidth),
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF828282)),
@@ -67,7 +72,7 @@ class _MenuPageState extends State<MenuPage> {
                     child: Text(
                       "주문접수",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
                   ),
@@ -78,7 +83,7 @@ class _MenuPageState extends State<MenuPage> {
                   navigateToPage(1);
                 },
                 child: Container(
-                  width: 250,
+                  width: 100 * (deviceWidth / standardDeviceWidth),
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF828282)),
@@ -87,7 +92,7 @@ class _MenuPageState extends State<MenuPage> {
                     child: Text(
                       "매장관리",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
                   ),
@@ -97,7 +102,7 @@ class _MenuPageState extends State<MenuPage> {
                 onTap: () {
                 },
                 child: Container(
-                  width: 250,
+                  width: 100 * (deviceWidth / standardDeviceWidth),
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF828282)),
@@ -107,7 +112,7 @@ class _MenuPageState extends State<MenuPage> {
                     child: Text(
                       "메뉴관리",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
                   ),
@@ -120,7 +125,7 @@ class _MenuPageState extends State<MenuPage> {
       child: Row(
         children: [
           Container(
-            width: 170,
+            width: 70 * (deviceWidth / standardDeviceWidth),
             color: Color(0xFFD9D9D9),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -132,21 +137,21 @@ class _MenuPageState extends State<MenuPage> {
                     });
                   },
                   child: Container(
-                    width: 170,
-                    height: 50,
+                    width: 70 * (deviceWidth / standardDeviceWidth),
+                    height: 30 * (deviceHeight / standardDeviceHeight),
                     color: selectedButtonIndex == 0 ? Color(0xFF831800) : Color(0xFF828282),
                     padding: EdgeInsets.all(4),
                     child: Center(
                       child: Text(
                         "메뉴 전체보기",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 10.5 * (deviceWidth / standardDeviceWidth),
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 60),
+                SizedBox(height: 30 * (deviceHeight / standardDeviceHeight)),
                 InkWell(
                   onTap: () {
                     setState(() {
@@ -154,15 +159,15 @@ class _MenuPageState extends State<MenuPage> {
                     });
                   },
                   child: Container(
-                    width: 170,
-                    height: 50,
+                    width: 70 * (deviceWidth / standardDeviceWidth),
+                    height: 30 * (deviceHeight / standardDeviceHeight),
                     color: selectedButtonIndex == 1 ? Color(0xFF831800) : Color(0xFF828282),
                     padding: EdgeInsets.all(4),
                     child: Center(
                       child: Text(
                         "메뉴 신규 등록",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 10.5 * (deviceWidth / standardDeviceWidth),
                         ),
                       ),
                     ),

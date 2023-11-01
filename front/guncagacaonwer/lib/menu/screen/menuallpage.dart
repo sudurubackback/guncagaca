@@ -9,7 +9,7 @@ class MenuAllPage extends StatefulWidget {
 class _MenuAllPageState extends State<MenuAllPage> {
   int selectedButtonIndex = 0;
 
-  List<Map<String, dynamic>> boxes = [
+  List<Map<String, dynamic>> menulists = [
     {
       'text': '아메리카노',
       'image': 'assets/americano.jpg',
@@ -55,18 +55,23 @@ class _MenuAllPageState extends State<MenuAllPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+    
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4, // 4개씩 표시
       ),
-      itemCount: boxes.length, // 텍스트 목록의 길이에 따라 박스 수 조정
+      itemCount: menulists.length, // 텍스트 목록의 길이에 따라 박스 수 조정
       itemBuilder: (BuildContext context, int index) {
-        Map<String, dynamic> box = boxes[index]; // 해당 인덱스의 박스 정보 가져오기
-        String boxText = box['text'];
-        String imagePath = box['image'];
+        Map<String, dynamic> menu = menulists[index]; // 해당 인덱스의 박스 정보 가져오기
+        String menuText = menu['text'];
+        String imagePath = menu['image'];
 
         return Container(
-          margin: EdgeInsets.all(16.0),
+          margin: EdgeInsets.only(top: 10, bottom: 10, left: 12, right: 12),
           decoration: BoxDecoration(
             color: Colors.white, // 각 박스의 배경색
             border: Border.all(
@@ -74,8 +79,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
               width: 1.0, // 외각선 두께
             ),
           ),
-          height: 80, // 각 박스의 높이
-          width: 80, // 각 박스의 너비
+          width: 80 * (deviceWidth / standardDeviceWidth), // 각 박스의 너비
+          height: 80 * (deviceHeight / standardDeviceHeight), // 각 박스의 높이
           child: Stack(
             children: [
               // 이미지
@@ -91,7 +96,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
               // 텍스트 중앙에 위치
               Center(
                 child: Text(
-                  boxText, // 박스에 할당된 텍스트 출력
+                  menuText, // 박스에 할당된 텍스트 출력
                   textAlign: TextAlign.center, // 텍스트 중앙 정렬
                 ),
               ),
@@ -108,7 +113,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return MenuEditPage(menuData: box); // MenuEditPage는 메뉴 수정 페이지의 위젯입니다.
+                              return MenuEditPage(menuData: menu); // MenuEditPage는 메뉴 수정 페이지의 위젯입니다.
                             },
                           ),
                         );
@@ -132,9 +137,9 @@ class _MenuAllPageState extends State<MenuAllPage> {
                                     // "삭제" 버튼을 누를 때 해당 항목을 리스트에서 제거하고 화면을 업데이트
                                     setState(() {
                                       // 리스트에서 항목 삭제하는 코드 (여기서는 예시로 index를 이용)
-                                      int index = boxes.indexOf(box); // order는 삭제하려는 항목
+                                      int index = menulists.indexOf(menu); // order는 삭제하려는 항목
                                       if (index != -1) {
-                                        boxes.removeAt(index);
+                                        menulists.removeAt(index);
                                       }
                                     });
                                     Navigator.of(context).pop();

@@ -34,6 +34,11 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -44,23 +49,26 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 20, left: 150.0, bottom: 10),
+                  padding: EdgeInsets.only(
+                    top: 20,
+                    left: 50 * (deviceWidth / standardDeviceWidth),
+                    bottom: 10),
                   child: Text(
                     "가게 소개",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 12 * (deviceWidth / standardDeviceWidth),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
               Container(
-                width: 800,
-                height: 210,
+                width: 350 * (deviceWidth / standardDeviceWidth),
+                height: 100 * (deviceHeight / standardDeviceHeight),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(),
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: TextFormField(
                   decoration: InputDecoration(
@@ -68,18 +76,18 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
               Padding(
-                padding: EdgeInsets.only(left: 150),
+                padding: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
                 child: Row(
                   children: [
                     Text(
                       "영업 시작 시간 : ",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
-                    SizedBox(width: 30),
+                    SizedBox(width: 13 * (deviceWidth / standardDeviceWidth)),
                     GestureDetector(
                       onTap: () {
                         _selectTime(context, openingTimeController, openingTime, true);
@@ -88,7 +96,7 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                         decoration: BoxDecoration(
                           color: Color(0xFFD9D9D9),
                         ),
-                        width: 80,
+                        width: 40 * (deviceWidth / standardDeviceWidth),
                         child: Center(
                           child: TextFormField(
                             enabled: false,
@@ -98,7 +106,7 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                             ),
                             style: TextStyle(
                               color: Colors.black, // 텍스트 색상 설정
-                              fontSize: 18, // 텍스트 크기 설정
+                              fontSize: 9 * (deviceWidth / standardDeviceWidth), // 텍스트 크기 설정
                               // 다른 텍스트 스타일 속성도 지정 가능
                             ),
                           ),
@@ -108,18 +116,18 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
               Padding(
-                padding: EdgeInsets.only(left: 150),
+                padding: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
                 child: Row(
                   children: [
                     Text(
                       "영업 종료 시간 : ",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
-                    SizedBox(width: 30),
+                    SizedBox(width: 13 * (deviceWidth / standardDeviceWidth)),
                     GestureDetector(
                       onTap: () {
                         _selectTime(context, closingTimeController, closingTime, false);
@@ -128,7 +136,7 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                         decoration: BoxDecoration(
                           color: Color(0xFFD9D9D9),
                         ),
-                        width: 80,
+                        width: 40 * (deviceWidth / standardDeviceWidth),
                         child: Center(
                           child: TextFormField(
                             enabled: false,
@@ -138,7 +146,7 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                             ),
                             style: TextStyle(
                               color: Colors.black, // 텍스트 색상 설정
-                              fontSize: 18, // 텍스트 크기 설정
+                              fontSize: 9 * (deviceWidth / standardDeviceWidth), // 텍스트 크기 설정
                               // 다른 텍스트 스타일 속성도 지정 가능
                             ),
                           ),
@@ -148,7 +156,7 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 50),
+              SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

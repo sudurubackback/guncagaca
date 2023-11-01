@@ -10,11 +10,16 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF9B5748),
         title: Text(
-          "근카가카",
+          "비밀번호 찾기",
           style: TextStyle(fontSize: 30),
         ),
       ),
@@ -25,11 +30,10 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(right: 350, bottom: 50),
                 child: Text(
-                  "비밀번호 찾기",
+                  "이메일을 입력하시면 초기화된 비밀번호가 이메일로 전송됩니다.",
                   style: TextStyle(
-                    fontSize: 30, // 원하는 폰트 크기로 설정
+                    fontSize: 9 * (deviceWidth / standardDeviceWidth), // 원하는 폰트 크기로 설정
                   ),
                 ),
               ),
@@ -37,8 +41,8 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                 height: 30,
               ),
               Container(
-                width: 500,
-                height: 100,
+                width: 250 * (deviceWidth / standardDeviceWidth),
+                height: 50 * (deviceHeight / standardDeviceHeight),
                 child: TextFormField(
                   decoration: InputDecoration(
                     labelText: '이메일',
@@ -63,18 +67,20 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                       Navigator.pop(context); // 현재 화면을 종료하고 이전 화면으로 돌아갑니다.
                     },
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(200, 80)),
+                      minimumSize: MaterialStateProperty.all(Size(
+                          60 * (deviceWidth / standardDeviceWidth),
+                          40 * (deviceHeight / standardDeviceHeight))),
                       backgroundColor: MaterialStateProperty.all(Color(0xFFFFFFFF)),
                       side: MaterialStateProperty.all(BorderSide(
                         color: Colors.black,
-                        width: 2.0,
+                        width: 1.0,
                       )),
                     ),
                     child: Text(
                       '취소',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 30,
+                        fontSize: 15 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
                   ),
@@ -87,14 +93,16 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                       // 비밀번호 초기화 메일을 보낸 후 사용자에게 알림을 표시할 수 있습니다.
                     },
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(200, 80)),
+                      minimumSize: MaterialStateProperty.all(Size(
+                          60 * (deviceWidth / standardDeviceWidth),
+                          40 * (deviceHeight / standardDeviceHeight))),
                       backgroundColor: MaterialStateProperty.all(Color(0xFF9B5748).withOpacity(0.5)),
                     ),
                     child: Text(
                       '찾기',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
+                        fontSize: 15 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
                   ),

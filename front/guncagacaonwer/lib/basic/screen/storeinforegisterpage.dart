@@ -28,11 +28,16 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF9B5748),
         title: Text(
-          "근카가카",
+          "가게 등록",
           style: TextStyle(fontSize: 30),
         ),
       ),
@@ -44,11 +49,11 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(
-                  height: 30,
+                  height: 10 * (deviceHeight / standardDeviceHeight),
                 ),
                 Container(
-                  width: 500,
-                  height: 80,
+                  width: 250 * (deviceWidth / standardDeviceWidth),
+                  height: 37 * (deviceHeight / standardDeviceHeight),
                   child: TextFormField(
                     decoration: InputDecoration(
                       labelText: '가게 명',
@@ -64,10 +69,12 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(
+                  height: 5 * (deviceHeight / standardDeviceHeight),
+                ),
                 Container(
-                  width: 500,
-                  height: 80,
+                  width: 250 * (deviceWidth / standardDeviceWidth),
+                  height: 37 * (deviceHeight / standardDeviceHeight),
                   child: TextFormField(
                     decoration: InputDecoration(
                       labelText: '가게 주소',
@@ -83,10 +90,12 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(
+                  height: 5 * (deviceHeight / standardDeviceHeight),
+                ),
                 Container(
-                  width: 500,
-                  height: 80,
+                  width: 250 * (deviceWidth / standardDeviceWidth),
+                  height: 37 * (deviceHeight / standardDeviceHeight),
                   child: TextFormField(
                     decoration: InputDecoration(
                       labelText: '가게 전화번호',
@@ -102,9 +111,12 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                     },
                   ),
                 ),
+                SizedBox(
+                  height: 5 * (deviceHeight / standardDeviceHeight),
+                ),
                 Container(
-                  width: 520,
-                  height: 80,
+                  width: 255 * (deviceWidth / standardDeviceWidth),
+                  height: 37 * (deviceHeight / standardDeviceHeight),
                   padding: EdgeInsets.all(8),
                   child: Row(
                     children: [
@@ -134,9 +146,11 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 15),
+                SizedBox(
+                  height: 5 * (deviceHeight / standardDeviceHeight),
+                ),
                 Container(
-                  margin: EdgeInsets.only(right: 260),
+                  margin: EdgeInsets.only(right: 135 * (deviceWidth / standardDeviceWidth)),
                   height: 40,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -144,16 +158,18 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                       Text(
                         "사진첨부",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           color: Color(0xFF9B5748),
                         ),
                       ),
-                      SizedBox(width: 30),
+                      SizedBox(width: 10 * (deviceWidth / standardDeviceWidth)),
                       ElevatedButton(
                         onPressed: _pickImage,
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Color(0xFFE54816)),
-                          minimumSize: MaterialStateProperty.all(Size(80, 30)),
+                          minimumSize: MaterialStateProperty.all(Size(
+                              40 * (deviceWidth / standardDeviceWidth),
+                              15 * (deviceHeight / standardDeviceHeight))),
                         ),
                         child: Text(
                           "이미지 선택",
@@ -164,13 +180,13 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                         ),
                       ),
                       SizedBox(
-                        width: 30,
+                        width: 20 * (deviceWidth / standardDeviceWidth),
                       ),
                       Text(img), // 선택된 이미지 파일명 표시 또는 경로 표시
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 15 * (deviceHeight / standardDeviceHeight)),
                 ElevatedButton(
                   onPressed: () {
                     // Handle registration logic here
@@ -178,7 +194,9 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                   },
                   style: ButtonStyle(
                     // 버튼의 최소 크기 설정
-                    minimumSize: MaterialStateProperty.all(Size(400, 60)), // 가로 150, 세로 50
+                    minimumSize: MaterialStateProperty.all(Size(
+                        180 * (deviceWidth / standardDeviceWidth),
+                        30 * (deviceHeight / standardDeviceHeight))), // 가로 150, 세로 50
 
                     // 버튼의 배경 색상 설정
                     backgroundColor: MaterialStateProperty.all(Color(0xFF9B5748).withOpacity(0.5)), // 배경 색상
@@ -187,7 +205,7 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                     '등록',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 30,// 텍스트 색상
+                      fontSize: 15 * (deviceWidth / standardDeviceWidth),// 텍스트 색상
                     ),
                   ),
                 ),

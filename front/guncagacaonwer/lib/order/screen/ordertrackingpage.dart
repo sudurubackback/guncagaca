@@ -35,21 +35,155 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
     },
   ];
 
+  DateTime? startingDate;
+  DateTime? endingDate;
+
+  TextEditingController startingDateController = TextEditingController();
+  TextEditingController endingDateController = TextEditingController();
+
+  Future<void> _selectDate(BuildContext context, TextEditingController controller, DateTime? selectedDate, bool isStartingDate) async {
+    final DateTime picked = (await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2010, 1, 1),
+      lastDate: DateTime.now(),
+    ))!;
+
+    if (picked != null && picked != selectedDate) {
+      // 사용자가 날짜를 선택한 경우
+      if (isStartingDate) {
+        // 시작 날짜 선택
+        startingDate = picked;
+      } else {
+        // 종료 날짜 선택
+        endingDate = picked;
+      }
+      // 선택한 날짜를 텍스트 필드에 업데이트
+      controller.text = DateFormat('yyyy-MM-dd').format(picked);
+    }
+  }
+  List<Map<String, dynamic>> filteredOrders = [];
+
+  // 날짜 필터링
+  List<Map<String, dynamic>> filterOrdersByDate(
+      List<Map<String, dynamic>> orders,
+      DateTime? startingDate,
+      DateTime? endingDate,
+      ) {
+    if (startingDate == null || endingDate == null) {
+      return orders; // 선택된 날짜 범위가 없으면 모든 주문 반환
+    }
+
+    return orders.where((order) {
+      DateTime orderTime = DateTime.parse(order['orderTime']);
+      return orderTime.isAfter(startingDate) && orderTime.isBefore(endingDate);
+    }).toList();
+  }
+
+  void applyDateFilter() {
+    if (startingDate != null && endingDate != null) {
+      setState(() {
+        // filteredOrders에 날짜 필터 적용
+        filteredOrders = filterOrdersByDate(processingOrders, startingDate, endingDate);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 20 * (deviceWidth / standardDeviceWidth)),
+              GestureDetector(
+                onTap: () {
+                  _selectDate(context, startingDateController, startingDate, true);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFD9D9D9),
+                  ),
+                  width: 60 * (deviceWidth / standardDeviceWidth),
+                  child: Center(
+                    child: TextFormField(
+                      enabled: false,
+                      controller: startingDateController,
+                      decoration: InputDecoration(
+                        hintText: startingDate != null ? DateFormat('yyyy-MM-dd').format(startingDate!) : '시작일 선택',
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Text(' ~ ', style: TextStyle(fontSize: 12 * (deviceWidth / standardDeviceWidth))),
+              GestureDetector(
+                onTap: () {
+                  _selectDate(context, endingDateController, endingDate, false);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFD9D9D9),
+                  ),
+                  width: 60 * (deviceWidth / standardDeviceWidth),
+                  child: Center(
+                    child: TextFormField(
+                      enabled: false,
+                      controller: endingDateController,
+                      decoration: InputDecoration(
+                        hintText: endingDate != null ? DateFormat('yyyy-MM-dd').format(endingDate!) : '종료일 선택',
+                      ),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(), // 화면에서 남은 공간을 차지
+              ElevatedButton(
+                onPressed: applyDateFilter,
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFFE54816), // 버튼의 배경색
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Color(0xFFACACAC), // 외곽선 색상
+                      width: 1.0, // 외곽선 두께
+                    ),
+                  ),
+                ),
+                child: Text(
+                  '적용',
+                  style: TextStyle(
+                    color: Colors.white, // 버튼 텍스트 색상
+                    fontSize: 12 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
+                  ),
+                ),
+              ),
+              SizedBox(width: 10 * (deviceWidth / standardDeviceWidth))
+            ],
+          ),
+          SizedBox(height: 3 * (deviceHeight / standardDeviceHeight)),
           Expanded(
             child: ListView.builder(
-              itemCount: processingOrders.length,
+              itemCount: filteredOrders.length,
               itemBuilder: (BuildContext context, int index) {
-                final processingorder = processingOrders[index];
+                final order = filteredOrders[index];
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(processingorder["totalPrice"]);
+                String formattedTotalPrice = formatter.format(order["totalPrice"]);
                 // 주문 시간에서 날짜와 시간 추출
-                List<String> orderTimeParts = processingorder["orderTime"].split(" ");
+                List<String> orderTimeParts = order["orderTime"].split(" ");
                 String timeOfDay = "";
                 String time = orderTimeParts[1];
                 // 시간을 오전/오후로 나누기
@@ -63,11 +197,11 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                   timeOfDay = "오전";
                 }
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,
-                    width: 150,
-                    height: 130,
+                    width: 70 * (deviceWidth / standardDeviceWidth),
+                    height: 65 * (deviceHeight / standardDeviceHeight),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -80,8 +214,10 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                       children: [
                         // 첫번째 컨테이너 (주문 시간)
                         Container(
-                          width: 150,
-                          margin: EdgeInsets.only(top: 15, left: 10),
+                          width: 60 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(
+                              top: 7 * (deviceHeight / standardDeviceHeight),
+                              left: 7 * (deviceWidth / standardDeviceWidth)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -89,68 +225,70 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
                               Text(
                                 '$hour:${time.split(":")[1]}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 36,
+                                  fontSize: 13 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 30,
+                          width: 13 * (deviceWidth / standardDeviceWidth),
                         ),
-                        // 두번째 컨테이너 (메뉴 총 개수, 메뉴-개수, 도착 예정 시간)
                         Container(
-                          width: 350,
-                          margin: EdgeInsets.only(top: 15),
+                          width: 160 * (deviceWidth / standardDeviceWidth),
+                          margin: EdgeInsets.only(top: 3 * (deviceHeight / standardDeviceHeight)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(
+                                height: 4 * (deviceHeight / standardDeviceHeight),
+                              ),
                               Text(
-                                '메뉴 [${processingorder["totalMenuCount"]}]개 / '+formattedTotalPrice+"원",
+                                '메뉴 [${order["totalMenuCount"]}]개 / '+formattedTotalPrice+"원",
                                 style: TextStyle(
-                                    fontSize: 18
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '닉네임 : ${processingorder['nickname']}',
+                                '닉네임 : ${order['nickname']}',
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color(0xFF9B5748)
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
+                                  color: Color(0xFF9B5748),
                                 ),
                               ),
                               SizedBox(
-                                height: 15,
+                                height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
                                 "도착 예정 시간: " + timeOfDay + ' $hour:${time.split(":")[1]}',
                                 style: TextStyle(
-                                    fontSize: 18
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 150,
+                          width: 80 * (deviceWidth / standardDeviceWidth),
                         ),
                         // 세번째 컨테이너 (버튼)
                         Container(
@@ -158,8 +296,8 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                             mainAxisAlignment: MainAxisAlignment.center, // 컨테이너를 가로로 배치
                             children: [
                               Container(
-                                width: 140,
-                                height: 110,
+                                width: 80 * (deviceWidth / standardDeviceWidth),
+                                height: 110 * (deviceHeight / standardDeviceHeight),
                                 child: ElevatedButton(
                                   onPressed: () {
                                     showDialog(
@@ -168,8 +306,8 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                         return AlertDialog(
                                           contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                                           content: Container(
-                                            width: 400,
-                                            height: 600,
+                                            width: 200 * (deviceWidth / standardDeviceWidth),
+                                            height: 280 * (deviceHeight / standardDeviceHeight),
                                             child: SingleChildScrollView( // 스크롤 가능한 영역 추가
                                               child: Column(
                                                 children: [
@@ -199,7 +337,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                     '주문표'+'\n'+'  확인',
                                     style: TextStyle(
                                       color: Colors.white, // 버튼 텍스트 색상
-                                      fontSize: 24, // 버튼 텍스트 크기
+                                      fontSize: 12 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
                                     ),
                                   ),
                                 ),
