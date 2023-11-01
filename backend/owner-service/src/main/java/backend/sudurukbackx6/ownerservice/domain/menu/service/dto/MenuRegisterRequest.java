@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class MenuRegisterRequest {
 	private Long cafeId;
 	private String name;
+	private String description;
 	private int price;
 	private String img;
 	private Category category;
