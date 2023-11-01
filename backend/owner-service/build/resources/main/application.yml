@@ -4,7 +4,12 @@ spring:
   profiles:
     active: dev
   config:
+<<<<<<< HEAD
     import: optional:configserver:http://k9d102.p.ssafy.io:8888 #config 설정
+=======
+    import: optional:configserver:http://localhost:8888
+
+>>>>>>> 8c07e86a864412b8eb383472a4ae7eaf2a047bf0
 server:
   port: 8086
 management:

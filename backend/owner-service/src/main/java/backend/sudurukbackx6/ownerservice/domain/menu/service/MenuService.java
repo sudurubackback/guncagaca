@@ -1,21 +1,16 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.service;
 
-import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
-import backend.sudurukbackx6.ownerservice.domain.menu.entity.DetailsOptionEntity;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.MenuEntity;
-import backend.sudurukbackx6.ownerservice.domain.menu.entity.OptionsEntity;
-import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.Category;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.StatusMenu;
 import backend.sudurukbackx6.ownerservice.domain.menu.repository.MenuRepository;
 import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuEditRequest;
 import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuRegisterRequest;
-import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
 import backend.sudurukbackx6.ownerservice.domain.owner.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +22,7 @@ public class MenuService {
 
 	private final MenuRepository menuRepository;
 	private final OwnerService ownerService;
+	private final MongoTemplate mongoTemplate;
 	public void createMenu(MenuRegisterRequest request) {
 
 		MenuEntity menuEntity = MenuEntity.builder()
@@ -54,20 +50,15 @@ public class MenuService {
 	}
 
 	public void updateStatus(String id) {
-		log.info("id = {}", id);
+
 		MenuEntity menuEntity = menuRepository.findById(id).orElseThrow();
-		log.info("=========================");
-		log.info("menuEntity = {}", menuEntity);
-		log.info("=========================");
-		if (menuEntity.getStatus().equals(StatusMenu.ON_SALE)) {
-			log.info("=========들어옴? ===========");
-			menuEntity.setStatus(StatusMenu.SOLD_OUT);
-			menuRepository.save(menuEntity);
-		} else {
-			log.info("=========들어옴? ===========222");
-			menuEntity.setStatus(StatusMenu.ON_SALE);
-			menuRepository.save(menuEntity);
-		}
+
+		//Spring id의 status값에 따라서 상태가 바뀐다. 3항연산자 써볼지두..?
+		Query query = new Query(Criteria.where("_id").is(id));
+		Update update = new Update();
+		update.set("status", menuEntity.getStatus()==StatusMenu.ON_SALE?StatusMenu.SOLD_OUT:StatusMenu.ON_SALE);
+		mongoTemplate.updateFirst(query, update, MenuEntity.class);
+
 	}
 
 	public void deleteMenu(String id) {

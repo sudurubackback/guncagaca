@@ -1,14 +1,8 @@
 package backend.sudurukbackx6.ownerservice.redis.util;
 
-import backend.sudurukbackx6.ownerservice.domain.token.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -16,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtil {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final JwtTokenProvider tokenProvider;
 
     //이메일로 전송한 인증코드 저장
     public void saveCode(String email, String code) {
@@ -41,9 +34,15 @@ public class RedisUtil {
         return (String) redisTemplate.opsForHash().get("email:token", email);
     }
 
-    public boolean isMatchToken(String email, String refreshToken){
+    public boolean isMatchToken(String email, String header){
         String redisToken = getRefreshTokens(email);
-        return redisToken != null && redisToken.equals(refreshToken);
+        return redisToken != null && redisToken.equals(header.substring(7));
+    }
+
+    //redis에 있는 refreshtoken을 삭제해준다,
+    public void deleteRefreshToken(String email) {
+        System.out.println("deleteRefreshToken email = "+email);
+        redisTemplate.opsForHash().delete("email:token", email);
     }
 
 
