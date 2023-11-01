@@ -59,8 +59,7 @@ class _LoginPageState extends State<LoginPage> {
       final email = mainViewModel.user?.kakaoAccount?.email;
       print('버튼 클릭 완료');
 
-      // final tokens = await _fetchTokens(nickname, email);
-      final tokens = null;
+      final tokens = await _fetchTokens(nickname, email);
       print(tokens);
       if (tokens != null) {
         // 토큰들을 얻었을 경우, 저장하고 다음 화면으로 이동
@@ -103,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
-    final url = 'http://10.0.2.2:8080/api/member/sign'; // 서버 엔드포인트 URL로 수정
+    final url = 'http://k9d102.p.ssafy.io:8000/api/member/sign'; // 서버 엔드포인트 URL로 수정
     final response = await http.post(
         Uri.parse(url),
         headers: <String, String>{
