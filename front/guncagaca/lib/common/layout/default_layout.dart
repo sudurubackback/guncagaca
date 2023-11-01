@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:guncagaca/notification/models/noti_widget.dart';
 
 import '../../cart/models/cart_widget.dart';
+import '../../kakao/main_view_model.dart';
 
 
 class DefaultLayout extends StatelessWidget {
@@ -10,12 +11,14 @@ class DefaultLayout extends StatelessWidget {
   final Widget child;
   final String? title;
   final Widget? bottomNavigationBar;
+  final MainViewModel mainViewModel;
 
   const DefaultLayout({
     required this.child,
     this.backgroundColor,
     this.title,
     this.bottomNavigationBar,
+    required this.mainViewModel,
     Key? key,
   }) : super(key: key);
 
@@ -54,8 +57,8 @@ class DefaultLayout extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    CartIconWidget(),
-                    NotiIconWidget(),
+                    CartIconWidget(mainViewModel: mainViewModel,),
+                    NotiIconWidget(mainViewModel: mainViewModel,),
                   ],
                 ),
               ],

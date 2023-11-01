@@ -4,16 +4,17 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'dart:convert';
 
 import '../../common/layout/default_layout.dart';
+import '../../kakao/main_view_model.dart';
 import '../../store/models/store.dart';
 import '../../store/view/store_detail_screen.dart';
 import '../component/orderdetail_list.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final int id;
+  final MainViewModel mainViewModel;
 
 
-
-  OrderDetailScreen({required this.id});
+  OrderDetailScreen({required this.id, required this.mainViewModel});
 
   @override
   _OrderDetailScreenState createState() => _OrderDetailScreenState();
@@ -69,21 +70,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       orElse: () => Map<String, dynamic>.from({}),
     );
 
-    ImageProvider? imageProvider;
 
-    if (orderData["img"] != null && orderData["img"] is String) {
-      imageProvider = NetworkImage(orderData["img"]);
-    } else {
-      imageProvider = AssetImage("assets/image/cafe.PNG");
-    }
 
     Store store = Store(
-      image: imageProvider,
-      name: orderData["name"] ?? "이름 없음",
+      storeId: 1,
+      img: orderData["img"],
+      cafeName: orderData["name"] ?? "이름 없음",
+      longitude: 2.5,
       distance: 2.5,
-      rating: 4.5,
-      reviewCount: 120,
-      description: '맛있는 음식을 제공하는 식당입니다.',
+      starTotal: 4.5,
+      reviewCount: 120, latitude: 2.5,
     );
 
     if (orderData.isEmpty) {
@@ -238,8 +234,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => DefaultLayout(
-                          title: store.name,
-                          child: StoreDetailScreen(store: store)),
+                          title: store.cafeName,
+                          child: StoreDetailScreen(storeId: store.storeId, mainViewModel: widget.mainViewModel,) ,
+                      mainViewModel: widget.mainViewModel,),
                     ),
                   );
                 },

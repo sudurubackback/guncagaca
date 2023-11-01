@@ -4,9 +4,14 @@ import 'dart:convert';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/review_create/reviewcreate_view.dart';
 
+import '../../kakao/main_view_model.dart';
 import '../../orderdetail/view/orderdetail_screen.dart';
 
 class OrderList extends StatefulWidget {
+  final MainViewModel mainViewModel;
+
+  const OrderList({required this.mainViewModel});
+
   @override
   _OrderListState createState() => _OrderListState();
 }
@@ -108,7 +113,7 @@ class _OrderListState extends State<OrderList> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => OrderDetailScreen(id: dummyOderss[index]["id"]),
+                                builder: (context) => OrderDetailScreen(id: dummyOderss[index]["id"], mainViewModel: widget.mainViewModel,),
                               ),
                             );
                           },

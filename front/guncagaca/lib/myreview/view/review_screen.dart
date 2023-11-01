@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:guncagaca/store/models/review.dart';
+import '../../kakao/main_view_model.dart';
 import '../component/review_list.dart';
 
 
 class ReviewScreen extends StatelessWidget {
+
+  final MainViewModel mainViewModel;
+
+  const ReviewScreen ({required this.mainViewModel});
 
   @override
   Widget build(BuildContext context) {

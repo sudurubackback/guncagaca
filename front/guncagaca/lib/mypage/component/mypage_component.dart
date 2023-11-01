@@ -6,9 +6,11 @@ import 'package:guncagaca/myreview/review.dart';
 import 'package:guncagaca/myreview/view/review_screen.dart';
 import 'package:guncagaca/order/view/order_page.dart';
 
+import '../../kakao/main_view_model.dart';
 import '../../point/view/point_screen.dart';
 
 class MypageComponent extends StatelessWidget {
+  final MainViewModel mainViewModel;
 
   final Function onOrderTap;
   final Function onReviewTap;
@@ -33,11 +35,15 @@ class MypageComponent extends StatelessWidget {
     required this.onWithdrawalTap,
     required this.showDialogLogOut,
     required this.showOut,
+    required this.mainViewModel
   });
 
 
   @override
   Widget build(BuildContext context) {
+    String? nickname = mainViewModel.user?.kakaoAccount?.profile?.nickname;
+
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -51,9 +57,9 @@ class MypageComponent extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    '000님 안녕하세요',
+                    '${nickname ?? "회원"} 님 안녕하세요',
                     style: TextStyle(fontSize: 29.0),
                     textAlign: TextAlign.left,
                   ),
@@ -102,7 +108,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => OrderPage()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: mainViewModel,)), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
                           );
                         },
                         child: Image.asset(
@@ -115,7 +121,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => OrderPage()),
+                            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: mainViewModel,)),
                           );
                         },
                         child: const Text(
@@ -132,7 +138,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ReviewScreen()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: mainViewModel,)), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
                           );
                         },
                         child: Image.asset(
@@ -145,7 +151,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ReviewScreen()),
+                            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: mainViewModel,)),
                           );
                         },
                         child: const Text(
@@ -162,7 +168,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => JjimScreen()), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: mainViewModel,)), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
                           );
                         },
                         child: Image.asset(
@@ -175,7 +181,7 @@ class MypageComponent extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => JjimScreen()),
+                            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: mainViewModel,)),
                           );
                         },
                         child: const Text(
@@ -204,7 +210,7 @@ class MypageComponent extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PointScreen()), // PasswordChangePage로 이동
+                  MaterialPageRoute(builder: (context) => PointScreen(mainViewModel: mainViewModel,)), // PasswordChangePage로 이동
                 );
               },
               child: const Center(
@@ -241,7 +247,7 @@ class MypageComponent extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NicknamePage()), // PasswordChangePage로 이동
+                  MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: mainViewModel,)), // PasswordChangePage로 이동
                 );
               },
               child: const Center(
@@ -278,7 +284,7 @@ class MypageComponent extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PasswordPage()), // PasswordChangePage로 이동
+                  MaterialPageRoute(builder: (context) => PasswordPage(mainViewModel: mainViewModel,)), // PasswordChangePage로 이동
                 );
               },
               child: const Center(

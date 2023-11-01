@@ -3,9 +3,13 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/notification/view/noti_screen.dart';
 import 'dart:convert';
+
+import '../../kakao/main_view_model.dart';
 // import 'package:flutter/services.dart' show rootBundle; // 추가
 
 class NotiIconWidget extends StatelessWidget {
+  final MainViewModel mainViewModel;
+  const NotiIconWidget({required this.mainViewModel});
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> dummyNotifications = [];
@@ -35,6 +39,7 @@ class NotiIconWidget extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => DefaultLayout(
                   child: NotiScreen(notifications: dummyNotifications),
+                  mainViewModel: mainViewModel,
                 ),
               ),
             );

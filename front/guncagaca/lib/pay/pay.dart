@@ -14,10 +14,15 @@ import 'package:uuid/uuid.dart';
 
 import '../cart/controller/cart_controller.dart';
 import '../common/view/root_tab.dart';
+import '../kakao/main_view_model.dart';
 import '../order/models/order.dart';
 import '../order/view/order_view.dart';
 
-class PaymentService {
+class PaymentService{
+  final MainViewModel mainViewModel;
+
+   PaymentService({required this.mainViewModel});
+
 
   String androidApplicationId = dotenv.env['ANDROID_APPLICATION_ID']!;
   String iosApplicationId = dotenv.env['IOS_APPLICATION_ID']!;
@@ -37,11 +42,11 @@ class PaymentService {
       // closeButton: Icon(Icons.close, size: 35.0, color: Colors.black54),
       onCancel: (String data) {
         print('------- onCancel: $data');
-        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen()));
+        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen(mainViewModel: mainViewModel,), mainViewModel: mainViewModel,));
       },
       onError: (String data) {
         print('------- onError: $data');
-        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen()));
+        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen(mainViewModel: mainViewModel,), mainViewModel: mainViewModel,));
       },
       onClose: () {
         print('------- onClose');
@@ -79,7 +84,7 @@ class PaymentService {
         cartController.cartItems.clear();
 
         // OrderView()로 이동
-        Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0)));
+        Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
       },
     );
   }
@@ -143,5 +148,11 @@ class PaymentService {
       return "${itemList[0].name}외 ${itemList.length-1}건";
     }
     return "${itemList[0].name}";
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
   }
 }

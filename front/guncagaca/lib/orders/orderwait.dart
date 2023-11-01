@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../kakao/main_view_model.dart';
 import '../order/view/order_page.dart';
 
 class OrderWaitPage extends StatefulWidget {
+  final MainViewModel mainViewModel;
+
+  const OrderWaitPage({required this.mainViewModel});
 
   @override
   _OrderWaitPageState createState() => _OrderWaitPageState();
@@ -98,7 +102,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OrderPage()), // OrderPage로 이동
+                    MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)), // OrderPage로 이동
                   );
                 },
                 child: const Center(

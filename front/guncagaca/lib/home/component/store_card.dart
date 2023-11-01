@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 
+import '../../kakao/main_view_model.dart';
 import '../../store/view/store_detail_screen.dart';
 import '../../store/models/store.dart';
 
 class StoreCard extends StatelessWidget {
+  final MainViewModel mainViewModel;
   final Store store;
 
   const StoreCard({
     required this.store,
+    required this.mainViewModel,
     Key? key,
   }) : super(key: key);
 
@@ -21,7 +24,8 @@ class StoreCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => DefaultLayout(
                   title: store.cafeName,
-                  child: StoreDetailScreen(storeId: store.storeId)),
+                  child: StoreDetailScreen(storeId: store.storeId,mainViewModel: mainViewModel,),
+              mainViewModel: mainViewModel,),
             ),
           );
         },

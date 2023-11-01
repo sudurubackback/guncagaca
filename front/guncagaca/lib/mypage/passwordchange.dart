@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../kakao/main_view_model.dart';
+
 
 class PasswordPage extends StatefulWidget {
+
+  final MainViewModel mainViewModel;
+
+  const PasswordPage ({required this.mainViewModel});
+
   @override
   _PasswordState createState() => _PasswordState();
 }

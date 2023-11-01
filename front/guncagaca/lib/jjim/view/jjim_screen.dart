@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../kakao/main_view_model.dart';
 import '../component/jjim_list.dart';
 
 
 class JjimScreen extends StatelessWidget {
+  final MainViewModel mainViewModel;
+
+  const JjimScreen ({required this.mainViewModel});
 
   @override
   Widget build(BuildContext context) {

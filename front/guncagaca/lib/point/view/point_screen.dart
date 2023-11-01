@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../kakao/main_view_model.dart';
 import '../component/point_list.dart';
 
 
 class PointScreen extends StatelessWidget {
+  final MainViewModel mainViewModel;
+
+  const PointScreen ({required this.mainViewModel});
 
   @override
   Widget build(BuildContext context) {

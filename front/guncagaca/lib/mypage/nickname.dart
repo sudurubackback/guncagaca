@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../kakao/main_view_model.dart';
+
 
 
 class NicknamePage extends StatefulWidget {
+  final MainViewModel mainViewModel;
+
+  const NicknamePage ({required this.mainViewModel});
+
   @override
   _NicknameState createState() => _NicknameState();
 }

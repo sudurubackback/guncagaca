@@ -44,7 +44,10 @@ class _LoginPageState extends State<LoginPage> {
       // 실패하면 로그인 화면으로 유지
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+        MaterialPageRoute(builder: (context) => DefaultLayout(
+            child: RootTab(mainViewModel: mainViewModel,),
+            mainViewModel: mainViewModel,
+        )),
       );
     }
   }
@@ -72,20 +75,29 @@ class _LoginPageState extends State<LoginPage> {
         // ...
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+          MaterialPageRoute(builder: (context) => DefaultLayout(
+            child: RootTab(mainViewModel: mainViewModel,),
+            mainViewModel: mainViewModel,
+          )),
         );
       } else {
         print('토큰 얻기 실패');
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+          MaterialPageRoute(builder: (context) => DefaultLayout(
+            child: RootTab(mainViewModel: mainViewModel,),
+            mainViewModel: mainViewModel,
+          )),
         );
       }
     } else {
       print('로그인 실패');
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => DefaultLayout(child: RootTab())),
+        MaterialPageRoute(builder: (context) => DefaultLayout(
+          child: RootTab(mainViewModel: mainViewModel,),
+          mainViewModel: mainViewModel,
+        )),
       );
     }
   }

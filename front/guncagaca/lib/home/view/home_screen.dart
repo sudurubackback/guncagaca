@@ -11,12 +11,15 @@ import 'package:provider/provider.dart';
 
 import '../../common/utils/dio_client.dart';
 import '../../common/utils/location_service.dart';
+import '../../kakao/main_view_model.dart';
 import '../component/store_card_list.dart';
 import '../../store/models/store.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final MainViewModel mainViewModel;
+  const HomeScreen({required this.mainViewModel,
+    Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -144,6 +147,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   onSubmitted: (value) {
                     // 검색값 제출 시 수행될 로직 작성
                   },
+
                 ),
               ),
               Expanded(
@@ -164,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: StoreCardList(stores: storeData),
+                    child: StoreCardList(stores: storeData, mainViewModel: widget.mainViewModel,),
                   ),
                 ),
               ),

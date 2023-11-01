@@ -5,13 +5,15 @@ import 'package:guncagaca/menu/menu_detail.dart';
 import 'package:guncagaca/menu/menu_card.dart';
 import '../../common/layout/default_layout.dart';
 import '../../common/utils/dio_client.dart';
+import '../../kakao/main_view_model.dart';
 import '../../menu/menu.dart';
 
 class MenuTabWidget extends StatefulWidget {
   final int cafeId;
   final String storeName;
+  final MainViewModel mainViewModel;
 
-  MenuTabWidget({required this.cafeId, required this.storeName});
+  MenuTabWidget({required this.cafeId, required this.storeName, required this.mainViewModel});
 
   @override
   _ReviewTabWidgetState createState() => _ReviewTabWidgetState();
@@ -41,6 +43,7 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -53,8 +56,11 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
               context,
               MaterialPageRoute(
                 builder: (context) => DefaultLayout(
+
                     title: widget.storeName,
-                    child: DetailPage(menu: menus[index])),
+                    child: DetailPage(menu: menus[index]),
+                mainViewModel:widget.mainViewModel,),
+
               ),
             );
           },

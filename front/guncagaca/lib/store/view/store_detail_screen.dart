@@ -8,14 +8,18 @@ import 'package:guncagaca/store/component/menu_tab.dart';
 import 'package:guncagaca/store/component/review_tab.dart';
 
 import '../../common/utils/dio_client.dart';
+import '../../kakao/main_view_model.dart';
 import '../../menu/menu.dart';
 import '../models/store_detail.dart';
 
 
 class StoreDetailScreen extends StatefulWidget {
-  final int storeId;
 
-  StoreDetailScreen({required this.storeId});
+  final int storeId;
+  final MainViewModel mainViewModel;
+
+  StoreDetailScreen({required this.storeId, required this.mainViewModel});
+
 
   @override
   _StoreDetailScreenState createState() => _StoreDetailScreenState();
@@ -119,6 +123,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                               color: storeDetail!.isLiked ? Colors.red : Colors.grey,
                             ),
                           ),
+
                         ],
                       ),
                       SizedBox(height: 16),
@@ -141,7 +146,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                               height: 400,
                               child: TabBarView(
                                 children: [
-                                  MenuTabWidget(storeName: storeDetail!.cafeName, cafeId: storeDetail!.storeId,),
+                                  MenuTabWidget(storeName: storeDetail!.cafeName, cafeId: storeDetail!.storeId,mainViewModel: widget.mainViewModel,),
                                   IntroTabWidget(description: storeDetail!.description),
                                   ReviewTabWidget(cafeId: storeDetail!.storeId,),
                                 ],
