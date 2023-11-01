@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.orderservice.domain.order.entity;
 
+import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "order")
 public class Order {
+
     @Id
     private String id;
 
@@ -31,5 +33,9 @@ public class Order {
 
     private Status status;
 
+    private boolean takeoutYn;
+
     private List<Menu> menus;
+
+    private int price;
 }
