@@ -22,11 +22,11 @@ public class KafkaEventService {
         event.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                log.info("Sent message=[" + message + "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                log.info("Sent message=[{}] with offset=[{}]", message, result.getRecordMetadata().offset());
             }
             @Override
             public void onFailure(Throwable ex) {
-                log.info("Unable to send message=[" + message + "] due to : " + ex.getMessage());
+                log.error("Unable to send message=[{}] due to : {}", message, ex.getMessage());
             }
         });
     }
