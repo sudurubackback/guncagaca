@@ -20,8 +20,8 @@ class StoreCard extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => DefaultLayout(
-                  title: store.name,
-                  child: StoreDetailScreen(store: store)),
+                  title: store.cafeName,
+                  child: StoreDetailScreen(storeId: store.storeId)),
             ),
           );
         },
@@ -30,8 +30,8 @@ class StoreCard extends StatelessWidget {
           children: [
             ClipRRect(
               //borderRadius: BorderRadius.circular(15.0),
-              child: Image(
-                image: store.image,
+              child: Image.network(
+                store.img,
                 width: 80,  // 원하는 이미지의 넓이로 조절하세요.
                 height: 80, // 원하는 이미지의 높이로 조절하세요.
                 fit: BoxFit.cover,
@@ -42,7 +42,7 @@ class StoreCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(store.name,
+                  Text(store.cafeName,
                   style: const TextStyle(
                     fontSize: 20.0, fontWeight: FontWeight.w500,
                   ),),
@@ -54,7 +54,7 @@ class StoreCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      _IconText(icon: Icons.star, label: store.rating.toString()),
+                      _IconText(icon: Icons.star, label: store.starTotal.toString()),
                       SizedBox(width: 10.0),
                       _IconText(icon: Icons.receipt, label: '${store.reviewCount} 개')
                     ],
