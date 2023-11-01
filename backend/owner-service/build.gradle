@@ -68,6 +68,9 @@ dependencies {
 
 	//password encoder
 	implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m' //Bcrypt 암호화
+
+	// openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 dependencyManagement {
