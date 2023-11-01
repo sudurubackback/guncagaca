@@ -7,8 +7,10 @@ import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.ReviewDto;
 import java.util.List;
 
 public interface ReviewService {
-    ReviewDto.Response reviewSave(String token, Long cafeId, Long orderId, ReviewDto.Request request);
+    ReviewDto.Response reviewSave(String token, Long cafeId, String orderId, ReviewDto.Request request);
     void reviewDelete(String token, Long cafeId, Long reviewId);
+
+    void updateOrderStatus(String orderId);
 
     List<MyReviewResponse> getReviewByMemberId(Long memberId);
 }
