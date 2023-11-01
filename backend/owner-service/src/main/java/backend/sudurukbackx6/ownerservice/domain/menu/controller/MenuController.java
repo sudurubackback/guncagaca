@@ -1,18 +1,15 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.controller;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import backend.sudurukbackx6.ownerservice.domain.menu.service.MenuService;
 import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuEditRequest;
 import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuRegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/ceo")
@@ -20,14 +17,14 @@ import lombok.RequiredArgsConstructor;
 public class MenuController {
 	private final MenuService menuService;
 
-	@PostMapping("/menu/register")
-	public void createMenu(@RequestBody MenuRegisterRequest request){
-		menuService.createMenu(request);
+	@PostMapping(value = "/menu/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public void createMenu(@RequestPart(value="file", required = false) MultipartFile file, @RequestPart MenuRegisterRequest request) throws IOException {
+		menuService.createMenu(file, request);
 	}
 
-	@PutMapping("/menu/edit")
-	public void updateMenu(@RequestBody MenuEditRequest request){
-		menuService.updateMenu(request);
+	@PutMapping(value = "/menu/edit",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public void updateMenu(@RequestPart(value="file", required = false) MultipartFile file, @RequestPart MenuEditRequest request) throws IOException {
+		menuService.updateMenu(file, request);
 	}
 
 	@PutMapping("/menu/sale")
@@ -39,4 +36,10 @@ public class MenuController {
 	public void deleteMenu(@RequestBody String menuId){
 		menuService.deleteMenu(menuId);
 	}
+
+	@PostMapping(value = "/image",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public String uploadTest(@RequestPart(value="file", required = false) MultipartFile file) throws IOException {
+		return menuService.uploadTest(file);
+	}
+
 }

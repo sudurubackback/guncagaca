@@ -1,6 +1,8 @@
 package backend.sudurukbackx6.ownerservice.domain.menu.service;
 
 
+import backend.sudurukbackx6.ownerservice.common.s3.S3Uploader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,6 +16,9 @@ import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.MenuRegisterRe
 import backend.sudurukbackx6.ownerservice.domain.owner.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -21,14 +26,22 @@ import lombok.extern.slf4j.Slf4j;
 public class MenuService {
 
 	private final MenuRepository menuRepository;
-	private final OwnerService ownerService;
 	private final MongoTemplate mongoTemplate;
-	public void createMenu(MenuRegisterRequest request) {
+	private final S3Uploader s3Uploader;
+
+
+	@Value("${cloud.aws.cloud.url}")
+	private String basicProfile;
+
+	public void createMenu(MultipartFile multipartFile, MenuRegisterRequest request) throws IOException {
+
+		String upload = s3Uploader.upload(multipartFile, "MenuImages");
 
 		MenuEntity menuEntity = MenuEntity.builder()
 			.storeId(request.getCafeId()) // ownerId에서 storeid로 바꿔야합니다.
-			.img("이미지") //S3 연결 후 수정
+			.img(upload) //S3 연결 후 수정
 			.category(request.getCategory())
+			.description(request.getDescription())
 			.name(request.getName())
 			.price(request.getPrice())
 			.optionsEntity(request.getOptionsList())
@@ -38,15 +51,31 @@ public class MenuService {
 		menuRepository.save(menuEntity);
 	}
 
-	public void updateMenu(MenuEditRequest request) {
+	public void updateMenu(MultipartFile multipartFile, MenuEditRequest request) throws IOException {
+
+		String upload = s3Uploader.upload(multipartFile, "MenuImages");
+
 		MenuEntity menuEntity = menuRepository.findById(request.getId()).orElseThrow(RuntimeException::new);
+
+		removeOriginFile(menuEntity);
+
 		menuEntity.setName(request.getName());
+		menuEntity.setDescription(request.getDescription());
 		menuEntity.setPrice(request.getPrice());
 		menuEntity.setCategory(request.getCategory());
-		menuEntity.setImg("이미지"); //S3 연결 후 수정
+		menuEntity.setImg(upload); //S3 연결 후 수정
 		menuEntity.setOptionsEntity(request.getOptionsList());
 
 		menuRepository.save(menuEntity);
+	}
+
+	//
+	private void removeOriginFile(MenuEntity menuEntity) {
+		String img = menuEntity.getImg();
+		String[] split = img.split("/");
+		int length = split.length;
+		img = split[length-1];
+		s3Uploader.deleteFile("MenuImages/" + img);
 	}
 
 	public void updateStatus(String id) {
@@ -64,5 +93,12 @@ public class MenuService {
 	public void deleteMenu(String id) {
 		MenuEntity menuEntity = menuRepository.findById(id).orElseThrow();
 		menuRepository.delete(menuEntity);
+	}
+
+	public String uploadTest(MultipartFile multipartFile) throws IOException {
+
+		String upload = s3Uploader.upload(multipartFile, "Test");
+
+		return "성공 " + upload;
 	}
 }
