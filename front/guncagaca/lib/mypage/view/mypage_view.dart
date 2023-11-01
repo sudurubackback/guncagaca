@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:guncagaca/mypage/component/mypage_component.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
-import 'package:guncagaca/myreview/review.dart';
 import 'package:guncagaca/myreview/view/review_screen.dart';
 import 'package:guncagaca/point/view/point_screen.dart';
 

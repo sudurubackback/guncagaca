@@ -1,12 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../../common/utils/dio_client.dart';
+import '../../kakao/main_view_model.dart';
+
 class ReviewList extends StatefulWidget {
+
   @override
   _ReviewListState createState() => _ReviewListState();
 }
 
 class _ReviewListState extends State<ReviewList> {
+  late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyReviews = [];
 
   @override
@@ -16,23 +23,43 @@ class _ReviewListState extends State<ReviewList> {
   }
 
   void loadDummyReviews() async {
-    try {
-      String jsonString = await DefaultAssetBundle.of(context)
-          .loadString('assets/json/review_dumi.json');
-      dummyReviews = List<Map<String, dynamic>>.from(json.decode(jsonString));
-      print("여기입니다");
-      print(dummyReviews);
-      setState(() {}); // 상태를 업데이트하여 위젯을 다시 그립니다.
-    } catch (e) {
-      print('Error decoding JSON: $e');
+    final token = prefs.getString('accessToken');
+
+    if (token != null) {
+      // String baseUrl = dotenv.env['BASE_URL']!;
+      Dio dio = DioClient.getInstance();
+      print(token);
+      print("통신");
+
+      try {
+        Response response = await dio.get(
+          "http://k9d102.p.ssafy.io:8085/api/store/mypage/reviews",
+          options: Options(
+            headers: <String, String>{
+              'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
+              'Authorization': token.toString(),
+            },
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          List<dynamic> jsonData = json.decode(response.data);
+          dummyReviews = List<Map<String, dynamic>>.from(jsonData);
+          print(dummyReviews);
+          print("제대로 옴");
+          setState(() {});
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('에러: $e');
+      }
+    } else {
+      print(token);
     }
+
   }
 
-  void _removeReview(int index) {
-    setState(() {
-      dummyReviews.removeAt(index);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
