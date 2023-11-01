@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 
-class Store {
+class StoreDetail {
   final int storeId;
   final String img;  // 가게 이미지
   final String cafeName;          // 가게 이름
-  final double latitude;
-  final double longitude;
-  final double distance;      // 거리
   final double starTotal;        // 평점
   final int reviewCount;      // 리뷰 수
+  final String description;
+  final bool isLiked;
 
-  Store({
+  StoreDetail({
     required this.storeId,
     required this.img,
     required this.cafeName,
-    required this.distance,
-    required this.latitude,
-    required this.longitude,
     required this.starTotal,
     required this.reviewCount,
+    required this.isLiked,
+    required this.description
   });
 
-  factory Store.fromMap(Map<String, dynamic> map) {
-    return Store(
+  factory StoreDetail.fromMap(Map<String, dynamic> map) {
+    return StoreDetail(
       storeId: map['storeId'],
       img: map['img'],
       cafeName: map['cafeName'],
-      latitude: map['latitude'],
-      longitude: map['longitude'],
-      distance: map['distance'],
       starTotal: map['starTotal'],
       reviewCount: map['reviewCount'],
+      isLiked: map['liked'],
+      description: map['description']
     );
   }
 }
