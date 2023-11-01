@@ -1,10 +1,7 @@
 package backend.sudurukbackx6.orderservice.domain.order.entity;
 
 import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
@@ -14,6 +11,7 @@ import java.util.List;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "order")
@@ -34,6 +32,8 @@ public class Order {
     private Status status;
 
     private boolean takeoutYn;
+
+    private boolean reviewYn;
 
     private List<Menu> menus;
 

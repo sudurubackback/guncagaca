@@ -8,7 +8,11 @@ import backend.sudurukbackx6.orderservice.domain.order.entity.Status;
 import backend.sudurukbackx6.orderservice.domain.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -30,6 +35,7 @@ public class OrderService {
                 .storeId(orderRequestDto.getStoreId())
                 .status(Status.ORDERED)
                 .takeoutYn(orderRequestDto.isTakeoutYn())
+                .reviewYn(false)
                 .price(orderRequestDto.getTotalOrderPrice())
                 .menus(orderRequestDto.getMenus())
                 .build();
@@ -39,6 +45,19 @@ public class OrderService {
         OrderResponseDto responseDto = new OrderResponseDto(null, null, orderRequestDto);
 
         return responseDto;
+    }
+
+    @KafkaListener(topics = "reviewTopic", groupId = "order")
+    public void updateOrderReviewStatus(@Payload String orderId) {
+        Order order = getOrder(orderId);
+        if (!order.isReviewYn()) {
+            order.setReviewYn(true);
+            log.info("작성완료 {}", orderId);
+            orderRepository.save(order);
+        } else {
+            log.info("이미 작성됨 {}", orderId);
+        }
+    }
 
 //    public OrderIndexResponseDto addOrder(OrderRequestDto orderRequestDto) {
 //        log.info("before order");
@@ -64,5 +83,10 @@ public class OrderService {
 //        orderRepository.save(order);
 //        log.info("after order");
 //        return new OrderIndexResponseDto();
+
+    public Order getOrder(String orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
+
     }
 }
