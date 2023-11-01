@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 
 class Review {
-  final String title;
+  final int reviewId;
+  final String nickname;
   final String content;
-  final double rating;
+  final double star;
 
   Review({
-    required this.title,
+    required this.reviewId,
+    required this.nickname,
     required this.content,
-    required this.rating
+    required this.star
   });
+
+  factory Review.fromMap(Map<String, dynamic> map) {
+    return Review(
+      reviewId: map['reviewId'],
+      nickname: map['nickname'],
+      content: map['content'],
+      star: map['star'],
+    );
+  }
+
 }

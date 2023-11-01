@@ -27,10 +27,18 @@ class MapProvider with ChangeNotifier {
       this.notifyListeners();
     }
   }
+
+  Future<LatLng> getCurrentLocation() async {
+    if (await _locationService.canGetCurrentLocation()) {
+      return convertToLatLng(_locationService.initLocation);
+    }
+    return LatLng(0, 0); // 기본값
+  }
 }
 
 LatLng convertToLatLng(LocationData? data) {
   if (data == null) {
+    print("기본값");
     return LatLng(0, 0); // 기본값을 제공하거나 오류를 처리합니다.
   }
   return LatLng(data.latitude!, data.longitude!);
