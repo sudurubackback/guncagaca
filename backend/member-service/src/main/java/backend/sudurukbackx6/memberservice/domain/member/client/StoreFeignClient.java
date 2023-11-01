@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(url = "https://k9d102.p.ssafy.io:8085", name = "store-service")
 public interface StoreFeignClient {
-    @GetMapping("/store/cafe/{cafe_id}")
+    @GetMapping("/api/store/cafe/{cafe_id}")
     StoreResponse cafeDetail(@PathVariable Long cafe_id);
 }
