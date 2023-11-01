@@ -27,7 +27,7 @@ class PointScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: PointList(),
+            child: PointList(mainViewModel: mainViewModel,),
           ),
         ],
       ),

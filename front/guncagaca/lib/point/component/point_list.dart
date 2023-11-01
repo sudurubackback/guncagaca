@@ -1,42 +1,80 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:guncagaca/kakao/main_view_model.dart';
+import 'package:guncagaca/kakao/kakao_login.dart';
+
+import '../../common/utils/dio_client.dart';
+
 
 class PointList extends StatefulWidget {
+  final MainViewModel mainViewModel;
+
+  PointList ({ required this.mainViewModel});
+
   @override
   _PointListState createState() => _PointListState();
 }
 
 class _PointListState extends State<PointList> {
+
+
+
   List<Map<String, dynamic>> dummyPoints = [];
 
   @override
   void initState() {
     super.initState();
-    loadDummyPoints();
+    loadPointsFromAPI();
   }
 
-  void loadDummyPoints() async {
-    try {
-      String jsonString = await DefaultAssetBundle.of(context)
-          .loadString('assets/json/point_dumi.json');
-      dummyPoints = List<Map<String, dynamic>>.from(json.decode(jsonString));
-      print("여기입니다");
-      print(dummyPoints);
-      setState(() {}); // 상태를 업데이트하여 위젯을 다시 그립니다.
-    } catch (e) {
-      print('Error decoding JSON: $e');
+  Future<void> loadPointsFromAPI() async {
+    final email = widget.mainViewModel.user?.kakaoAccount?.email;
+
+    if (email != null) {
+      // String baseUrl = dotenv.env['BASE_URL']!;
+      Dio dio = DioClient.getInstance();
+      print(email);
+      print("통신");
+
+      try {
+        Response response = await dio.get(
+          "http://k9d102.p.ssafy.io:8081/api/member/mypage/point",
+          options: Options(
+            headers: <String, String>{
+              'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
+              'email': email.toString(),
+            },
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          List<dynamic> jsonData = json.decode(response.data);
+          dummyPoints = List<Map<String, dynamic>>.from(jsonData);
+          print(dummyPoints);
+          print("제대로 옴");
+          setState(() {});
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('에러: $e');
+      }
+    } else {
+      print(email);
     }
+
+
   }
 
-  void _removePoint(int index) {
-    setState(() {
-      dummyPoints.removeAt(index);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return dummyPoints.isEmpty
+    return dummyPoints == null || dummyPoints.isEmpty
         ? Center(
       child: Text(
         "포인트함이 비었습니다.",
