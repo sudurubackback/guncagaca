@@ -54,7 +54,7 @@ class _PointListState extends State<PointList> {
           margin: EdgeInsets.only(top: 15, left: 10, right: 10),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xff9B5748), // PRIMARY_COLOR를 적절한 색상으로 바꿔주세요.
+              color: Color(0xff9B5748),
               width: 1.0,
             ),
             borderRadius: BorderRadius.circular(20.0),
@@ -62,39 +62,51 @@ class _PointListState extends State<PointList> {
           child: ListTile(
             contentPadding:
             EdgeInsets.symmetric(vertical: 13.0, horizontal: 16.0),
-            title: Column(
+            title: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      dummyPoints[index]['name'] ,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      dummyPoints[index]['point'].toString()+ 'p',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 6.0),
-                Container(
-                  width: 100, // 이미지의 너비
-                  height: 100, // 이미지의 높이
+              Padding(
+                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.01),
+                child: Container(
+                  width: 110,
+                  height: 110,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15), // 모서리를 둥글게 만듦
+                    borderRadius: BorderRadius.circular(15),
                     image: DecorationImage(
                       image: NetworkImage(
-                        dummyPoints[index]['img'], // 이미지 주소
+                        dummyPoints[index]['img'],
                       ),
-                      fit: BoxFit.cover, // 이미지를 박스에 맞춥니다.
+                      fit: BoxFit.cover,
                     ),
                   ),
-                )
+                ),
+              ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03), // 오른쪽에 20만큼의 패딩
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          dummyPoints[index]['name'],
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                        Text(
+                          dummyPoints[index]['point'].toString() + ' p',
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontSize: 20.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
               ],
             ),
             onTap: () {

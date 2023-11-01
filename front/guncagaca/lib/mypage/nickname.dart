@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/common/view/custom_appbar.dart';
 
 import '../kakao/main_view_model.dart';
 
@@ -31,52 +32,7 @@ class _NicknameState extends State<NicknamePage> {
       child : Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0, // 밑 줄 제거
-          automaticallyImplyLeading: false, // leading 영역을 자동으로 생성하지 않도록 설정
-          flexibleSpace: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 20),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 30.0,
-                    color: Color(0xff000000),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only( top: 20.0),
-                  child: const Center(
-                    child: Text(
-                    '닉네임 변경',
-                    style: TextStyle(color: Colors.black, fontSize: 29.0),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 20),
-                  child: Opacity(
-                    opacity: 0.0, // 아이콘을 투명하게 만듭니다.
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      iconSize: 30.0,
-                      color: Color(0xff000000),
-                      onPressed: () {
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: CustomAppbar(title: '닉네임 변경', imagePath: null,)
       ),
       body:SingleChildScrollView(
         child: Column(

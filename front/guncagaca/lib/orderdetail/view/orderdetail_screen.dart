@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:guncagaca/common/const/colors.dart';
+import 'package:guncagaca/common/view/custom_appbar.dart';
 import 'dart:convert';
 
 import '../../common/layout/default_layout.dart';
@@ -98,61 +99,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 20),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 30.0,
-                    color: Color(0xff000000),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Row(
-                    children: [
-                      const Text(
-                        '주문내역',
-                        style: TextStyle(color: Colors.black, fontSize: 29.0),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(width: 10.0),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 20),
-                  child: Opacity(
-                    opacity: 0.0,
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      iconSize: 30.0,
-                      color: Color(0xff000000),
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(2.0),
-            child: Container(
-              color: Color(0xff9B5748),
-              height: 2.0,
-            ),
-          ),
-        ),
+        child: CustomAppbar(title: '주문내역', imagePath: null,)
       ),
       body: orderData != null
           ? SingleChildScrollView(
