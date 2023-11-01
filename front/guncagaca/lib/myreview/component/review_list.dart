@@ -19,8 +19,15 @@ class _ReviewListState extends State<ReviewList> {
   @override
   void initState() {
     super.initState();
+    _initSharedPreferences();
+  }
+
+  // SharedPreferences 초기화
+  Future<void> _initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
     loadDummyReviews();
   }
+
 
   void loadDummyReviews() async {
     final token = prefs.getString('accessToken');

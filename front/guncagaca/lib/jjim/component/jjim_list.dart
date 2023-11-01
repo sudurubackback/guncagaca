@@ -20,6 +20,12 @@ class _JjimListState extends State<JjimList> {
   @override
   void initState() {
     super.initState();
+    _initSharedPreferences();
+  }
+
+  // SharedPreferences 초기화
+  Future<void> _initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
     loadDummyJjims();
   }
 
