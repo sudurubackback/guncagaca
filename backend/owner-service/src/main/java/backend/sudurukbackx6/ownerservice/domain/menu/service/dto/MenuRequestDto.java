@@ -16,6 +16,8 @@ public class MenuRequestDto {
 
     private int totalPrice; // 옵션 포함 가격
 
+    private int quantity;
+
     private String img;
 
     private String category;

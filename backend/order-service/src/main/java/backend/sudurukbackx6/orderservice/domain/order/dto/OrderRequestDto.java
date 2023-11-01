@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class OrderRequestDto {
-    private String memberId;
+    private Long memberId;
 
-    private String storeId;
+    private Long storeId;
 
     private List<MenuRequestDto> menus;
 }

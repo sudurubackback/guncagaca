@@ -77,15 +77,17 @@ public class MenuService {
 
 		List<MenuResponseDto> menuList = new ArrayList<>();
 		for (MenuRequestDto menuRequestDto : menus) {
-			MenuEntity menuEntity = menuRepository.findById(menuRequestDto.getMenuId()).orElseThrow();
-
+			MenuEntity menuEntity = menuRepository.findById(menuRequestDto.getMenuId())
+					.orElseThrow(() -> new IllegalArgumentException("메뉴 아이디가 일치하지 않습니다."));
+			log.info(menuEntity.getName());
 			List<int[]> optionsList = new ArrayList<>();
 
 			// 옵션
 			List<OptionsEntity> optionsEntity = menuEntity.getOptionsEntity();
 			for (int i = 0; i<optionsEntity.size(); i++) {
 				for (OptionRequestDto optionRequestDto : menuRequestDto.getOptions()) {
-					if (optionsEntity.get(i).getId().equals(optionRequestDto.getOptionId())) {
+					if (optionsEntity.get(i).getOptionName().equals(optionRequestDto.getOptionName())) {
+						log.info("in option");
 						// 인덱스 설정
 						int[] arr = new int[2];
 						arr[0] = i;
@@ -93,8 +95,11 @@ public class MenuService {
 						// 디테일 옵션
 						List<DetailsOptionEntity> detailsOptions = optionsEntity.get(i).getDetailsOptions();
 						for (int j = 0; j<detailsOptions.size(); j++) {
-							for (DetailOptionRequestDto detailOptionRequestDto : optionRequestDto.getDetailsOptions()) {
-								if (detailsOptions.get(j).getId().equals(detailOptionRequestDto.getDetailOptionId())) {
+							for (DetailOptionRequestDto detailOptionRequestDto : optionRequestDto.getDetailOptions()) {
+								log.info(detailsOptions.get(j).getDetailOptionName());
+								log.info(detailOptionRequestDto.getDetailOptionName());
+								if (detailsOptions.get(j).getDetailOptionName().equals(detailOptionRequestDto.getDetailOptionName())) {
+									log.info("in detail option");
 									arr[1] = j;
 									optionsList.add(arr);
 								}
@@ -103,11 +108,13 @@ public class MenuService {
 					}
 				}
 			}
+			log.info("out");
 			MenuResponseDto menuResponseDto = MenuResponseDto.builder()
 					.menuId(menuRequestDto.getMenuId())
 					.name(menuRequestDto.getName())
 					.price(menuRequestDto.getPrice())
 					.totalPrice(menuRequestDto.getTotalPrice())
+					.quantity(menuRequestDto.getQuantity())
 					.img(menuRequestDto.getImg())
 					.category(menuRequestDto.getCategory())
 					.options(optionsList)

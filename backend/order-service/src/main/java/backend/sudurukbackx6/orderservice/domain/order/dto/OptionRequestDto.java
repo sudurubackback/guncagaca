@@ -12,5 +12,5 @@ public class OptionRequestDto {
 
     private String optionName;
 
-    private List<DetailOptionRequestDto> detailsOptions;
+    private List<DetailOptionRequestDto> detailOptions;
 }

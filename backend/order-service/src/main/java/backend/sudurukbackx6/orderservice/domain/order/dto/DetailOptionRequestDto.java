@@ -9,7 +9,6 @@ import javax.persistence.Column;
 @Getter
 @NoArgsConstructor
 public class DetailOptionRequestDto {
-
     private String detailOptionId;
 
     private String detailOptionName;

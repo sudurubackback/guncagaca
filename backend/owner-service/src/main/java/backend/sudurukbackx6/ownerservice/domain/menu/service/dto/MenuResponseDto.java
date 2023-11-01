@@ -18,17 +18,20 @@ public class MenuResponseDto {
 
     private int totalPrice; // 옵션 포함 가격
 
+    private int quantity;
+
     private String img;
 
     private String category;
 
     private List<int[]> options;
 
-    public MenuResponseDto(String menuId, String name, int price, int totalPrice, String img, String category, List<int[]> options) {
+    public MenuResponseDto(String menuId, String name, int price, int totalPrice, int quantity, String img, String category, List<int[]> options) {
         this.menuId = menuId;
         this.name = name;
         this.price = price;
         this.totalPrice = totalPrice;
+        this.quantity = quantity;
         this.img = img;
         this.category = category;
         this.options = options;

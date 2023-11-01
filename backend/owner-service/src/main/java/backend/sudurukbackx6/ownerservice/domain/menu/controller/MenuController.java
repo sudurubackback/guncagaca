@@ -33,7 +33,7 @@ public class MenuController {
 		menuService.deleteMenu(menuId);
 	}
 
-	@GetMapping("/menu/order")
+	@PostMapping("/menu/order")
 	public ResponseEntity<OrderResponseDto> getOrder(@RequestBody OrderRequestDto orderRequestDto) {
 		return ResponseEntity.ok(menuService.getOrder(orderRequestDto));
 	}
