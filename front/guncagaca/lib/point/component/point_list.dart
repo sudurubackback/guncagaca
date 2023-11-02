@@ -25,9 +25,6 @@ class PointList extends StatefulWidget {
 
 class _PointListState extends State<PointList> {
   late SharedPreferences prefs;
-
-
-
   List<Map<String, dynamic>> dummyPoints = [];
 
   @override
