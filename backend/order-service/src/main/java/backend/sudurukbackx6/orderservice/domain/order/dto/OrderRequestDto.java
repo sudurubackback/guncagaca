@@ -12,6 +12,8 @@ public class OrderRequestDto {
 
     private Long memberId;
 
+    private String receiptId;
+
     private Long storeId;
 
     private boolean takeoutYn;
@@ -20,10 +22,4 @@ public class OrderRequestDto {
 
     private List<Menu> menus;
 
-    public OrderRequestDto(Long storeId, boolean takeoutYn, int totalOrderPrice, List<Menu> menus) {
-        this.storeId = storeId;
-        this.takeoutYn = takeoutYn;
-        this.totalOrderPrice = totalOrderPrice;
-        this.menus = menus;
-    }
 }
