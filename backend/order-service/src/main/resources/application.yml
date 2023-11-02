@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: order
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://k9d102.p.ssafy.io:8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    org.hibernate.type: trace
