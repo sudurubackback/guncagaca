@@ -170,8 +170,9 @@ public class StoreServiceImpl implements StoreService {
 
         List<Review> reviewList = reviewRepository.findByStoreIdOrderByIdDesc(cafeId);
         // 리뷰의 멤버Id 목록
-        List<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toList());
-        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(token, memberIds);
+        Set<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toSet());
+        List<Long> memberIdsList = new ArrayList<>(memberIds);
+        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(token, memberIdsList);
 
         // Id : 닉네임
         Map<Long, String> memberIdToNicknameMap = memberInfoList.stream()
