@@ -49,7 +49,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMemberInfo(token));
     }
     // memberId 리스트로 받아서 리스트로 반환
-    @GetMapping("/memberInfo/bulk")
+    @PostMapping("/memberInfo/bulk")
     public List<MemberInfoResponse> getMemberInfoBulk(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds) {
         return memberService.getMemberInfoBulk(memberIds);
     }
