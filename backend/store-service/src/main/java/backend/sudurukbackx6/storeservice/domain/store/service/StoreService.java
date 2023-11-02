@@ -16,8 +16,6 @@ public interface StoreService {
     void cafeSave(StoreRequest request);
     List<NeerStoreResponse> cafeList(LocateRequest request);
     StoreResponse cafeDetail(Long memberId, Long cafeId);
-//    List<StoreMenuResponse> cafeMenu(String token, Long cafeId);
-//    StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex);
     List<StoreReviewResponse> cafeReview(Long cafeId);
     Store getCafe(Long cafeId);
     void updateStarPoint(Long storeId, Double point);

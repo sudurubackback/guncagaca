@@ -66,9 +66,4 @@ public class StoreController {
         }
     }
 
-//    // 카페 메뉴 상세 몽고db에서 바로 가져오는게?
-//    @GetMapping("/cafe/{cafe_id}/menu/{index}")
-//    public StoreMenuResponse cafeMenuDetail(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id, @PathVariable Long index){
-//        return null;
-//    }
 }

@@ -152,18 +152,6 @@ public class StoreServiceImpl implements StoreService {
                 .build();
     }
 
-//    @Override
-//    public List<StoreMenuResponse> cafeMenu(String token, Long cafeId) {
-//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
-//        return null;
-//    }
-//
-//    @Override
-//    public StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex) {
-//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
-//        return null;
-//    }
-
     // 리뷰 최신순
     @Override
     public List<StoreReviewResponse> cafeReview(Long cafeId) {
@@ -212,7 +200,5 @@ public class StoreServiceImpl implements StoreService {
     public Store getCafe(Long cafeId) {
         return storeRepository.findById(cafeId).orElseThrow();
     }
-
-
 
 }
