@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/home/component/store_card.dart';
 
+import '../../kakao/main_view_model.dart';
 import '../../store/models/store.dart';
 
 
 class StoreCardList extends StatelessWidget {
   final List<Store> stores;
+  final MainViewModel mainViewModel;
 
-  StoreCardList({required this.stores});
+  StoreCardList({required this.stores, required this.mainViewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,8 @@ class StoreCardList extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: StoreCard(
-            store: stores[index],  // 이 부분을 수정했습니다.
+            store: stores[index],
+            mainViewModel: mainViewModel,// 이 부분을 수정했습니다.
           ),
         );
       },

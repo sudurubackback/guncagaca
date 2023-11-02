@@ -32,6 +32,7 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
           automaticallyImplyLeading: false,
           flexibleSpace: Center(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 20.0, top: 20),
@@ -45,7 +46,7 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.18, top: 20.0),
+                  padding: EdgeInsets.only( top: 20.0),
                   child: const Row(
                     children: [
                       Text(
@@ -54,6 +55,19 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
                         textAlign: TextAlign.center,
                       ),
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0, top: 20),
+                  child: Opacity(
+                    opacity: 0.0, // 아이콘을 투명하게 만듭니다.
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      iconSize: 30.0,
+                      color: Color(0xff000000),
+                      onPressed: () {
+                      },
+                    ),
                   ),
                 ),
               ],

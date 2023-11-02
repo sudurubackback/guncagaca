@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/review_create/reviewcreate_view.dart';
 
 import '../menu/menu.dart';
+import '../menu/menu_detail.dart';
 
 
 class OrderPage extends StatefulWidget {
@@ -75,7 +77,7 @@ class _OrderState extends State<OrderPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DetailPage()), // ReviewCreate 페이지로 이동
+                  MaterialPageRoute(builder: (context) => ReviewCreatePage()), // ReviewCreate 페이지로 이동
                 );
               },
               child: Text('메뉴디테일'),

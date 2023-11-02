@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:guncagaca/pay/pay.dart';
 
 import '../../common/const/colors.dart';
+import '../../kakao/main_view_model.dart';
 import '../controller/cart_controller.dart';
 
 class CartFooter extends StatelessWidget {
+  final MainViewModel mainViewModel;
   final CartController cartController = Get.find();
+
+ CartFooter({required this.mainViewModel});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 1, blurRadius: 10)],
+        border: Border(top: BorderSide(color: Colors.grey[200]!, width: 1.0)),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 8.0),
       child: Column(
         children: [
@@ -80,11 +90,11 @@ class CartFooter extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 12.0),
               ),
               onPressed: () {
-                // 결제 로직
+                PaymentService(mainViewModel: mainViewModel).bootpayTest(context);
               },
               child: Text("결제하기"),
             ),
-          )
+          ),
         ],
       ),
     );

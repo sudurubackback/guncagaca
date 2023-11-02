@@ -5,9 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guncagaca/login/loginpage.dart';
 
-import '../order/order.dart';
+import '../kakao/main_view_model.dart';
+import '../order/view/order_page.dart';
 
 class OrderCompletePage extends StatefulWidget {
+  final MainViewModel mainViewModel;
+
+  const OrderCompletePage({required this.mainViewModel});
 
   @override
   _OrderCompletePageState createState() => _OrderCompletePageState();
@@ -17,7 +21,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
 
   Widget _buildTitleText(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       child: Text(
         text,
         style: const TextStyle(
@@ -99,7 +103,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OrderPage()), // OrderPage로 이동
+                    MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)), // OrderPage로 이동
                   );
                 },
                 child: const Center(

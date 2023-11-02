@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="guncagaca"
+        android:label="근카가카"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
 
         <!-- 카카오 로그인 커스텀 URL 스킴 설정 -->
@@ -50,4 +51,5 @@
             android:value="z7kjv11bk5" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -1,16 +1,51 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:guncagaca/menu/menu.dart';
-import '../models/menu.dart';
-import 'menu_card.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:guncagaca/menu/menu_detail.dart';
+import 'package:guncagaca/menu/menu_card.dart';
+import '../../common/layout/default_layout.dart';
+import '../../common/utils/dio_client.dart';
+import '../../kakao/main_view_model.dart';
+import '../../menu/menu.dart';
 
-class MenuTabWidget extends StatelessWidget {
-  final List<Menu> menus;
+class MenuTabWidget extends StatefulWidget {
+  final int cafeId;
+  final String storeName;
+  final MainViewModel mainViewModel;
 
-  MenuTabWidget({Key? key, required this.menus}) : super(key: key);
+  MenuTabWidget({required this.cafeId, required this.storeName, required this.mainViewModel});
+
+  @override
+  _ReviewTabWidgetState createState() => _ReviewTabWidgetState();
+}
+
+class _ReviewTabWidgetState extends State<MenuTabWidget> {
+  List<Menu> menus = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMenuList();  // 가상의 메서드, 실제 구현이 필요합니다.
+  }
+
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
+
+  Future<List<Menu>> fetchMenuList() async {
+    final String apiUrl = "$baseUrl/api/store/${widget.cafeId}/menu";
+
+    final response = await dio.get(apiUrl);
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = response.data;
+      return jsonData.map((json) => Menu.fromMap(json)).toList();
+    } else {
+      throw Exception("Failed to fetch menus.");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    final CartController cartController = Get.put(CartController());
 
     return ListView.builder(
       itemCount: menus.length,
@@ -19,13 +54,17 @@ class MenuTabWidget extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DetailPage()),
+              MaterialPageRoute(
+                builder: (context) => DefaultLayout(
+
+                    title: widget.storeName,
+                    child: DetailPage(menu: menus[index]),
+                mainViewModel:widget.mainViewModel,),
+
+              ),
             );
           },
-          child: ListTile(
-            leading: Icon(menus[index].icon),
-            title: Text(menus[index].name),
-            trailing: Text('₩${menus[index].price}'),
+          child: MenuCard(menu: menus[index],
           ),
         );
       },

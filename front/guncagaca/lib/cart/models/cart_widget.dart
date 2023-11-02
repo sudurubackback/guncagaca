@@ -5,11 +5,15 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
+import '../../kakao/main_view_model.dart';
 import '../controller/cart_controller.dart';
 import '../view/cart_screen.dart';
 
 class CartIconWidget extends StatelessWidget {
+  final MainViewModel mainViewModel;
   final CartController cartController = Get.find<CartController>();
+
+  CartIconWidget({required this.mainViewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +28,8 @@ class CartIconWidget extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DefaultLayout(
-                    title: '장바구니',
-                    child: CartScreen()),
+                builder: (context) =>
+                   CartScreen(mainViewModel: mainViewModel,),
               ),
             );
           },

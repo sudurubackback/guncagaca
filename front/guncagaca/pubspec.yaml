@@ -35,10 +35,8 @@ dependencies:
 #  flutter_naver_map: ^1.0.0
   naver_map_plugin:
     git: https://github.com/LBSTECH/naver_map_plugin.git
+  shared_preferences: ^2.0.7
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   get: ^4.6.6
   kakao_flutter_sdk: ^1.6.1
@@ -46,7 +44,20 @@ dependencies:
   permission_handler: ^11.0.1
 
   flutter_rating_bar: ^4.0.1
+  flutter_dotenv: ^5.1.0
+  http: ^0.13.5
 
+  webview_flutter: 4.0.7
+
+  fluttertoast: ^8.2.1
+
+  uuid: ^3.0.7
+
+  bootpay: ^4.7.1
+
+  synchronized: ^3.1.0
+
+  dio: ^5.3.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +84,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/image/
+    - assets/json/
+    - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

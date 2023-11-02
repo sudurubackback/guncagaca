@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/common/view/custom_appbar.dart';
+
+import '../kakao/main_view_model.dart';
 
 
 class PasswordPage extends StatefulWidget {
+
+  final MainViewModel mainViewModel;
+
+  const PasswordPage ({required this.mainViewModel});
+
   @override
   _PasswordState createState() => _PasswordState();
 }
@@ -24,45 +32,14 @@ class _PasswordState extends State<PasswordPage> {
     child :Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0, // 밑 줄 제거
-          automaticallyImplyLeading: false, // leading 영역을 자동으로 생성하지 않도록 설정
-          flexibleSpace: Center(
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 20),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 30.0,
-                    color: Color(0xff000000),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.1, top: 20.0),
-                  child: Center(
-                    child: Text(
-                    '비밀번호 변경',
-                    style: TextStyle(color: Colors.black, fontSize: 29.0),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: CustomAppbar(title: "비밀번호 변경", imagePath: null,)
       ),
       body:SingleChildScrollView(
         child: Column(
         children: [
           Container(
             color: Color(0xff9B5748),
-            height: 2.0,
+            height: 0,
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.05),
           Container(

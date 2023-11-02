@@ -8,8 +8,13 @@ import '../../home/component/map_provider.dart';
 import 'package:guncagaca/mypage/view/mypage_view.dart';
 import 'package:guncagaca/order/view/order_view.dart';
 
+import '../../kakao/main_view_model.dart';
+
 class RootTab extends StatefulWidget {
-  const RootTab({Key? key}) : super(key: key);
+  final int initialIndex;
+  final MainViewModel mainViewModel;
+
+  const RootTab({Key? key, this.initialIndex = 1, required this.mainViewModel}) : super(key: key);
 
   @override
   State<RootTab> createState() => _RootTabState();
@@ -23,14 +28,11 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
 
   @override
   void initState() {
-
     super.initState();
-
-    controller = TabController(initialIndex:1, length: 3, vsync: this); // 홈을 첫 화면으로
-
+    current_index = widget.initialIndex;
+    controller = TabController(initialIndex: widget.initialIndex, length: 3, vsync: this); // initialIndex를 사용
     controller.addListener((tabListener));
   }
-
   @override
   void dispose() {
     controller.removeListener(tabListener);
@@ -79,14 +81,15 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         controller: controller,
         children: [
 
-          OrderView(),
+          OrderView(mainViewModel: widget.mainViewModel,),
           ChangeNotifierProvider<MapProvider>(
             create: (context) => MapProvider(), // MapProvider의 인스턴스 생성 로직에 따라 적절히 수정해야 합니다.
-            child: HomeScreen(),
+            child: HomeScreen(mainViewModel: widget.mainViewModel,),
           ),
-          MypageView(),
+          MypageView(mainViewModel: widget.mainViewModel,),
         ],
       ),
+        mainViewModel: widget.mainViewModel,
     );
   }
 }

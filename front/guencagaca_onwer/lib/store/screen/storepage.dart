@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guencagaca_onwer/common/layout/default_layout.dart';
+import 'package:guencagaca_onwer/menu/screen/menupage.dart';
 import 'package:guencagaca_onwer/store/screen/mypage.dart';
 import 'package:guencagaca_onwer/store/screen/reviewpage.dart';
 import 'package:guencagaca_onwer/store/screen/infopage.dart';
@@ -36,12 +37,12 @@ class _StorePageState extends State<StorePage> {
       //     settings: RouteSettings(name: 'OrderPage'),
       //   ));
       //   break;
-      // case 2:
-      //   Navigator.of(context).push(PageRouteBuilder(
-      //     pageBuilder: (context, animation, secondaryAnimation) => MenuPage(),
-      //     settings: RouteSettings(name: 'MenuPage'),
-      //   ));
-      //   break;
+      case 2:
+        Navigator.of(context).push(PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => MenuPage(),
+          settings: RouteSettings(name: 'MenuPage'),
+        ));
+        break;
     // 추가적인 case문을 여기에 추가해서 다른 버튼에 대한 페이지로의 이동을 처리할 수 있습니다.
     }
   }
@@ -96,7 +97,7 @@ class _StorePageState extends State<StorePage> {
               ),
               InkWell(
                 onTap: () {
-                  // navigateToPage(2);
+                  navigateToPage(2);
                 },
                 child: Container(
                   width: 250,

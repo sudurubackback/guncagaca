@@ -5,9 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guncagaca/login/loginpage.dart';
 
-import '../order/order.dart';
+import '../kakao/main_view_model.dart';
+import '../order/view/order_page.dart';
 
 class OrderCancellPage extends StatefulWidget {
+  final MainViewModel mainViewModel;
+
+  const OrderCancellPage({required this.mainViewModel});
 
   @override
   _OrderCancellPageState createState() => _OrderCancellPageState();
@@ -99,7 +103,7 @@ class _OrderCancellPageState extends State<OrderCancellPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OrderPage()), // OrderPage로 이동
+                    MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)), // OrderPage로 이동
                   );
                 },
                 child: const Center(

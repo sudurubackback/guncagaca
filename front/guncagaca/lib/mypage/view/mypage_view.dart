@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/mypage/component/mypage_component.dart';
-import 'package:guncagaca/mypage/jjim.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
-import 'package:guncagaca/mypage/point.dart';
-import 'package:guncagaca/mypage/review.dart';
+import 'package:guncagaca/myreview/view/review_screen.dart';
+import 'package:guncagaca/point/view/point_screen.dart';
 
-import '../../order/order.dart';
+import '../../jjim/view/jjim_screen.dart';
+import '../../kakao/main_view_model.dart';
+import '../../login/loginpage.dart';
+import '../../order/view/order_page.dart';
 
 
 
 
 class MypageView extends StatelessWidget {
+  final MainViewModel mainViewModel;
+
+  const MypageView ({required this.mainViewModel});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,37 +26,37 @@ class MypageView extends StatelessWidget {
         onOrderTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => OrderPage()),
+            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: mainViewModel,)),
           );
         },
         onReviewTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ReviewPage()),
+            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: mainViewModel,)),
           );
         },
         onJjimTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => JjimPage()),
+            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: mainViewModel,)),
           );
         },
         onPointTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PointPage()),
+            MaterialPageRoute(builder: (context) => PointScreen(mainViewModel: mainViewModel,)),
           );
         },
         onNicknameTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NicknamePage()),
+            MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: mainViewModel,)),
           );
         },
         onPasswordTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PasswordPage()),
+            MaterialPageRoute(builder: (context) => PasswordPage(mainViewModel: mainViewModel,)),
           );
         },
         onLogoutTap: () {
@@ -60,7 +66,7 @@ class MypageView extends StatelessWidget {
           _showOut(context);
         },
         showDialogLogOut: _showDialogLogOut,
-        showOut: _showOut,
+        showOut: _showOut, mainViewModel: mainViewModel,
       ),
     );
   }
@@ -121,8 +127,8 @@ class MypageView extends StatelessWidget {
                   ),
                   child: Text('확인', style: TextStyle(color: Color(0xffffffff))),
                   onPressed: () {
-                    // 여기에 로그아웃 로직을 추가할 수 있습니다.
-                    print("로그아웃 완료");
+                    // 여기에 회원탈퇴 로직을 추가할 수 있습니다.
+                    print("회원탈퇴 완료");
                     // ...
                     Navigator.of(context).pop();
                   },
@@ -204,11 +210,13 @@ class MypageView extends StatelessWidget {
                     backgroundColor: Color(0xff9B5748),
                   ),
                   child: Text('확인', style: TextStyle(color: Color(0xffffffff))),
-                  onPressed: () {
-                    // 여기에 로그아웃 로직을 추가할 수 있습니다.
+                  onPressed: () async{
+                    await mainViewModel.logout();
                     print("로그아웃 완료");
-                    // ...
-                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
                   },
                 ),
                 SizedBox(width: 30), // 버튼 사이 간격 조절
