@@ -18,17 +18,17 @@ import java.util.List;
 @Service
 public class OwnerStatisticsService {
 
-    private final OwnersRepository ownersRepository;
-    private final OrderServiceClient orderServiceClient;
-
-    // 오늘 시간별 주문 건수 및 돈 총합
-    public List<GetTodaySellingResponse> getTodaySelling(Long storeId) {
-        List<StoreOrderResponse> storedOrder = orderServiceClient.getStoredOrder(storeId);
-        for (StoreOrderResponse storeOrderResponse : storedOrder) {
-            LocalDateTime orderTime = storeOrderResponse.getOrderTime();
-            orderTime.
-        }
-    }
+//    private final OwnersRepository ownersRepository;
+//    private final OrderServiceClient orderServiceClient;
+//
+//    // 오늘 시간별 주문 건수 및 돈 총합
+//    public List<GetTodaySellingResponse> getTodaySelling(Long storeId) {
+//        List<StoreOrderResponse> storedOrder = orderServiceClient.getStoredOrder(storeId);
+//        for (StoreOrderResponse storeOrderResponse : storedOrder) {
+//            LocalDateTime orderTime = storeOrderResponse.getOrderTime();
+//            orderTime.
+//        }
+//    }
 
     // 오늘 시간별 디테일 주문 종류 돈 총합
 

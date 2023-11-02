@@ -4,8 +4,6 @@ package backend.sudurukbackx6.ownerservice.domain.menu.service;
 import backend.sudurukbackx6.ownerservice.common.s3.S3Uploader;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.Category;
 import org.springframework.beans.factory.annotation.Value;
-import backend.sudurukbackx6.ownerservice.domain.menu.entity.DetailsOptionEntity;
-import backend.sudurukbackx6.ownerservice.domain.menu.entity.OptionsEntity;
 import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -101,6 +99,63 @@ public class MenuService {
 		menuRepository.delete(menuEntity);
 	}
 
+//	public OrderResponseDto getOrder(OrderRequestDto orderRequestDto) {
+//		List<MenuRequestDto> menus = orderRequestDto.getMenus();
+//
+//		List<MenuResponseDto> menuList = new ArrayList<>();
+//		for (MenuRequestDto menuRequestDto : menus) {
+//			MenuEntity menuEntity = menuRepository.findById(menuRequestDto.getMenuId())
+//					.orElseThrow(() -> new IllegalArgumentException("메뉴 아이디가 일치하지 않습니다."));
+//			log.info(menuEntity.getName());
+//			List<int[]> optionsList = new ArrayList<>();
+//
+//			// 옵션
+//			List<OptionsEntity> optionsEntity = menuEntity.getOptionsEntity();
+//			for (int i = 0; i < optionsEntity.size(); i++) {
+//				for (OptionRequestDto optionRequestDto : menuRequestDto.getOptions()) {
+//					if (optionsEntity.get(i).getOptionName().equals(optionRequestDto.getOptionName())) {
+//						log.info("in option");
+//						// 인덱스 설정
+//						int[] arr = new int[2];
+//						arr[0] = i;
+//
+//						// 디테일 옵션
+//						List<DetailsOptionEntity> detailsOptions = optionsEntity.get(i).getDetailsOptions();
+//						for (int j = 0; j < detailsOptions.size(); j++) {
+//							for (DetailOptionRequestDto detailOptionRequestDto : optionRequestDto.getDetailOptions()) {
+//								log.info(detailsOptions.get(j).getDetailOptionName());
+//								log.info(detailOptionRequestDto.getDetailOptionName());
+//								if (detailsOptions.get(j).getDetailOptionName().equals(detailOptionRequestDto.getDetailOptionName())) {
+//									log.info("in detail option");
+//									arr[1] = j;
+//									optionsList.add(arr);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			log.info("out");
+//			MenuResponseDto menuResponseDto = MenuResponseDto.builder()
+//					.menuId(menuRequestDto.getMenuId())
+//					.name(menuRequestDto.getName())
+//					.price(menuRequestDto.getPrice())
+//					.totalPrice(menuRequestDto.getTotalPrice())
+//					.quantity(menuRequestDto.getQuantity())
+//					.img(menuRequestDto.getImg())
+//					.category(menuRequestDto.getCategory())
+//					.options(optionsList)
+//					.build();
+//			menuList.add(menuResponseDto);
+//		}
+//
+//		return OrderResponseDto.builder()
+//				.memberId(orderRequestDto.getMemberId())
+//				.storeId(orderRequestDto.getStoreId())
+//				.orderPrice(orderRequestDto.getOrderPrice())
+//				.menus(menuList)
+//				.build();
+//	}
 	public String uploadTest(MultipartFile multipartFile) throws IOException {
 
 		String upload = s3Uploader.upload(multipartFile, "Test");

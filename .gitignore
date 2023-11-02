@@ -42,11 +42,17 @@ out/
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
 
 >>>>>>> a4b096fc37ba1b053fa30e680eebe8b1d5182203
+=======
+front/
+frontend/
+=======
+>>>>>>> 0c27befbc467a298c67a5be11d6276c56c7e5785
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,flutter,dart,xcode
 
@@ -300,6 +306,7 @@ fabric.properties
 iOSInjectionProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
+<<<<<<< HEAD
 =======
 front/
 frontend/
@@ -555,3 +562,6 @@ Frontend/
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
 >>>>>>> origin/backend-store
 >>>>>>> a4b096fc37ba1b053fa30e680eebe8b1d5182203
+=======
+>>>>>>> f8498daa15bcd18ee612b2b3bba6eadfe4977eb2
+>>>>>>> 0c27befbc467a298c67a5be11d6276c56c7e5785

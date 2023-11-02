@@ -80,6 +80,3 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://k9d102.p.ssafy.io:8761/eureka/
-
-  instance:
-    hostname: localhost#euraka client 등록 설정
