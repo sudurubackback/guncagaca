@@ -1,6 +1,5 @@
 package backend.sudurukbackx6.memberservice.domain.member.controller;
 
-import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.MemberInfoResponse;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
@@ -46,8 +45,9 @@ public class MemberController {
 
     /* OpenFeign을 통해 받아올 떄 안에 memberId, email, nickname을 반환*/
     @GetMapping("/memberInfo")
-    public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token){
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(memberService.getMemberInfo(token));
+    }
 
     @GetMapping("/mypage/point")
     public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Email") String email) {

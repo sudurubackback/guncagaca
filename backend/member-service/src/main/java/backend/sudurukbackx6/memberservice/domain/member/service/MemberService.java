@@ -1,6 +1,5 @@
 package backend.sudurukbackx6.memberservice.domain.member.service;
 
-import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.MemberInfoResponse;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
