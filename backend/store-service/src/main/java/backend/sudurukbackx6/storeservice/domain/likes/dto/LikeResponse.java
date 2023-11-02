@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class LikeResponse {
+    private Long id;
     private Long memberId;
     private Long storeId;
     private String cafeName;
