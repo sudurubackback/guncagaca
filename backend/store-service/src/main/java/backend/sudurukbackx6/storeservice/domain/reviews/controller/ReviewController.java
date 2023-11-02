@@ -26,7 +26,7 @@ public class ReviewController {
     // 리뷰 등록
     @PostMapping("/{cafeId}/{orderId}/review")
     public ReviewDto.Response saveReview(@RequestHeader("Authorization") String token, @PathVariable Long cafeId,
-                                         @PathVariable Long orderId, @RequestBody ReviewDto.Request request){
+                                         @PathVariable String orderId, @RequestBody ReviewDto.Request request){
         log.info("token = {}", token);
         return reviewService.reviewSave(token, cafeId, orderId, request);
     }
