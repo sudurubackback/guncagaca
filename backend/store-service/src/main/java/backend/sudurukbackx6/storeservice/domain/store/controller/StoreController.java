@@ -9,9 +9,12 @@ import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -26,9 +29,15 @@ public class StoreController {
 
 
     // 카페 등록
-    @PostMapping("/save")
-    public void cafeSave(@RequestBody StoreRequest request){
-        storeService.cafeSave(request);
+    @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void cafeSave(@RequestPart(value="file", required = false) MultipartFile file,@RequestPart StoreRequest request) throws IOException {
+        storeService.cafeSave(file,request);
+    }
+
+    // 카페 이미지 변경
+    @PutMapping(value = "/{cafeId}/chageImg",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+    public void cafeImgChage(@RequestPart(value="file", required = false) MultipartFile multipartFile,@PathVariable("cafeId") Long cafeId) throws IOException{
+        storeService.cafeImgChage(multipartFile,cafeId);
     }
 
     // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이
