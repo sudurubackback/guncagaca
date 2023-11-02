@@ -10,8 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class StoreResponse {
+
+    private Long storeId;
     private String cafeName;
-    private Double starTotal;
+    private Double starPoint;
     private int reviewCount;
     private String img;
+    private boolean isLiked;
+    private String description;
 }

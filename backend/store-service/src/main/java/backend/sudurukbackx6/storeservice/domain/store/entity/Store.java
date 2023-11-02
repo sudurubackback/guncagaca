@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,10 +29,10 @@ public class Store {
     @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String name;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double latitude;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double longitude;
 
     @Column(nullable = false,columnDefinition = "VARCHAR(500)")
@@ -46,8 +47,13 @@ public class Store {
     @Column(nullable = false)
     private String description;
 
+    private Double starPoint;
+
     @OneToMany(mappedBy = "store")
     private List<Review> review;
+
+    @OneToMany(mappedBy = "store")
+    private List<Likey> likeys;
 
     @Builder
     public Store(Long id, String name, Double latitude, Double longitude, String address, String tel, String img,
@@ -59,6 +65,7 @@ public class Store {
         this.address = address;
         this.tel = tel;
         this.img = img;
+        this.starPoint = 0.0;
         this.description = description;
         this.review = review;
     }

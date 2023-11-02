@@ -1,5 +1,5 @@
 server:
-  port: 8088    # Spring Cloud Config Server 포트
+  port: 8888    # Spring Cloud Config Server 포트
 spring:
   application:
     name: config-server
@@ -72,3 +72,11 @@ management:
   endpoint:
     shutdown:
       enabled: true
+
+#euraka client 등록 설정
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://k9d102.p.ssafy.io:8761/eureka/

@@ -1,85 +1,18 @@
-server:
-  port: 8080
-
 spring:
   application:
-    name: Gateway Server # 여기서 명시한 이름이 유레카 서버에 Service ID로 등록된다.
+    name: gateway
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://k9d102.p.ssafy.io:8888
 
-  cloud:
-    cicuitbreaker: # 서킷 브레이커 사용하여 장애 대응
-      resilience4j:
-        enabled: true
-    gateway:
-      httpclient:
-        connect-timeout: 3000
-        response-timeout: 3s
-      default-filters:
-        - name: GlobalFilter #Global Filter로 지정된 java 파일 이름
-          args:
-            baseMessage: Spring Cloud Gateway Global Filter
-            preLogger: true
-            postLogger: true
-      routes: # filter 설정- id: Member Domain Server
-        - id: member-service
-          uri: http://13.209.198.194:8081/
-          predicates: # 조건절
-            - Path=/api/member/**  # 권한 검증을 진행하지 않는다.
-          filters:
-            - AddRequestHeader=first-request, first-request-header2
-        - id: notification-service
-          uri: http://13.209.198.194:8082/
-          predicates: # 조건절
-            - Path=/api/notification/**  # 권한 검증을 진행하지 않는다.
-          filters:
-            - AddRequestHeader=first-request, first-request-header2
-        - id: order-service
-          uri: http://13.209.198.194:8083/
-          predicates: # 조건절
-            - Path=/api/order/**  # 권한 검증을 진행하지 않는다.
-          filters:
-            - AddRequestHeader=first-request, first-request-header2
-        - id: pay-service
-          uri: http://13.209.198.194:8084/
-          predicates: # 조건절
-            - Path=/api/pay/**  # 권한 검증을 진행하지 않는다.
-          filters:
-            - AddRequestHeader=first-request, first-request-header2
-        - id: store-service
-          uri: http://13.209.198.194:8085/
-          predicates: # 조건절
-            - Path=/api/store/**  # 권한 검증을 진행하지 않는다.
-          filters:
-            - AddRequestHeader=first-request, first-request-header2
-
-eureka:
-  client:
-    service-url: # Eureka Server의 url이 들어간다.
-      defualtZone: http://13.209.198.194:8761/eureka/ # 유레카 클라이언트가 서비스를 등록할 때 주소를 지정하기 위해 사용
-    register-with-eureka: true # 유레카 서버에 본인 서비스를 등록할 건지 여부
-    fetch-registry: true # 유레카 서버로부터 서비스 목록을 로컬 캐시에 저장할 건지 여부
-
-resilience4j:
-  circuitbreaker:
-    configs:
-      default:
-        registerHealthIndicator: true # Actuator를 통해 Circuit Breaker 상태를 확인하기 위해 설정
-        minimumNumberOfCalls: 5 # Circuit Breaker가 error 비율 및 slow call 비율을 계산하기 전에 요구되는 최소한의 요청 수
-        failureRateThreshold: 50 # Error 비율(퍼센트)로 해당 값 이상으로 에러 발생시 서킷이 Open 된다.
-        waitDurationInOpenState: 10s # 서킷의 상태가 Open에서 Half-open으로 변경되기 전에 Circuit Breaker가 기다리는 시간
-    instances:
-      testCircuitBreaker:
-        baseConfig: default
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-  endpoint:
-    shutdown:
-      enabled: true
-    health:
-      slow-details: always # Actuator에서 자세한 정보들을 확인하기 위해 설정
-  health:
-    circuitbreakers:
-      enabled: true # Actuator를 통해 Circuit Breaker 상태를 확인하기 위해 설정
+
+logging:
+  level:
+    org.hibernate.type: trace
