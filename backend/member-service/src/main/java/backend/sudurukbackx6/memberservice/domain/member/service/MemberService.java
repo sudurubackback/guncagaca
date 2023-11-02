@@ -120,7 +120,8 @@ public class MemberService {
 
         for (Long cafeId : cafeIds) {
             StoreResponse storeInfo = storeFeignClient.cafeDetail(token, cafeId);
-            String name = storeInfo.getName();
+            log.info(storeInfo.toString());
+            String name = storeInfo.getCafeName();
             String img = storeInfo.getImg();
 
             List<Point> cafePoints = pointList.stream()
