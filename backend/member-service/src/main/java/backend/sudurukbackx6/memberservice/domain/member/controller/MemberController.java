@@ -48,6 +48,11 @@ public class MemberController {
     public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(memberService.getMemberInfo(token));
     }
+    // memberId 리스트로 받아서 리스트로 반환
+    @GetMapping("/memberInfo/bulk")
+    public List<MemberInfoResponse> getMemberInfoBulk(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds) {
+        return memberService.getMemberInfoBulk(memberIds);
+    }
 
     @GetMapping("/mypage/point")
     public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Authorization") String token,@RequestHeader("Email") String email) {

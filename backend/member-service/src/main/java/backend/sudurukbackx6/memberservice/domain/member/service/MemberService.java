@@ -103,6 +103,21 @@ public class MemberService {
                 .build();
     }
 
+    public List<MemberInfoResponse> getMemberInfoBulk(List<Long> memberIds){
+
+        List<Member> members = memberRepository.findByIdIn(memberIds);
+
+        List<MemberInfoResponse> memberInfoResponses = members.stream().map(member ->
+                MemberInfoResponse.builder()
+                        .id(member.getId())
+                        .email(member.getEmail())
+                        .nickname(member.getNickname())
+                        .build()
+        ).collect(Collectors.toList());
+
+        return memberInfoResponses;
+    }
+
 
     public List<MyPointsResponse> myPoint(String email, String token) {
 
