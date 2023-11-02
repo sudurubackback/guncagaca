@@ -9,7 +9,7 @@ class MenuOption {
   factory MenuOption.fromMap(Map<String, dynamic> map) {
     return MenuOption(
       optionName: map['optionName'],
-      subOptions: (map['subOptions'] as List).map((e) => Option.fromMap(e)).toList(),
+      subOptions: (map['detailsOptions'] as List).map((e) => Option.fromMap(e)).toList(),
     );
   }
 }

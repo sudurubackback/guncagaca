@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/menu/menu_detail.dart';
 import 'package:guncagaca/menu/menu_card.dart';
 import '../../common/layout/default_layout.dart';
@@ -21,23 +23,38 @@ class MenuTabWidget extends StatefulWidget {
 
 class _ReviewTabWidgetState extends State<MenuTabWidget> {
   List<Menu> menus = [];
+  Map<String, List<Menu>> categorizedMenus = {}; // 카테고리별 분류
 
   @override
   void initState() {
     super.initState();
-    fetchMenuList();  // 가상의 메서드, 실제 구현이 필요합니다.
+    fetchMenuList().then((result) {
+      setState(() {
+        categorizedMenus = result;
+      });
+    });
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
-  Future<List<Menu>> fetchMenuList() async {
-    final String apiUrl = "$baseUrl/api/store/${widget.cafeId}/menu";
-
+  Future<Map<String, List<Menu>>> fetchMenuList() async {
+    final String apiUrl = "$baseUrl/api/ceo/${widget.cafeId}/menu";
     final response = await dio.get(apiUrl);
+
     if (response.statusCode == 200) {
-      List<dynamic> jsonData = response.data;
-      return jsonData.map((json) => Menu.fromMap(json)).toList();
+      Map<String, dynamic> jsonData = response.data;
+
+      jsonData.forEach((category, menus) {
+        List<Menu> menuList = (menus as List).map((json) => Menu.fromMap(json)).toList();
+
+        if (categorizedMenus.containsKey(category)) {
+          categorizedMenus[category]!.addAll(menuList);
+        } else {
+          categorizedMenus[category] = menuList;
+        }
+      });
+      return categorizedMenus;
     } else {
       throw Exception("Failed to fetch menus.");
     }
@@ -46,26 +63,40 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
-      itemCount: menus.length,
+      itemCount: categorizedMenus.keys.length,
       itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DefaultLayout(
+        String category = categorizedMenus.keys.elementAt(index);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(category, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), // 카테고리 이름
+            ),
+            Column(
+              children: categorizedMenus[category]!.map((menu) {
+                return InkWell(  // 여기서 InkWell을 사용
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DefaultLayout(
+                          title: widget.storeName,
+                          mainViewModel: widget.mainViewModel,
+                          child: DetailPage(menu: menu, storeName: widget.storeName,),
+                        ),
+                      ),
+                    );
 
-                    title: widget.storeName,
-                    child: DetailPage(menu: menus[index]),
-                mainViewModel:widget.mainViewModel,),
-
-              ),
-            );
-          },
-          child: MenuCard(menu: menus[index],
-          ),
+                    // Get.to(() => DetailPage(menu: menu));  // 메뉴 디테일 페이지로 이동
+                  },
+                  child: MenuCard(
+                    menu: menu,
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
         );
       },
     );
