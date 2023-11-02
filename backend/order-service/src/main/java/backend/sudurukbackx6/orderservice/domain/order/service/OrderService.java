@@ -59,7 +59,7 @@ public class OrderService {
 
         orderRepository.save(newOrder);
 
-        OrderResponseDto responseDto = new OrderResponseDto(null, null, orderRequestDto);
+        OrderResponseDto responseDto = new OrderResponseDto(orderRequestDto.getMemberId(), orderRequestDto.getStoreId(), orderRequestDto);
 
         return responseDto;
     }
