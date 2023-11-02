@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,17 +19,19 @@ import java.util.List;
 @Service
 public class OwnerStatisticsService {
 
-//    private final OwnersRepository ownersRepository;
-//    private final OrderServiceClient orderServiceClient;
-//
-//    // 오늘 시간별 주문 건수 및 돈 총합
-//    public List<GetTodaySellingResponse> getTodaySelling(Long storeId) {
-//        List<StoreOrderResponse> storedOrder = orderServiceClient.getStoredOrder(storeId);
-//        for (StoreOrderResponse storeOrderResponse : storedOrder) {
-//            LocalDateTime orderTime = storeOrderResponse.getOrderTime();
-//            orderTime.
-//        }
-//    }
+    private final OrderServiceClient orderServiceClient;
+
+    // 오늘 시간별 주문 건수 및 돈 총합
+    public List<GetTodaySellingResponse> getTodaySelling(Long storeId) {
+        List<GetTodaySellingResponse> result = new ArrayList<>();
+        List<StoreOrderResponse> storedOrder = orderServiceClient.getStoredOrder(storeId);
+        System.out.println(storedOrder + " storedOrder");
+        for (StoreOrderResponse storeOrderResponse : storedOrder) {
+            LocalDateTime orderTime = storeOrderResponse.getOrderTime();
+            System.out.println(orderTime);
+        }
+        return result;
+    }
 
     // 오늘 시간별 디테일 주문 종류 돈 총합
 
