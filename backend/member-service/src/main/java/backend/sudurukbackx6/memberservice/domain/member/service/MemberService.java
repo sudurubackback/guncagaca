@@ -167,4 +167,11 @@ public class MemberService {
             throw new IllegalArgumentException("해당 멤버의 카페 포인트 정보가 없습니다.");
         }
     }
+
+    public Long getId(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+        return member.getId();
+    }
+
 }

@@ -58,5 +58,10 @@ public class MemberController {
     public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Authorization") String token, @RequestHeader("Email") String email,@PathVariable Long cafe_id){
         return ResponseEntity.ok(memberService.pointStore(email,token, cafe_id));
     }
+
+    @GetMapping("/id")
+    public ResponseEntity<Long> getId(@RequestParam String email) {
+        return ResponseEntity.ok(memberService.getId(email));
+    }
 }
 
