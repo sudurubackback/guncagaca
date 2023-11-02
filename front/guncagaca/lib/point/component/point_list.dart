@@ -7,11 +7,14 @@ import 'package:http/http.dart' as http;
 
 import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:guncagaca/kakao/kakao_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 import '../../common/utils/dio_client.dart';
 
 
 class PointList extends StatefulWidget {
+
   final MainViewModel mainViewModel;
 
   PointList ({ required this.mainViewModel});
@@ -21,6 +24,7 @@ class PointList extends StatefulWidget {
 }
 
 class _PointListState extends State<PointList> {
+  late SharedPreferences prefs;
 
 
 
@@ -29,17 +33,26 @@ class _PointListState extends State<PointList> {
   @override
   void initState() {
     super.initState();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
     loadPointsFromAPI();
   }
 
   Future<void> loadPointsFromAPI() async {
     final email = widget.mainViewModel.user?.kakaoAccount?.email;
+    final token = prefs.getString('accessToken');
+
 
     if (email != null) {
       // String baseUrl = dotenv.env['BASE_URL']!;
       Dio dio = DioClient.getInstance();
+      print(token);
       print(email);
       print("통신");
+
 
       try {
         Response response = await dio.get(
@@ -47,13 +60,17 @@ class _PointListState extends State<PointList> {
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
+              'Authorization': 'Bearer $token',
               'email': email.toString(),
             },
           ),
         );
+        print("리스폰스 값");
+        print(response.toString());
+        print(response.data.runtimeType);
 
         if (response.statusCode == 200) {
-          List<dynamic> jsonData = json.decode(response.data);
+          List<dynamic> jsonData = response.data;
           dummyPoints = List<Map<String, dynamic>>.from(jsonData);
           print(dummyPoints);
           print("제대로 옴");
