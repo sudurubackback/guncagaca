@@ -3,6 +3,7 @@ package backend.sudurukbackx6.storeservice.domain.store.controller;
 import backend.sudurukbackx6.storeservice.domain.likes.service.LikeServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
+import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.service.StoreServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
 import lombok.Getter;
