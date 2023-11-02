@@ -36,6 +36,8 @@ public class Order {
 
     private boolean takeoutYn;
 
+    private boolean reviewYn;
+
     private List<Menu> menus;
 
     private int price;

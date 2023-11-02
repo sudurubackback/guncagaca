@@ -11,6 +11,8 @@ import kr.co.bootpay.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
@@ -45,6 +47,7 @@ public class OrderService {
                 .receiptId(orderRequestDto.getReceiptId())
                 .status(Status.ORDERED)
                 .takeoutYn(orderRequestDto.isTakeoutYn())
+                .reviewYn(false)
                 .price(orderRequestDto.getTotalOrderPrice())
                 .menus(orderRequestDto.getMenus())
                 .build();
@@ -54,6 +57,24 @@ public class OrderService {
         OrderResponseDto responseDto = new OrderResponseDto(null, null, orderRequestDto);
 
         return responseDto;
+    }
+
+    @KafkaListener(topics = "reviewTopic", groupId = "order")
+    public void updateOrderReviewStatus(@Payload String orderId) {
+        Order order = getOrder(orderId);
+        if (!order.isReviewYn()) {
+            order.setReviewYn(true);
+            log.info("작성완료 {}", orderId);
+            orderRepository.save(order);
+        } else {
+            log.info("이미 작성됨 {}", orderId);
+        }
+    }
+
+    public Order getOrder(String orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
+
     }
 
     // 결제 취소
@@ -91,12 +112,6 @@ public class OrderService {
         order.setStatus(Status.CANCELED);
         orderRepository.save(order);
 
-    }
-
-    public Order getOrder(String orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
-        return order;
     }
 
 }
