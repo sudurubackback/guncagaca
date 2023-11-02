@@ -54,6 +54,98 @@ class _DetailState extends State<DetailPage> {
     super.initState();
     // 모든 옵션을 첫 번째 서브옵션으로 초기화
   }
+  
+
+  void _showCustomDialog(Order order) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          elevation: 10,
+          backgroundColor: Colors.transparent,
+          child: _buildDialogContents(order),
+        );
+      },
+    );
+  }
+
+  Widget _buildDialogContents(Order order) {
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black38,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                "장바구니 비우기",
+                style: TextStyle(
+                  color: PRIMARY_COLOR,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Text("장바구니에는 한 가게의\n상품만 담을 수 있습니다.\n\n장바구니를 비우고 새로운\n상품을 담겠습니까?",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey[700],
+                ),),
+              SizedBox(height: 24.0),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,  // 이렇게 설정하면, 가로 크기를 최소한으로 설정하여 버튼들이 오른쪽 정렬됩니다.
+                  children: [
+                    TextButton(
+                      child: Text(
+                        "아니요",
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text("예",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      onPressed: () {
+                        final CartController controller = Get.find<CartController>();
+                        controller.cartItems.clear();
+                        controller.cartItems.add(order);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,9 +296,13 @@ class _DetailState extends State<DetailPage> {
                 storeName: widget.storeName,
                 selectedOptions: selectedOptions,
             );
-            controller.addToCart(newOrder);
-            print(newOrder);
-            Navigator.pop(context);
+            if (controller.cartItems.isNotEmpty && controller.cartItems[0].storeName != widget.storeName) {
+              _showCustomDialog(newOrder);
+            } else {
+              controller.addToCart(newOrder);
+              print(newOrder);
+              Navigator.pop(context);
+            }
           },
           child: Center(
             child: Row(
