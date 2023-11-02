@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.likes.controller;
 
+import backend.sudurukbackx6.storeservice.domain.likes.dto.LikeResponse;
 import backend.sudurukbackx6.storeservice.domain.likes.service.LikeServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
@@ -22,7 +23,7 @@ public class LikeController {
 
     // 멤버가 찜한 목록 조회
     @GetMapping("/mypage/like-store")
-    public ResponseEntity<List<Store>> LikedStoresByMemberId(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<LikeResponse>> LikedStoresByMemberId(@RequestHeader("Authorization") String token){
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         return ResponseEntity.ok(likeService.getLikedStoresByMemberId(memberInfo.getId()));
 

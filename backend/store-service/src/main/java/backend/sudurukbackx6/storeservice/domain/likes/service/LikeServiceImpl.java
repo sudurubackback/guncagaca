@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.likes.service;
 
+import backend.sudurukbackx6.storeservice.domain.likes.dto.LikeResponse;
 import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.likes.repository.LikeRepository;
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
@@ -47,11 +48,21 @@ public class LikeServiceImpl implements LikeService{
     }
 
     @Override
-    public List<Store> getLikedStoresByMemberId(Long memberId) {
+    public List<LikeResponse> getLikedStoresByMemberId(Long memberId) {
         List<Likey> likeys = likeRepository.findByMemberId(memberId);
 
         return likeys.stream()
-                .map(Likey::getStore)
+                .map(likey -> {
+                    return LikeResponse.builder()
+                            .memberId(likey.getMemberId())
+                            .storeId(likey.getStore().getId())
+                            .cafeName(likey.getStore().getName())
+                            .starPoint(likey.getStore().getStarPoint())
+                            .reviewCount(likey.getStore().getReview().size())
+                            .img(likey.getStore().getImg())
+                            .description(likey.getStore().getDescription())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 }
