@@ -15,7 +15,7 @@ class JjimList extends StatefulWidget {
 class _JjimListState extends State<JjimList> {
   late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyJjims = [];
-  List<bool> toggleList = [];
+  // List<bool> toggleList = [];
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class _JjimListState extends State<JjimList> {
     int index = dummyJjims.indexWhere((item) => item['id'] == id);
     if (index != -1) {
       setState(() {
-        toggleList[index] = !toggleList[index];
+        // toggleList[index] = !toggleList[index];
       });
     }
   }
@@ -123,7 +123,7 @@ class _JjimListState extends State<JjimList> {
                 SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    dummyJjims[index]['name'],
+                    dummyJjims[index]['cafeName'],
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -137,9 +137,8 @@ class _JjimListState extends State<JjimList> {
                     height: 30,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(toggleList[index]
-                            ? 'assets/image/h2.png'
-                            : 'assets/image/h1.png'),
+                        image: AssetImage(
+                            'assets/image/h2.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
