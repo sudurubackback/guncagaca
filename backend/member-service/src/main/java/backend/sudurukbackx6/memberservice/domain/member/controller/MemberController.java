@@ -1,5 +1,8 @@
 package backend.sudurukbackx6.memberservice.domain.member.controller;
 
+import backend.sudurukbackx6.memberservice.domain.member.dto.MemberInfoResponse;
+import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
+import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.*;
 import backend.sudurukbackx6.memberservice.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -40,13 +43,20 @@ public class MemberController {
         return ResponseEntity.ok(memberService.changeNickname(email, nickname));
     }
 
+    /* OpenFeign을 통해 받아올 떄 안에 memberId, email, nickname을 반환*/
+    @GetMapping("/memberInfo")
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(memberService.getMemberInfo(token));
+    }
+
     @GetMapping("/mypage/point")
-    public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Email") String email) {
-        return ResponseEntity.ok(memberService.myPoint(email));
+    public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Authorization") String token,@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.myPoint(email,token));
     }
 
     @GetMapping("/mypage/point/{cafe_id}")
-    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Email") String email,@PathVariable Long cafe_id){
-        return ResponseEntity.ok(memberService.pointStore(email, cafe_id));
+    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Authorization") String token, @RequestHeader("Email") String email,@PathVariable Long cafe_id){
+        return ResponseEntity.ok(memberService.pointStore(email,token, cafe_id));
     }
 }
+

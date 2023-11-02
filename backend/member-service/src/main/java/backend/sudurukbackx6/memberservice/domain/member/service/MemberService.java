@@ -1,5 +1,8 @@
 package backend.sudurukbackx6.memberservice.domain.member.service;
 
+import backend.sudurukbackx6.memberservice.domain.member.dto.MemberInfoResponse;
+import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
+import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.client.StoreFeignClient;
 import backend.sudurukbackx6.memberservice.domain.member.client.response.StoreResponse;
 import backend.sudurukbackx6.memberservice.domain.member.dto.*;
@@ -87,13 +90,21 @@ public class MemberService {
 
         return MypageResponse.builder()
                 .memberId(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .build();
+    }
+    public MemberInfoResponse getMemberInfo(String token){
+        Member member = jwtProvider.extractUser(token);
+        return MemberInfoResponse.builder()
+                .id(member.getId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .build();
     }
 
 
-    public List<MyPointsResponse> myPoint(String email) {
+    public List<MyPointsResponse> myPoint(String email, String token) {
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
@@ -108,7 +119,7 @@ public class MemberService {
         List<MyPointsResponse> myPointsResponses = new ArrayList<>();
 
         for (Long cafeId : cafeIds) {
-            StoreResponse storeInfo = storeFeignClient.cafeDetail(cafeId);
+            StoreResponse storeInfo = storeFeignClient.cafeDetail(token, cafeId);
             String name = storeInfo.getName();
             String img = storeInfo.getImg();
 
@@ -133,7 +144,7 @@ public class MemberService {
         return myPointsResponses;
     }
 
-    public PointStoreResponse pointStore(String email, Long cafeId) {
+    public PointStoreResponse pointStore(String email,String token, Long cafeId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
 
