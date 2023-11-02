@@ -44,6 +44,6 @@ public class OrderController {
 
     @PostMapping("/complete/{orderId}")
     public ResponseEntity<String> completeOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
-        return ResponseEntity.ok("주문 메뉴 완료");
+        return ResponseEntity.ok(orderService.completeOrder(orderId));
     }
 }

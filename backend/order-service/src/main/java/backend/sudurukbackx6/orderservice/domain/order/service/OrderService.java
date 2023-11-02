@@ -145,10 +145,20 @@ public class OrderService {
     public String requestOrder (String obejctId) {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
-        order.updateStatus(Status.REQUEST);
+        order.setStatus(Status.REQUEST);
 
-        // TODO 알림보내기
+        // TODO 알림보내기 (Open Feign)
 
         return "주문 접수가 완료되었습니다.";
+    }
+
+    public String completeOrder (String obejctId) {
+        Order order = orderRepository.findById(obejctId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        order.setStatus(Status.COMPLETE);
+
+        // TODO 알림보내기 TODO 알림보내기 (Open Feign)
+
+        return "주문 상품이 완료되었습니다.";
     }
 }
