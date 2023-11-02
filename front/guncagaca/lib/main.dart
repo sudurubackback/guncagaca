@@ -4,12 +4,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:guncagaca/login/landingpage.dart';
+import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
 
 import 'cart/controller/cart_controller.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");	// .env 파일 Path
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_SDK_NATIVE_KEY']);
+  WidgetsFlutterBinding.ensureInitialized();
+  await KakaoTokenManager.TokenManager().initialize();
   runApp(const MyApp());
 }
 

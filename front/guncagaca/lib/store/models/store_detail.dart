@@ -24,7 +24,7 @@ class StoreDetail {
       storeId: map['storeId'],
       img: map['img'],
       cafeName: map['cafeName'],
-      starTotal: map['starTotal'],
+      starTotal: map['starPoint'],
       reviewCount: map['reviewCount'],
       isLiked: map['liked'],
       description: map['description']
