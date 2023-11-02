@@ -19,7 +19,7 @@ class MenuCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 7.0),
-              child: Image.asset(menu.imagePath, width: 60, height: 60, fit: BoxFit.cover),
+              child: Image.network(menu.imagePath, width: 60, height: 60, fit: BoxFit.cover),
             ),
             SizedBox(width: 16.0),
             Expanded(

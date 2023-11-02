@@ -19,10 +19,10 @@ class CartList extends StatelessWidget {
 
       return Column(
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
-              "가게이름", // 예시로 넣은 가게이름. 실제 데이터로 대체 필요.
+              cartController.cartItems[0].storeName, // 예시로 넣은 가게이름. 실제 데이터로 대체 필요.
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),

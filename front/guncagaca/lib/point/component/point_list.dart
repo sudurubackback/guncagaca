@@ -36,6 +36,9 @@ class _PointListState extends State<PointList> {
     _initSharedPreferences();
   }
 
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
+
   Future<void> _initSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
     loadPointsFromAPI();
@@ -48,7 +51,6 @@ class _PointListState extends State<PointList> {
 
     if (email != null) {
       // String baseUrl = dotenv.env['BASE_URL']!;
-      Dio dio = DioClient.getInstance();
       print(token);
       print(email);
       print("통신");
@@ -56,7 +58,7 @@ class _PointListState extends State<PointList> {
 
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8081/api/member/mypage/point",
+          "$baseUrl/api/member/mypage/point",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시

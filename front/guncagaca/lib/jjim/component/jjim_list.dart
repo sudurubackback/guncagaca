@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,9 @@ class _JjimListState extends State<JjimList> {
     _initSharedPreferences();
   }
 
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
+
   // SharedPreferences 초기화
   Future<void> _initSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
@@ -34,13 +38,12 @@ class _JjimListState extends State<JjimList> {
 
     if (token != null) {
       // String baseUrl = dotenv.env['BASE_URL']!;
-      Dio dio = DioClient.getInstance();
       print(token);
       print("통신");
 
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8085/api/like/mypage/like-store",
+          "$baseUrl/api/like/mypage/like-store",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시

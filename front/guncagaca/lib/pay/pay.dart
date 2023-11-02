@@ -97,11 +97,11 @@ class PaymentService{
 
     List<Item> itemList = orders.map((order) {
       Item item = Item();
-      item.name = order.menu.name;
+      item.name = order.name;
       item.qty = order.quantity.value;
       var uuid = Uuid();
       item.id = uuid.v4();
-      item.price = order.menu.initPrice.toDouble(); // initPrice를 double로 변환
+      item.price = order.totalPrice.toDouble(); // initPrice를 double로 변환
       return item;
     }).toList();
 

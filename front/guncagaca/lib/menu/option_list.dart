@@ -20,10 +20,10 @@ class OptionList extends StatefulWidget {
 }
 
 class _OptionListState extends State<OptionList> {
-  int selectedIndex = 0;
+  int selectedIndex = -1;
 
   int getSelectedOptionPrice() {
-    if (selectedIndex == -1) return 0;
+    if (selectedIndex == -1) return -1;
     return widget.menuOption.subOptions[selectedIndex].price;
   }
 
@@ -48,9 +48,15 @@ class _OptionListState extends State<OptionList> {
                   isSelected: selectedIndex == optionIndex,
                   onTap: () {
                     setState(() {
-                      selectedIndex = optionIndex;
+                      // 이미 선택된 옵션을 다시 선택한 경우, 미선택 상태로 변경
+                      if (selectedIndex == optionIndex) {
+                        selectedIndex = -1;
+                        widget.onOptionSelected(-1, -1);  // 미선택 상태로 설정
+                      } else {
+                        selectedIndex = optionIndex;
+                        widget.onOptionSelected(optionIndex, getSelectedOptionPrice());
+                      }
                     });
-                    widget.onOptionSelected(optionIndex, getSelectedOptionPrice());
                   },
                 ),
                 if (optionIndex != widget.menuOption.subOptions.length - 1)
