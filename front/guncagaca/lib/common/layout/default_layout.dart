@@ -32,40 +32,41 @@ class DefaultLayout extends StatelessWidget {
     );
   }
 
-      AppBar? renderAppBar(BuildContext context) {
-        if (title == null) {
-          return null;
-        } else {
+  AppBar? renderAppBar(BuildContext context) {
+    if (title == null) {
+      return null;
+    } else {
 
-          return AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // 가운데 정렬을 위해 추가된 부분
-              children: [
-                SizedBox(width: MediaQuery.of(context).size.width * 0.1,),
-                // Container(), // 추가된 빈 컨테이너
-                Center(
+      return AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // 가운데 정렬을 위해 추가된 부분
+          children: [
+            SizedBox(width: MediaQuery.of(context).size.width * 0.1,),
+            // Container(),
+            Flexible(
+                child: Center(
                   child: Text(
                     title!,
                     style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.black,
+                    fontSize: 18.0,
+                    color: Colors.black,
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    CartIconWidget(mainViewModel: mainViewModel,),
-                    NotiIconWidget(mainViewModel: mainViewModel,),
-                  ],
-                ),
+            ),
+            Row(
+              children: [
+                CartIconWidget(mainViewModel: mainViewModel,),
+                NotiIconWidget(mainViewModel: mainViewModel,),
               ],
             ),
-            foregroundColor: Colors.black,
-          );
-        }
-      }
+          ],
+        ),
+        foregroundColor: Colors.black,
+      );
     }
-
+  }
+}

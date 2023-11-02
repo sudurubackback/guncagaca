@@ -21,22 +21,22 @@ class CartController extends GetxController {
   }
 
   int get totalPrice {
-    return cartItems.fold(0, (prev, order) => prev + order.menu.initPrice * order.quantity.value);
+    return cartItems.fold(0, (prev, order) => prev + order.totalPrice * order.quantity.value);
   }
 
   void addToCart(Order order) {
     Order? existingOrder;
     try {
-      existingOrder = cartItems.firstWhere((o) => o.menu == order.menu && _areOptionListsEqual(o.selectedOptions, order.selectedOptions));
+      existingOrder = cartItems.firstWhere((o) => o == order);
     } catch (e) {
-      // 해당하는 Order가 없음
+      existingOrder = null;
     }
 
-    if (existingOrder == null) {
-      order.quantity.value = 1;  // 여기에서 quantity를 초기화합니다.
-      cartItems.add(order);
-    } else {
+    if (existingOrder != null) {
       increaseQuantity(existingOrder);
+    } else {
+      order.quantity = RxInt(1); // 새로운 주문 항목의 경우, 수량을 1로 초기화
+      cartItems.add(order);
     }
   }
 
@@ -56,14 +56,6 @@ class CartController extends GetxController {
     } else {
       removeFromCart(order);
     }
-  }
-
-  bool _areOptionListsEqual(List<Option> list1, List<Option> list2) {
-    if (list1.length != list2.length) return false;
-    for (int i = 0; i < list1.length; i++) {
-      if (list1[i] != list2[i]) return false;
-    }
-    return true;
   }
 
   int get itemCount => cartItems.length;

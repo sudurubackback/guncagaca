@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 
@@ -19,21 +21,20 @@ class StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap:  () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DefaultLayout(
-                  title: store.cafeName,
-                  child: StoreDetailScreen(storeId: store.storeId,mainViewModel: mainViewModel,),
-              mainViewModel: mainViewModel,),
-            ),
-          );
-        },
-        child: Row(
+      onTap: () {
+        Get.to(
+            DefaultLayout(
+              title: store.cafeName,
+              child: StoreDetailScreen(storeId: store.storeId, mainViewModel: mainViewModel),
+              mainViewModel: mainViewModel,
+            )
+        );
+      },
+      child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              //borderRadius: BorderRadius.circular(15.0),
+              borderRadius: BorderRadius.circular(15.0),
               child: Image.network(
                 store.img,
                 width: 80,  // 원하는 이미지의 넓이로 조절하세요.
@@ -51,7 +52,9 @@ class StoreCard extends StatelessWidget {
                     fontSize: 20.0, fontWeight: FontWeight.w500,
                   ),),
                   SizedBox(height: 15.0),
-                  Text('${store.distance} km'),
+                  Text(store.distance < 1
+                      ? '${(store.distance * 1000).toInt()} m'
+                      : '${store.distance.toStringAsFixed(2)} km'),
                   SizedBox(height: 8.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
