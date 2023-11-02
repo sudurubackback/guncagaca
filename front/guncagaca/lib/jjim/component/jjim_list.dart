@@ -44,10 +44,13 @@ class _JjimListState extends State<JjimList> {
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
-              'Authorization': token.toString(),
+              'Authorization': 'Bearer $token',
             },
           ),
         );
+        print("리스폰스 값");
+        print(response.toString());
+        print(response.data.runtimeType);
 
         if (response.statusCode == 200) {
           List<dynamic> jsonData = json.decode(response.data);
