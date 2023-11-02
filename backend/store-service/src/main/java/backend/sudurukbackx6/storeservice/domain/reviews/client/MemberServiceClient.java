@@ -17,5 +17,4 @@ public interface MemberServiceClient {
 
     @PostMapping("/api/member/memberInfo")
     List<MemberInfoResponse> getMemberInfo(@RequestBody List<Long> memberIds);
-
 }
