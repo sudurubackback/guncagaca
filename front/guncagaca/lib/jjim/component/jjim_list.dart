@@ -53,7 +53,7 @@ class _JjimListState extends State<JjimList> {
         print(response.data.runtimeType);
 
         if (response.statusCode == 200) {
-          List<dynamic> jsonData = json.decode(response.data);
+          List<dynamic> jsonData = response.data;
           dummyJjims = List<Map<String, dynamic>>.from(jsonData);
           print(dummyJjims);
           print("제대로 옴");
