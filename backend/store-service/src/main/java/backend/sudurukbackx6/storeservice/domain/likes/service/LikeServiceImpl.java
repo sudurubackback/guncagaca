@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.storeservice.domain.likes.service;
 
 import backend.sudurukbackx6.storeservice.domain.likes.dto.LikeResponse;
+import backend.sudurukbackx6.storeservice.domain.likes.dto.LikeToggleResponse;
 import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.likes.repository.LikeRepository;
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
@@ -23,7 +24,7 @@ public class LikeServiceImpl implements LikeService{
 
     // 찜 토글
     @Override
-    public boolean toggleLike(Long memberId, Long storeId) {
+    public LikeToggleResponse toggleLike(Long memberId, Long storeId) {
         boolean exists = likeRepository.existsByMemberIdAndStoreId(memberId, storeId);
 
         Optional<Store> optionalStore = storeRepository.findById(storeId);
@@ -35,7 +36,13 @@ public class LikeServiceImpl implements LikeService{
             // TODO Exception 처리
             Likey existingLikey = likeRepository.findByMemberIdAndStoreId(memberId, storeId).orElseThrow(() -> new IllegalArgumentException("Like not found"));
             likeRepository.delete(existingLikey);
-            return false;
+
+            LikeToggleResponse response = new LikeToggleResponse();
+            response.setLiked(false);
+            response.setStoreId(storeId);
+
+            return response;
+
         } else {
             // 찜이 없다면 새로 찜 등록
             Likey likey = Likey.builder()
@@ -43,7 +50,12 @@ public class LikeServiceImpl implements LikeService{
                     .store(store)
                     .build();
             likeRepository.save(likey);
-            return true;
+
+            LikeToggleResponse response = new LikeToggleResponse();
+            response.setLiked(true);
+            response.setStoreId(storeId);
+
+            return response;
         }
     }
 

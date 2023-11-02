@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.store.controller;
 
+import backend.sudurukbackx6.storeservice.domain.likes.dto.LikeToggleResponse;
 import backend.sudurukbackx6.storeservice.domain.likes.service.LikeServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
@@ -56,18 +57,10 @@ public class StoreController {
 
     // 찜 등록/해제
     @PostMapping("/{cafeId}/like")
-    public ResponseEntity<String> cafeLike(@RequestHeader("Authorization") String token, @PathVariable Long cafeId) {
+    public LikeToggleResponse cafeLike(@RequestHeader("Authorization") String token, @PathVariable Long cafeId) {
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
-        if (likeService.toggleLike(memberInfo.getId(), cafeId)) {
-            return ResponseEntity.ok(String.format("%d번 가게 찜 등록", cafeId));
-        } else {
-            return ResponseEntity.ok(String.format("%d번 가게 찜 해제", cafeId));
-        }
-    }
 
-//    // 카페 메뉴 상세 몽고db에서 바로 가져오는게?
-//    @GetMapping("/cafe/{cafe_id}/menu/{index}")
-//    public StoreMenuResponse cafeMenuDetail(@RequestHeader("Authorization") String token, @PathVariable Long cafe_id, @PathVariable Long index){
-//        return null;
-//    }
+        return likeService.toggleLike(memberInfo.getId(), cafeId);
+
+    }
 }
