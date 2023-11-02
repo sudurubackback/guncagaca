@@ -8,6 +8,7 @@ import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceCli
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.MyReviewResponse;
 import backend.sudurukbackx6.storeservice.domain.store.service.StoreServiceImpl;
+import backend.sudurukbackx6.storeservice.global.kafka.KafkaEventService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.webjars.NotFoundException;
 
 @Service
 @Slf4j
@@ -29,6 +31,7 @@ public class ReviewServiceImpl implements ReviewService{
     private final ReviewRepository reviewRepository;
     private final MemberServiceClient memberServiceClient;
     private final StoreServiceImpl storeService;
+    private final KafkaEventService kafkaEventService;
 
     /**
      * 리뷰를 썼는지 확인 주문 메뉴에 해당하는 true값으로
@@ -38,22 +41,24 @@ public class ReviewServiceImpl implements ReviewService{
      */
 
     @Override
-    public ReviewDto.Response reviewSave(String token, Long cafeId, Long orderId, ReviewDto.Request request) {
-        Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
-        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+    public ReviewDto.Response reviewSave(String token, Long cafeId, String orderId, ReviewDto.Request request) {
+        Store store = storeRepository.findById(cafeId).orElseThrow(()-> new NotFoundException("해당 가게를 찾을 수 없습니다."));
+//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
 
-        log.info("memberInfo={}", memberInfo.getEmail());
+//        log.info("memberInfo={}", memberInfo.getEmail());
         Review review = Review.builder()
                 .star(request.getStar())
                 .comment(request.getComment())
                 .store(store)
-                .memberId(memberInfo.getId())
+                .orderId(orderId)
+                .memberId(1L)
                 .build();
 
         reviewRepository.save(review);
 
         storeService.updateStarPoint(store.getId(), review.getStar());
-        // TODO 해당 주문에 대한 리뷰 작성완료 처리
+        // 리뷰 작성 완료 처리
+        updateOrderStatus(orderId);
 
         return new ReviewDto.Response(review);
 
@@ -67,6 +72,14 @@ public class ReviewServiceImpl implements ReviewService{
             throw new RuntimeException();
         }
         reviewRepository.deleteById(reviewId);
+    }
+
+    // 리뷰 작성완료 이벤트 발행
+    @Override
+    public void updateOrderStatus(String orderId) {
+
+        kafkaEventService.eventPublish("reviewTopic", orderId);
+
     }
 
     @Override

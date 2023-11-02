@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.storeservice.global;
+package backend.sudurukbackx6.storeservice.global.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Configuration
 @OpenAPIDefinition
-public class OpenApiConfig {
+public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI(
             @Value("${openapi.service.title}") String serviceTitle,
