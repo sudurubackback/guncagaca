@@ -1,10 +1,16 @@
 package backend.sudurukbackx6.storeservice.domain.store.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import backend.sudurukbackx6.storeservice.domain.likes.repository.LikeRepository;
+import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
+import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
+import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
+import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +33,6 @@ public class StoreServiceImpl implements StoreService {
 
     /**
      * 메뉴 부분 기능 개발
-     * 카페 리스트 거리순으로 오름차순
      * API 호출
      * 인가를 어떻게 할지 -> 인가를 통해서 Bearer 처리를 하고, 이 다음 service 메서드를 진행한다.
      */
@@ -35,14 +40,38 @@ public class StoreServiceImpl implements StoreService {
     private static final double EARTH_RADIUS = 6371.0;
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
+    private final LikeRepository likeRepository;
+    private final StoreGeocoding storeGeocoding;
+    private final MemberServiceClient memberServiceClient;
 
+    @Value("${ncp.clientId}")
+    private String id;
+
+    @Value("${ncp.secret}")
+    private String secret;
+
+    // 카페 등록
     @Override
     public void cafeSave(StoreRequest request) {
 
+        GeocodingDto.Response response = getCoordinate(request.getAddress());
+
+        String latitude = null;
+        String longitude = null;
+
+        // 죄표 추출
+        if (!response.getAddresses().isEmpty()) {
+            GeocodingDto.Response.Address firstAddress = response.getAddresses().get(0);
+            latitude = firstAddress.getX();
+            longitude = firstAddress.getY();
+        } // TODO : 좌표 없을 때 예외 처리
+        log.info("위도 : {}", latitude);
+        log.info("경도 : {}", longitude);
+
         Store store = Store.builder()
                 .name(request.getStoreName())
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
+                .latitude(Double.valueOf(latitude))
+                .longitude(Double.valueOf(longitude))
                 .address(request.getAddress())
                 .tel(request.getTel())
                 .img(request.getImg())
@@ -52,36 +81,45 @@ public class StoreServiceImpl implements StoreService {
         storeRepository.save(store);
     }
 
+    // 주변 카페 리스트
     @Override
-    public List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request) {
+    public List<NeerStoreResponse> cafeList(LocateRequest request) {
         List<Store> allStores = storeRepository.findAll();
         List<NeerStoreResponse> nearCafes = new ArrayList<>();
 
         for (Store store : allStores) {
 
-            Result result = getResult(store.getId());
-
+            // 거리 구하기
             double c = getLocate(request, store);
-
             double distance = EARTH_RADIUS * c;
 
-            if(distance <= 1.5) {  // If distance is less than or equal to 1.5km
+
+            if(distance > 0) {  // If distance is less than or equal to 1.5km
                 NeerStoreResponse cafe = NeerStoreResponse.builder()
+                        .storeId(store.getId())
                     .cafeName(store.getName())
                     .latitude(store.getLatitude())
                     .longitude(store.getLongitude())
-                    .starTotal(result.star_adding)
-                    .reviewCount(result.reviewList.size())
+                    .starTotal(store.getStarPoint())
+                    .reviewCount(store.getReview().size())
                     .img(store.getImg())
+                    .distance(distance)
+                        .address(store.getAddress())
                     .build();
 
                 nearCafes.add(cafe);
             }
         }
 
-        return nearCafes;
+        // 거리 기준 오름차순 정렬
+        List<NeerStoreResponse> sortedCafes = nearCafes.stream()
+                .sorted(Comparator.comparingDouble(NeerStoreResponse::getDistance))
+                .collect(Collectors.toList());
+
+        return sortedCafes;
     }
 
+    // 현재위치와 카페 사이 거리
     private static double getLocate(LocateRequest request, Store store) {
         double dLat = Math.toRadians(request.getLatitude() - store.getLatitude());
         double dLon = Math.toRadians(request.getLongitude() - store.getLongitude());
@@ -95,90 +133,86 @@ public class StoreServiceImpl implements StoreService {
         return c;
     }
 
+    // 카페 기본 정보
     @Override
     public StoreResponse cafeDetail(Long memberId, Long cafeId) {
-        Result result = getResult(cafeId);
+
+        // 찜 여부
+        boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, cafeId);
+        Store store = getCafe(cafeId);
 
         return StoreResponse.builder()
-                .cafeName(result.store.getName())
-                .starTotal(result.star_adding)
-                .reviewCount(result.reviewList.size())
-                .img(result.store.getImg())
+                .storeId(cafeId)
+                .cafeName(store.getName())
+                .starPoint(store.getStarPoint())
+                .reviewCount(store.getReview().size())
+                .img(store.getImg())
+                .isLiked(isLiked)
+                .description(store.getDescription())
                 .build();
     }
 
+//    @Override
+//    public List<StoreMenuResponse> cafeMenu(String token, Long cafeId) {
+//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+//        return null;
+//    }
+//
+//    @Override
+//    public StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex) {
+//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+//        return null;
+//    }
+
+    // 리뷰 최신순
     @Override
-    public List<StoreMenuResponse> cafeMenu(Long memberId, Long cafeId) {
+    public List<StoreReviewResponse> cafeReview(Long cafeId) {
 
-        return null;
-    }
+        List<Review> reviewList = reviewRepository.findByStoreIdOrderByIdDesc(cafeId);
+        // 리뷰의 멤버Id 목록
+        List<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toList());
+        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(memberIds);
 
-    @Override
-    public StoreMenuResponse cafeMenuDetail(Long memberId, Long cafeId, Long menuIndex) {
-        return null;
-    }
+        // Id : 닉네임
+        Map<Long, String> memberIdToNicknameMap = memberInfoList.stream()
+                .collect(Collectors.toMap(MemberInfoResponse::getId, MemberInfoResponse::getNickname));
 
-    // @Override
-    // public ShowStoreResponse cafeDescription(Long memberId, Long cafeId) {
-    //
-    //     Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
-    //
-    //     Result result = getResult(cafeId);
-    //     return ShowStoreResponse.builder()
-    //         .cafeName(store.getName())
-    //         .storeImg(store.getImg())
-    //         .reviewCount(result.reviewList.size())
-    //         .starTotal(result.star_adding)
-    //         .build();
-    // }
-
-
-    @Override
-    public List<StoreReviewResponse> cafeReview(String nickname, Long cafeId) {
-        Result result = getResult(cafeId);
-
-        List<StoreReviewResponse> reviewResponses = new ArrayList<>();
-
-        List<Review> reviewList = result.reviewList;
-        for (Review review : reviewList) {
-            StoreReviewResponse build = StoreReviewResponse.builder()
+        List<StoreReviewResponse> storeReviewResponses = reviewList.stream().map(review -> {
+            String nickname = memberIdToNicknameMap.getOrDefault(review.getMemberId(), "Unknown");
+            return StoreReviewResponse.builder()
+                    .reviewId(review.getId())
+                    .nickname(nickname)
                     .star(review.getStar())
                     .content(review.getComment())
                     .build();
+        }).collect(Collectors.toList());
 
-            reviewResponses.add(build);
-        }
+        return storeReviewResponses;
 
-        return reviewResponses;
+    }
+
+    // 좌표변환
+    private GeocodingDto.Response getCoordinate(String address) {
+        return storeGeocoding.transferAddress(id, secret, address);
+    }
+
+    // 별점 업데이트
+    @Override
+    public void updateStarPoint(Long storeId, Double point) {
+        Store store = getCafe(storeId);
+
+        int reviewCount = store.getReview().size();
+        Double totalPoint = (reviewCount-1) * store.getStarPoint(); // 총점 (방금 작성한 리뷰는 카운트 x)
+
+        Double newStarPoint = (totalPoint + point) / reviewCount;
+        storeRepository.updateStarPoint(newStarPoint, storeId);
+    }
+
+    @Override
+    public Store getCafe(Long cafeId) {
+        return storeRepository.findById(cafeId).orElseThrow();
     }
 
 
-    // cafe에 달린 review, review의 별점의 평균을 구하기 위함.
-    private Result getResult(Long cafeId) {
-        Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
 
-        List<Review> reviewList = store.getReview();
-
-        double star_adding = 0;
-
-        for (Review review : reviewList) {
-            int star = review.getStar();
-            star_adding += star;
-        }
-        star_adding /= reviewList.size();
-        Result result = new Result(store, reviewList, star_adding);
-        return result;
-    }
-
-    private static class Result {
-        public final Store store;
-        public final List<Review> reviewList;
-        public final double star_adding;
-
-        public Result(Store store, List<Review> reviewList, double star_adding) {
-            this.store = store;
-            this.reviewList = reviewList;
-            this.star_adding = star_adding;
-        }
-    }
 }
