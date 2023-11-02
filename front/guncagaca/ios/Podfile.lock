@@ -1,0 +1,86 @@
+PODS:
+  - bootpay_webview_flutter_wkwebview (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - kakao_flutter_sdk_common (1.6.1):
+    - Flutter
+  - location (0.0.1):
+    - Flutter
+  - naver_map_plugin (0.9.4):
+    - Flutter
+    - NMapsMap
+  - NMapsGeometry (1.0.1)
+  - NMapsMap (3.17.0):
+    - NMapsGeometry
+  - package_info_plus (0.4.5):
+    - Flutter
+  - permission_handler_apple (9.1.1):
+    - Flutter
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - Toast (4.0.0)
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - bootpay_webview_flutter_wkwebview (from `.symlinks/plugins/bootpay_webview_flutter_wkwebview/ios`)
+  - Flutter (from `Flutter`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - kakao_flutter_sdk_common (from `.symlinks/plugins/kakao_flutter_sdk_common/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
+  - naver_map_plugin (from `.symlinks/plugins/naver_map_plugin/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+
+SPEC REPOS:
+  trunk:
+    - NMapsGeometry
+    - NMapsMap
+    - Toast
+
+EXTERNAL SOURCES:
+  bootpay_webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/bootpay_webview_flutter_wkwebview/ios"
+  Flutter:
+    :path: Flutter
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  kakao_flutter_sdk_common:
+    :path: ".symlinks/plugins/kakao_flutter_sdk_common/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
+  naver_map_plugin:
+    :path: ".symlinks/plugins/naver_map_plugin/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+
+SPEC CHECKSUMS:
+  bootpay_webview_flutter_wkwebview: baf2884591d215ae8bf446f97f1acc282f9527a6
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  fluttertoast: 48c57db1b71b0ce9e6bba9f31c940ff4b001293c
+  kakao_flutter_sdk_common: 7167cfbf5725acf75252af46bb045b9ad99ed6ce
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  naver_map_plugin: d1d67733c56b20b88270d9da51218e18fa916232
+  NMapsGeometry: 53c573ead66466681cf123f99f698dc8071a4b83
+  NMapsMap: a5b909a31b6f3d27a670f6eb2ddc913c38975474
+  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
+
+PODFILE CHECKSUM: 1959d098c91d8a792531a723c4a9d7e9f6a01e38
+
+COCOAPODS: 1.13.0

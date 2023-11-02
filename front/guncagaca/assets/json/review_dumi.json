@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "근카가카 구미인동점",
+    "img" : "https://mblogthumb-phinf.pstatic.net/MjAyMTEyMTRfODUg/MDAxNjM5NDgwMjE3MTM2.LtR9jiHgER2fi572LaPgIX5ZkVCcsc8ZXuNLWIeui4og.nn8VAWHT-92I-JHC5bQprfKFLC7He7_Zvb5GFqmo8V0g.JPEG.wlsl8869/IMG_7516.jpg?type=w800",
+    "star": 1,
+    "comment" : "친절합니다"
+  },
+  {
+    "id": 2,
+    "name": "커피비치 구미인동점",
+    "img" : "https://wimg.mk.co.kr/meet/neds/2020/12/image_readtop_2020_1248229_16070484024458376.jpg",
+    "star": 0.5,
+    "comment" : "맛있습니다."
+  },
+  {
+    "id": 3,
+    "name": "Nerd 교동점",
+    "img" : "https://www.issueinfact.com/news/photo/201911/13148_10028_325.jpg",
+    "star": 5,
+    "comment" : "가나다라마바사아자차카타파하가나다라마바사가나다라마바사아자차카타파하가나다라마바사가나다라마바사아자차카타파하가나다라마바사가나다라마바사아자차카타파하가나다라마바사"
+  },
+  {
+    "id": 4,
+    "name": "근카가카 구미인동점",
+    "img" : "https://mblogthumb-phinf.pstatic.net/MjAyMTEyMTRfODUg/MDAxNjM5NDgwMjE3MTM2.LtR9jiHgER2fi572LaPgIX5ZkVCcsc8ZXuNLWIeui4og.nn8VAWHT-92I-JHC5bQprfKFLC7He7_Zvb5GFqmo8V0g.JPEG.wlsl8869/IMG_7516.jpg?type=w800",
+    "star": 4,
+    "comment" : "친절합니다"
+  },
+  {
+    "id": 5,
+    "name": "커피비치 구미인동점",
+    "img" : "https://wimg.mk.co.kr/meet/neds/2020/12/image_readtop_2020_1248229_16070484024458376.jpg",
+    "star": 0.5,
+    "comment" : "맛있습니다."
+  },
+  {
+    "id": 6,
+    "name": "Nerd 교동점",
+    "img" : "https://www.issueinfact.com/news/photo/201911/13148_10028_325.jpg",
+    "star": 5,
+    "comment" : "가나다라마바사아자차카타파하가나다라마바사가나다라마바사아자차카타파하가나다라마바사가나다라마바사아자차카타파하가나다라마바사가나다라마바사아자차카타파하가나다라마바사"
+  }
+]

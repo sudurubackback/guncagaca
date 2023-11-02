@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "time_history": "2023-10-27-14:48:03",
+    "order_prices" : "35000",
+    "order_memus" :  {"아메리카노" : ["샷추가","Tall"],"카페라떼" : ["기본","Grande","휘핑추가"]},
+    "order_memu" :  ["아메리카노","카페라떼"],
+    "takeoutYn" : true,
+    "name" : "근카가카 구미인동점",
+    "img" : "https://www.issueinfact.com/news/photo/201911/13148_10028_325.jpg",
+    "reviewYn" : false,
+    "order_status" : "접수 대기"
+  },
+  {
+    "id": 2,
+    "time_history": "2023-10-26-14:48:03",
+    "order_prices" : "35000",
+    "order_memus" :  {"카페라떼" : ["기본","Grande"],"아메리카노" : ["샷추가","Tall"]},
+    "order_memu" :  ["카페라떼","아메리카노"],
+    "takeoutYn" : false,
+    "name" : "Nerd 교동점",
+    "img" : "https://wimg.mk.co.kr/meet/neds/2020/12/image_readtop_2020_1248229_16070484024458376.jpg",
+    "reviewYn" : true,
+    "order_status" : "준비 중"
+  }
+
+]
