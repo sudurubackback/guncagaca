@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.store.service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,7 @@ import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
 import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
+import backend.sudurukbackx6.storeservice.global.s3.S3Uploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreResponse
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreReviewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -43,6 +46,12 @@ public class StoreServiceImpl implements StoreService {
     private final LikeRepository likeRepository;
     private final StoreGeocoding storeGeocoding;
     private final MemberServiceClient memberServiceClient;
+    private final S3Uploader s3Uploader;
+
+
+    @Value("${cloud.aws.cloud.url}")
+    private String basicProfile;
+
 
     @Value("${ncp.clientId}")
     private String id;
@@ -52,8 +61,9 @@ public class StoreServiceImpl implements StoreService {
 
     // 카페 등록
     @Override
-    public void cafeSave(StoreRequest request) {
+    public void cafeSave(MultipartFile multipartFile, StoreRequest request) throws IOException {
 
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
 
         String latitude = null;
@@ -74,11 +84,19 @@ public class StoreServiceImpl implements StoreService {
                 .longitude(Double.valueOf(longitude))
                 .address(request.getAddress())
                 .tel(request.getTel())
-                .img(request.getImg())
+                .img(upload)
                 .description(request.getDescription())
                 .build();
 
         storeRepository.save(store);
+    }
+
+    public void cafeImgChage(MultipartFile multipartFile, Long cafeId) throws IOException {
+
+        Store store = storeRepository.findById(cafeId).orElseThrow();
+
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
+        store.setImg(upload);
     }
 
     // 주변 카페 리스트
