@@ -1,12 +1,12 @@
 package backend.sudurukbackx6.memberservice.domain.member.controller;
 
-import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
-import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
-import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
+import backend.sudurukbackx6.memberservice.domain.member.dto.*;
 import backend.sudurukbackx6.memberservice.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/member")
@@ -31,12 +31,22 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<MypageResponseDto> getMypage(@RequestHeader("Email") String email) {
+    public ResponseEntity<MypageResponse> getMypage(@RequestHeader("Email") String email) {
         return ResponseEntity.ok(memberService.getMypage(email));
     }
 
     @PutMapping("/mypage/change-nickname")
-    public ResponseEntity<MypageResponseDto> changeNickname(@RequestHeader("Email") String email, @RequestParam String nickname) {
+    public ResponseEntity<MypageResponse> changeNickname(@RequestHeader("Email") String email, @RequestParam String nickname) {
         return ResponseEntity.ok(memberService.changeNickname(email, nickname));
+    }
+
+    @GetMapping("/mypage/point")
+    public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.myPoint(email));
+    }
+
+    @GetMapping("/mypage/point/{cafe_id}")
+    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Email") String email,@PathVariable Long cafe_id){
+        return ResponseEntity.ok(memberService.pointStore(email, cafe_id));
     }
 }

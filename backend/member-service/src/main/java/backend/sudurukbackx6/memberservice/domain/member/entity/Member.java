@@ -1,13 +1,17 @@
 package backend.sudurukbackx6.memberservice.domain.member.entity;
 
+import backend.sudurukbackx6.memberservice.domain.points.entity.Point;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Member {
 
@@ -19,6 +23,9 @@ public class Member {
     private String nickname;
 
     private String email;
+
+    @OneToMany(mappedBy = "member")
+    private List<Point> points;
 
     @Builder
     public Member(Long id, String nickname, String email) {

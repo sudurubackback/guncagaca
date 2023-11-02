@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.store.controller;
 
+import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.service.StoreServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
 import lombok.Getter;
