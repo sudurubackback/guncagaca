@@ -54,6 +54,7 @@ public class LikeServiceImpl implements LikeService{
         return likeys.stream()
                 .map(likey -> {
                     return LikeResponse.builder()
+                            .id(likey.getId())
                             .memberId(likey.getMemberId())
                             .storeId(likey.getStore().getId())
                             .cafeName(likey.getStore().getName())
