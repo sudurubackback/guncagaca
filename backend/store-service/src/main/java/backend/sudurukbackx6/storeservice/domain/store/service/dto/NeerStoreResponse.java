@@ -10,10 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class NeerStoreResponse {
+
+    private Long storeId;
     private String cafeName;
     private Double latitude;
     private Double longitude;
     private Double starTotal;
     private int reviewCount;
     private String img;
+    private Double distance;
+    private String address;
 }
