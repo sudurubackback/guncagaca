@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.ownerservice.domain.owner.controller;
 
 import backend.sudurukbackx6.ownerservice.common.dto.BaseResponseBody;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.GetTodaySellingResponse;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -15,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.ws.rs.Path;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -108,6 +111,4 @@ public class OwnerController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "accesstoken갱신 성공", newAccessToken));
     }
-
-
 }

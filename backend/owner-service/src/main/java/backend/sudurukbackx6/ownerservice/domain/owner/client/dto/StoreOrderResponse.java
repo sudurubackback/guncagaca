@@ -24,7 +24,7 @@ public class StoreOrderResponse {
     private int price;
 
 
-    public class Menu {
+    public static class Menu {
 
         @Column(name = "menu_id")
         private String menuId;
@@ -44,7 +44,7 @@ public class StoreOrderResponse {
         private List<Option> options;
     }
 
-    public class Option {
+    public static class Option {
 
         private String optionName;
         private String selectedOption;
