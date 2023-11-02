@@ -36,4 +36,14 @@ public class OrderController {
     public List<StoreOrderResponse> getStoredOrder (@PathVariable Long storeId){
         return orderService.getStoredOrder(storeId);
     }
+
+    @PostMapping("/request/{orderId}")
+    public ResponseEntity<String> requestOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
+        return ResponseEntity.ok(orderService.requestOrder(orderId));
+    }
+
+    @PostMapping("/complete/{orderId}")
+    public ResponseEntity<String> completeOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
+        return ResponseEntity.ok("주문 메뉴 완료");
+    }
 }
