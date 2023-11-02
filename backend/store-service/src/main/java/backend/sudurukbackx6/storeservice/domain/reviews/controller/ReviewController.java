@@ -40,7 +40,7 @@ public class ReviewController {
 
     // 멤버가 리뷰한 목록 조회
     @GetMapping("/mypage/reviews")
-    public ResponseEntity<List<MyReviewResponse>> LikedStoresByMemberId(@RequestHeader("Authorization") String token, @PathVariable Long memberId){
+    public ResponseEntity<List<MyReviewResponse>> LikedStoresByMemberId(@RequestHeader("Authorization") String token){
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         return ResponseEntity.ok(reviewService.getReviewByMemberId(memberInfo.getId()));
 

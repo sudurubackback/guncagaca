@@ -166,12 +166,12 @@ public class StoreServiceImpl implements StoreService {
 
     // 리뷰 최신순
     @Override
-    public List<StoreReviewResponse> cafeReview(Long cafeId) {
+    public List<StoreReviewResponse> cafeReview(String token, Long cafeId) {
 
         List<Review> reviewList = reviewRepository.findByStoreIdOrderByIdDesc(cafeId);
         // 리뷰의 멤버Id 목록
         List<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toList());
-        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(memberIds);
+        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(token, memberIds);
 
         // Id : 닉네임
         Map<Long, String> memberIdToNicknameMap = memberInfoList.stream()
@@ -212,7 +212,5 @@ public class StoreServiceImpl implements StoreService {
     public Store getCafe(Long cafeId) {
         return storeRepository.findById(cafeId).orElseThrow();
     }
-
-
 
 }

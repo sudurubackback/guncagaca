@@ -51,8 +51,8 @@ public class StoreController {
 
     // 카페 리뷰 조회
     @GetMapping("/{cafeId}/review")
-    public List<StoreReviewResponse> cafeReview(@PathVariable Long cafeId){
-        return storeService.cafeReview(cafeId);
+    public List<StoreReviewResponse> cafeReview(@RequestHeader("Authorization") String token, @PathVariable Long cafeId){
+        return storeService.cafeReview(token, cafeId);
     }
 
     // 찜 등록/해제
