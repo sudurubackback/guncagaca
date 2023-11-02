@@ -146,7 +146,7 @@ public class OrderService {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
         order.setStatus(Status.REQUEST);
-
+        orderRepository.save(order);
         // TODO 알림보내기 (Open Feign)
 
         return "주문 접수가 완료되었습니다.";
@@ -156,7 +156,7 @@ public class OrderService {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
         order.setStatus(Status.COMPLETE);
-
+        orderRepository.save(order);
         // TODO 알림보내기 TODO 알림보내기 (Open Feign)
 
         return "주문 상품이 완료되었습니다.";
