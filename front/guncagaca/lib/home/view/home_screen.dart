@@ -30,6 +30,15 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   bool get wantKeepAlive => true;
 
   naver.NaverMapController? _controller;
+  LocationData? currentLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    dotenv.load(fileName: '.env');  // .env 파일 로드
+    _permission();
+    _initCurrentLocationAndFetchCafes();
+  }
 
   // 위치 권한 받기
   void _permission() async {
@@ -44,28 +53,32 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   List<Marker> markers = []; // 마커 정보
   final LocationService locationService = LocationService();
 
+  // 위치 정보를 초기화하고 카페 정보를 가져오는 함수
+  Future<void> _initCurrentLocationAndFetchCafes() async {
+    currentLocation = await locationService.getCurrentLocation();
+    if (currentLocation != null) {
+      fetchCafes();
+    } else {
+      print("위치 정보를 가져오지 못했습니다.");
+    }
+  }
+
   // 주변 카페 호출
   Future<void> fetchCafes() async {
     print("api호출");
-    LocationData? currentLocation = await locationService.getCurrentLocation();
-
-    if (currentLocation == null) {
-      // 위치 정보를 가져오지 못한 경우의 처리
-      print("실패");
-      return;
-    }
+    if (currentLocation == null) return;
 
     String baseUrl = dotenv.env['BASE_URL']!;
     Dio dio = DioClient.getInstance();
 
-    print("통신");
     print(currentLocation);
     final response = await dio.get("$baseUrl/api/store/list", queryParameters: {
-      'lat': currentLocation.longitude,
-      'lon': currentLocation.latitude
+      'lat': currentLocation!.longitude,
+      'lon': currentLocation!.latitude
     });
-    print('${currentLocation.latitude} 위도');
-    print('${currentLocation.longitude} 경도');
+    print('${currentLocation!.latitude} 위도');
+    print('${currentLocation!.longitude} 경도');
+
     if (response.statusCode == 200) {
       List<dynamic> data = response.data;
       print(data);
@@ -78,16 +91,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   Future<void> refreshContent() async {
     await fetchCafes();
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    dotenv.load(fileName: '.env');  // .env 파일 로드
-    print("홈");
-    fetchCafes();
-    _permission();
   }
 
   // 마커 찍기
@@ -155,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 child: naver.NaverMap(
                   markers: List.from(markers),
                   initLocationTrackingMode: mapProvider.trackingMode,
-                  initialCameraPosition: naver.CameraPosition(target: mapProvider.initLocation),
+                  initialCameraPosition: naver.CameraPosition(target: convertToLatLng(currentLocation)),
                   locationButtonEnable: true,
                   onMapCreated: (naver.NaverMapController controller) async {
                     _controller = controller;
