@@ -104,7 +104,7 @@ public class MemberService {
     }
 
 
-    public List<MyPointsResponse> myPoint(String email) {
+    public List<MyPointsResponse> myPoint(String email, String token) {
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
@@ -119,7 +119,7 @@ public class MemberService {
         List<MyPointsResponse> myPointsResponses = new ArrayList<>();
 
         for (Long cafeId : cafeIds) {
-            StoreResponse storeInfo = storeFeignClient.cafeDetail(cafeId);
+            StoreResponse storeInfo = storeFeignClient.cafeDetail(token, cafeId);
             String name = storeInfo.getName();
             String img = storeInfo.getImg();
 
@@ -144,7 +144,7 @@ public class MemberService {
         return myPointsResponses;
     }
 
-    public PointStoreResponse pointStore(String email, Long cafeId) {
+    public PointStoreResponse pointStore(String email,String token, Long cafeId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
 

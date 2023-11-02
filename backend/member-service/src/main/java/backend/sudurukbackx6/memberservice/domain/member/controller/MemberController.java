@@ -50,12 +50,12 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/point")
-    public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Email") String email) {
-        return ResponseEntity.ok(memberService.myPoint(email));
+    public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Authorization") String token,@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.myPoint(email,token));
     }
 
     @GetMapping("/mypage/point/{cafe_id}")
-    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Email") String email,@PathVariable Long cafe_id){
-        return ResponseEntity.ok(memberService.pointStore(email, cafe_id));
+    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Authorization") String token, @RequestHeader("Email") String email,@PathVariable Long cafe_id){
+        return ResponseEntity.ok(memberService.pointStore(email,token, cafe_id));
     }
 }
