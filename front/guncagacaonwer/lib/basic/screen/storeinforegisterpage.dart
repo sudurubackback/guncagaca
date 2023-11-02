@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:guncagacaonwer/basic/api/storeregister_api_service.dart';
+import 'package:guncagacaonwer/basic/models/storeregistermodel.dart';
+import 'package:guncagacaonwer/login/screen/loginpage.dart';
 import 'package:image_picker/image_picker.dart';
 
 
@@ -11,7 +15,7 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
   String storeName = '';
   String address = '';
   String tel = '';
-  String img = '';
+  MultipartFile? img;
   String description = '';
 
   final picker = ImagePicker();
@@ -19,11 +23,26 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
   Future _pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
+    // 이미지를 선택한 경우에만 할당
     if (pickedFile != null) {
       setState(() {
-        img = pickedFile.path; // 이미지 경로를 상태 변수에 저장
+        img = MultipartFile.fromFileSync(pickedFile.path);
       });
     }
+    // 나중에 사용할 때 null 체크를 수행
+    if (img != null) {
+      final storeRegisterRequest = StoreRegisterRequest(storeName, address, tel, img, description);
+    }
+  }
+
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Dio dio = Dio();
+    apiService = ApiService(dio);
   }
 
   @override
@@ -182,15 +201,52 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                       SizedBox(
                         width: 20 * (deviceWidth / standardDeviceWidth),
                       ),
-                      Text(img), // 선택된 이미지 파일명 표시 또는 경로 표시
+                      Text(img as String), // 선택된 이미지 파일명 표시 또는 경로 표시
                     ],
                   ),
                 ),
                 SizedBox(height: 15 * (deviceHeight / standardDeviceHeight)),
                 ElevatedButton(
-                  onPressed: () {
-                    // Handle registration logic here
-                    // ...
+                  onPressed: () async {
+                    try {
+                     // 요청 데이터 모델
+                     final formData = StoreRegisterRequest(storeName, address, tel, img, description).toFormData();
+
+                     // API 서비스 사용해 가게등록 요청
+                     final reponse = await apiService.storeRegister(formData);
+
+                     // 응답 처리
+                     if (reponse.status == 0) {
+                       // 가게 등록 성공 -> 로그인 창으로 이동
+                       Navigator.of(context).pushReplacement(
+                         MaterialPageRoute(
+                           builder: (context) => LoginPage(),
+                         ),
+                       );
+                     } else {
+                       // 가게 등록 실패
+                       showDialog(
+                         context: context,
+                         builder: (context) {
+                           return AlertDialog(
+                             title: Text("가게 등록 실패"),
+                             content: Text("가게 등록에 실패했습니다. 다시 시도해 주세요."),
+                             actions: <Widget> [
+                               ElevatedButton(
+                                 child: Text("확인"),
+                                 onPressed: () {
+                                   Navigator.of(context).pop();
+                                   },
+                                )
+                              ],
+                            );
+                          }
+                        );
+                      }
+                    } catch (e) {
+                      // 통신 실패시 예외 처리
+                      print("통신 실패 : $e");
+                    }
                   },
                   style: ButtonStyle(
                     // 버튼의 최소 크기 설정
