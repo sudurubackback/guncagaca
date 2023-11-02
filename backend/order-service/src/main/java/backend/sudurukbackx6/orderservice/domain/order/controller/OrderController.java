@@ -39,11 +39,11 @@ public class OrderController {
 
     @PostMapping("/request/{orderId}")
     public ResponseEntity<String> requestOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
-        return ResponseEntity.ok(orderService.requestOrder(orderId));
+        return ResponseEntity.ok(orderService.requestOrder(email, orderId));
     }
 
     @PostMapping("/complete/{orderId}")
     public ResponseEntity<String> completeOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
-        return ResponseEntity.ok(orderService.completeOrder(orderId));
+        return ResponseEntity.ok(orderService.completeOrder(email, orderId));
     }
 }

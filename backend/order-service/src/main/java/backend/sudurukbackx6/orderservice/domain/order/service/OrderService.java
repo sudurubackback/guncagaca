@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.orderservice.domain.order.service;
 
+import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderCancelRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
@@ -33,6 +34,7 @@ import java.util.Objects;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final MemberServiceClient memberServiceClient;
 
     @Value("${bootpay.clientId")
     private String CLIENT_ID;
@@ -142,9 +144,12 @@ public class OrderService {
         return storeOrderResponses;
     }
 
-    public String requestOrder (String obejctId) {
+    public String requestOrder (String email, String obejctId) {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        Long memberId = memberServiceClient.getId(email);
+        log.info(memberId.toString());
+
         order.setStatus(Status.REQUEST);
         orderRepository.save(order);
         // TODO 알림보내기 (Open Feign)
@@ -152,9 +157,12 @@ public class OrderService {
         return "주문 접수가 완료되었습니다.";
     }
 
-    public String completeOrder (String obejctId) {
+    public String completeOrder (String email, String obejctId) {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        Long memberId = memberServiceClient.getId(email);
+        log.info(memberId.toString());
+        
         order.setStatus(Status.COMPLETE);
         orderRepository.save(order);
         // TODO 알림보내기 TODO 알림보내기 (Open Feign)
