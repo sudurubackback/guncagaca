@@ -26,6 +26,9 @@ public class Order {
     @Column(name = "store_id")
     private Long storeId;
 
+    // 결제 영수증 id (취소할때 사용)
+    private String receiptId;
+
     @Column(name = "order_time")
     private LocalDateTime orderTime;
 
