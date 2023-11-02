@@ -2,13 +2,18 @@ package backend.sudurukbackx6.storeservice.domain.reviews.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
+import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
+import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.MyReviewResponse;
+import backend.sudurukbackx6.storeservice.domain.store.service.StoreServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
-import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.ReviewSaveRequest;
+import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.ReviewDto;
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +27,8 @@ public class ReviewServiceImpl implements ReviewService{
 
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberServiceClient memberServiceClient;
+    private final StoreServiceImpl storeService;
 
     /**
      * 리뷰를 썼는지 확인 주문 메뉴에 해당하는 true값으로
@@ -31,32 +38,54 @@ public class ReviewServiceImpl implements ReviewService{
      */
 
     @Override
-    public void reviewSave(Long memberId, Long cafeId, ReviewSaveRequest request) {
+    public ReviewDto.Response reviewSave(String token, Long cafeId, Long orderId, ReviewDto.Request request) {
         Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
 
+        log.info("memberInfo={}", memberInfo.getEmail());
         Review review = Review.builder()
                 .star(request.getStar())
-                .comment(request.getContent())
+                .comment(request.getComment())
                 .store(store)
-                .memberId(memberId)
+                .memberId(memberInfo.getId())
                 .build();
 
         reviewRepository.save(review);
 
+        storeService.updateStarPoint(store.getId(), review.getStar());
+        // TODO 해당 주문에 대한 리뷰 작성완료 처리
+
+        return new ReviewDto.Response(review);
+
     }
 
     @Override
-    public void reviewDelete(Long memberId, Long cafeId, Long reviewId) {
-        Store store = storeRepository.findById(cafeId).orElseThrow(RuntimeException::new);
-
-        /**
-         * 이 아래 부분은 그냥 deleteById로 해도 되겠다.
-         */
-
-        List<Review> reviewList = store.getReview();
-
-        for (Review review : reviewList) {
-            if(Objects.equals(reviewId, review.getId())) reviewRepository.delete(review);
+    public void reviewDelete(String token, Long cafeId, Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        if(!Objects.equals(review.getMemberId(), memberInfo.getId())){
+            throw new RuntimeException();
         }
+        reviewRepository.deleteById(reviewId);
     }
+
+    @Override
+    public List<MyReviewResponse> getReviewByMemberId(Long memberId) {
+        List<Review> reviews = reviewRepository.getReviewByMemberId(memberId);
+
+        return reviews.stream().map(review -> {
+            MyReviewResponse response = new MyReviewResponse();
+            response.setStar(review.getStar());
+            response.setComment(review.getComment());
+
+            // 가게 정보 설정
+            Store store = review.getStore();
+            if (store != null) {
+                response.setStore(storeRepository.findById(store.getId()).orElse(null));
+            }
+
+            return response;
+        }).collect(Collectors.toList());
+    }
+
 }

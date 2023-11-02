@@ -3,6 +3,8 @@ package backend.sudurukbackx6.orderservice.domain.order.service;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderCancelRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
+import backend.sudurukbackx6.orderservice.client.OwnerServiceClient;
+import backend.sudurukbackx6.orderservice.domain.order.dto.StoreOrderResponse;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Status;
 import backend.sudurukbackx6.orderservice.domain.order.repository.OrderRepository;
@@ -20,6 +22,9 @@ import org.webjars.NotFoundException;
 import java.time.LocalDateTime;
 
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -114,4 +119,26 @@ public class OrderService {
 
     }
 
+    // Owner에서 통계용
+    public List<StoreOrderResponse> getStoredOrder (Long storeId){
+
+        List<StoreOrderResponse> storeOrderResponses = new ArrayList<>();
+
+        List<Order> all = orderRepository.findAll();
+        for (Order order : all) {
+            if(Objects.equals(order.getStoreId(), storeId)){
+                StoreOrderResponse storeOrderResponse = StoreOrderResponse.builder()
+                        .memberId(order.getMemberId())
+                        .orderTime(order.getOrderTime())
+                        .status(order.getStatus())
+                        .takeoutYn(order.isTakeoutYn())
+                        .menuList(order.getMenus())
+                        .price(order.getPrice())
+                        .build();
+                storeOrderResponses.add(storeOrderResponse);
+            }
+        }
+
+        return storeOrderResponses;
+    }
 }

@@ -21,10 +21,11 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
     private Long id;
 
     @Column(nullable = false)
-    private int star;
+    private Double star;
 
     @Column(nullable = false,columnDefinition = "VARCHAR(500)")
     private String comment;
@@ -34,8 +35,10 @@ public class Review {
 
     private Long memberId;
 
+    private Long orderId;
+
     @Builder
-    public Review(Long id, int star, String comment, Store store, Long memberId) {
+    public Review(Long id, Double star, String comment, Store store, Long memberId) {
         this.id = id;
         this.star = star;
         this.comment = comment;
