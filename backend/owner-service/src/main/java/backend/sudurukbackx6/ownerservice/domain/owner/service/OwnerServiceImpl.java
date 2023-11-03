@@ -2,6 +2,8 @@ package backend.sudurukbackx6.ownerservice.domain.owner.service;
 
 import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -172,4 +174,20 @@ public class OwnerServiceImpl implements OwnerService {
         ownersRepository.deleteByEmail(email);
     }
 
+    @Override
+    public OwnerInfoResponse ownerInfo (String token){
+        Owners owners = jwtProvider.extractUser(token);
+        return OwnerInfoResponse.builder()
+                .email(owners.getEmail())
+                .tel(owners.getTel())
+                .storeId(owners.getStoreId())
+                .build();
+    }
+
+    @Override
+    public Long ownerStoreId(ChangeOwnerStoreIdRequest request){
+        Owners owners = ownersRepository.findByEmail(request.getEmail()).orElseThrow();
+        owners.setStoreId(request.getStoreId());
+        return request.getStoreId();
+    }
 }

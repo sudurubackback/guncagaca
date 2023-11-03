@@ -33,14 +33,14 @@ public class StoreController {
     // 카페 등록
     @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "카페 등록", description = "가게명, 주소, 전화번호, 이미지, 소개, 오픈시간, 마감시간을 입력받아 가게 등록\n등록 시 주소 통해서 자동으로 위도, 경도 입력됨", tags = { "Store Controller" })
-    public void cafeSave(@RequestPart(value="file", required = false) MultipartFile file,@RequestPart StoreRequest request) throws IOException {
-        storeService.cafeSave(file,request);
+    public void cafeSave(@RequestPart(value="file", required = false) MultipartFile file,@RequestPart StoreRequest request,@RequestHeader("Authorization") String token) throws IOException {
+        storeService.cafeSave(file,request, token);
     }
 
     // 카페 이미지 변경
-    @PutMapping(value = "/{cafeId}/chageImg",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
-    public void cafeImgChage(@RequestPart(value="file", required = false) MultipartFile multipartFile,@PathVariable("cafeId") Long cafeId) throws IOException {
-        storeService.cafeImgChage(multipartFile, cafeId);
+    @PutMapping(value = "/chageImg",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+    public void cafeImgChage(@RequestPart(value="file", required = false) MultipartFile multipartFile, @RequestHeader("Authorization") String token) throws IOException {
+        storeService.cafeImgChage(multipartFile, token);
     }
 
     // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이

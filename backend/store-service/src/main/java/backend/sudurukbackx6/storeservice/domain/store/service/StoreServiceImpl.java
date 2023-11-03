@@ -9,8 +9,11 @@ import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceCli
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
+import backend.sudurukbackx6.storeservice.domain.store.client.OwnerServiceClient;
 import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
+import backend.sudurukbackx6.storeservice.domain.store.client.dto.OwnerInfoResponse;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
 import backend.sudurukbackx6.storeservice.global.s3.S3Uploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.repository.StoreRepository;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.LocateRequest;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.NeerStoreResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreMenuResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreRequest;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreReviewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +44,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreGeocoding storeGeocoding;
     private final MemberServiceClient memberServiceClient;
     private final S3Uploader s3Uploader;
+    private final OwnerServiceClient ownerServiceClient;
 
 
     @Value("${cloud.aws.cloud.url}")
@@ -61,7 +59,9 @@ public class StoreServiceImpl implements StoreService {
 
     // 카페 등록
     @Override
-    public void cafeSave(MultipartFile multipartFile, StoreRequest request) throws IOException {
+    public void cafeSave(MultipartFile multipartFile, StoreRequest request, String token) throws IOException {
+
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
 
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
@@ -90,11 +90,18 @@ public class StoreServiceImpl implements StoreService {
                 .description(request.getDescription())
                 .build();
 
-        storeRepository.save(store);
+        storeRepository.saveAndFlush(store);
+        ChangeOwnerStoreIdRequest build = ChangeOwnerStoreIdRequest.builder()
+                .email(ownerInfo.getEmail())
+                .storeId(store.getId())
+                .build();
+        ownerServiceClient.changeOwnersStoreId(build);
     }
 
-    public void cafeImgChage(MultipartFile multipartFile, Long cafeId) throws IOException {
-
+    @Override
+    public void cafeImgChage(MultipartFile multipartFile, String token) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        Long cafeId = ownerInfo.getStoreId();
         Store store = storeRepository.findById(cafeId).orElseThrow();
 
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
