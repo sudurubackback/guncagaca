@@ -17,6 +17,7 @@ import '../common/view/root_tab.dart';
 import '../kakao/main_view_model.dart';
 import '../order/models/order.dart';
 import '../order/view/order_view.dart';
+import '../orders/orderwait.dart';
 
 class PaymentService{
   final MainViewModel mainViewModel;
@@ -84,7 +85,8 @@ class PaymentService{
         cartController.cartItems.clear();
 
         // OrderView()로 이동
-        Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
+        // Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
+        Get.offAll(() => OrderWaitPage(mainViewModel: mainViewModel));
       },
     );
   }

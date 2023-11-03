@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../common/layout/default_layout.dart';
+import '../common/view/root_tab.dart';
 import '../kakao/main_view_model.dart';
 import '../order/view/order_page.dart';
 
@@ -62,7 +64,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
             iconSize: 30.0,
             color: Color(0xff000000),
             onPressed: () {
-              Navigator.pop(context);
+              Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: widget.mainViewModel,),mainViewModel: widget.mainViewModel,));
             },
           ),
         ),
