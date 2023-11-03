@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:guncagaca/firebase_options.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:guncagaca/login/landingpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
 
 import 'cart/controller/cart_controller.dart';
@@ -20,8 +21,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   String? _fcmToken = await FirebaseMessaging.instance.getToken();
-  print("--------------------fcm----------------------------");
-  print(_fcmToken);
+  // FCM 토큰을 shared_preferences에 저장
+  if (_fcmToken != null) {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('fcm_token', _fcmToken);
+  }
   runApp(const MyApp());
 }
 
