@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,9 +19,9 @@ public class StoreOrderResponse {
 
     private Long memberId;
     private LocalDateTime orderTime;
-    private Status status;
+    private String status;
     private Boolean takeoutYn;
     private List<Menu> menuList;
-    private int price;
+    private BigDecimal price;
 
 }
