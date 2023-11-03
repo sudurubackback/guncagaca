@@ -75,6 +75,8 @@ public class StoreServiceImpl implements StoreService {
                 .address(request.getAddress())
                 .tel(request.getTel())
                 .img(request.getImg())
+                .openTime(request.getOpenTime())
+                .closeTime(request.getCloseTime())
                 .description(request.getDescription())
                 .build();
 
@@ -151,18 +153,6 @@ public class StoreServiceImpl implements StoreService {
                 .description(store.getDescription())
                 .build();
     }
-
-//    @Override
-//    public List<StoreMenuResponse> cafeMenu(String token, Long cafeId) {
-//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
-//        return null;
-//    }
-//
-//    @Override
-//    public StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex) {
-//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
-//        return null;
-//    }
 
     // 리뷰 최신순
     @Override
