@@ -1,5 +1,7 @@
 package backend.sudurukbackx6.ownerservice.domain.owner.service;
 
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -45,5 +47,8 @@ public interface OwnerService {
 
     void deletedOwner(String email);
 
+    OwnerInfoResponse ownerInfo (String token);
+
+    Long ownerStoreId (ChangeOwnerStoreIdRequest request);
 //    void toggleValidStatus(String email);
 }
