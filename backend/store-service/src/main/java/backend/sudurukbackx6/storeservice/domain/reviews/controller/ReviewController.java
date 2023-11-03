@@ -4,6 +4,7 @@ import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceCli
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.MyReviewResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class ReviewController {
 
     // 리뷰 등록
     @PostMapping("/{cafeId}/{orderId}/review")
+    @Operation(summary = "리뷰 등록", description = "주문완료건에 대해 리뷰 작성", tags = { "Review Controller" })
     public ReviewDto.Response saveReview(@RequestHeader("Authorization") String token, @PathVariable Long cafeId,
                                          @PathVariable String orderId, @RequestBody ReviewDto.Request request){
         log.info("token = {}", token);
@@ -33,6 +35,7 @@ public class ReviewController {
 
     // 리뷰 삭제
     @DeleteMapping("/{cafeId}/{reviewId}/review")
+    @Operation(summary = "리뷰 삭제", description = "내가 쓴 리뷰 삭제", tags = { "Review Controller" })
     public ResponseEntity<String> deleteReview(@RequestHeader("Authorization") String token, @PathVariable Long cafeId, @PathVariable Long reviewId){
         reviewService.reviewDelete(token, cafeId, reviewId);
         return ResponseEntity.ok(String.format("%d번 리뷰 삭제", reviewId));
@@ -40,6 +43,7 @@ public class ReviewController {
 
     // 멤버가 리뷰한 목록 조회
     @GetMapping("/mypage/reviews")
+    @Operation(summary = "리뷰 조회", description = "내가 쓴 리뷰 목록 조회", tags = { "Review Controller" })
     public ResponseEntity<List<MyReviewResponse>> LikedStoresByMemberId(@RequestHeader("Authorization") String token){
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         return ResponseEntity.ok(reviewService.getReviewByMemberId(memberInfo.getId()));

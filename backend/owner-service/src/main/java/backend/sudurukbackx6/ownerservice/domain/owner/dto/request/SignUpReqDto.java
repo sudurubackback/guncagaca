@@ -11,5 +11,5 @@ public class SignUpReqDto {
     String email;
     String password;
     String tel;
-
+    Long business_id;
 }

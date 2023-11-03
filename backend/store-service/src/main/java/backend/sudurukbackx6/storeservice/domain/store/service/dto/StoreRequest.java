@@ -11,7 +11,8 @@ public class StoreRequest {
     private String storeName;
     private String address;
     private String tel;
-    private String img;
     private String description;
+    private String openTime;
+    private String closeTime;
 
 }

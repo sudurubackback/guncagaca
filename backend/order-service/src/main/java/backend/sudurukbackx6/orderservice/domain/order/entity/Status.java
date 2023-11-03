@@ -1,21 +1,23 @@
-package backend.sudurukbackx6.orderservice.domain.order.entity;
+    package backend.sudurukbackx6.orderservice.domain.order.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public enum Status {
+    @Getter
+    @NoArgsConstructor
+    public enum Status {
 
-    ORDERED("주문완료"),
-    PREPARING("조리중"),
-    DONE("조리완료"),
-    CANCELED("주문취소");
 
-    private String status;
+    ORDERED("주문"),
+    REQUEST("주문접수"),
+    CANCELED("주문취소"),
+    COMPLETE("주문완료"),;
 
-    Status(String status) {
-        this.status = status;
+
+        private String status;
+
+        Status(String status) {
+            this.status = status;
+        }
+
     }
-
-}
