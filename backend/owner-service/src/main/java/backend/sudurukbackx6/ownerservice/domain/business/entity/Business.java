@@ -24,9 +24,14 @@ public class Business extends TimeEntity {
     @Column(name = "business_Id")
     private Long businessId;
 
-    @OneToOne
-    @JoinColumn(name = "owner_id")
-    private Owners owner;
+    /*    @OneToOne
+        @JoinColumn(name = "owner_id")
+        private Owners owner;*/
+/*    @OneToOne(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Owners owner;*/
+    @OneToOne(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Owners owners;
+
 
     @Column(name = "business_number")
     private String businessNum;
@@ -47,8 +52,7 @@ public class Business extends TimeEntity {
     private String address; //가게 주소
 
     //builer생성
-    public Business(Owners owner, VendorVailidateReqDto dto) {
-        this.owner = owner;
+    public Business(VendorVailidateReqDto dto) {
         this.businessNum = dto.getBusiness_number();
         this.accountNum = dto.getAccount_number();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");

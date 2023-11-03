@@ -19,8 +19,12 @@ public class Owners extends TimeEntity {
     @Column(name = "owner_id")
     private Long ownerId;
 
-    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    /*    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+        private */
+    @OneToOne
+    @JoinColumn(name = "business_Id")
     private Business business;
+
 
     private String password;
     private String email;
@@ -34,7 +38,7 @@ public class Owners extends TimeEntity {
         this.tel = tel;
     }
 
-    public void changeValidation(){
+    public void changeValidation() {
         validation = !validation;
     }
 

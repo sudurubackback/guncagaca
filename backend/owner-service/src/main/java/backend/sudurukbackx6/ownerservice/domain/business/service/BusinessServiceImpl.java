@@ -24,7 +24,7 @@ public class BusinessServiceImpl implements BusinessService {
     private final OwnerService ownerService;
 
     @Override
-    public boolean checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException {
+    public long checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException {
         int isValidate = vendorService.checkVendorValidation(reqDto);
         log.info("isValidate : {}", isValidate);
 
@@ -32,12 +32,12 @@ public class BusinessServiceImpl implements BusinessService {
             //사업자 등록이 되어있는지 확인
             
             //사업자 등록이 되어 있으면 시작~! 우리가 확인하는 DB에 저장
-           Business business = new Business(ownerService.findByEmail(reqDto.getEmail()), reqDto);
-            businessRepository.save(business);
-            return true;
+            Business business = new Business(reqDto);
+            Business saved= businessRepository.save(business);
+            return saved.getBusinessId();
 
         }
-        return false;
+        return -1;
     }
 
 
