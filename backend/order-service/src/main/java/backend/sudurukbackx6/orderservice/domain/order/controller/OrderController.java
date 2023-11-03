@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.orderservice.domain.order.controller;
 
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
+import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +22,7 @@ public class OrderController {
     // 주문 등록
     @PostMapping("/add")
     public ResponseEntity<OrderResponseDto> addOrder(@RequestHeader("Email") String email, @RequestBody OrderRequestDto orderRequestDto) {
-        return ResponseEntity.ok(orderService.addOrder(orderRequestDto));
+        return ResponseEntity.ok(orderService.addOrder(email, orderRequestDto));
     }
 
     // 주문 취소
@@ -100,4 +101,27 @@ public class OrderController {
     }
 
 
+    // 사장님이 주문 접수
+    @PostMapping("/request/{orderId}")
+    public ResponseEntity<String> requestOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
+        return ResponseEntity.ok(orderService.requestOrder(email, orderId));
+    }
+
+    // 사장님이 주문 완료
+    @PostMapping("/complete/{orderId}")
+    public ResponseEntity<String> completeOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
+        return ResponseEntity.ok(orderService.completeOrder(email, orderId));
+    }
+
+    // 사용자 주문 목록 조회
+    @GetMapping("/member")
+    public ResponseEntity<List<Order>> getMemberOrder(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(orderService.getMemberOrder(email));
+    }
+
+    // 사용자 주문 목록 조회
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
+        return ResponseEntity.ok(orderService.getOrder(orderId));
+    }
 }
