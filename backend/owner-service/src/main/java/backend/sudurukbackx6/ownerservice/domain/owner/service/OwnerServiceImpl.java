@@ -2,6 +2,8 @@ package backend.sudurukbackx6.ownerservice.domain.owner.service;
 
 import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
 import backend.sudurukbackx6.ownerservice.domain.business.service.BusinessService;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
@@ -178,6 +180,22 @@ public class OwnerServiceImpl implements OwnerService {
         ownersRepository.deleteByEmail(email);
     }
 
+    @Override
+    public OwnerInfoResponse ownerInfo (String token){
+        Owners owners = jwtProvider.extractUser(token);
+        return OwnerInfoResponse.builder()
+                .email(owners.getEmail())
+                .tel(owners.getTel())
+                .storeId(owners.getStoreId())
+                .build();
+    }
+
+    @Override
+    public Long ownerStoreId(ChangeOwnerStoreIdRequest request){
+        Owners owners = ownersRepository.findByEmail(request.getEmail()).orElseThrow();
+        owners.setStoreId(request.getStoreId());
+        return request.getStoreId();
+    }
     /*@Override
     public void toggleValidStatus(String email) {
         Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
