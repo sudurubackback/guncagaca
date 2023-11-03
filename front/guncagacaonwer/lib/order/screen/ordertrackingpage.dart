@@ -311,13 +311,8 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                             child: SingleChildScrollView( // 스크롤 가능한 영역 추가
                                               child: Column(
                                                 children: [
-                                                  Text('주문 정보:'),
-                                                  Text('주문 시간: ${order["orderTime"]}'),
-                                                  Text('메뉴 수량: ${order["totalMenuCount"]}'),
-                                                  Text('총 가격: ${formattedTotalPrice}원'),
-                                                  Text('메뉴 목록:'),
-                                                  for (String menu in order["menuList"])
-                                                    Text(menu),
+                                                  // 모달 다이얼로그 내용
+                                                  // 만약 내용이 모달 높이보다 크면 스크롤이 활성화됩니다.
                                                 ],
                                               ),
                                             ),
