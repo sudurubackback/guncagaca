@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/jjim/view/jjim_screen.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/myreview/view/review_screen.dart';
 import 'package:guncagaca/order/view/order_page.dart';
 
 import '../../kakao/main_view_model.dart';
+import '../../point/component/point_list.dart';
 import '../../point/view/point_screen.dart';
 
 import '../../common/utils/dio_client.dart';
@@ -87,7 +89,7 @@ class _MypageComponentState extends State<MypageComponent> {
               top: 10.0,
               left: 40.0,
               right: 40.0,
-              bottom: 10.0,
+              bottom: 20.0,
             ),
             child:
             Row(
@@ -95,7 +97,7 @@ class _MypageComponentState extends State<MypageComponent> {
               children: [
                 Expanded(
                   child: Align(
-                    alignment: Alignment.centerLeft, // 왼쪽 정렬
+
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
@@ -238,151 +240,106 @@ class _MypageComponentState extends State<MypageComponent> {
               ),
             ),
           ),
+
+          // 버튼 두 개
           Container(
-            width: MediaQuery.of(context).size.width * 0.9,
+            padding: const EdgeInsets.only(bottom: 30.0,top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildSquareButton(
+                    context,
+                    '닉네임 변경',
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: widget.mainViewModel,nickName: myData['nickname'],)),
+                          );
+                    }
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                _buildSquareButton(
+                    context,
+                    '로그아웃',
+                        () {
+                          mypageController.showDialogLogOut(context);
+                    }
+                ),
+              ],
+            ),
+          ),
+
+
+          Container(
+            width: MediaQuery.of(context).size.width * 0.95,
             height: MediaQuery.of(context).size.height * 0.08,
-            padding: EdgeInsets.only(left: 30.0, right: 50.0),
+            padding: EdgeInsets.only(left: 50.0, right: 70.0),
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Color(0xff9B5748),
-                width: 2.0,
+              // color: PRIMARY_COLOR,
+              border: Border(
+                top: BorderSide(width: 2.0, color: PRIMARY_COLOR), // 상단 테두리
+                bottom: BorderSide(width: 2.0, color: PRIMARY_COLOR),
               ),
-              borderRadius: BorderRadius.circular(20.0),
+              // borderRadius: BorderRadius.circular(20.0),
             ),
             child: InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PointScreen(mainViewModel: widget.mainViewModel,)), // PasswordChangePage로 이동
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => PointScreen(mainViewModel: widget.mainViewModel,)), // PasswordChangePage로 이동
+                // );
               },
-              child: const Center(
+              child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       '포인트',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 20,),
                     ),
-                    Text(
-                      '>',
-                      style: TextStyle(fontSize: 20),
-                    )
+                    Image.asset(
+                      'assets/image/point.png',
+                      width: 40.0, // 이미지 너비 설정
+                      height: 40.0, // 이미지 높이 설정
+                    ),
                   ],
                 ),
+
 
               ),
             ),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.08,
-            padding: const EdgeInsets.only(left: 30.0, right: 50.0),
-            margin: const EdgeInsets.only(top: 20.0,),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color(0xff9B5748),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: widget.mainViewModel,nickName: myData['nickname'],)), // PasswordChangePage로 이동
-                );
-              },
-              child: const Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '닉네임 변경',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      '>',
-                      style: TextStyle(fontSize: 20),
-                    )
-                  ],
-                ),
 
-              ),
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.08,
-            padding: const EdgeInsets.only(left: 30.0, right: 50.0),
-            margin: const EdgeInsets.only(top: 20.0,),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color(0xff9B5748),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: InkWell(
-              onTap: () {
-                mypageController.showDialogLogOut(context);
-              },
-              child: const Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '로그아웃',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      '>',
-                      style: TextStyle(fontSize: 20),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.08,
-            padding: const EdgeInsets.only(left: 30.0, right: 50.0),
-            margin: const EdgeInsets.only(top: 20.0,),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color(0xff9B5748),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: InkWell(
-              onTap: () {
-                mypageController.showOut(context);
-              },
-              child: const Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '회원탈퇴',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      '>',
-                      style: TextStyle(fontSize: 20),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+
+            PointList(mainViewModel: widget.mainViewModel,),
         ],
       ),
     );
 
   }
-
+  Widget _buildSquareButton(BuildContext context, String title, Function() onPressed) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.35,
+        height: MediaQuery.of(context).size.height * 0.05,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            color: Color(0xff9B5748),
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 
