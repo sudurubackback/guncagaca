@@ -410,6 +410,7 @@ class OrderItem {
   double progressValue = 1.0;
 
   StreamController<int> _timerController = StreamController<int>.broadcast();
+
   Stream<int> get timerStream => _timerController.stream;
 
   OrderItem({
@@ -421,30 +422,4 @@ class OrderItem {
     required this.arrivalTime,
     required this.currentTime,
   });
-
-  void initializeTimer() {
-    _timerController = StreamController<int>();
-  }
-
-  bool get isCompleted => !inProgress && currentTime == 0;
-
-  void startTimer() {
-    const oneSecond = Duration(seconds: 1);
-
-    Timer.periodic(oneSecond, (timer) {
-      if (currentTime > 0) {
-        currentTime--;
-        progressValue = currentTime / initialTime;
-        _timerController.sink.add(currentTime); // 타이머 값을 스트림을 통해 전달
-      } else {
-        inProgress = false;
-        _timerController.sink.add(currentTime); // 타이머 값을 스트림을 통해 전달
-        timer.cancel();
-      }
-    });
-  }
-
-  void dispose() {
-    _timerController.close();
-  }
 }

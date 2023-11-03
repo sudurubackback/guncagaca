@@ -34,7 +34,6 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
       "arrivalTime": "2023-10-27 15:00",
     },
   ];
-
   DateTime? startingDate;
   DateTime? endingDate;
 
