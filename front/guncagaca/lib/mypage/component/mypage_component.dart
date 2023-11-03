@@ -11,27 +11,14 @@ import '../../kakao/main_view_model.dart';
 import '../../point/view/point_screen.dart';
 
 import '../../common/utils/dio_client.dart';
-import '../controller/MypageController.dart';
+import '../controller/mypage_controller.dart';
 
 class MypageComponent extends StatefulWidget {
   final MainViewModel mainViewModel;
-  final Function onOrderTap;
-  final Function onReviewTap;
-  final Function onJjimTap;
-  final Function onPointTap;
-  final Function onNicknameTap;
-  final Function onLogoutTap;
-  final Function onWithdrawalTap;
+
 
 
   MypageComponent({
-    required this.onOrderTap,
-    required this.onReviewTap,
-    required this.onJjimTap,
-    required this.onPointTap,
-    required this.onNicknameTap,
-    required this.onLogoutTap,
-    required this.onWithdrawalTap,
     required this.mainViewModel
   });
 
@@ -107,10 +94,17 @@ class _MypageComponentState extends State<MypageComponent> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Text(
-                    '${myData['nickname'] ?? "회원"} 님 안녕하세요',
-                    style: TextStyle(fontSize: 28.0),
-                    textAlign: TextAlign.left,
+                  child: Align(
+                    alignment: Alignment.centerLeft, // 왼쪽 정렬
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '${myData['nickname'] ?? "회원"} 님 안녕하세요',
+                        style: TextStyle(fontSize: 25.0),
+                        textAlign: TextAlign.left,
+                        maxLines: 1,
+                      ),
+                    ),
                   ),
                 ),
                 Image.asset(
@@ -296,7 +290,7 @@ class _MypageComponentState extends State<MypageComponent> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: widget.mainViewModel,)), // PasswordChangePage로 이동
+                  MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: widget.mainViewModel,nickName: myData['nickname'],)), // PasswordChangePage로 이동
                 );
               },
               child: const Center(
