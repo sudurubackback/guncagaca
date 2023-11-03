@@ -72,8 +72,8 @@ public class StoreServiceImpl implements StoreService {
         // 죄표 추출
         if (!response.getAddresses().isEmpty()) {
             GeocodingDto.Response.Address firstAddress = response.getAddresses().get(0);
-            latitude = firstAddress.getX();
-            longitude = firstAddress.getY();
+            longitude = firstAddress.getX();
+            latitude = firstAddress.getY();
         } // TODO : 좌표 없을 때 예외 처리
         log.info("위도 : {}", latitude);
         log.info("경도 : {}", longitude);
@@ -85,6 +85,8 @@ public class StoreServiceImpl implements StoreService {
                 .address(request.getAddress())
                 .tel(request.getTel())
                 .img(upload)
+                .openTime(request.getOpenTime())
+                .closeTime(request.getCloseTime())
                 .description(request.getDescription())
                 .build();
 
@@ -122,6 +124,9 @@ public class StoreServiceImpl implements StoreService {
                     .reviewCount(store.getReview().size())
                     .img(store.getImg())
                     .distance(distance)
+                        .isOpen(store.isOpen())
+                        .openTime(store.getOpenTime())
+                        .closeTime(store.getCloseTime())
                         .address(store.getAddress())
                     .build();
 
@@ -167,17 +172,26 @@ public class StoreServiceImpl implements StoreService {
                 .img(store.getImg())
                 .isLiked(isLiked)
                 .description(store.getDescription())
+                .isOpen(store.isOpen())
+                .openTime(store.getOpenTime())
+                .closeTime(store.getCloseTime())
                 .build();
+    }
+
+    @Override
+    public List<StoreReviewResponse> cafeReview(Long cafeId) {
+        return null;
     }
 
     // 리뷰 최신순
     @Override
-    public List<StoreReviewResponse> cafeReview(Long cafeId) {
+    public List<StoreReviewResponse> cafeReview(String token, Long cafeId) {
 
         List<Review> reviewList = reviewRepository.findByStoreIdOrderByIdDesc(cafeId);
         // 리뷰의 멤버Id 목록
-        List<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toList());
-        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(memberIds);
+        Set<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toSet());
+        List<Long> memberIdsList = new ArrayList<>(memberIds);
+        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(token, memberIdsList);
 
         // Id : 닉네임
         Map<Long, String> memberIdToNicknameMap = memberInfoList.stream()
