@@ -169,4 +169,11 @@ public class OrderService {
 
         return "주문 상품이 완료되었습니다.";
     }
+
+    public List<Order> getMemberOrder(String email) {
+        Long memberId = memberServiceClient.getId(email);
+        List<Order> orderList = orderRepository.findAllByMemberId(memberId);
+        return orderList;
+    }
+
 }
