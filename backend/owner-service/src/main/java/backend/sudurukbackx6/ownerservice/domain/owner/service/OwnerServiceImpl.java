@@ -4,6 +4,8 @@ import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
+import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
+import backend.sudurukbackx6.ownerservice.domain.business.service.BusinessService;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -35,20 +37,24 @@ public class OwnerServiceImpl implements OwnerService {
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
     private final Encrypt encrypt;
+    private final BusinessService businessService;
 
     @Override
-    public void signUp(SignUpReqDto signUpReqDto) throws IOException {
+    public void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException {
         //해당 이메일이 먼저 존재하는지 확인
         Optional<Owners> exitOwner = ownersRepository.findByEmail(signUpReqDto.getEmail());
 
         if (exitOwner.isEmpty()) {
             //이미 가입된 회원이 없으면? 회원가입 진행한다.
-            Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel());
-            System.out.println("암호화 : "+encrypt.encrypt(signUpReqDto.getPassword()));
+            Business business= businessService.getBusinessById(signUpReqDto.getBusiness_id());
+            Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel(), business);
+            //그리고 메일을 전송한다
+            mailSenderService.sendInfoMail(signUpReqDto.getEmail());
             ownersRepository.save(owner);
         } else {
             throw new BadRequestException(ErrorCode.USER_EXISTS);
         }
+
     }
 
     @Override
@@ -190,4 +196,10 @@ public class OwnerServiceImpl implements OwnerService {
         owners.setStoreId(request.getStoreId());
         return request.getStoreId();
     }
+    /*@Override
+    public void toggleValidStatus(String email) {
+        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
+        owner.changeValidation();
+    }
+*/
 }

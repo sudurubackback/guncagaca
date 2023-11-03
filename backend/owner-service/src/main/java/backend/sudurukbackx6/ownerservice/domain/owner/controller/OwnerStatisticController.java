@@ -20,4 +20,8 @@ public class OwnerStatisticController {
 
     private final OwnerStatisticsService ownerStatisticsService;
 
+   /* @GetMapping("/{storeId}")
+    public List<GetTodaySellingResponse> getTodaySelling(@PathVariable("storeId") Long storeId){
+        return ownerStatisticsService.getTodaySelling(storeId);
+    }*/
 }

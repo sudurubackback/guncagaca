@@ -15,7 +15,7 @@ import java.io.IOException;
 public interface OwnerService {
 
     //1. 회원가입
-    void signUp(SignUpReqDto signUpReqDto) throws IOException;
+    void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException;
 
     //2. 이메일로 인증 코드 전송
     void sendAuthCode(String email) throws MessagingException;
@@ -50,4 +50,5 @@ public interface OwnerService {
     OwnerInfoResponse ownerInfo (String token);
 
     Long ownerStoreId (ChangeOwnerStoreIdRequest request);
+//    void toggleValidStatus(String email);
 }

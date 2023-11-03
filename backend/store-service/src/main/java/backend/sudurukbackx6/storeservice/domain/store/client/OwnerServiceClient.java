@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-//@FeignClient(url = "k9d102.p.ssafy.io:8086", name="owner-service")
-@FeignClient(url = "http://localhost:8086", name="owner-service")
+@FeignClient(url = "k9d102.p.ssafy.io:8086", name="owner-service")
+//@FeignClient(url = "http://localhost:8086", name="owner-service")
 public interface OwnerServiceClient {
     @GetMapping("/api/ceo/ownerInfo")
     OwnerInfoResponse getOwnerInfo(@RequestHeader("Authorization") String token);
