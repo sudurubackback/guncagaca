@@ -22,7 +22,7 @@ public class OrderController {
     // 주문 등록
     @PostMapping("/add")
     public ResponseEntity<OrderResponseDto> addOrder(@RequestHeader("Email") String email, @RequestBody OrderRequestDto orderRequestDto) {
-        return ResponseEntity.ok(orderService.addOrder(orderRequestDto));
+        return ResponseEntity.ok(orderService.addOrder(email, orderRequestDto));
     }
 
     // 주문 취소

@@ -45,11 +45,12 @@ public class OrderService {
     Bootpay bootpay = new Bootpay(CLIENT_ID, PRIVATE_KEY);
 
     // 주문 등록
-    public OrderResponseDto addOrder(OrderRequestDto orderRequestDto) {
+    public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
+        Long memberId = memberServiceClient.getId(email);
 
-        // TODO memberId 찾아서 order에 set
         Order newOrder = Order.builder()
                 .orderTime(LocalDateTime.now())
+                .memberId(memberId)
                 .storeId(orderRequestDto.getStoreId())
                 .receiptId(orderRequestDto.getReceiptId())
                 .status(Status.ORDERED)
