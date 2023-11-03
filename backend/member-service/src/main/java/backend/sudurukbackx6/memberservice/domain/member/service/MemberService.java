@@ -42,6 +42,7 @@ public class MemberService {
             Member member = Member.builder()
                     .email(signRequestDto.getEmail())
                     .nickname(signRequestDto.getNickname())
+                    .fcmToken(signRequestDto.getFcmToken())
                     .build();
             memberRepository.save(member);
         }
