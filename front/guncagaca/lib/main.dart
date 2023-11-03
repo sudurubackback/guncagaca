@@ -1,7 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:guncagaca/firebase_options.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:guncagaca/login/landingpage.dart';
 import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
@@ -13,6 +16,12 @@ void main() async {
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_SDK_NATIVE_KEY']);
   WidgetsFlutterBinding.ensureInitialized();
   await KakaoTokenManager.TokenManager().initialize();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  String? _fcmToken = await FirebaseMessaging.instance.getToken();
+  print("--------------------fcm----------------------------");
+  print(_fcmToken);
   runApp(const MyApp());
 }
 
