@@ -267,7 +267,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                     '주문표\n 인쇄',
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 16,
+                                      fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                     ),
                                   ),
                                 ),
