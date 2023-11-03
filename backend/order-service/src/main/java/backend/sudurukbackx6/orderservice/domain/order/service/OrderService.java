@@ -169,5 +169,54 @@ public class OrderService {
         return new SalesSummaryResponse(totalSales, menuSalesCount, hourlySalesCount);
     }
 
+    public List<OrderResponseDto> getOrdersByStoreId(Long storeId) {
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+//        return orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
+    }
+
+    public List<OrderResponseDto> getDoneByStoreId(Long memberId) {
+//        return orderRepository.findByStoreIdAndStatus(memberId, Status.DONE);
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(memberId, Status.DONE);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
+
+    public List<OrderResponseDto> getPreparingByStoreId(Long storeId) {
+//        return orderRepository.findByStoreIdAndStatus(storeId, Status.PREPARING);
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.PREPARING);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
+
+    public List<OrderResponseDto> getCancleByStoreId(Long storeId) {
+//        return orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
+
 
 }
