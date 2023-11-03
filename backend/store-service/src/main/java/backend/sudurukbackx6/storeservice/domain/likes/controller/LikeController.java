@@ -5,6 +5,7 @@ import backend.sudurukbackx6.storeservice.domain.likes.service.LikeServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceClient;
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/like")
+@RequestMapping("/api/store")
 @RequiredArgsConstructor
 public class LikeController {
 
@@ -23,10 +24,10 @@ public class LikeController {
 
     // 멤버가 찜한 목록 조회
     @GetMapping("/mypage/like-store")
+    @Operation(summary = "찜 가게 조회", description = "token 필요\n현재 멤버가 찜한 가게 리스트 조회", tags = { "Store Controller" })
     public ResponseEntity<List<LikeResponse>> LikedStoresByMemberId(@RequestHeader("Authorization") String token){
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
         return ResponseEntity.ok(likeService.getLikedStoresByMemberId(memberInfo.getId()));
 
     }
-
 }

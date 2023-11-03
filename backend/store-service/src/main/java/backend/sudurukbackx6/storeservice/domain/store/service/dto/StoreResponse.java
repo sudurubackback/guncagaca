@@ -18,4 +18,7 @@ public class StoreResponse {
     private String img;
     private boolean isLiked;
     private String description;
+    private String openTime;
+    private String closeTime;
+    private boolean isOpen;
 }

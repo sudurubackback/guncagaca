@@ -106,6 +106,9 @@ public class StoreServiceImpl implements StoreService {
                     .reviewCount(store.getReview().size())
                     .img(store.getImg())
                     .distance(distance)
+                        .isOpen(store.isOpen())
+                        .openTime(store.getOpenTime())
+                        .closeTime(store.getCloseTime())
                         .address(store.getAddress())
                     .build();
 
@@ -151,6 +154,9 @@ public class StoreServiceImpl implements StoreService {
                 .img(store.getImg())
                 .isLiked(isLiked)
                 .description(store.getDescription())
+                .isOpen(store.isOpen())
+                .openTime(store.getOpenTime())
+                .closeTime(store.getCloseTime())
                 .build();
     }
 
