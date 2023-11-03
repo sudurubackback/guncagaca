@@ -189,4 +189,8 @@ public class MemberService {
         return member.getId();
     }
 
+    public Object getOrderList(String email) {
+        return new Object();
+    }
+
 }

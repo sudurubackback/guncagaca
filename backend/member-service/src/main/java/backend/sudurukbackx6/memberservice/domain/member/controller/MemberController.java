@@ -68,5 +68,10 @@ public class MemberController {
     public ResponseEntity<Long> getId(@RequestParam String email) {
         return ResponseEntity.ok(memberService.getId(email));
     }
+
+    @GetMapping("/mypage/order")
+    public ResponseEntity<Object> getOrderList(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.getOrderList(email));
+    }
 }
 
