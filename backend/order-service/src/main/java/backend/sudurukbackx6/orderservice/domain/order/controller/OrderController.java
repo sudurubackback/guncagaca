@@ -28,9 +28,11 @@ public class OrderController {
     // 주문 취소
     @PostMapping("/cancel")
     public ResponseEntity<String> cancelOrder(@RequestHeader("Email") String email, @RequestBody OrderCancelRequestDto cancelRequestDto) {
-        orderService.cancelOrder(email, cancelRequestDto);
 
-        return ResponseEntity.ok(String.format("{} 주문 취소", cancelRequestDto.getReceiptId()));
+        if (orderService.cancelOrder(email, cancelRequestDto)) {
+            return ResponseEntity.ok(String.format("%s 주문 취소", cancelRequestDto.getReceiptId()));
+        }
+        return ResponseEntity.ok("실패");
     }
 
     @GetMapping("/store/{storeId}")

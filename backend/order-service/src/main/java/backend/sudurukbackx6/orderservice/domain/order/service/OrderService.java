@@ -36,13 +36,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberServiceClient memberServiceClient;
 
-    @Value("${bootpay.clientId")
+    @Value("${bootpay.clientId}")
     private String CLIENT_ID;
 
-    @Value("${bootpay.secretKey")
+    @Value("${bootpay.secretKey}")
     private String PRIVATE_KEY;
 
-    Bootpay bootpay = new Bootpay(CLIENT_ID, PRIVATE_KEY);
+
 
     // 주문 등록
     public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
@@ -86,40 +86,50 @@ public class OrderService {
     }
 
     // 결제 취소
-    public void cancelPay(String email, String receiptId, String reason) {
-
+    @Transactional
+    public boolean cancelPay(String email, String receiptId, String reason) {
         try {
+            Bootpay bootpay = new Bootpay(CLIENT_ID, PRIVATE_KEY);
+
+            log.info("부트페이 호출");
             HashMap<String, Object> token = bootpay.getAccessToken();
             if(token.get("error_code") != null) { //failed
-                return;
+                return false;
             }
+            log.info("token획득");
             Cancel cancel = new Cancel();
             cancel.receiptId = receiptId;
             cancel.cancelMessage = reason;
             cancel.cancelUsername = email;
 
+            log.info("취소생성");
             HashMap<String, Object> res = bootpay.receiptCancel(cancel);
             if(res.get("error_code") == null) { //success
                 log.info("receiptCancel success: " + res);
+                return true;
             } else {
                 log.info("receiptCancel false: " + res);
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     // 주문 취소
-    public void cancelOrder(String email, OrderCancelRequestDto orderCancelRequestDto) {
+    @Transactional
+    public boolean cancelOrder(String email, OrderCancelRequestDto orderCancelRequestDto) {
 
         // 결제 취소부터
-        cancelPay(email, orderCancelRequestDto.getReceiptId(), orderCancelRequestDto.getReason());
-
-        // 주문 내역 취소로 업데이트
-        Order order = getOrder(orderCancelRequestDto.getOrderId());
-        order.setStatus(Status.CANCELED);
-        orderRepository.save(order);
-
+        if (cancelPay(email, orderCancelRequestDto.getReceiptId(), orderCancelRequestDto.getReason())) {
+            // 주문 내역 취소로 업데이트
+            Order order = getOrder(orderCancelRequestDto.getOrderId());
+            order.setStatus(Status.CANCELED);
+            orderRepository.save(order);
+            return true;
+        }
+        return false;
     }
 
     // Owner에서 통계용
