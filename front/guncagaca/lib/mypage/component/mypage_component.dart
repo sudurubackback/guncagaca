@@ -54,12 +54,14 @@ class MypageComponent extends StatelessWidget {
               right: 40.0,
               bottom: 10.0,
             ),
-            child: Row(
+            child:
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
                     '${nickname ?? "회원"} 님 안녕하세요',
-                    style: TextStyle(fontSize: 29.0),
+                    style: TextStyle(fontSize: 28.0),
                     textAlign: TextAlign.left,
                   ),
                 ),

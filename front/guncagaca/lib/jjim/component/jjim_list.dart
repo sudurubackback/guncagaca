@@ -43,7 +43,7 @@ class _JjimListState extends State<JjimList> {
 
       try {
         Response response = await dio.get(
-          "$baseUrl/api/like/mypage/like-store",
+          "http://k9d102.p.ssafy.io:8085/api/like/mypage/like-store",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
@@ -87,7 +87,7 @@ class _JjimListState extends State<JjimList> {
     return dummyJjims.isEmpty
         ? Center(
       child: Text(
-        "포인트함이 비었습니다.",
+        "찜 목록이 비었습니다.",
         style: TextStyle(fontSize: 18.0),
       ),
     )
