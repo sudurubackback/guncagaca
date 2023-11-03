@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.storeservice.domain.store.service.dto;
+package backend.sudurukbackx6.storeservice.domain.likes.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class StoreResponse {
-
+public class LikeResponse {
+    private Long id;
+    private Long memberId;
     private Long storeId;
     private String cafeName;
     private Double starPoint;
@@ -18,7 +19,4 @@ public class StoreResponse {
     private String img;
     private boolean isLiked;
     private String description;
-    private String openTime;
-    private String closeTime;
-    private boolean isOpen;
 }
