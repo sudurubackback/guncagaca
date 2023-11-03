@@ -26,10 +26,16 @@ public class Owners extends TimeEntity {
     private String email;
     private String tel;
 
+    private boolean validation = false;
+
     public Owners(String email, String password, String tel) {
         this.email = email;
         this.password = password;
         this.tel = tel;
+    }
+
+    public void changeValidation(){
+        validation = !validation;
     }
 
     public void changePassword(String newPassword) {

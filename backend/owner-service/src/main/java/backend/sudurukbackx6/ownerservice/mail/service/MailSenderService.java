@@ -9,4 +9,6 @@ public interface MailSenderService {
     //코드일치 체크
     boolean checkCode(String email, String code);
     String sendPassword(String password) throws MessagingException;
+
+    void sendInfoMail(String email) throws MessagingException;
 }

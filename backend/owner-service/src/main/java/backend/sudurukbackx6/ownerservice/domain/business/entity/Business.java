@@ -40,16 +40,21 @@ public class Business extends TimeEntity {
     @Column(name = "owner_name")
     private String name;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)", name = "business_name")
+    private String businessName;    //가게 이름
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)")
+    private String address; //가게 주소
+
     //builer생성
     public Business(Owners owner, VendorVailidateReqDto dto) {
         this.owner = owner;
         this.businessNum = dto.getBusiness_number();
         this.accountNum = dto.getAccount_number();
-//        this.openDate = LocalDate.parse(dto.getOpen_date());
-
-        // 'yyyyMMdd' 포맷의 문자열을 LocalDate로 변환
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         this.openDate = LocalDate.parse(dto.getOpen_date(), formatter);
         this.name = dto.getOwner_name();
+        this.businessName = dto.getBusiness_name();
+        this.address = dto.getAddress();
     }
 }

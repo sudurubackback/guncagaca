@@ -17,25 +17,32 @@ import java.net.URISyntaxException;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class BusinessServiceImpl implements BusinessService{
+public class BusinessServiceImpl implements BusinessService {
 
     private final VendorService vendorService;
     private final BusinessRepository businessRepository;
     private final OwnerService ownerService;
+
     @Override
     public boolean checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException {
-        int isValidate =  vendorService.checkVendorValidation(reqDto);
+        int isValidate = vendorService.checkVendorValidation(reqDto);
+        log.info("isValidate : {}", isValidate);
 
-        System.out.println(isValidate);
+        if (isValidate == 1) {
+            //사업자 등록이 되어있는지 확인
+            
+            //사업자 등록이 되어 있으면 시작~! 우리가 확인하는 DB에 저장
+           Business business = new Business(ownerService.findByEmail(reqDto.getEmail()), reqDto);
+            businessRepository.save(business);
+            return true;
 
-//        if(isValidate){
-//            Owners owner = ownerService.findByEmail(reqDto.getEmail());
-//            businessRepository.save(new Business(owner, reqDto));
-//        }else{
-//            ownerService.deletedOwner(reqDto.getEmail());
-//        }
-//
-//        return isValidate;
-        return isValidate==1;
+        }
+        return false;
     }
+
+
+
 }
+
+
+

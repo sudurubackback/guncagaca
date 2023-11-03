@@ -7,5 +7,5 @@ import java.net.URISyntaxException;
 public interface BusinessService {
 
     boolean checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException;
-//    void saveBusiness(VendorVailidateReqDto reqDto);
+
 }

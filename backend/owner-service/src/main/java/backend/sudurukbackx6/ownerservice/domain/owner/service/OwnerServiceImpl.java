@@ -35,18 +35,20 @@ public class OwnerServiceImpl implements OwnerService {
     private final Encrypt encrypt;
 
     @Override
-    public void signUp(SignUpReqDto signUpReqDto) throws IOException {
+    public void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException {
         //해당 이메일이 먼저 존재하는지 확인
         Optional<Owners> exitOwner = ownersRepository.findByEmail(signUpReqDto.getEmail());
 
         if (exitOwner.isEmpty()) {
             //이미 가입된 회원이 없으면? 회원가입 진행한다.
             Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel());
-            System.out.println("암호화 : "+encrypt.encrypt(signUpReqDto.getPassword()));
+            //그리고 메일을 전송한다
+            mailSenderService.sendInfoMail(signUpReqDto.getEmail());
             ownersRepository.save(owner);
         } else {
             throw new BadRequestException(ErrorCode.USER_EXISTS);
         }
+
     }
 
     @Override
@@ -172,4 +174,10 @@ public class OwnerServiceImpl implements OwnerService {
         ownersRepository.deleteByEmail(email);
     }
 
+    /*@Override
+    public void toggleValidStatus(String email) {
+        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
+        owner.changeValidation();
+    }
+*/
 }

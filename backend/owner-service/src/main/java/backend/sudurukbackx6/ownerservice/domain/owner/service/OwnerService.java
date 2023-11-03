@@ -13,7 +13,7 @@ import java.io.IOException;
 public interface OwnerService {
 
     //1. 회원가입
-    void signUp(SignUpReqDto signUpReqDto) throws IOException;
+    void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException;
 
     //2. 이메일로 인증 코드 전송
     void sendAuthCode(String email) throws MessagingException;
@@ -44,4 +44,6 @@ public interface OwnerService {
     void unRegister(SignInReqDto signInReqDto);
 
     void deletedOwner(String email);
+
+//    void toggleValidStatus(String email);
 }
