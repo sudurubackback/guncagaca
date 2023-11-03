@@ -201,7 +201,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 height: 60 * (deviceHeight / standardDeviceHeight),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    if (isSelected) {
+                                    if (!isSelected) {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
