@@ -33,7 +33,9 @@ public class OrderResponseDto {
     public OrderResponseDto(Order order){
         this.menus = order.getMenus();
         this.orderPrice = order.getPrice();
-        this.memberId = order.getMemberId().toString();
-        this.storeId = order.getStoreId().toString();
+//        this.memberId = order.getMemberId().toString();
+//        this.storeId = order.getStoreId().toString();
+        this.memberId = order.getMemberId();
+        this.storeId = order.getStoreId();
     }
 }
