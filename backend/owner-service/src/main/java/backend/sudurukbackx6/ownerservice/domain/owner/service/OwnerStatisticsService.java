@@ -22,6 +22,4 @@ import java.util.List;
 @Service
 public class OwnerStatisticsService {
 
-    private final OrderServiceClient orderServiceClient;
-
 }

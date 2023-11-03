@@ -1,11 +1,12 @@
 package backend.sudurukbackx6.ownerservice.domain.business.service;
 
 import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorVailidateReqDto;
+import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
 
 import java.net.URISyntaxException;
 
 public interface BusinessService {
 
-    boolean checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException;
-//    void saveBusiness(VendorVailidateReqDto reqDto);
+    long checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException;
+    Business getBusinessById(Long businessId);
 }
