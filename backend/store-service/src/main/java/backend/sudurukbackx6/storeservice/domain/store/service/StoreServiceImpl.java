@@ -62,8 +62,8 @@ public class StoreServiceImpl implements StoreService {
         // 죄표 추출
         if (!response.getAddresses().isEmpty()) {
             GeocodingDto.Response.Address firstAddress = response.getAddresses().get(0);
-            latitude = firstAddress.getX();
-            longitude = firstAddress.getY();
+            longitude = firstAddress.getX();
+            latitude = firstAddress.getY();
         } // TODO : 좌표 없을 때 예외 처리
         log.info("위도 : {}", latitude);
         log.info("경도 : {}", longitude);
