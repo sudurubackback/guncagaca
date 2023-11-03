@@ -21,7 +21,6 @@ public class BusinessServiceImpl implements BusinessService {
 
     private final VendorService vendorService;
     private final BusinessRepository businessRepository;
-    private final OwnerService ownerService;
 
     @Override
     public long checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException {
@@ -40,6 +39,10 @@ public class BusinessServiceImpl implements BusinessService {
         return -1;
     }
 
+    @Override
+    public Business getBusinessById(Long businessId) {
+        return businessRepository.findById(businessId).orElseThrow(() -> new IllegalArgumentException("Business not found"));
+    }
 
 
 }

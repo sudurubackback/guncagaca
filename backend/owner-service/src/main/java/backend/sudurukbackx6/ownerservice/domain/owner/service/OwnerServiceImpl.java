@@ -2,6 +2,8 @@ package backend.sudurukbackx6.ownerservice.domain.owner.service;
 
 import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
+import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
+import backend.sudurukbackx6.ownerservice.domain.business.service.BusinessService;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -33,6 +35,7 @@ public class OwnerServiceImpl implements OwnerService {
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
     private final Encrypt encrypt;
+    private final BusinessService businessService;
 
     @Override
     public void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException {
@@ -41,7 +44,8 @@ public class OwnerServiceImpl implements OwnerService {
 
         if (exitOwner.isEmpty()) {
             //이미 가입된 회원이 없으면? 회원가입 진행한다.
-            Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel());
+            Business business= businessService.getBusinessById(signUpReqDto.getBusiness_id());
+            Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel(), business);
             //그리고 메일을 전송한다
             mailSenderService.sendInfoMail(signUpReqDto.getEmail());
             ownersRepository.save(owner);
