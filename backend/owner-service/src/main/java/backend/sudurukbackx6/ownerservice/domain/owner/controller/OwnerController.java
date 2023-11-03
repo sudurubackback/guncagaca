@@ -33,7 +33,7 @@ public class OwnerController {
     @Operation(summary = "회원가입", description = "email, password, tel을 활용해서 회원가입 진행 \n\n")
     //무슨 인자가 필요한지만 설명
     @PostMapping("/signup")
-    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody SignUpReqDto signUpReqDto) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody SignUpReqDto signUpReqDto) throws IOException, MessagingException {
         ownerService.signUp(signUpReqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(200, "회원가입 성공"));
     }
@@ -111,4 +111,5 @@ public class OwnerController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "accesstoken갱신 성공", newAccessToken));
     }
+
 }

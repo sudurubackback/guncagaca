@@ -22,13 +22,13 @@ public interface OrderServiceClient {
 
     @GetMapping("/api/order/store/{storeId}/orders")
     List<StoreOrderResponse> getStoreOrdersForDateRange(
-            @PathVariable Long storeId,
+            @PathVariable("storeId") Long storeId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate);
 
     @GetMapping("/store/{storeId}/orders/summary")
     SalesSummaryResponse getSalesSummary(
-            @PathVariable Long storeId,
+            @PathVariable("storeId") Long storeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate);
 }
