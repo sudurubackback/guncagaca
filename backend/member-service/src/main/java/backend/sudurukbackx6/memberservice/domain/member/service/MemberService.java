@@ -188,9 +188,4 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
         return member.getId();
     }
-
-    public Object getOrderList(String email) {
-        return new Object();
-    }
-
 }
