@@ -18,6 +18,7 @@ class MainViewModel {
       print(user);
 
       await _saveEmailToPreferences(user?.kakaoAccount?.email);
+      await _saveNameToPreferences(user?.kakaoAccount?.name);
     }
     print("Login : " + isLogined.toString());
   }
@@ -32,6 +33,13 @@ class MainViewModel {
     if (email != null && email.isNotEmpty) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_email', email);
+    }
+  }
+
+  Future<void> _saveNameToPreferences(String? name) async {
+    if (name != null && name.isNotEmpty) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_name', name);
     }
   }
 }
