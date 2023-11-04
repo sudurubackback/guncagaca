@@ -43,7 +43,6 @@ public class OrderService {
     private String PRIVATE_KEY;
 
 
-
     // 주문 등록
     public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
         Long memberId = memberServiceClient.getId(email);
@@ -62,7 +61,7 @@ public class OrderService {
 
         orderRepository.save(newOrder);
 
-        OrderResponseDto responseDto = new OrderResponseDto(orderRequestDto.getMemberId(), orderRequestDto.getStoreId(), orderRequestDto);
+        OrderResponseDto responseDto = new OrderResponseDto(memberId, orderRequestDto.getStoreId(), orderRequestDto);
 
         return responseDto;
     }
