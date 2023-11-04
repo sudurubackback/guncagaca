@@ -55,6 +55,7 @@ public class OrderService {
                 .status(Status.ORDERED)
                 .takeoutYn(orderRequestDto.isTakeoutYn())
                 .reviewYn(false)
+                .eta(orderRequestDto.getEta())
                 .price(orderRequestDto.getTotalOrderPrice())
                 .menus(orderRequestDto.getMenus())
                 .build();

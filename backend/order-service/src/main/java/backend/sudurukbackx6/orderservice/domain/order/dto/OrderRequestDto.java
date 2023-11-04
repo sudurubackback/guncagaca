@@ -18,6 +18,8 @@ public class OrderRequestDto {
 
     private int totalOrderPrice;
 
+    private int eta;
+
     private List<Menu> menus;
 
 }
