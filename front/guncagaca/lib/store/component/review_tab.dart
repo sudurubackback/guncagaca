@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../common/utils/dio_client.dart';
+import '../../common/utils/oauth_token_manager.dart';
 import '../models/review.dart';
 
 class ReviewTabWidget extends StatefulWidget {
@@ -16,11 +17,16 @@ class ReviewTabWidget extends StatefulWidget {
 
 class _ReviewTabWidgetState extends State<ReviewTabWidget> {
   List<Review> reviews = [];
+  final token = TokenManager().token;
 
   @override
   void initState() {
     super.initState();
-    fetchReviewList();  // 가상의 메서드, 실제 구현이 필요합니다.
+    fetchReviewList().then((result) {
+      setState(() {
+        reviews = result;
+      });
+    });
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
@@ -29,7 +35,15 @@ class _ReviewTabWidgetState extends State<ReviewTabWidget> {
   Future<List<Review>> fetchReviewList() async {
     final String apiUrl = "$baseUrl/api/store/${widget.cafeId}/review";
 
-    final response = await dio.get(apiUrl);
+    final response = await dio.get(
+        apiUrl,
+        options: Options(
+            headers: {
+              'Authorization': "Bearer $token",
+            }
+        )
+    );
+    print(response.data);
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((json) => Review.fromMap(json)).toList();

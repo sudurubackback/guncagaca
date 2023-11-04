@@ -9,5 +9,5 @@ abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
   @POST("/api/store/save")
-  Future<StoreRegisterResponse> storeRegister(@Part() FormData data);
+  Future<StoreRegisterResponse> storeRegister(@Body() FormData data);
 }

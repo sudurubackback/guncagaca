@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "952671342269",
+    "project_id": "sudukbackx6",
+    "storage_bucket": "sudukbackx6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952671342269:android:b1d875d67fe2b045df31d4",
+        "android_client_info": {
+          "package_name": "com.example.guncagaca"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP4rYc4zC8NYS-JjVVlbDqKZJNF0iOjRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

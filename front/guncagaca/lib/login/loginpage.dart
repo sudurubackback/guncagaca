@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
 import 'package:guncagaca/kakao/kakao_login.dart';
@@ -8,6 +10,8 @@ import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:guncagaca/kakao/social_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
+import '../common/utils/dio_client.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -26,6 +30,9 @@ class _LoginPageState extends State<LoginPage> {
       _tryAutoLogin();
     });
   }
+
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
 
   // SharedPreferences 초기화
   Future<void> _initSharedPreferences() async {
@@ -57,9 +64,11 @@ class _LoginPageState extends State<LoginPage> {
     if (mainViewModel.isLogined) {
       final nickname = mainViewModel.user?.kakaoAccount?.profile?.nickname;
       final email = mainViewModel.user?.kakaoAccount?.email;
+      final fcmToken = prefs.getString("fcm_token");
+
       print('버튼 클릭 완료');
 
-      final tokens = await _fetchTokens(nickname, email);
+      final tokens = await _fetchTokens(nickname, email, fcmToken);
       print(tokens);
       if (tokens != null) {
         // 토큰들을 얻었을 경우, 저장하고 다음 화면으로 이동
@@ -101,22 +110,26 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
-    final url = 'http://k9d102.p.ssafy.io:8000/api/member/sign'; // 서버 엔드포인트 URL로 수정
-    final response = await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
-        },
-        body: jsonEncode({
+  Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email, String? fcmToken) async {
+    final String apiUrl = "$baseUrl/api/member/sign";
+
+    final response = await dio.post(
+        apiUrl,
+        options: Options(
+            headers: {
+              'Content-Type': 'application/json',
+            }
+        ),
+        data: {
           'nickname': nickname,
           'email': email,
-        }),
+          'fcmToken': fcmToken,
+        }
     );
 
     if (response.statusCode == 200) {
-      print("200");
-      final Map<String, dynamic> tokens = json.decode(response.body);
+      print(response.data);
+      final Map<String, dynamic> tokens = response.data;
       return tokens;
     } else {
       return null;

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,13 +16,16 @@ class JjimList extends StatefulWidget {
 class _JjimListState extends State<JjimList> {
   late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyJjims = [];
-  List<bool> toggleList = [];
+  // List<bool> toggleList = [];
 
   @override
   void initState() {
     super.initState();
     _initSharedPreferences();
   }
+
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
 
   // SharedPreferences 초기화
   Future<void> _initSharedPreferences() async {
@@ -34,7 +38,6 @@ class _JjimListState extends State<JjimList> {
 
     if (token != null) {
       // String baseUrl = dotenv.env['BASE_URL']!;
-      Dio dio = DioClient.getInstance();
       print(token);
       print("통신");
 
@@ -44,13 +47,16 @@ class _JjimListState extends State<JjimList> {
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
-              'Authorization': token.toString(),
+              'Authorization': 'Bearer $token',
             },
           ),
         );
+        print("리스폰스 값");
+        print(response.toString());
+        print(response.data.runtimeType);
 
         if (response.statusCode == 200) {
-          List<dynamic> jsonData = json.decode(response.data);
+          List<dynamic> jsonData = response.data;
           dummyJjims = List<Map<String, dynamic>>.from(jsonData);
           print(dummyJjims);
           print("제대로 옴");
@@ -71,7 +77,7 @@ class _JjimListState extends State<JjimList> {
     int index = dummyJjims.indexWhere((item) => item['id'] == id);
     if (index != -1) {
       setState(() {
-        toggleList[index] = !toggleList[index];
+        // toggleList[index] = !toggleList[index];
       });
     }
   }
@@ -81,7 +87,7 @@ class _JjimListState extends State<JjimList> {
     return dummyJjims.isEmpty
         ? Center(
       child: Text(
-        "포인트함이 비었습니다.",
+        "찜 목록이 비었습니다.",
         style: TextStyle(fontSize: 18.0),
       ),
     )
@@ -120,7 +126,7 @@ class _JjimListState extends State<JjimList> {
                 SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    dummyJjims[index]['name'],
+                    dummyJjims[index]['cafeName'],
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -134,9 +140,8 @@ class _JjimListState extends State<JjimList> {
                     height: 30,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(toggleList[index]
-                            ? 'assets/image/h2.png'
-                            : 'assets/image/h1.png'),
+                        image: AssetImage(
+                            'assets/image/h2.png'),
                         fit: BoxFit.cover,
                       ),
                     ),

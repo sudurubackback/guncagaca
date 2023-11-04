@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -22,6 +23,9 @@ class _ReviewListState extends State<ReviewList> {
     _initSharedPreferences();
   }
 
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
+
   // SharedPreferences 초기화
   Future<void> _initSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
@@ -34,23 +38,26 @@ class _ReviewListState extends State<ReviewList> {
 
     if (token != null) {
       // String baseUrl = dotenv.env['BASE_URL']!;
-      Dio dio = DioClient.getInstance();
       print(token);
       print("통신");
 
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8085/api/store/mypage/reviews",
+          "$baseUrl/api/store/mypage/reviews",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
-              'Authorization': token.toString(),
+              'Authorization': 'Bearer $token',
             },
           ),
         );
 
+        print("리스폰스 값");
+        print(response.toString());
+        print(response.data.runtimeType);
+
         if (response.statusCode == 200) {
-          List<dynamic> jsonData = json.decode(response.data);
+          List<dynamic> jsonData = response.data;
           dummyReviews = List<Map<String, dynamic>>.from(jsonData);
           print(dummyReviews);
           print("제대로 옴");

@@ -6,8 +6,8 @@ class Option {
 
   factory Option.fromMap(Map<String, dynamic> map) {
     return Option(
-      label: map['label'],
-      price: map['price'],
+      label: map['detailOptionName'],
+      price: map['additionalPrice'],
     );
   }
 }
