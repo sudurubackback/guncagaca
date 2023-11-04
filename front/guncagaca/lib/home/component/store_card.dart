@@ -43,11 +43,11 @@ class StoreCard extends StatelessWidget {
             ),
           );
         } else { // 영업중이라면 상세 화면으로 이동
-          Get.to(
+          Get.to(() =>
               DefaultLayout(
                 title: store.cafeName,
-                child: StoreDetailScreen(storeId: store.storeId, mainViewModel: mainViewModel),
                 mainViewModel: mainViewModel,
+                child: StoreDetailScreen(storeId: store.storeId, mainViewModel: mainViewModel),
               )
           );
         }

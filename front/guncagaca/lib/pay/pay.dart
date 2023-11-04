@@ -110,14 +110,14 @@ class PaymentService{
           totalOrderPrice: this.cartController.totalPrice,
           menus: this.cartController.cartItems,
         );
-
+        print("주문 생성");
         createOrderApi(orderRequest);
         // 주문 완료되면 카트를 비우기
         CartController cartController = Get.find<CartController>();
         cartController.cartItems.clear();
 
         // OrderView()로 이동
-        Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
+        Get.off(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
       },
     );
   }
