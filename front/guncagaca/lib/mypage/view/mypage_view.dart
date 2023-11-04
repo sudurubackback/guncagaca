@@ -8,7 +8,7 @@ import 'package:guncagaca/point/view/point_screen.dart';
 import '../../jjim/view/jjim_screen.dart';
 import '../../kakao/main_view_model.dart';
 import '../../login/loginpage.dart';
-import '../../order/view/order_page.dart';
+import '../../orderStatus/order_page.dart';
 
 
 

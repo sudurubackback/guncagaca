@@ -77,8 +77,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Refresh Token: ${tokens['refreshToken']}');
         prefs.setString('accessToken', tokens['accessToken']);
         prefs.setString('refreshToken', tokens['refreshToken']);
-        // SharedPreference 저장 및 홈 화면으로 이동 로직을 여기에 추가하세요.
-        // ...
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DefaultLayout(

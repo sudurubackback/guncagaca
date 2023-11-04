@@ -9,6 +9,10 @@ class Store {
   final double distance;      // 거리
   final double starTotal;        // 평점
   final int reviewCount;      // 리뷰 수
+  final bool isOpen;
+  final String openTime;
+  final String closeTime;
+  final String address;
 
   Store({
     required this.storeId,
@@ -19,6 +23,10 @@ class Store {
     required this.longitude,
     required this.starTotal,
     required this.reviewCount,
+    required this.isOpen,
+    required this.openTime,
+    required this.closeTime,
+    required this.address,
   });
 
   factory Store.fromMap(Map<String, dynamic> map) {
@@ -30,7 +38,11 @@ class Store {
       longitude: map['longitude'],
       distance: map['distance'],
       starTotal: map['starTotal'],
+      address: map['address'],
       reviewCount: map['reviewCount'],
+      isOpen: map['open'],
+      openTime: map['openTime'],
+      closeTime: map['closeTime'],
     );
   }
 }

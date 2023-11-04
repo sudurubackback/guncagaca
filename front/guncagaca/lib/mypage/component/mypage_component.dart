@@ -3,7 +3,7 @@ import 'package:guncagaca/jjim/view/jjim_screen.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/mypage/passwordchange.dart';
 import 'package:guncagaca/myreview/view/review_screen.dart';
-import 'package:guncagaca/order/view/order_page.dart';
+import 'package:guncagaca/orderStatus/order_page.dart';
 
 import '../../kakao/main_view_model.dart';
 import '../../point/view/point_screen.dart';
