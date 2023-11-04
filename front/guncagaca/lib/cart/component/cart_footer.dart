@@ -82,19 +82,23 @@ class CartFooter extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.0),
-          Container(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: PRIMARY_COLOR,
-                padding: EdgeInsets.symmetric(vertical: 12.0),
-              ),
-              onPressed: () {
-                PaymentService(mainViewModel: mainViewModel).bootpayTest(context);
-              },
-              child: Text("결제하기"),
-            ),
-          ),
+          Builder(
+            builder: (context) {
+              return Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PRIMARY_COLOR,
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                  ),
+                  onPressed: () {
+                    PaymentService(mainViewModel: mainViewModel).bootpay(context);
+                  },
+                  child: Text("결제하기"),
+                ),
+              );
+            },
+          )
         ],
       ),
     );
