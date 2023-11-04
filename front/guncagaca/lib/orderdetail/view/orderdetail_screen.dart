@@ -38,8 +38,6 @@ class OrderDetailScreen extends StatefulWidget {
 //   return formattedMenus;
 // }
 
-
-
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   List<Map<String, dynamic>> dummyOrders = [];
 
@@ -63,15 +61,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> orderData = dummyOrders.firstWhere(
           (order) => order["id"] == widget.id,
       orElse: () => Map<String, dynamic>.from({}),
     );
-
-
 
     Store store = Store(
       storeId: 1,
@@ -81,15 +76,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       distance: 2.5,
       starTotal: 4.5,
       reviewCount: 120, latitude: 2.5,
+      isOpen: true,
+      openTime: "10:00 AM",
+      closeTime: "09:00 PM",
+        address: "진평동",
     );
+
 
     if (orderData.isEmpty) {
       return Center(
         child: Text("해당 주문을 찾을 수 없습니다."),
       );
     }
-
-
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Color(0xfff8e9d7),
@@ -202,7 +200,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 height: 1.5,),),
           ),
 
-          OrderDetailList(orderMenus: orderData["order_memus"]),
+          // OrderDetailList(orderMenus: orderData["order_memus"]),
 
 
           Padding(

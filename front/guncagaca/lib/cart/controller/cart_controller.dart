@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import '../../menu/option.dart';
-import '../../order/models/order.dart';
+import '../../order/models/order_menu.dart';
 
 class CartController extends GetxController {
-  RxList<Order> cartItems = RxList<Order>();
-  RxMap<Order, int> itemQuantities = RxMap<Order, int>();
+  RxList<OrderMenu> cartItems = RxList<OrderMenu>();
+  RxMap<OrderMenu, int> itemQuantities = RxMap<OrderMenu, int>();
 
   var selectedOption = '포장'.obs;
   var selectedTime = '10분'.obs;
@@ -24,8 +24,8 @@ class CartController extends GetxController {
     return cartItems.fold(0, (prev, order) => prev + order.totalPrice * order.quantity.value);
   }
 
-  void addToCart(Order order) {
-    Order? existingOrder;
+  void addToCart(OrderMenu order) {
+    OrderMenu? existingOrder;
     try {
       existingOrder = cartItems.firstWhere((o) => o == order);
     } catch (e) {
@@ -40,16 +40,16 @@ class CartController extends GetxController {
     }
   }
 
-  void removeFromCart(Order order) {
+  void removeFromCart(OrderMenu order) {
     cartItems.remove(order);
   }
 
-  void increaseQuantity(Order order) {
+  void increaseQuantity(OrderMenu order) {
     print('개수 추가');
     order.quantity.value++;
   }
 
-  void decreaseQuantity(Order order) {
+  void decreaseQuantity(OrderMenu order) {
     print('개수 감소');
     if (order.quantity.value > 1) {
       order.quantity.value--;
