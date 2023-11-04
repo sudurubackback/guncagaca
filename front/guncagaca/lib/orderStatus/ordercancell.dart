@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:guncagaca/login/loginpage.dart';
 
 import '../kakao/main_view_model.dart';
-import '../order/view/order_page.dart';
+import 'order_page.dart';
 
-class OrderWaitPage extends StatefulWidget {
+class OrderCancellPage extends StatefulWidget {
   final MainViewModel mainViewModel;
 
-  const OrderWaitPage({required this.mainViewModel});
+  const OrderCancellPage({required this.mainViewModel});
 
   @override
-  _OrderWaitPageState createState() => _OrderWaitPageState();
+  _OrderCancellPageState createState() => _OrderCancellPageState();
 }
 
-class _OrderWaitPageState extends State<OrderWaitPage> {
+class _OrderCancellPageState extends State<OrderCancellPage> {
 
   Widget _buildTitleText(String text) {
     return Padding(
@@ -75,17 +76,17 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildTitleText("주문대기 중"),
+            _buildTitleText("주문취소"),
             Container(
               width: 350,
               height: 350,
               padding: EdgeInsets.symmetric(vertical: 20.0), // 위아래로 패딩을 줍니다
               child: Image.asset(
-                'assets/image/main_img.png',
+                'assets/image/cancell.png',
                 fit: BoxFit.contain,
               ),
             ),
-          _buildSubText("가게에서 주문을 확인 중입니다.\n가게 사정에 따라 주문이 취소될 수 있습니다.\n접수가 완료되면 알려드릴게요!\n주문사항은 주문내역에서 확인하실 수 있습니다."),
+          _buildSubText("정말 죄송합니다.\n고객님이 주문하신 음식이.\n____의 이유로 취소되었습니다.\n자세한 내용은 주문내역에서 확인하실 수 있습니다."),
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.08,
