@@ -3,14 +3,16 @@ class SignUpRequest {
   final String email;
   final String password;
   final String tel;
+  final int business_id;
 
-  SignUpRequest(this.email, this.password, this.tel);
+  SignUpRequest(this.email, this.password, this.tel, this.business_id);
 
-  Map<String, String> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'email' : email,
       'password' : password,
       'tel' : tel,
+      'business_id' : business_id,
     };
   }
 }

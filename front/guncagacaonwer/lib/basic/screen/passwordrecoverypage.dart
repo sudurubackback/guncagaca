@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:guncagacaonwer/basic/api/resetpw_api_service.dart';
+import 'package:guncagacaonwer/basic/models/resetpwmodel.dart';
 
 class PasswordRecoveryPage extends StatefulWidget {
   @override
@@ -8,6 +11,15 @@ class PasswordRecoveryPage extends StatefulWidget {
 class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
   String email = '';
 
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Dio dio = Dio();
+    apiService = ApiService(dio);
+  }
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -90,7 +102,54 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                   ElevatedButton(
                     onPressed: () async {
                       // 이메일을 사용하여 비밀번호 초기화 메일을 보내는 로직을 추가
-                      // 비밀번호 초기화 메일을 보낸 후 사용자에게 알림을 표시할 수 있습니다.
+                      final request = ResetPasswordRequest(email);
+
+                      try {
+                        final response = await apiService.resetPassword(ResetPasswordRequest(email));
+
+                        if (response.status == 200) {
+                          // 비밀번호 초기화 성공
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('비밀번호 초기화 성공'),
+                                content: Text('비밀번호 초기화 메일을 이메일 주소로 전송했습니다.'),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text('확인'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // 다이얼로그 닫기
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          // 비밀번호 초기화 실패
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('비밀번호 초기화 실패'),
+                                content: Text('비밀번호 초기화 메일을 보내는 중 문제가 발생했습니다.'),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text('확인'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // 다이얼로그 닫기
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      } catch (e) {
+                        // 통신 실패 시 예외 처리
+                        print('통신 실패: $e');
+                      }
                     },
                     style: ButtonStyle(
                       minimumSize: MaterialStateProperty.all(Size(

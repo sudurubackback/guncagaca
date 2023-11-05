@@ -18,15 +18,13 @@ class EmailValidationRequest {
 class EmailValidationResponse {
   final int status;
   final String message;
-  final Map<String, dynamic> data;
 
-  EmailValidationResponse(this.status, this.message, this.data);
+  EmailValidationResponse(this.status, this.message);
 
   factory EmailValidationResponse.fromJson(Map<String, dynamic> json) {
     return EmailValidationResponse(
       json['status'] as int,
       json['message'] as String,
-      json['data'] as Map<String, dynamic>,
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/basic/api/sign_api_service.dart';
@@ -26,6 +28,7 @@ class _SignPageState extends State<SignPage> {
     super.initState();
 
     Dio dio = Dio();
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     apiService = ApiService(dio);
   }
 
@@ -35,6 +38,10 @@ class _SignPageState extends State<SignPage> {
   String failureMessage = "";
   TextEditingController codeController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController(); // 비밀번호 입력 필드를 위한 컨트롤러
+  TextEditingController telController = TextEditingController(); // 전화번호 입력 필드를 위한 컨트롤러
+
+  Timer? emailValidationTimer;
 
   // 이메일 유효성 인증
   void validateEmail(String email) {
@@ -44,25 +51,38 @@ class _SignPageState extends State<SignPage> {
       });
       return;
     }
-    Future.delayed(const Duration(seconds: 1), () async {
-      try {
-        final emailResponse = await apiService.emailValidation(EmailValidationRequest(email));
-        setState(() {
-          response = emailResponse;
-        });
-        if (emailResponse.status == 200) {
-          setState(() {
-            validationMessage = "유효한 이메일입니다.";
-          });
-        } else {
-          setState(() {
-            validationMessage = "유효하지 않은 이메일입니다.";
-          });
-        }
-      } catch (e) {
-        print("에러: $e");
-      }
+    // 이메일 유효성을 검사하려면 1초 후에 API를 호출
+    if (emailValidationTimer != null && emailValidationTimer!.isActive) {
+      // 이미 타이머가 활성화 중이라면 이전 타이머를 취소
+      emailValidationTimer!.cancel();
+    }
+
+    emailValidationTimer = Timer(const Duration(seconds: 1), () {
+      // 1초 후에 API 요청 실행
+      callEmailValidationApi(emailController.text);
     });
+  }
+
+  void callEmailValidationApi(String email) async {
+    try {
+      final emailResponse = await apiService.emailValidation(EmailValidationRequest(email));
+      setState(() {
+        response = emailResponse;
+      });
+      if (emailResponse.status == 200) {
+        setState(() {
+          validationMessage = "유효한 이메일입니다.";
+          print(validationMessage);
+        });
+      } else {
+        setState(() {
+          validationMessage = "유효하지 않은 이메일입니다.";
+          print(validationMessage);
+        });
+      }
+    } catch (e) {
+      print("에러: $e");
+    }
   }
 
   // 이메일 인증 요청
@@ -132,30 +152,34 @@ class _SignPageState extends State<SignPage> {
                     SizedBox(
                       width: 25 * (deviceWidth / standardDeviceWidth),
                     ),
-                    Container(
-                      width: 250 * (deviceWidth / standardDeviceWidth),
-                      height: 30 * (deviceHeight / standardDeviceHeight),
-                      child: TextFormField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                            color: Color(0xFF9B5748),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF9B5748)),
+                    Column(
+                      children: [
+                        Container(
+                          width: 250 * (deviceWidth / standardDeviceWidth),
+                          height: 30 * (deviceHeight / standardDeviceHeight),
+                          child: TextFormField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: TextStyle(
+                                color: Color(0xFF9B5748),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFF9B5748)),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              validateEmail(value);
+                            },
                           ),
                         ),
-                        onChanged: (value) {
-                          validateEmail(value);
-                        },
-                      ),
-                    ),
-                    Text(
-                      validationMessage,
-                      style: TextStyle(
-                        color: response?.status == 200 ? Colors.green : Colors.red,
-                      ),
+                        Text(
+                          validationMessage,
+                          style: TextStyle(
+                            color: response?.status == 200 ? Colors.green : Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
                     ElevatedButton(
@@ -164,9 +188,10 @@ class _SignPageState extends State<SignPage> {
                           // 이메일이 유효한 경우에만 인증 코드 요청을 보내도록 변경
                           if (validationMessage == "유효한 이메일입니다.") {
                             sendCode(emailController.text); // 이메일로 인증 코드 요청 보내기
+                            showSecondRow = true;
                           }
                           // 인증 요청 버튼을 누르면 두 번째 로우를 보이게 함
-                          showSecondRow = true;
+                          // showSecondRow = true;
                         });
                       },
                       style: ButtonStyle(
@@ -270,6 +295,7 @@ class _SignPageState extends State<SignPage> {
                   width: 250 * (deviceWidth / standardDeviceWidth),
                   height: 50 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
+                    controller: passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: TextStyle(
@@ -289,6 +315,7 @@ class _SignPageState extends State<SignPage> {
                   width: 250 * (deviceWidth / standardDeviceWidth),
                   height: 50 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
+                    controller: telController,
                     decoration: InputDecoration(
                       labelText: 'Tel',
                       labelStyle: TextStyle(
@@ -299,58 +326,58 @@ class _SignPageState extends State<SignPage> {
                       ),
                     ),
                     onChanged: (value) {
-                      password = value;
+                      tel = value;
                     },
                   ),
                 ),
                 SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
                 ElevatedButton(
                   onPressed: () async {
-                    // try {
-                    //   // 요청 데이터 모델
-                    //   final signUpRequest = SignUpRequest(email, password, tel);
-                    //
-                    //   // API 서비스 사용해 회원가입 요청
-                    //   final response = await apiService.signupUser(signUpRequest);
-                    //
-                    //   // 응답 처리
-                    //   if (response.status == 0) {
-                    //     // 회원가입 성공 -> 가게 정보 등록 창으로 이동
-                    //     Navigator.of(context).pushReplacement(
-                    //       MaterialPageRoute(
-                    //         builder: (context) => LoginPage(),
-                    //       ),
-                    //     );
-                    //   } else {
-                    //     // 회원가입 실패
-                    //     // 실패 이유에 따라 사용자에게 메시지를 표시하거나 로깅할 수 있습니다.
-                    //     showDialog(
-                    //       context: context,
-                    //       builder: (context) {
-                    //         return AlertDialog(
-                    //           title: Text('회원가입 실패'),
-                    //           content: Text('회원가입에 실패했습니다. 다시 시도해 주세요.'),
-                    //           actions: <Widget>[
-                    //             ElevatedButton(
-                    //               child: Text('확인'),
-                    //               onPressed: () {
-                    //                 Navigator.of(context).pop(); // 다이얼로그 닫기
-                    //               },
-                    //             ),
-                    //           ],
-                    //         );
-                    //       },
-                    //     );
-                    //   }
-                    // } catch (e) {
-                    //   // 통신 실패 시 예외 처리
-                    //   print('통신 실패 : $e');
-                    // }
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => LoginPage(),
-                      ),
-                    );
+                    try {
+                      // 요청 데이터 모델
+                      final signUpRequest = SignUpRequest(emailController.text, passwordController.text, telController.text, 0);
+
+                      // API 서비스 사용해 회원가입 요청
+                      final response = await apiService.signupUser(signUpRequest);
+
+                      // 응답 처리
+                      if (response.status == 200) {
+                        // 회원가입 성공 -> 가게 정보 등록 창으로 이동
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
+                      } else {
+                        // 회원가입 실패
+                        // 실패 이유에 따라 사용자에게 메시지를 표시하거나 로깅할 수 있습니다.
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('회원가입 실패'),
+                              content: Text('회원가입에 실패했습니다. 다시 시도해 주세요.'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  child: Text('확인'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // 다이얼로그 닫기
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    } catch (e) {
+                      // 통신 실패 시 예외 처리
+                      print('통신 실패 : $e');
+                    }
+                    // Navigator.of(context).pushReplacement(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => LoginPage(),
+                    //   ),
+                    // );
                   },
                   style: ButtonStyle(
                     // 버튼의 최소 크기 설정
