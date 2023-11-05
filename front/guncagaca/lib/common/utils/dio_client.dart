@@ -20,22 +20,41 @@ class DioClient {
           // 응답 후에 해야 할 작업
           return handler.next(response);
         },
-        onError: (DioError e, ErrorInterceptorHandler handler) {
+        onError: (DioError e, ErrorInterceptorHandler handler) async {
           // 에러 발생 시에 해야 할 작업
           print("Error occurred: ${e.message}");
 
           // 500 에러 발생 시 토큰 갱신 로직
           if (e.response?.statusCode == 500) {
-            _refreshToken().then((newToken) {
+            final originalRequest = e.requestOptions; // 원래의 요청 저장
+
+            try {
+              final newToken = await _refreshToken();
               if (newToken != null) {
                 // 토큰을 성공적으로 갱신했을 때의 로직
                 print("재발급");
-                TokenManager().setToken(newToken);  // 갱신된 토큰 저장
+                TokenManager().setToken(newToken); // 갱신된 토큰 저장
+
+                // 원래의 요청을 다시 실행
+                originalRequest.headers['Authorization'] = 'Bearer $newToken';
+                final response = await _dio.fetch(originalRequest);
+                return handler.resolve(response); // 새로운 응답으로 핸들러를 처리
               }
-            }).catchError((error) {
+            } catch (error) {
               print("Failed to refresh token: $error");
               // 토큰 갱신 실패
-            });
+            }
+
+            // _refreshToken().then((newToken) {
+            //   if (newToken != null) {
+            //     // 토큰을 성공적으로 갱신했을 때의 로직
+            //     print("재발급");
+            //     TokenManager().setToken(newToken);  // 갱신된 토큰 저장
+            //   }
+            // }).catchError((error) {
+            //   print("Failed to refresh token: $error");
+            //   // 토큰 갱신 실패
+            // };
           }
           return handler.next(e);
         },
