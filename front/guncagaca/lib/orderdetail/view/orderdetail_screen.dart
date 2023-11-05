@@ -124,6 +124,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       .toString() + "개 "
               : widget.orderHistory['menus'][0]['menuName'],
               style: TextStyle(fontSize: 17.0,
+                color: PRIMARY_COLOR,
                 ),
             ),
           ),
@@ -190,7 +191,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             child: Text("결제 금액 : ${widget.orderHistory['price']}원",
               style: TextStyle(fontSize: 20.0),)
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05 ,)
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05),
+                  child: Text(
+                    "결제 방법 : ${widget.orderHistory['payMethod']}",
+                    style: TextStyle(fontSize: 17.0),
+                  ),
+                ),
 
         ],
       ),

@@ -103,6 +103,7 @@ class PaymentService{
 
         Map<String, dynamic> decodedData = jsonDecode(data);  // data를 맵으로 변환
         String receiptIdFromData = decodedData['data']['receipt_id'];
+        String payMethod = decodedData['data']['method_origin'];
 
         // 주문 생성
         OrderRequest orderRequest = OrderRequest(
@@ -111,6 +112,7 @@ class PaymentService{
           takeoutYn: this.cartController.selectedOption.value == "포장",
           totalOrderPrice: this.cartController.totalPrice,
           menus: this.cartController.cartItems,
+          payMethod: payMethod,
           eta: this.cartController.selectedTime.value,
         );
         print("주문 생성 : ${orderRequest}");
