@@ -9,6 +9,7 @@ class OrderRequest {
   final bool takeoutYn;
   final int totalOrderPrice;
   final int eta;
+  final String payMethod;
   final List<OrderMenu> menus;
 
   OrderRequest({
@@ -16,6 +17,7 @@ class OrderRequest {
     required this.storeId,
     required this.takeoutYn,
     required this.eta,
+    required this.payMethod,
     required this.totalOrderPrice,
     required this.menus,
   });
