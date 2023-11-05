@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/view/custom_appbar.dart';
-import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import '../../common/layout/default_layout.dart';
 import '../../kakao/main_view_model.dart';
-import '../../store/models/store.dart';
-import '../../store/models/store_detail.dart';
 import '../../store/view/store_detail_screen.dart';
 import '../component/orderdetail_list.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  final int id;
+  final Map<String, dynamic> orderHistory;
   final MainViewModel mainViewModel;
 
 
-  OrderDetailScreen({required this.id, required this.mainViewModel});
+  OrderDetailScreen({required this.orderHistory, required this.mainViewModel});
 
   @override
   _OrderDetailScreenState createState() => _OrderDetailScreenState();
@@ -40,87 +38,57 @@ class OrderDetailScreen extends StatefulWidget {
 // }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  List<Map<String, dynamic>> dummyOrders = [];
+  late String orderTime;
 
   @override
   void initState() {
     super.initState();
-    loadDummyOrders();
+    orderTime = formatDateTime(widget.orderHistory['orderTime']);
   }
 
-  void loadDummyOrders() async {
-    try {
-      String jsonString = await DefaultAssetBundle.of(context)
-          .loadString('assets/json/order_dumi.json');
-      dummyOrders = List<Map<String, dynamic>>.from(json.decode(jsonString));
+  String formatDateTime(String datetimeStr) {
+    DateTime datetime = DateTime.parse(datetimeStr);
 
-    } catch (e) {
-      print('Error decoding JSON: $e');
-      // 예외가 발생한 경우 빈 리스트로 초기화합니다.
-      dummyOrders = [];
-    }
-    setState(() {});
+    // 날짜 및 시간 형식
+    String year = datetime.year.toString();
+    String month = datetime.month.toString().padLeft(2, '0');
+    String day = datetime.day.toString().padLeft(2, '0');
+    String weekday = DateFormat('EEEE', 'ko_KR').format(datetime).substring(0, 1);
+    String period = datetime.hour < 12 ? "오전" : "오후";
+    String hour = (datetime.hour <= 12 ? datetime.hour : datetime.hour - 12).toString().padLeft(2, '0');
+    String minute = datetime.minute.toString().padLeft(2, '0');
+
+    return "$year년 $month월 $day일 ($weekday) $period $hour:$minute";
   }
+
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> orderData = dummyOrders.firstWhere(
-          (order) => order["id"] == widget.id,
-      orElse: () => Map<String, dynamic>.from({}),
-    );
-
-    StoreDetail store = StoreDetail(
-      storeId: 1,
-      img: orderData["img"],
-      cafeName: orderData["name"] ?? "이름 없음",
-      description: "소개",
-      starTotal: 4.5,
-      reviewCount: 120,
-      isOpen: true,
-      isLiked: false,
-      openTime: "10:00 AM",
-      closeTime: "09:00 PM",
-        address: "진평동",
-    );
-
-
-    if (orderData.isEmpty) {
-      return Center(
-        child: Text("해당 주문을 찾을 수 없습니다."),
-      );
-    }
-
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xfff8e9d7),
-      statusBarIconBrightness: Brightness.dark,
-    ));
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
         child: CustomAppbar(title: '주문내역', imagePath: null,)
-      ),
-      body: orderData != null
-          ? SingleChildScrollView(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 추가
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05, right:MediaQuery.of(context).size.width * 0.05 ), // 위아래 패딩 값 설정
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ),
+        body:SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 추가
               children: [
-                Text(
-                  "${orderData["order_status"]}",
-                  style: TextStyle(
-                    color: PRIMARY_COLOR,
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05, right:MediaQuery.of(context).size.width * 0.05 ), // 위아래 패딩 값 설정
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.orderHistory["status"],
+                        style: TextStyle(
+                        color: PRIMARY_COLOR,
                     fontSize: 17.0,
                   ),
                 ),
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: orderData['takeoutYn'] ? Colors.green : Colors.red,
+                      color: widget.orderHistory['takeoutYn'] ? Colors.green : Colors.red,
                       width: 1.5,
                     ),
                     borderRadius: BorderRadius.circular(5.0),
@@ -130,7 +98,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     vertical: MediaQuery.of(context).size.height * 0.005,
                   ),
                   child: Text(
-                    orderData['takeoutYn'] ? '테이크아웃' : '매장',
+                    widget.orderHistory['takeoutYn'] ? '포장' : '매장',
                     style: TextStyle(fontSize: 15.0),
                   ),
                 ),
@@ -140,7 +108,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
             child: Text(
-              "${orderData["name"]}",
+              widget.orderHistory['store']['cafeName'],
               style: TextStyle(
                 fontSize: 25.0,
               ),
@@ -149,21 +117,35 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
             child: Text(
-              orderData['order_memu'][0].toString() +
+              widget.orderHistory['menus'].length > 1
+              ? widget.orderHistory['menus'][0]['menuName']+
                   " 외 " +
-                  orderData['order_memu'].length
-                      .toString() +
-                  "개 ",
+                  (widget.orderHistory['menus'].length-1)
+                      .toString() + "개 "
+              : widget.orderHistory['menus'][0]['menuName'],
               style: TextStyle(fontSize: 17.0,
                 ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
-            child:Text("주문 시간: ${orderData["time_history"]}",
-              style: TextStyle(fontSize: 17.0),),
-          ),
-          Center(
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "주문 일시: $orderTime",
+                        style: TextStyle(fontSize: 14.0),
+                      ),
+                      SizedBox(height: 10.0), // 주문 일시와 주문번호 사이의 간격을 조정
+                      Text(
+                        "주문 번호: ${widget.orderHistory['id']}",
+                        style: TextStyle(fontSize: 14.0),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Center(
             child: Container(
               margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.03),
               width: MediaQuery.of(context).size.width * 0.85, // 버튼의 폭을 조절하세요 (원하는 크기로 설정)
@@ -180,8 +162,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => DefaultLayout(
-                          title: store.cafeName,
-                          child: StoreDetailScreen(storeId: store.storeId, mainViewModel: widget.mainViewModel,) ,
+                          title: widget.orderHistory['store']['cafeName'],
+                          child: StoreDetailScreen(storeId: widget.orderHistory['store']['storeId'], mainViewModel: widget.mainViewModel,) ,
                       mainViewModel: widget.mainViewModel,),
                     ),
                   );
@@ -201,12 +183,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 height: 1.5,),),
           ),
 
-          // OrderDetailList(orderMenus: orderData["order_memus"]),
-
+          OrderDetailList(orderMenus: widget.orderHistory['menus']),
 
           Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
-            child: Text("결제 금액 : ${orderData["order_prices"]}원",
+            child: Text("결제 금액 : ${widget.orderHistory['price']}원",
               style: TextStyle(fontSize: 20.0),)
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.05 ,)
@@ -214,10 +195,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ],
       ),
       )
-          : Center(
-        child: Text("해당 주문을 찾을 수 없습니다."),
-      ),
     );
-
   }
 }
