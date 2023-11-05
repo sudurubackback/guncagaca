@@ -22,7 +22,7 @@ class StoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (!store.isOpen) { // 영업중이 아니라면 다이얼로그 표시
+        if (!store.storeDetail.isOpen) { // 영업중이 아니라면 다이얼로그 표시
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -45,9 +45,9 @@ class StoreCard extends StatelessWidget {
         } else { // 영업중이라면 상세 화면으로 이동
           Get.to(() =>
               DefaultLayout(
-                title: store.cafeName,
+                title: store.storeDetail.cafeName,
                 mainViewModel: mainViewModel,
-                child: StoreDetailScreen(storeId: store.storeId, mainViewModel: mainViewModel),
+                child: StoreDetailScreen(storeId: store.storeDetail.storeId, mainViewModel: mainViewModel),
               )
           );
         }
@@ -59,13 +59,13 @@ class StoreCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
                 child: Image.network(
-                  store.img,
+                  store.storeDetail.img,
                   width: 80,  // 원하는 이미지의 넓이로 조절하세요.
                   height: 80, // 원하는 이미지의 높이로 조절하세요.
                   fit: BoxFit.cover,
                 ),
               ),
-              if (!store.isOpen)
+              if (!store.storeDetail.isOpen)
                 Positioned.fill(
                   child: Container(
                     color: Colors.black45,
@@ -89,7 +89,7 @@ class StoreCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  store.cafeName,
+                  store.storeDetail.cafeName,
                   style: const TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w500,
@@ -107,9 +107,9 @@ class StoreCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    _IconText(icon: Icons.star, label: store.starTotal.toStringAsFixed(2)),
+                    _IconText(icon: Icons.star, label: store.storeDetail.starTotal.toStringAsFixed(2)),
                     SizedBox(width: 10.0),
-                    _IconText(icon: Icons.receipt, label: '${store.reviewCount} 개')
+                    _IconText(icon: Icons.receipt, label: '${store.storeDetail.reviewCount} 개')
                   ],
                 ),
               ],

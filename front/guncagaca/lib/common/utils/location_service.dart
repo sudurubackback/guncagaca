@@ -1,8 +1,6 @@
-import 'package:location/location.dart';
-import 'package:synchronized/synchronized.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-
   static final LocationService _instance = LocationService._internal();
 
   factory LocationService() {
@@ -10,41 +8,38 @@ class LocationService {
   }
 
   LocationService._internal();
-  Location location = new Location();
-  LocationData? initLocation;
-  final _lock = Lock();  // 추가한 뮤텍스
 
-  Future<LocationData?> getCurrentLocation() async {
-    return _lock.synchronized(() async { // 동시성 제어
-      bool serviceEnabled;
-      PermissionStatus permissionGranted;
-      LocationData? locationData;
+  Position? initPosition;
 
-      // 서비스 활성화 확인
-      serviceEnabled = await location.serviceEnabled();
-      if (!serviceEnabled) {
-        serviceEnabled = await location.requestService();
-        if (!serviceEnabled) {
-          return null;
-        }
+  Future<Position?> getCurrentPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // 서비스 활성화 확인
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return null;
+    }
+
+    // 권한 확인
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return null;
       }
+    }
 
-      // 권한 확인
-      permissionGranted = await location.hasPermission();
-      if (permissionGranted == PermissionStatus.denied) {
-        permissionGranted = await location.requestPermission();
-        if (permissionGranted != PermissionStatus.granted) {
-          return null;
-        }
-      }
+    if (permission == LocationPermission.deniedForever) {
+      return null;
+    }
 
-      // 현재 위치 획득 후 캐싱
-      locationData = await location.getLocation();
-      initLocation = locationData; // 현재 위치 캐싱
-      return locationData;
-    });
+    // 현재 위치 획득 후 캐싱
+    initPosition = await Geolocator.getCurrentPosition();
+    return initPosition;
   }
-  Future<bool> canGetCurrentLocation() async {
-    return (await getCurrentLocation()) != null;
+
+  Future<bool> canGetCurrentPosition() async {
+    return (await getCurrentPosition()) != null;
   }
 }
