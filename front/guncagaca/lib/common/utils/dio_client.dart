@@ -91,7 +91,6 @@ class DioClient {
             'Email': email,
           },
         ),
-        // 필요한 파라미터를 여기에 추가
       );
       if (response.statusCode == 200) {
         final newToken = response.data['accessToken'];
