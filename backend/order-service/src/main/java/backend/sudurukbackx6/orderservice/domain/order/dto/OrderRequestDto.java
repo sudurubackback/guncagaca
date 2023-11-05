@@ -20,6 +20,8 @@ public class OrderRequestDto {
 
     private int eta;
 
+    private String payMethod;
+
     private List<Menu> menus;
 
 }

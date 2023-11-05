@@ -40,6 +40,8 @@ public class Order {
 
     private int eta;
 
+    private String payMethod;
+
     private List<Menu> menus;
 
     private int price;
