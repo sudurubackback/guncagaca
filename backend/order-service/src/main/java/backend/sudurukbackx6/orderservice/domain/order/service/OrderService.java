@@ -183,7 +183,7 @@ public class OrderService {
 
     public List<Order> getMemberOrder(String email) {
         Long memberId = memberServiceClient.getId(email);
-        List<Order> orderList = orderRepository.findAllByMemberId(memberId);
+        List<Order> orderList = orderRepository.findAllByMemberIdOrderByOrderTimeDesc(memberId);
         return orderList;
     }
 
