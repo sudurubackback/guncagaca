@@ -115,7 +115,6 @@ class PaymentService{
           payMethod: payMethod,
           eta: this.cartController.selectedTime.value,
         );
-        print("주문 생성 : ${orderRequest}");
 
         await createOrderApi(orderRequest);
         // 주문 완료되면 카트를 비우기

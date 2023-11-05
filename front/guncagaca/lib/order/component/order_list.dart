@@ -45,7 +45,6 @@ class _OrderListState extends State<OrderList> {
               }
           )
       );
-      print("주문 $orderResponse");
       if (orderResponse.statusCode == 200) {
         List<dynamic> orders = orderResponse.data;
 
@@ -66,7 +65,6 @@ class _OrderListState extends State<OrderList> {
         // 주문 내역과 가게 정보를 하나의 리스트로 결합합니다.
         for (var i = 0; i < orders.length; i++) {
           var storeResponse = storeResponses[i];
-          print("가게 :  $storeResponse");
           if (storeResponse.statusCode == 200) {
             orders[i]['store'] = storeResponse.data;
           } else {
