@@ -7,6 +7,7 @@ import 'dart:convert';
 import '../../common/layout/default_layout.dart';
 import '../../kakao/main_view_model.dart';
 import '../../store/models/store.dart';
+import '../../store/models/store_detail.dart';
 import '../../store/view/store_detail_screen.dart';
 import '../component/orderdetail_list.dart';
 
@@ -68,15 +69,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       orElse: () => Map<String, dynamic>.from({}),
     );
 
-    Store store = Store(
+    StoreDetail store = StoreDetail(
       storeId: 1,
       img: orderData["img"],
       cafeName: orderData["name"] ?? "이름 없음",
-      longitude: 2.5,
-      distance: 2.5,
+      description: "소개",
       starTotal: 4.5,
-      reviewCount: 120, latitude: 2.5,
+      reviewCount: 120,
       isOpen: true,
+      isLiked: false,
       openTime: "10:00 AM",
       closeTime: "09:00 PM",
         address: "진평동",

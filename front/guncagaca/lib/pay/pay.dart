@@ -97,7 +97,7 @@ class PaymentService{
         // checkQtyFromServer(data);
         return true;
       },
-      onDone: (String data) {
+      onDone: (String data) async {
         print('------- onDone: $data');
         isPaymentDone = true;
 
@@ -115,7 +115,7 @@ class PaymentService{
         );
         print("주문 생성 : ${orderRequest}");
 
-        createOrderApi(orderRequest);
+        await createOrderApi(orderRequest);
         // 주문 완료되면 카트를 비우기
         CartController cartController = Get.find<CartController>();
         cartController.cartItems.clear();

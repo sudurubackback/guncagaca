@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:guncagaca/home/view/home_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../home/component/map_provider.dart';
 import 'package:guncagaca/mypage/view/mypage_view.dart';
 import 'package:guncagaca/order/view/order_view.dart';
 
@@ -82,10 +81,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         children: [
 
           OrderView(mainViewModel: widget.mainViewModel,),
-          ChangeNotifierProvider<MapProvider>(
-            create: (context) => MapProvider(), // MapProvider의 인스턴스 생성 로직에 따라 적절히 수정해야 합니다.
-            child: HomeScreen(mainViewModel: widget.mainViewModel,),
-          ),
+          HomeScreen(mainViewModel: widget.mainViewModel,),
           MypageView(mainViewModel: widget.mainViewModel,),
         ],
       ),
