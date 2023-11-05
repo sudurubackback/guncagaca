@@ -5,12 +5,14 @@ class ReviewInputComponent extends StatelessWidget {
   final double rating;
   final ValueChanged<double> onRatingUpdate;
   final TextEditingController textEditingController;
+  final String cafeName;
 
   const ReviewInputComponent({
     Key? key,
     required this.rating,
     required this.onRatingUpdate,
     required this.textEditingController,
+    required this.cafeName
   }) : super(key: key);
 
   @override
@@ -18,7 +20,7 @@ class ReviewInputComponent extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "근카가카 구미인동점",
+          cafeName,
           style: TextStyle(fontSize: 25, color: Color(0xff000000)),
           textAlign: TextAlign.center,
         ),
