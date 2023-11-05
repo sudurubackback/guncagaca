@@ -21,11 +21,13 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<StoreRegisterResponse> storeRegister(FormData data) async {
+  Future<StoreRegisterResponse> storeRegister(
+      StoreRegisterRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = data;
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<StoreRegisterResponse>(Options(
       method: 'POST',

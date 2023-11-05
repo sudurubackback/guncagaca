@@ -3,26 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:guncagaca/login/loginpage.dart';
 
-import '../common/layout/default_layout.dart';
-import '../common/view/root_tab.dart';
 import '../kakao/main_view_model.dart';
-import '../order/view/order_page.dart';
+import 'order_page.dart';
 
-class OrderWaitPage extends StatefulWidget {
+class OrderCompletePage extends StatefulWidget {
   final MainViewModel mainViewModel;
 
-  const OrderWaitPage({required this.mainViewModel});
+  const OrderCompletePage({required this.mainViewModel});
 
   @override
-  _OrderWaitPageState createState() => _OrderWaitPageState();
+  _OrderCompletePageState createState() => _OrderCompletePageState();
 }
 
-class _OrderWaitPageState extends State<OrderWaitPage> {
+class _OrderCompletePageState extends State<OrderCompletePage> {
 
   Widget _buildTitleText(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       child: Text(
         text,
         style: const TextStyle(
@@ -64,7 +63,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
             iconSize: 30.0,
             color: Color(0xff000000),
             onPressed: () {
-              Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: widget.mainViewModel,),mainViewModel: widget.mainViewModel,));
+              Navigator.pop(context);
             },
           ),
         ),
@@ -77,7 +76,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildTitleText("주문대기 중"),
+            _buildTitleText("접수 완료!"),
             Container(
               width: 350,
               height: 350,
@@ -87,7 +86,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
                 fit: BoxFit.contain,
               ),
             ),
-          _buildSubText("가게에서 주문을 확인 중입니다.\n가게 사정에 따라 주문이 취소될 수 있습니다.\n접수가 완료되면 알려드릴게요!\n주문사항은 주문내역에서 확인하실 수 있습니다."),
+          _buildSubText("접수가 완료되었습니다.\n예상 준비 시간은 약 00분입니다.\n맛있게 조리해서 준비해둘게요.\n조금만 기다려 주세요! \n주문사항은 주문내역에서 확인하실 수 있습니다."),
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.08,

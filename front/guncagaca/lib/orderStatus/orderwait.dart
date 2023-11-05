@@ -3,25 +3,24 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:guncagaca/login/loginpage.dart';
 
 import '../kakao/main_view_model.dart';
-import '../order/view/order_page.dart';
+import 'order_page.dart';
 
-class OrderCompletePage extends StatefulWidget {
+class OrderWaitPage extends StatefulWidget {
   final MainViewModel mainViewModel;
 
-  const OrderCompletePage({required this.mainViewModel});
+  const OrderWaitPage({required this.mainViewModel});
 
   @override
-  _OrderCompletePageState createState() => _OrderCompletePageState();
+  _OrderWaitPageState createState() => _OrderWaitPageState();
 }
 
-class _OrderCompletePageState extends State<OrderCompletePage> {
+class _OrderWaitPageState extends State<OrderWaitPage> {
 
   Widget _buildTitleText(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 1),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Text(
         text,
         style: const TextStyle(
@@ -76,7 +75,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildTitleText("접수 완료!"),
+            _buildTitleText("주문대기 중"),
             Container(
               width: 350,
               height: 350,
@@ -86,7 +85,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                 fit: BoxFit.contain,
               ),
             ),
-          _buildSubText("접수가 완료되었습니다.\n예상 준비 시간은 약 00분입니다.\n맛있게 조리해서 준비해둘게요.\n조금만 기다려 주세요! \n주문사항은 주문내역에서 확인하실 수 있습니다."),
+          _buildSubText("가게에서 주문을 확인 중입니다.\n가게 사정에 따라 주문이 취소될 수 있습니다.\n접수가 완료되면 알려드릴게요!\n주문사항은 주문내역에서 확인하실 수 있습니다."),
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.08,

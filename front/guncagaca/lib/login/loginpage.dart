@@ -64,11 +64,9 @@ class _LoginPageState extends State<LoginPage> {
     if (mainViewModel.isLogined) {
       final nickname = mainViewModel.user?.kakaoAccount?.profile?.nickname;
       final email = mainViewModel.user?.kakaoAccount?.email;
-      final fcmToken = prefs.getString("fcm_token");
-
       print('버튼 클릭 완료');
 
-      final tokens = await _fetchTokens(nickname, email, fcmToken);
+      final tokens = await _fetchTokens(nickname, email);
       print(tokens);
       if (tokens != null) {
         // 토큰들을 얻었을 경우, 저장하고 다음 화면으로 이동
@@ -79,8 +77,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Refresh Token: ${tokens['refreshToken']}');
         prefs.setString('accessToken', tokens['accessToken']);
         prefs.setString('refreshToken', tokens['refreshToken']);
-        // SharedPreference 저장 및 홈 화면으로 이동 로직을 여기에 추가하세요.
-        // ...
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DefaultLayout(
@@ -110,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email, String? fcmToken) async {
+  Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
     final String apiUrl = "$baseUrl/api/member/sign";
 
     final response = await dio.post(
@@ -123,7 +120,6 @@ class _LoginPageState extends State<LoginPage> {
         data: {
           'nickname': nickname,
           'email': email,
-          'fcmToken': fcmToken,
         }
     );
 

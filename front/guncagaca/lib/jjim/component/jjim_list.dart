@@ -16,7 +16,7 @@ class JjimList extends StatefulWidget {
 class _JjimListState extends State<JjimList> {
   late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyJjims = [];
-  // List<bool> toggleList = [];
+  List<bool> toggleList = [];
 
   @override
   void initState() {
@@ -43,20 +43,17 @@ class _JjimListState extends State<JjimList> {
 
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8085/api/like/mypage/like-store",
+          "$baseUrl/api/like/mypage/like-store",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
-              'Authorization': 'Bearer $token',
+              'Authorization': token.toString(),
             },
           ),
         );
-        print("리스폰스 값");
-        print(response.toString());
-        print(response.data.runtimeType);
 
         if (response.statusCode == 200) {
-          List<dynamic> jsonData = response.data;
+          List<dynamic> jsonData = json.decode(response.data);
           dummyJjims = List<Map<String, dynamic>>.from(jsonData);
           print(dummyJjims);
           print("제대로 옴");
@@ -77,7 +74,7 @@ class _JjimListState extends State<JjimList> {
     int index = dummyJjims.indexWhere((item) => item['id'] == id);
     if (index != -1) {
       setState(() {
-        // toggleList[index] = !toggleList[index];
+        toggleList[index] = !toggleList[index];
       });
     }
   }
@@ -87,7 +84,7 @@ class _JjimListState extends State<JjimList> {
     return dummyJjims.isEmpty
         ? Center(
       child: Text(
-        "찜 목록이 비었습니다.",
+        "포인트함이 비었습니다.",
         style: TextStyle(fontSize: 18.0),
       ),
     )
@@ -126,7 +123,7 @@ class _JjimListState extends State<JjimList> {
                 SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    dummyJjims[index]['cafeName'],
+                    dummyJjims[index]['name'],
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -140,8 +137,9 @@ class _JjimListState extends State<JjimList> {
                     height: 30,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(
-                            'assets/image/h2.png'),
+                        image: AssetImage(toggleList[index]
+                            ? 'assets/image/h2.png'
+                            : 'assets/image/h1.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
