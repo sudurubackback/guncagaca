@@ -222,7 +222,7 @@ class _OrderListState extends State<OrderList> {
                             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                             child: Text(
                               {
-                                'ORDERED': '주문 대기',
+                                'ORDERED': '접수 대기',
                                 'REQUEST': '주문 접수',
                                 'CANCELED': '주문 취소',
                                 'COMPLETE': '완료',

@@ -79,7 +79,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.orderHistory["status"],
+                        {
+                          'ORDERED': '접수 대기중 입니다',
+                          'REQUEST': '주문이 접수 되었습니다',
+                          'CANCELED': '주문이 취소 되었습니다',
+                          'COMPLETE': '완료된 주문입니다',
+                        }[widget.orderHistory["status"]] ?? '알 수 없는 상태',
                         style: TextStyle(
                         color: PRIMARY_COLOR,
                     fontSize: 17.0,

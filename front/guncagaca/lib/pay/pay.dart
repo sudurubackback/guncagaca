@@ -131,7 +131,7 @@ class PaymentService{
   Future<void> createOrderApi(OrderRequest orderRequest) async {
     final String apiUrl = "$baseUrl/api/order/add";
 
-    final response = await dio.post(
+    await dio.post(
       apiUrl,
       data: orderRequest.toJson(),
       options: Options(

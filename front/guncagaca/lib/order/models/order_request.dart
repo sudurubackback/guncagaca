@@ -27,6 +27,7 @@ class OrderRequest {
     'storeId': storeId,
     'takeoutYn': takeoutYn,
     'eta': eta,
+    'payMethod': payMethod,
     'totalOrderPrice': totalOrderPrice,
     'menus': menus.map((orderMenu) => orderMenu.toJson()).toList(),
   };
