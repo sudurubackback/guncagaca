@@ -83,14 +83,11 @@ class _MenuAllPageState extends State<MenuAllPage> {
           height: 80 * (deviceHeight / standardDeviceHeight), // 각 박스의 높이
           child: Column(
             children: [
-              SizedBox(
-                height: 1 * (deviceHeight / standardDeviceHeight),
-              ),
               // 이미지
               Image.asset(
                 imagePath, // 이미지 파일 경로
                 width: 90 * (deviceWidth / standardDeviceWidth),
-                height: 70 * (deviceHeight / standardDeviceHeight),
+                height: 80 * (deviceHeight / standardDeviceHeight),
                 fit: BoxFit.cover,
               ),
               // 텍스트 중앙에 위치

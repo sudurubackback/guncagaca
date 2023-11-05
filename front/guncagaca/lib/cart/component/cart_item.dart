@@ -4,11 +4,11 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/order/models/order_option.dart';
 import '../../menu/menu.dart';
 import '../../menu/option.dart';
-import '../../order/models/order.dart';
+import '../../order/models/order_menu.dart';
 import '../controller/cart_controller.dart';
 
 class CartItem extends StatelessWidget {
-  final Order item;
+  final OrderMenu item;
 
   CartItem({required this.item});
 
@@ -17,7 +17,7 @@ class CartItem extends StatelessWidget {
     CartController controller = Get.find<CartController>();
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
       child: Column(
         children: [
           Row(

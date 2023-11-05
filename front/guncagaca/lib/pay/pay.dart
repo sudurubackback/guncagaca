@@ -1,36 +1,54 @@
+import 'dart:convert';
+
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
 import 'package:bootpay/model/item.dart';
 import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/cart/view/cart_screen.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../cart/controller/cart_controller.dart';
+import '../common/utils/dio_client.dart';
+import '../common/utils/oauth_token_manager.dart';
 import '../common/view/root_tab.dart';
 import '../kakao/main_view_model.dart';
-import '../order/models/order.dart';
-import '../order/view/order_view.dart';
-import '../orders/orderwait.dart';
+import '../order/models/order_menu.dart';
+import '../order/models/order_request.dart';
 
 class PaymentService{
   final MainViewModel mainViewModel;
+  final token = TokenManager().token;
 
    PaymentService({required this.mainViewModel});
 
-
   String androidApplicationId = dotenv.env['ANDROID_APPLICATION_ID']!;
   String iosApplicationId = dotenv.env['IOS_APPLICATION_ID']!;
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
 
-  void bootpayTest(BuildContext context) {
+  CartController cartController = Get.find<CartController>();
 
-    Payload payload = getPayload();
+  Future<String?> _getEmailFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_email');
+  }
+
+  Future<String?> _getNameFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_name');
+  }
+
+  void bootpay(BuildContext context) async{
+
+    Payload payload = await getPayload();
     if(kIsWeb) {
       payload.extra?.openType = "iframe";
     }
@@ -43,17 +61,19 @@ class PaymentService{
       // closeButton: Icon(Icons.close, size: 35.0, color: Colors.black54),
       onCancel: (String data) {
         print('------- onCancel: $data');
-        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen(mainViewModel: mainViewModel,), mainViewModel: mainViewModel,));
+        Get.back();
+        Get.back();
       },
       onError: (String data) {
         print('------- onError: $data');
-        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen(mainViewModel: mainViewModel,), mainViewModel: mainViewModel,));
+        Get.back();
+        Get.back();
       },
       onClose: () {
         print('------- onClose');
         if (!isPaymentDone) {
           Bootpay().dismiss(context);
-          Get.back();
+          // Get.back();
         } //명시적으로 부트페이 뷰 종료 호출
       },
       onIssued: (String data) {
@@ -80,22 +100,51 @@ class PaymentService{
       onDone: (String data) {
         print('------- onDone: $data');
         isPaymentDone = true;
+
+        Map<String, dynamic> decodedData = jsonDecode(data);  // data를 맵으로 변환
+        String receiptIdFromData = decodedData['data']['receipt_id'];
+
+        // 주문 생성
+        OrderRequest orderRequest = OrderRequest(
+          receiptId: receiptIdFromData,
+          storeId: this.cartController.cartItems[0].storeId,
+          takeoutYn: this.cartController.selectedOption.value == "포장",
+          totalOrderPrice: this.cartController.totalPrice,
+          menus: this.cartController.cartItems,
+          eta: this.cartController.selectedTime.value,
+        );
+        print("주문 생성 : ${orderRequest}");
+
+        createOrderApi(orderRequest);
         // 주문 완료되면 카트를 비우기
         CartController cartController = Get.find<CartController>();
         cartController.cartItems.clear();
 
         // OrderView()로 이동
-        // Get.offAll(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
-        Get.offAll(() => OrderWaitPage(mainViewModel: mainViewModel));
+        Get.off(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
       },
     );
   }
 
-  Payload getPayload() {
+  // 주문내역 생성
+  Future<void> createOrderApi(OrderRequest orderRequest) async {
+    final String apiUrl = "$baseUrl/api/order/add";
+
+    final response = await dio.post(
+      apiUrl,
+      data: orderRequest.toJson(),
+      options: Options(
+        headers: {
+          'Authorization': "Bearer $token",
+        },
+      ),
+    );
+  }
+
+  Future<Payload> getPayload() async {
     Payload payload = Payload();
 
-    CartController cartController = Get.find<CartController>();
-    List<Order> orders = cartController.cartItems;
+    List<OrderMenu> orders = cartController.cartItems;
 
     List<Item> itemList = orders.map((order) {
       Item item = Item();
@@ -128,11 +177,12 @@ class PaymentService{
     payload.items = itemList; // 상품정보 배열
 
     User user = User(); // 구매자 정보
-    user.username = "사용자 이름";
-    user.email = "dudxo7721@naver.com";
+    user.username = await _getNameFromPreferences();
+    user.email = await _getEmailFromPreferences();
     user.area = "서울";
-    user.phone = "010-5911-1911";
+    user.phone = "010-0000-0000";
     user.addr = '서울시 동작구 상도로 222';
+    print(user.username);
 
     Extra extra = Extra(); // 결제 옵션
     extra.appScheme = "guncagacaBootpay";
@@ -152,9 +202,4 @@ class PaymentService{
     return "${itemList[0].name}";
   }
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
 }
