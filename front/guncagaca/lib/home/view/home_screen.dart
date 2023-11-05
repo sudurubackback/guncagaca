@@ -73,8 +73,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
     print(currentLocation);
     final response = await dio.get("$baseUrl/api/store/list", queryParameters: {
-      'lat': currentLocation!.longitude,
-      'lon': currentLocation!.latitude
+      'lat': currentLocation!.latitude,
+      'lon': currentLocation!.longitude
     });
     print('${currentLocation!.latitude} 위도');
     print('${currentLocation!.longitude} 경도');

@@ -8,7 +8,7 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/order/models/order_option.dart';
 
 import '../cart/controller/cart_controller.dart';
-import '../order/models/order.dart';
+import '../order/models/order_menu.dart';
 import 'menu.dart';
 import 'menu_option.dart';
 import 'option.dart';
@@ -56,7 +56,7 @@ class _DetailState extends State<DetailPage> {
   }
   
 
-  void _showCustomDialog(Order order) {
+  void _showCustomDialog(OrderMenu order) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -72,7 +72,7 @@ class _DetailState extends State<DetailPage> {
     );
   }
 
-  Widget _buildDialogContents(Order order) {
+  Widget _buildDialogContents(OrderMenu order) {
     return Stack(
       children: [
         Container(
@@ -289,11 +289,15 @@ class _DetailState extends State<DetailPage> {
                 selectedOptions.add(OrderOption(optionName: optionName, selectedOption: selectedOptionLabel));
               }
             }
-            var newOrder = Order(
+            var newOrder = OrderMenu(
+              menuId: widget.menu.menuId,
                 name: widget.menu.name,
+                initPrice: widget.menu.initPrice,
                 totalPrice: total.toInt(),
                 img: widget.menu.imagePath,
                 storeName: widget.storeName,
+                category: widget.menu.category,
+                storeId: widget.menu.storeId,
                 selectedOptions: selectedOptions,
             );
             if (controller.cartItems.isNotEmpty && controller.cartItems[0].storeName != widget.storeName) {

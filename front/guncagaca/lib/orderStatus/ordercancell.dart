@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:guncagaca/login/loginpage.dart';
 
 import '../kakao/main_view_model.dart';
-import '../order/view/order_page.dart';
+import 'order_page.dart';
 
 class OrderCancellPage extends StatefulWidget {
   final MainViewModel mainViewModel;

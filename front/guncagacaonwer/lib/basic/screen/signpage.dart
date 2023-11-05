@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/basic/api/sign_api_service.dart';
 import 'package:guncagacaonwer/basic/models/signmodel.dart';
+import 'package:guncagacaonwer/basic/screen/storeinforegisterpage.dart';
 import '../../login/screen/loginpage.dart';
 
 class SignPage extends StatefulWidget {
@@ -24,10 +25,6 @@ class _SignPageState extends State<SignPage> {
     Dio dio = Dio();
     apiService = ApiService(dio);
   }
-
-  bool showSecondRow = false;
-  bool isCodeVerified = false; // 인증 코드가 확인되었는지 여부
-  TextEditingController codeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,136 +51,25 @@ class _SignPageState extends State<SignPage> {
                 SizedBox(
                   height: 40 * (deviceHeight / standardDeviceHeight),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 25 * (deviceWidth / standardDeviceWidth),
-                    ),
-                    Container(
-                      width: 250 * (deviceWidth / standardDeviceWidth),
-                      height: 30 * (deviceHeight / standardDeviceHeight),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                            color: Color(0xFF9B5748),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF9B5748)),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          email = value;
-                        },
+                Container(
+                  width: 250 * (deviceWidth / standardDeviceWidth),
+                  height: 50 * (deviceHeight / standardDeviceHeight),
+                  child : TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(
+                        color: Color(0xFF9B5748),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF9B5748)),
                       ),
                     ),
-                    SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
-                    ElevatedButton(
-                      onPressed: () async {
-                        setState(() {
-                          // 인증 요청 버튼을 누르면 두 번째 로우를 보이게 함
-                          showSecondRow = true;
-                        });
-                      },
-                      style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all(
-                          Size(
-                            10 * (deviceWidth / standardDeviceWidth),
-                            30 * (deviceHeight / standardDeviceHeight),
-                          ),
-                        ),
-                        backgroundColor: MaterialStateProperty.all(
-                          Color(0xFF828282),
-                        ),
-                      ),
-                      child: Text(
-                        '인증\n요청',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 7 * (deviceWidth / standardDeviceWidth),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
-                Visibility(
-                  visible: showSecondRow,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        width: 100 * (deviceWidth / standardDeviceWidth),
-                        height: 20 * (deviceHeight / standardDeviceHeight),
-                        child: TextFormField(
-                          controller: codeController,
-                          decoration: InputDecoration(
-                            labelText: '인증 코드',
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            filled: true,
-                            fillColor: isCodeVerified ? Colors.grey : Colors.white, // 배경색 설정
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                            contentPadding: EdgeInsets.only(
-                                top: 1 * (deviceHeight / standardDeviceHeight),
-                                left: 4 * (deviceWidth / standardDeviceWidth)
-                            ),
-                          ),
-                          style: TextStyle(fontSize: 8 * (deviceWidth / standardDeviceWidth)),
-                          enabled: !isCodeVerified,
-                        ),
-                      ),
-                      SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
-                      ElevatedButton(
-                        onPressed: () async {
-                          // 새로운 필드 버튼을 누를 때의 동작
-                        },
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all(
-                            Size(
-                              10 * (deviceWidth / standardDeviceWidth), // 같은 너비로 조절
-                              20 * (deviceHeight / standardDeviceHeight), // 같은 높이로 조절
-                            ),
-                          ),
-                          backgroundColor: MaterialStateProperty.all(Color(0xFF828282)), // 회색 배경색
-                        ),
-                        child: Text('재요청', style: TextStyle(color: Colors.white)),
-                      ),
-                      SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
-                      ElevatedButton(
-                        onPressed: () {
-                          // 인증 코드 확인 로직
-                          // if (codeController.text == '올바른인증코드') {
-                          //   setState(() {
-                          //     isCodeVerified = true; // 인증 코드 확인
-                          //     codeController.text = '올바른인증코드'; // 인증 코드 필드 잠금
-                          //     codeController.text = codeController.text;
-                          //   });
-                          // }
-                          setState(() {
-                            isCodeVerified = true;
-                          });
-                        },
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all(
-                            Size(
-                              10 * (deviceWidth / standardDeviceWidth), // 같은 너비로 조절
-                              20 * (deviceHeight / standardDeviceHeight), // 같은 높이로 조절
-                            ),
-                          ),
-                          backgroundColor: MaterialStateProperty.all(Color(0xFF406AD6)), // 파란색 배경색
-                        ),
-                        child: Text('확인', style: TextStyle(color: Colors.white)),
-                      ),
-                    ],
+                    onChanged: (value) {
+                      password = value;
+                    },
                   ),
                 ),
-                SizedBox(height: 3 * (deviceHeight / standardDeviceHeight)),
+                SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
                 Container(
                   width: 250 * (deviceWidth / standardDeviceWidth),
                   height: 50 * (deviceHeight / standardDeviceHeight),
@@ -202,7 +88,7 @@ class _SignPageState extends State<SignPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 3 * (deviceHeight / standardDeviceHeight)),
+                SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
                 Container(
                   width: 250 * (deviceWidth / standardDeviceWidth),
                   height: 50 * (deviceHeight / standardDeviceHeight),
@@ -266,7 +152,7 @@ class _SignPageState extends State<SignPage> {
                     // }
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => LoginPage(),
+                        builder: (context) => StoreInfoRegisterPage(),
                       ),
                     );
                   },

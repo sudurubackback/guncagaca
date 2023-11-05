@@ -5,10 +5,10 @@ import 'package:guncagaca/home/view/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/component/map_provider.dart';
+import 'package:guncagaca/mypage/view/mypage_view.dart';
 import 'package:guncagaca/order/view/order_view.dart';
 
 import '../../kakao/main_view_model.dart';
-import '../../mypage/component/mypage_component.dart';
 
 class RootTab extends StatefulWidget {
   final int initialIndex;
@@ -86,7 +86,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
             create: (context) => MapProvider(), // MapProvider의 인스턴스 생성 로직에 따라 적절히 수정해야 합니다.
             child: HomeScreen(mainViewModel: widget.mainViewModel,),
           ),
-          MypageComponent(mainViewModel: widget.mainViewModel,),
+          MypageView(mainViewModel: widget.mainViewModel,),
         ],
       ),
         mainViewModel: widget.mainViewModel,

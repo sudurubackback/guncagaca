@@ -50,9 +50,14 @@ class DioClient {
     return prefs.getString('user_email');
   }
 
+  static Future<String?> getRefreshTokenFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('refreshToken');
+  }
 
   static Future<String?> _refreshToken() async {
     String? email = await getEmailFromPreferences();
+    String? refreshToken = await getRefreshTokenFromPreferences();
     String baseUrl = dotenv.env['BASE_URL']!;
 
     // 토큰 갱신 API 호출 로직
@@ -63,6 +68,7 @@ class DioClient {
       final response = await _dio.post('$baseUrl/api/member/refresh',
         options: Options(
           headers: {
+            'Authorization': 'Bearer $refreshToken',
             'Email': email,
           },
         ),

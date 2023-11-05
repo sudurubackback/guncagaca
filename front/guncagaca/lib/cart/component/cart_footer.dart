@@ -29,17 +29,18 @@ class CartFooter extends StatelessWidget {
               SizedBox(width: 20.0),
               Expanded(
                 flex: 2,
-                child: Obx(() => DropdownButton<String>(
+                child: Obx(() => DropdownButton<int>(
                   isExpanded: true,
                   value: cartController.selectedTime.value,
-                  items: ["10분", "20분", "30분", "40분", "50분", "60분 이상"].map((time) {
+                  items: [10, 20, 30, 40, 50, 60].map((time) {
                     return DropdownMenuItem(
-                      child: Text(time),
+                      child: Text(time == 60 ? "$time분 이상" : "$time분"),
                       value: time,
                     );
                   }).toList(),
                   onChanged: (value) {
                     cartController.setSelectedTime(value!);
+                    print(cartController.selectedTime.value);
                   },
                 )),
               ),
@@ -82,19 +83,23 @@ class CartFooter extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.0),
-          Container(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: PRIMARY_COLOR,
-                padding: EdgeInsets.symmetric(vertical: 12.0),
-              ),
-              onPressed: () {
-                PaymentService(mainViewModel: mainViewModel).bootpayTest(context);
-              },
-              child: Text("결제하기"),
-            ),
-          ),
+          Builder(
+            builder: (context) {
+              return Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PRIMARY_COLOR,
+                    padding: EdgeInsets.symmetric(vertical: 12.0),
+                  ),
+                  onPressed: () {
+                    PaymentService(mainViewModel: mainViewModel).bootpay(context);
+                  },
+                  child: Text("결제하기"),
+                ),
+              );
+            },
+          )
         ],
       ),
     );
