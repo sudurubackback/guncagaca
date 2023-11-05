@@ -136,7 +136,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                                 onRatingUpdate: (rating) {},
                               ),
                               SizedBox(width: 8),
-                              Text('${storeDetail!.starTotal}/5', style: TextStyle(fontSize: 12)),
+                              Text('${storeDetail!.starTotal.toStringAsFixed(2)}/5', style: TextStyle(fontSize: 12)),
                               SizedBox(width: 25),
                               Text(" 리뷰 ${storeDetail!.reviewCount} 개", style: TextStyle(fontSize: 12)),
                               SizedBox(width: 20),

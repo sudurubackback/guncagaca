@@ -107,7 +107,7 @@ class StoreCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    _IconText(icon: Icons.star, label: store.starTotal.toString()),
+                    _IconText(icon: Icons.star, label: store.starTotal.toStringAsFixed(2)),
                     SizedBox(width: 10.0),
                     _IconText(icon: Icons.receipt, label: '${store.reviewCount} 개')
                   ],
