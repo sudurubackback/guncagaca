@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/basic/api/sign_api_service.dart';
+import 'package:guncagacaonwer/basic/models/checkcodemodel.dart';
+import 'package:guncagacaonwer/basic/models/emailvalidationmodel.dart';
+import 'package:guncagacaonwer/basic/models/sendcodemodel.dart';
 import 'package:guncagacaonwer/basic/models/signmodel.dart';
-import 'package:guncagacaonwer/basic/screen/storeinforegisterpage.dart';
 import '../../login/screen/loginpage.dart';
 
 class SignPage extends StatefulWidget {
@@ -17,6 +19,7 @@ class _SignPageState extends State<SignPage> {
   String tel = '';
 
   late ApiService apiService;
+  EmailValidationResponse? response;
 
   @override
   void initState() {
@@ -24,6 +27,78 @@ class _SignPageState extends State<SignPage> {
 
     Dio dio = Dio();
     apiService = ApiService(dio);
+  }
+
+  bool showSecondRow = false;
+  bool isCodeVerified = false; // 인증 코드가 확인되었는지 여부
+  String validationMessage = "";
+  String failureMessage = "";
+  TextEditingController codeController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  // 이메일 유효성 인증
+  void validateEmail(String email) {
+    if (email.isEmpty) {
+      setState(() {
+        validationMessage = "";
+      });
+      return;
+    }
+    Future.delayed(const Duration(seconds: 1), () async {
+      try {
+        final emailResponse = await apiService.emailValidation(EmailValidationRequest(email));
+        setState(() {
+          response = emailResponse;
+        });
+        if (emailResponse.status == 200) {
+          setState(() {
+            validationMessage = "유효한 이메일입니다.";
+          });
+        } else {
+          setState(() {
+            validationMessage = "유효하지 않은 이메일입니다.";
+          });
+        }
+      } catch (e) {
+        print("에러: $e");
+      }
+    });
+  }
+
+  // 이메일 인증 요청
+  void sendCode(String email) async {
+    try {
+      final response = await apiService.sendCode(SendCodeRequest(email));
+
+      if (response.status == 200) {
+        // 인증 코드 전송 성공
+        // 이에 대한 UI나 처리를 추가하세요
+      } else {
+        // 인증 코드 전송 실패
+        // 이에 대한 UI나 처리를 추가하세요
+      }
+    } catch (e) {
+      print("에러: $e");
+    }
+  }
+
+  // 인증 코드 확인 요청
+  void checkCode(String email, String code) async {
+    try {
+      final response = await apiService.checkCode(CheckCodeRequest(email, code));
+
+      if (response.status == 200) {
+        // 인증 코드 확인 성공
+        isCodeVerified = true;
+        // 사용자에게 알림 메시지 표시 또는 필요한 동작 수행
+      } else {
+        // 인증 코드 확인 실패
+        failureMessage = "인증 코드가 올바르지 않습니다. 다시 입력해 주세요.";
+        // 사용자에게 실패 메시지 표시 또는 필요한 동작 수행
+      }
+    } catch (e) {
+      print("에러: $e");
+    }
   }
 
   @override
@@ -51,22 +126,143 @@ class _SignPageState extends State<SignPage> {
                 SizedBox(
                   height: 40 * (deviceHeight / standardDeviceHeight),
                 ),
-                Container(
-                  width: 250 * (deviceWidth / standardDeviceWidth),
-                  height: 50 * (deviceHeight / standardDeviceHeight),
-                  child : TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(
-                        color: Color(0xFF9B5748),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF9B5748)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 25 * (deviceWidth / standardDeviceWidth),
+                    ),
+                    Container(
+                      width: 250 * (deviceWidth / standardDeviceWidth),
+                      height: 30 * (deviceHeight / standardDeviceHeight),
+                      child: TextFormField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                            color: Color(0xFF9B5748),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF9B5748)),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          validateEmail(value);
+                        },
                       ),
                     ),
-                    onChanged: (value) {
-                      password = value;
-                    },
+                    Text(
+                      validationMessage,
+                      style: TextStyle(
+                        color: response?.status == 200 ? Colors.green : Colors.red,
+                      ),
+                    ),
+                    SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
+                    ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          // 이메일이 유효한 경우에만 인증 코드 요청을 보내도록 변경
+                          if (validationMessage == "유효한 이메일입니다.") {
+                            sendCode(emailController.text); // 이메일로 인증 코드 요청 보내기
+                          }
+                          // 인증 요청 버튼을 누르면 두 번째 로우를 보이게 함
+                          showSecondRow = true;
+                        });
+                      },
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(
+                          Size(
+                            10 * (deviceWidth / standardDeviceWidth),
+                            30 * (deviceHeight / standardDeviceHeight),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color(0xFF828282),
+                        ),
+                      ),
+                      child: Text(
+                        '인증\n요청',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 7 * (deviceWidth / standardDeviceWidth),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                Visibility(
+                  visible: showSecondRow,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: 100 * (deviceWidth / standardDeviceWidth),
+                        height: 20 * (deviceHeight / standardDeviceHeight),
+                        child: TextFormField(
+                          controller: codeController,
+                          decoration: InputDecoration(
+                            labelText: '인증 코드',
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            filled: true,
+                            fillColor: isCodeVerified ? Colors.grey : Colors.white, // 배경색 설정
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                            contentPadding: EdgeInsets.only(
+                                top: 1 * (deviceHeight / standardDeviceHeight),
+                                left: 4 * (deviceWidth / standardDeviceWidth)
+                            ),
+                          ),
+                          style: TextStyle(fontSize: 8 * (deviceWidth / standardDeviceWidth)),
+                          enabled: !isCodeVerified,
+                        ),
+                      ),
+                      Text(
+                        failureMessage,  // 실패 메시지를 표시
+                        style: TextStyle(
+                          color: Colors.red, // 실패 메시지의 색상을 빨간색으로 설정
+                        ),
+                      ),
+                      SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
+                      ElevatedButton(
+                        onPressed: () async {
+                          // 새로운 필드 버튼을 누를 때의 동작
+                        },
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all(
+                            Size(
+                              10 * (deviceWidth / standardDeviceWidth), // 같은 너비로 조절
+                              20 * (deviceHeight / standardDeviceHeight), // 같은 높이로 조절
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(Color(0xFF828282)), // 회색 배경색
+                        ),
+                        child: Text('재요청', style: TextStyle(color: Colors.white)),
+                      ),
+                      SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
+                      ElevatedButton(
+                        onPressed: () async {
+                          checkCode(emailController.text, codeController.text); // 이메일과 인증 코드를 확인합니다.
+                          setState(() {
+                            isCodeVerified = true;
+                          });
+                        },
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all(
+                            Size(
+                              10 * (deviceWidth / standardDeviceWidth), // 같은 너비로 조절
+                              20 * (deviceHeight / standardDeviceHeight), // 같은 높이로 조절
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(Color(0xFF406AD6)), // 파란색 배경색
+                        ),
+                        child: Text('확인', style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
@@ -122,7 +318,7 @@ class _SignPageState extends State<SignPage> {
                     //     // 회원가입 성공 -> 가게 정보 등록 창으로 이동
                     //     Navigator.of(context).pushReplacement(
                     //       MaterialPageRoute(
-                    //         builder: (context) => StoreInfoRegisterPage(),
+                    //         builder: (context) => LoginPage(),
                     //       ),
                     //     );
                     //   } else {
@@ -152,7 +348,7 @@ class _SignPageState extends State<SignPage> {
                     // }
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => StoreInfoRegisterPage(),
+                        builder: (context) => LoginPage(),
                       ),
                     );
                   },
