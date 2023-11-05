@@ -27,7 +27,25 @@ class OrderMenu {
     required this.initPrice,
     required this.category,
     required this.storeName,
-    required this.selectedOptions});
+    required this.selectedOptions,
+  });
+
+  factory OrderMenu.fromJson(Map<String, dynamic> json) {
+    var orderMenu = OrderMenu(
+      storeId: json['storeId'],
+      menuId: json['menuId'],
+      name: json['menuName'],
+      totalPrice: json['totalPrice'],
+      initPrice: json['price'],
+      img: json['img'],
+      category: json['category'],
+      selectedOptions: (json['options'] as List?)?.map((item) => OrderOption.fromJson(item)).toList(),
+      storeName: '',
+    );
+
+    orderMenu.quantity.value = json['quantity'];
+    return orderMenu;
+  }
 
   Map<String, dynamic> toJson() => {
     'storeId': storeId,
@@ -39,6 +57,17 @@ class OrderMenu {
     'img': img,
     'category': category,
     'options': selectedOptions?.map((orderOption) => orderOption.toJson()).toList(),
+  };
+
+  Map<String, dynamic> toModel() => {
+    'menuId': menuId,
+    'menuName': name,
+    'price': initPrice,
+    'totalPrice': totalPrice,
+    'img': img,
+    'category': category,
+    'storeName': storeName,
+    'options': selectedOptions?.map((option) => option.toModel()).toList(),
   };
 
   @override
