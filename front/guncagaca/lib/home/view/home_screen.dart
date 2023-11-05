@@ -1,16 +1,18 @@
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:guncagaca/home/component/map_provider.dart';
-import 'package:guncagaca/home/component/store_card.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart' as naver;
 import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 
+import '../../common/const/colors.dart';
 import '../../common/utils/dio_client.dart';
 import '../../common/utils/location_service.dart';
+import '../../common/utils/location_utils.dart';
+import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
 import '../component/store_card_list.dart';
 import '../../store/models/store.dart';
@@ -30,12 +32,16 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   bool get wantKeepAlive => true;
 
   naver.NaverMapController? _controller;
-  LocationData? currentLocation;
+  Position? currentLocation;
+  OverlayImage? heartIcon;
+  bool loading = true;
+  final token = TokenManager().token;
 
   @override
   void initState() {
     super.initState();
     dotenv.load(fileName: '.env');  // .env 파일 로드
+    _loadMarkerImages();
     _permission();
     _initCurrentLocationAndFetchCafes();
   }
@@ -51,31 +57,51 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   List<Store> storeData = []; // 카페 정보
   List<Marker> markers = []; // 마커 정보
+  String baseUrl = dotenv.env['BASE_URL']!;
+  Dio dio = DioClient.getInstance();
+
   final LocationService locationService = LocationService();
+
+  Future<void> _loadMarkerImages() async {
+    heartIcon = await OverlayImage.fromAssetImage(
+        assetName: 'assets/image/free-icon-heart.png',
+      // devicePixelRatio: window.devicePixelRatio,
+      // size: Size(5, 5),
+    );
+  }
 
   // 위치 정보를 초기화하고 카페 정보를 가져오는 함수
   Future<void> _initCurrentLocationAndFetchCafes() async {
-    currentLocation = await locationService.getCurrentLocation();
+    currentLocation = await locationService.getCurrentPosition();
     if (currentLocation != null) {
       fetchCafes();
     } else {
       print("위치 정보를 가져오지 못했습니다.");
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   // 주변 카페 호출
   Future<void> fetchCafes() async {
-    print("api호출");
     if (currentLocation == null) return;
-
-    String baseUrl = dotenv.env['BASE_URL']!;
-    Dio dio = DioClient.getInstance();
-
     print(currentLocation);
-    final response = await dio.get("$baseUrl/api/store/list", queryParameters: {
-      'lat': currentLocation!.latitude,
-      'lon': currentLocation!.longitude
-    });
+
+    final String apiUrl = "$baseUrl/api/store/list";
+
+    final response = await dio.get(
+        apiUrl,
+        options: Options(
+            headers: {
+              'Authorization': "Bearer $token",
+            }
+        ),
+        queryParameters: {
+          'lat': currentLocation!.latitude,
+          'lon': currentLocation!.longitude
+        }
+    );
     print('${currentLocation!.latitude} 위도');
     print('${currentLocation!.longitude} 경도');
 
@@ -98,24 +124,88 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     markers.clear();
     for (Store store in storeData) {
       Marker marker = Marker(
-        markerId: store.storeId.toString(),
-        position: LatLng(store.longitude, store.latitude),
-        captionText: store.cafeName, // 마커에 표시할 텍스트
+        markerId: store.storeDetail.storeId.toString(),
+        position: LatLng(store.latitude, store.longitude),
+        captionText: store.storeDetail.cafeName,
+        icon: store.storeDetail.isLiked
+            ? heartIcon : null,
+        onMarkerTab: (naver.Marker? marker, Map<String, int?>? iconSize) {
+          if (marker != null) {
+            // 카메라를 해당 마커 위치로 이동
+            _controller?.moveCamera(naver.CameraUpdate.scrollTo(marker.position!));
+            // 가게 정보 다이얼로그 표시
+            _showStoreInfoDialog(store);
+          }
+        },
       );
-
-      marker.onMarkerTab = (naver.Marker? marker, Map<String, int?>? iconSize) {
-        if (marker?.position != null && iconSize != null) {
-          _controller?.moveCamera(naver.CameraUpdate.scrollTo(marker!.position!));
-        }
-      };
-
       markers.add(marker);
     }
   }
 
+
+  // 가게 정보 다이얼로그
+  void _showStoreInfoDialog(Store store) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: <Widget>[
+              Expanded(child: Text(store.storeDetail.cafeName, style: TextStyle(fontWeight: FontWeight.bold))),
+              Icon(store.storeDetail.isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: store.storeDetail.isLiked ? Colors.red : Colors.grey)
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                store.storeDetail.img.isNotEmpty
+                    ? Image.network(store.storeDetail.img, width: 200.0, height: 150.0, fit: BoxFit.cover)
+                    : Container(),
+                SizedBox(height: 10),
+                Text('주소: ${store.storeDetail.address}'),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Text('평점: ${store.storeDetail.starTotal.toString()}'),
+                    SizedBox(width: 20),
+                    Text('리뷰 수: ${store.storeDetail.reviewCount}')
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Icon(Icons.access_time, size: 16.0),
+                    SizedBox(width: 5),
+                    Flexible(child: Text('${store.storeDetail.openTime}')),
+                    Text(' - '),
+                    Flexible(child: Text('${store.storeDetail.closeTime}'))
+                  ],
+                ),
+                SizedBox(height: 5),
+                Text(store.storeDetail.isOpen
+                    ? '영업 중'
+                    : '영업 종료',
+                    style: TextStyle(color: store.storeDetail.isOpen ? Colors.green : Colors.red)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('닫기', style: TextStyle(color: PRIMARY_COLOR)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final mapProvider = context.watch<MapProvider>();
 
     return GestureDetector(
       onTap: () {
@@ -155,14 +245,15 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               ),
               Expanded(
                 flex: 1,
-                child: naver.NaverMap(
-                  markers: List.from(markers),
-                  initLocationTrackingMode: mapProvider.trackingMode,
-                  initialCameraPosition: naver.CameraPosition(target: convertToLatLng(currentLocation)),
+                child: loading
+                    ? Center(child: CircularProgressIndicator())  // 로딩 중일 때 로딩 인디케이터 표시
+                    : naver.NaverMap(
+                  initLocationTrackingMode: naver.LocationTrackingMode.Follow,
+                  initialCameraPosition: naver.CameraPosition(target: naverConvertToLatLng(currentLocation)),
                   locationButtonEnable: true,
-                  onMapCreated: (naver.NaverMapController controller) async {
+                  markers: List.from(markers),
+                  onMapCreated: (naver.NaverMapController controller) {
                     _controller = controller;
-                    naver.LatLng currentLocation = (await controller.getCameraPosition()).target;
                   },
                 ),
               ),
