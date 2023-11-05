@@ -14,7 +14,7 @@ import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreReviewRe
 public interface StoreService {
 
     void cafeSave(StoreRequest request);
-    List<NeerStoreResponse> cafeList(LocateRequest request);
+    List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request);
     StoreResponse cafeDetail(Long memberId, Long cafeId);
 //    List<StoreMenuResponse> cafeMenu(String token, Long cafeId);
 //    StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex);

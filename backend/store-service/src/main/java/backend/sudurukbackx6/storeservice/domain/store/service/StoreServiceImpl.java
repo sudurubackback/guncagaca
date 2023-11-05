@@ -85,7 +85,7 @@ public class StoreServiceImpl implements StoreService {
 
     // 주변 카페 리스트
     @Override
-    public List<NeerStoreResponse> cafeList(LocateRequest request) {
+    public List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request) {
         List<Store> allStores = storeRepository.findAll();
         List<NeerStoreResponse> nearCafes = new ArrayList<>();
 
@@ -95,22 +95,14 @@ public class StoreServiceImpl implements StoreService {
             double c = getLocate(request, store);
             double distance = EARTH_RADIUS * c;
 
+            // 찜 여부
+            boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, store.getId());
 
             if(distance > 0) {  // If distance is less than or equal to 1.5km
-                NeerStoreResponse cafe = NeerStoreResponse.builder()
-                        .storeId(store.getId())
-                    .cafeName(store.getName())
-                    .latitude(store.getLatitude())
-                    .longitude(store.getLongitude())
-                    .starTotal(store.getStarPoint())
-                    .reviewCount(store.getReview().size())
-                    .img(store.getImg())
-                    .distance(distance)
-                        .isOpen(store.isOpen())
-                        .openTime(store.getOpenTime())
-                        .closeTime(store.getCloseTime())
-                        .address(store.getAddress())
-                    .build();
+                StoreResponse storeResponse = new StoreResponse(store, isLiked);
+
+                NeerStoreResponse cafe = new NeerStoreResponse(store.getLatitude(), store.getLongitude(),
+                        distance, storeResponse);
 
                 nearCafes.add(cafe);
             }
@@ -146,18 +138,7 @@ public class StoreServiceImpl implements StoreService {
         boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, cafeId);
         Store store = getCafe(cafeId);
 
-        return StoreResponse.builder()
-                .storeId(cafeId)
-                .cafeName(store.getName())
-                .starPoint(store.getStarPoint())
-                .reviewCount(store.getReview().size())
-                .img(store.getImg())
-                .isLiked(isLiked)
-                .description(store.getDescription())
-                .isOpen(store.isOpen())
-                .openTime(store.getOpenTime())
-                .closeTime(store.getCloseTime())
-                .build();
+        return new StoreResponse(store, isLiked);
     }
 
     // 리뷰 최신순

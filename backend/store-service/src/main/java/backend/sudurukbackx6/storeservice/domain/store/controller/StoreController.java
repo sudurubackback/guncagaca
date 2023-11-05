@@ -37,11 +37,14 @@ public class StoreController {
     // 주변 카페 리스트
     @GetMapping("/list")
     @Operation(summary = "주변 카페 조회", description = "현재 위치의 위도, 경도 입력하면 주변 카페들을 거리순으로 반환", tags = { "Store Controller" })
-    public List<NeerStoreResponse> cafeList(@RequestParam("lat") Double latitude, @RequestParam("lon") Double longitude){
+    public List<NeerStoreResponse> cafeList(@RequestHeader("Authorization") String token,
+                                            @RequestParam("lat") Double latitude, @RequestParam("lon") Double longitude){
         LocateRequest request = new LocateRequest();
         request.setLatitude(latitude);
         request.setLongitude(longitude);
-        return storeService.cafeList(request);
+
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        return storeService.cafeList(memberInfo.getId(), request);
     }
 
     // 카페 상세(소개)
