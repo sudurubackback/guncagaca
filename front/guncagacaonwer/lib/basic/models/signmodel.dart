@@ -6,7 +6,7 @@ class SignUpRequest {
 
   SignUpRequest(this.email, this.password, this.tel);
 
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
       'email' : email,
       'password' : password,

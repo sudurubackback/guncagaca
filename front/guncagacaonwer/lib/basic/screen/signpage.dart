@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/basic/api/sign_api_service.dart';
+import 'package:guncagacaonwer/basic/models/checkcodemodel.dart';
+import 'package:guncagacaonwer/basic/models/emailvalidationmodel.dart';
+import 'package:guncagacaonwer/basic/models/sendcodemodel.dart';
 import 'package:guncagacaonwer/basic/models/signmodel.dart';
 import '../../login/screen/loginpage.dart';
 
@@ -16,6 +19,7 @@ class _SignPageState extends State<SignPage> {
   String tel = '';
 
   late ApiService apiService;
+  EmailValidationResponse? response;
 
   @override
   void initState() {
@@ -27,7 +31,75 @@ class _SignPageState extends State<SignPage> {
 
   bool showSecondRow = false;
   bool isCodeVerified = false; // 인증 코드가 확인되었는지 여부
+  String validationMessage = "";
+  String failureMessage = "";
   TextEditingController codeController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  // 이메일 유효성 인증
+  void validateEmail(String email) {
+    if (email.isEmpty) {
+      setState(() {
+        validationMessage = "";
+      });
+      return;
+    }
+    Future.delayed(const Duration(seconds: 1), () async {
+      try {
+        final emailResponse = await apiService.emailValidation(EmailValidationRequest(email));
+        setState(() {
+          response = emailResponse;
+        });
+        if (emailResponse.status == 200) {
+          setState(() {
+            validationMessage = "유효한 이메일입니다.";
+          });
+        } else {
+          setState(() {
+            validationMessage = "유효하지 않은 이메일입니다.";
+          });
+        }
+      } catch (e) {
+        print("에러: $e");
+      }
+    });
+  }
+
+  // 이메일 인증 요청
+  void sendCode(String email) async {
+    try {
+      final response = await apiService.sendCode(SendCodeRequest(email));
+
+      if (response.status == 200) {
+        // 인증 코드 전송 성공
+        // 이에 대한 UI나 처리를 추가하세요
+      } else {
+        // 인증 코드 전송 실패
+        // 이에 대한 UI나 처리를 추가하세요
+      }
+    } catch (e) {
+      print("에러: $e");
+    }
+  }
+
+  // 인증 코드 확인 요청
+  void checkCode(String email, String code) async {
+    try {
+      final response = await apiService.checkCode(CheckCodeRequest(email, code));
+
+      if (response.status == 200) {
+        // 인증 코드 확인 성공
+        isCodeVerified = true;
+        // 사용자에게 알림 메시지 표시 또는 필요한 동작 수행
+      } else {
+        // 인증 코드 확인 실패
+        failureMessage = "인증 코드가 올바르지 않습니다. 다시 입력해 주세요.";
+        // 사용자에게 실패 메시지 표시 또는 필요한 동작 수행
+      }
+    } catch (e) {
+      print("에러: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +136,7 @@ class _SignPageState extends State<SignPage> {
                       width: 250 * (deviceWidth / standardDeviceWidth),
                       height: 30 * (deviceHeight / standardDeviceHeight),
                       child: TextFormField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(
@@ -74,14 +147,24 @@ class _SignPageState extends State<SignPage> {
                           ),
                         ),
                         onChanged: (value) {
-                          email = value;
+                          validateEmail(value);
                         },
+                      ),
+                    ),
+                    Text(
+                      validationMessage,
+                      style: TextStyle(
+                        color: response?.status == 200 ? Colors.green : Colors.red,
                       ),
                     ),
                     SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
                     ElevatedButton(
                       onPressed: () async {
                         setState(() {
+                          // 이메일이 유효한 경우에만 인증 코드 요청을 보내도록 변경
+                          if (validationMessage == "유효한 이메일입니다.") {
+                            sendCode(emailController.text); // 이메일로 인증 코드 요청 보내기
+                          }
                           // 인증 요청 버튼을 누르면 두 번째 로우를 보이게 함
                           showSecondRow = true;
                         });
@@ -138,6 +221,12 @@ class _SignPageState extends State<SignPage> {
                           enabled: !isCodeVerified,
                         ),
                       ),
+                      Text(
+                        failureMessage,  // 실패 메시지를 표시
+                        style: TextStyle(
+                          color: Colors.red, // 실패 메시지의 색상을 빨간색으로 설정
+                        ),
+                      ),
                       SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
                       ElevatedButton(
                         onPressed: () async {
@@ -156,15 +245,8 @@ class _SignPageState extends State<SignPage> {
                       ),
                       SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
                       ElevatedButton(
-                        onPressed: () {
-                          // 인증 코드 확인 로직
-                          // if (codeController.text == '올바른인증코드') {
-                          //   setState(() {
-                          //     isCodeVerified = true; // 인증 코드 확인
-                          //     codeController.text = '올바른인증코드'; // 인증 코드 필드 잠금
-                          //     codeController.text = codeController.text;
-                          //   });
-                          // }
+                        onPressed: () async {
+                          checkCode(emailController.text, codeController.text); // 이메일과 인증 코드를 확인합니다.
                           setState(() {
                             isCodeVerified = true;
                           });
@@ -236,7 +318,7 @@ class _SignPageState extends State<SignPage> {
                     //     // 회원가입 성공 -> 가게 정보 등록 창으로 이동
                     //     Navigator.of(context).pushReplacement(
                     //       MaterialPageRoute(
-                    //         builder: (context) => StoreInfoRegisterPage(),
+                    //         builder: (context) => LoginPage(),
                     //       ),
                     //     );
                     //   } else {
