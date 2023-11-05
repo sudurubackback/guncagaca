@@ -10,4 +10,16 @@ class OrderOption {
     'optionName': optionName,
     'selectedOption': selectedOption,
   };
+
+  factory OrderOption.fromJson(Map<String, dynamic> json) {
+    return OrderOption(
+      optionName: json['optionName'],
+      selectedOption: json['selectedOption'],
+    );
+  }
+
+  Map<String, dynamic> toModel() => {
+    'optionName': optionName,
+    'selectedOption': selectedOption,
+  };
 }

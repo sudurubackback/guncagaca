@@ -10,10 +10,12 @@ class OrderHistory {
   final String status;
   final bool takeoutYn;
   final bool reviewYn;
+  final int eta;
   final List<OrderMenu> menus;
   final int price;
 
   OrderHistory({
+    required this.eta,
     required this.orderId,
     required this.storeId,
     required this.orderTime,
@@ -24,4 +26,35 @@ class OrderHistory {
     required this.menus,
     required this.price,
   });
+
+  factory OrderHistory.fromJson(Map<String, dynamic> json) {
+    return OrderHistory(
+      eta: json['eta'],
+      orderId: json['id'],
+      storeId: json['storeId'],
+      orderTime: DateTime.parse(json['orderTime']),
+      receiptId: json['receiptId'],
+      status: json['status'],
+      takeoutYn: json['takeoutYn'],
+      reviewYn: json['reviewYn'],
+      menus: (json['menus'] as List).map((menuJson) => OrderMenu.fromJson(menuJson)).toList(),
+      price: json['price'],
+    );
+  }
+
+  Map<String, dynamic> toModel() {
+    return {
+      'eta': eta,
+      'orderId': orderId,
+      'storeId': storeId,
+      'orderTime': orderTime.toIso8601String(),
+      'receiptId': receiptId,
+      'status': status,
+      'takeoutYn': takeoutYn,
+      'reviewYn': reviewYn,
+      'menus': menus.map((menu) => menu.toModel()).toList(),
+      'price': price,
+    };
+  }
+
 }
