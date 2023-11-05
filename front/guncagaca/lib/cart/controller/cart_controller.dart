@@ -10,13 +10,13 @@ class CartController extends GetxController {
   RxMap<OrderMenu, int> itemQuantities = RxMap<OrderMenu, int>();
 
   var selectedOption = '포장'.obs;
-  var selectedTime = '10분'.obs;
+  var selectedTime = 10.obs;
 
   void setSelectedOption(String value) {
     selectedOption.value = value;
   }
 
-  void setSelectedTime(String value) {
+  void setSelectedTime(int value) {
     selectedTime.value = value;
   }
 

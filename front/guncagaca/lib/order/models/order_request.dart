@@ -8,12 +8,14 @@ class OrderRequest {
   final int storeId;
   final bool takeoutYn;
   final int totalOrderPrice;
+  final int eta;
   final List<OrderMenu> menus;
 
   OrderRequest({
     required this.receiptId,
     required this.storeId,
     required this.takeoutYn,
+    required this.eta,
     required this.totalOrderPrice,
     required this.menus,
   });
@@ -22,6 +24,7 @@ class OrderRequest {
     'receiptId': receiptId,
     'storeId': storeId,
     'takeoutYn': takeoutYn,
+    'eta': eta,
     'totalOrderPrice': totalOrderPrice,
     'menus': menus.map((orderMenu) => orderMenu.toJson()).toList(),
   };

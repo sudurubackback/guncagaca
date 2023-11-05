@@ -61,17 +61,19 @@ class PaymentService{
       // closeButton: Icon(Icons.close, size: 35.0, color: Colors.black54),
       onCancel: (String data) {
         print('------- onCancel: $data');
-        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen(mainViewModel: mainViewModel,), mainViewModel: mainViewModel,));
+        Get.back();
+        Get.back();
       },
       onError: (String data) {
         print('------- onError: $data');
-        Get.to(() => DefaultLayout(title: '장바구니', child: CartScreen(mainViewModel: mainViewModel,), mainViewModel: mainViewModel,));
+        Get.back();
+        Get.back();
       },
       onClose: () {
         print('------- onClose');
         if (!isPaymentDone) {
           Bootpay().dismiss(context);
-          Get.back();
+          // Get.back();
         } //명시적으로 부트페이 뷰 종료 호출
       },
       onIssued: (String data) {
@@ -109,8 +111,10 @@ class PaymentService{
           takeoutYn: this.cartController.selectedOption.value == "포장",
           totalOrderPrice: this.cartController.totalPrice,
           menus: this.cartController.cartItems,
+          eta: this.cartController.selectedTime.value,
         );
-        print("주문 생성");
+        print("주문 생성 : ${orderRequest}");
+
         createOrderApi(orderRequest);
         // 주문 완료되면 카트를 비우기
         CartController cartController = Get.find<CartController>();
