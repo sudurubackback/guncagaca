@@ -11,6 +11,7 @@ class OrderHistory {
   final bool takeoutYn;
   final bool reviewYn;
   final int eta;
+  final String payMethod;
   final List<OrderMenu> menus;
   final int price;
 
@@ -21,6 +22,7 @@ class OrderHistory {
     required this.orderTime,
     required this.receiptId,
     required this.status,
+    required this.payMethod,
     required this.takeoutYn,
     required this.reviewYn,
     required this.menus,
@@ -32,6 +34,7 @@ class OrderHistory {
       eta: json['eta'],
       orderId: json['id'],
       storeId: json['storeId'],
+      payMethod: json['payMethod'],
       orderTime: DateTime.parse(json['orderTime']),
       receiptId: json['receiptId'],
       status: json['status'],
@@ -50,6 +53,7 @@ class OrderHistory {
       'orderTime': orderTime.toIso8601String(),
       'receiptId': receiptId,
       'status': status,
+      'payMethod': payMethod,
       'takeoutYn': takeoutYn,
       'reviewYn': reviewYn,
       'menus': menus.map((menu) => menu.toModel()).toList(),

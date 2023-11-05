@@ -90,6 +90,20 @@ class _OrderListState extends State<OrderList> {
     }
   }
 
+  String formatOrderTime(String datetimeStr) {
+    DateTime datetime = DateTime.parse(datetimeStr);
+
+    // 날짜 및 시간 형식
+    String year = datetime.year.toString().substring(2, 4);
+    String month = datetime.month.toString().padLeft(2, '0');
+    String day = datetime.day.toString().padLeft(2, '0');
+    String period = datetime.hour < 12 ? "AM" : "PM";
+    String hour = (datetime.hour <= 12 ? datetime.hour : datetime.hour - 12).toString().padLeft(2, '0');
+    String minute = datetime.minute.toString().padLeft(2, '0');
+
+    return "$year.$month.$day $period $hour:$minute";
+  }
+
   @override
   Widget build(BuildContext context) {
     return storeOrders.isEmpty
@@ -121,20 +135,22 @@ class _OrderListState extends State<OrderList> {
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Row(
-                  children: [
-                    // 주문시간
-                    Expanded(
-                      child: Text(
-                        formatOrderTime(storeOrders[index]['orderTime']),
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      Icon(Icons.access_time, color: Colors.grey),
+                      SizedBox(width: 8.0),
+                      // 주문시간
+                      Expanded(
+                        child: Text(
+                          formatOrderTime(storeOrders[index]['orderTime']),
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
                 Row(
                   children: [
@@ -162,7 +178,9 @@ class _OrderListState extends State<OrderList> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => OrderDetailScreen(id: storeOrders[index]["id"], mainViewModel: widget.mainViewModel,),
+                                builder: (context) => OrderDetailScreen(
+                                  orderHistory: storeOrders[index],
+                                  mainViewModel: widget.mainViewModel,),
                               ),
                             );
                           },
@@ -177,13 +195,13 @@ class _OrderListState extends State<OrderList> {
                               Text(
                                 // 1개일때, 2개 이상일때
                                 storeOrders[index]['menus'].length > 1
-                                    ? storeOrders[index]['menus'][0]['menuName'].toString() +
+                                    ? storeOrders[index]['menus'][0]['menuName'] +
                                     " 외 " +
                                     (storeOrders[index]['menus'].length - 1).toString() +
                                     "개\n" +
                                     storeOrders[index]['price'].toString() +
                                     "원"
-                                    : storeOrders[index]['menus'][0]['menuName'].toString() +
+                                    : storeOrders[index]['menus'][0]['menuName']+
                                     "\n" +
                                     storeOrders[index]['price'].toString() +
                                     "원",
@@ -298,16 +316,5 @@ class _OrderListState extends State<OrderList> {
         );
       },
     );
-  }
-
-  String formatOrderTime(String orderTimeStr) {
-    DateTime orderTime = DateTime.parse(orderTimeStr);
-
-    String period = orderTime.hour < 12 ? "오전" : "오후";
-    int hour = orderTime.hour <= 12 ? orderTime.hour : orderTime.hour - 12;
-    int minute = orderTime.minute;
-
-    return "${orderTime.year}년 ${orderTime.month}월 ${orderTime.day}일 "
-        "$period ${hour.toString().padLeft(2, '0')}시 ${minute.toString().padLeft(2, '0')}분";
   }
 }

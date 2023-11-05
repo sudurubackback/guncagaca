@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:guncagaca/login/landingpage.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
 
 import 'cart/controller/cart_controller.dart';
@@ -14,6 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await KakaoTokenManager.TokenManager().initialize();
   runApp(const MyApp());
+  initializeDateFormatting();
 }
 
 class MyApp extends StatelessWidget {
