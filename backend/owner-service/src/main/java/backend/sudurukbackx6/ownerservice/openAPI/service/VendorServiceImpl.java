@@ -1,7 +1,7 @@
 package backend.sudurukbackx6.ownerservice.openAPI.service;
 
 import backend.sudurukbackx6.ownerservice.openAPI.config.VendorProperties;
-import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorVailidateReqDto;
+import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorValidateReqDto;
 import backend.sudurukbackx6.ownerservice.openAPI.dto.response.VenderResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class VendorServiceImpl implements VendorService {
 
     //사업자가 유효한지 확인만 해주면 된다.
     @Override
-    public int checkVendorValidation(VendorVailidateReqDto reqDto) throws URISyntaxException {
+    public int checkVendorValidation(VendorValidateReqDto reqDto) throws URISyntaxException {
 
 //        VendorReqDto request = new VendorReqDto(reqDto.getBusiness_number(), reqDto.getOpen_date(), reqDto.getOwner_name());
 //        ArrayList<VendorReqDto> list = new ArrayList<>();   //list형식으로 전달해야하기 때문이다.

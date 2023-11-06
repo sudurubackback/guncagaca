@@ -1,7 +1,7 @@
 package backend.sudurukbackx6.ownerservice.domain.business.entity;
 
 import backend.sudurukbackx6.ownerservice.common.entity.TimeEntity;
-import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorVailidateReqDto;
+import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorValidateReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,7 +52,7 @@ public class Business extends TimeEntity {
     private String address; //가게 주소
 
     //builer생성
-    public Business(VendorVailidateReqDto dto) {
+    public Business(VendorValidateReqDto dto) {
         this.businessNum = dto.getBusiness_number();
         this.accountNum = dto.getAccount_number();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
