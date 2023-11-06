@@ -43,15 +43,15 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public ReviewDto.Response reviewSave(String token, Long cafeId, String orderId, ReviewDto.Request request) {
         Store store = storeRepository.findById(cafeId).orElseThrow(()-> new NotFoundException("해당 가게를 찾을 수 없습니다."));
-//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
 
-//        log.info("memberInfo={}", memberInfo.getEmail());
+        log.info("memberInfo={}", memberInfo.getEmail());
         Review review = Review.builder()
                 .star(request.getStar())
                 .comment(request.getComment())
                 .store(store)
                 .orderId(orderId)
-                .memberId(1L)
+                .memberId(memberInfo.getId())
                 .build();
 
         reviewRepository.save(review);

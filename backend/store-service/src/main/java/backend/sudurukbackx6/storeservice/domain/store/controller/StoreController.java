@@ -7,6 +7,8 @@ import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoRe
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.service.StoreServiceImpl;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.reponse.BaseResponseBody;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +35,9 @@ public class StoreController {
     // 카페 등록
     @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "카페 등록", description = "가게명, 주소, 전화번호, 이미지, 소개, 오픈시간, 마감시간을 입력받아 가게 등록\n등록 시 주소 통해서 자동으로 위도, 경도 입력됨", tags = { "Store Controller" })
-    public void cafeSave(@RequestPart(value="file", required = false) MultipartFile file,@RequestPart StoreRequest request,@RequestHeader("Authorization") String token) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> cafeSave(@RequestPart(value="file", required = false) MultipartFile file,@ModelAttribute StoreRequest request,@RequestHeader("Authorization") String token) throws IOException {
         storeService.cafeSave(file,request, token);
+        return ResponseEntity.status(200).body(new BaseResponseBody(200, "카페 등록 성공"));
     }
 
     // 카페 이미지 변경
@@ -42,16 +45,27 @@ public class StoreController {
     public void cafeImgChage(@RequestPart(value="file", required = false) MultipartFile multipartFile, @RequestHeader("Authorization") String token) throws IOException {
         storeService.cafeImgChage(multipartFile, token);
     }
+    
+    //카페 정보 수정
+    @PutMapping(value = "/",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+    @Operation(summary = "카페 정보 수정", description = "tel, description, openTime, closeTime, file 필요", tags = { "Store Controller" })
+    public ResponseEntity<? extends BaseResponseBody> updateCafeInfo(@RequestPart(value="file", required = false) MultipartFile multipartFile, @RequestHeader("Authorization") String token, @ModelAttribute StoreUpdateReqDto storeUpdateReqDto) throws IOException {
+        storeService.updateCafeInfo(token, storeUpdateReqDto, multipartFile);
+        return ResponseEntity.status(200).body(new BaseResponseBody(200, "카페 정보 수정 성공"));
+    }
 
     // 위도 경도 차이를 통해 0.0135가 1.5km 정도의 차이
     // 주변 카페 리스트
     @GetMapping("/list")
     @Operation(summary = "주변 카페 조회", description = "현재 위치의 위도, 경도 입력하면 주변 카페들을 거리순으로 반환", tags = { "Store Controller" })
-    public List<NeerStoreResponse> cafeList(@RequestParam("lat") Double latitude, @RequestParam("lon") Double longitude){
+    public List<NeerStoreResponse> cafeList(@RequestHeader("Authorization") String token,
+                                            @RequestParam("lat") Double latitude, @RequestParam("lon") Double longitude){
         LocateRequest request = new LocateRequest();
         request.setLatitude(latitude);
         request.setLongitude(longitude);
-        return storeService.cafeList(request);
+
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        return storeService.cafeList(memberInfo.getId(), request);
     }
 
     // 카페 상세(소개)
@@ -79,4 +93,6 @@ public class StoreController {
         return likeService.toggleLike(memberInfo.getId(), cafeId);
 
     }
+
+    
 }

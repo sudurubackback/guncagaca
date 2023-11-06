@@ -14,6 +14,7 @@ import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import backend.sudurukbackx6.storeservice.global.s3.S3Uploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,8 @@ public class StoreServiceImpl implements StoreService {
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
 
+        log.info("주소 : {}", request.getAddress());
+
         String latitude = null;
         String longitude = null;
 
@@ -108,9 +111,27 @@ public class StoreServiceImpl implements StoreService {
         store.setImg(upload);
     }
 
+    @Override
+    public void updateCafeInfo(String token, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        Long cafeId = ownerInfo.getStoreId();
+
+        log.info("description : {}", storeUpdateReqDto.getDescription());
+        System.out.println(storeUpdateReqDto.getDescription());
+
+        if(multipartFile==null || multipartFile.isEmpty()) {
+            Store store = storeRepository.findById(cafeId).orElseThrow();
+            storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), store.getImg(), cafeId);
+            return;
+        }
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
+        storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
+    }
+
+
     // 주변 카페 리스트
     @Override
-    public List<NeerStoreResponse> cafeList(LocateRequest request) {
+    public List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request) {
         List<Store> allStores = storeRepository.findAll();
         List<NeerStoreResponse> nearCafes = new ArrayList<>();
 
@@ -120,22 +141,14 @@ public class StoreServiceImpl implements StoreService {
             double c = getLocate(request, store);
             double distance = EARTH_RADIUS * c;
 
+            // 찜 여부
+            boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, store.getId());
 
             if(distance > 0) {  // If distance is less than or equal to 1.5km
-                NeerStoreResponse cafe = NeerStoreResponse.builder()
-                        .storeId(store.getId())
-                    .cafeName(store.getName())
-                    .latitude(store.getLatitude())
-                    .longitude(store.getLongitude())
-                    .starTotal(store.getStarPoint())
-                    .reviewCount(store.getReview().size())
-                    .img(store.getImg())
-                    .distance(distance)
-                        .isOpen(store.isOpen())
-                        .openTime(store.getOpenTime())
-                        .closeTime(store.getCloseTime())
-                        .address(store.getAddress())
-                    .build();
+                StoreResponse storeResponse = new StoreResponse(store, isLiked);
+
+                NeerStoreResponse cafe = new NeerStoreResponse(store.getLatitude(), store.getLongitude(),
+                        distance, storeResponse);
 
                 nearCafes.add(cafe);
             }
@@ -171,18 +184,7 @@ public class StoreServiceImpl implements StoreService {
         boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, cafeId);
         Store store = getCafe(cafeId);
 
-        return StoreResponse.builder()
-                .storeId(cafeId)
-                .cafeName(store.getName())
-                .starPoint(store.getStarPoint())
-                .reviewCount(store.getReview().size())
-                .img(store.getImg())
-                .isLiked(isLiked)
-                .description(store.getDescription())
-                .isOpen(store.isOpen())
-                .openTime(store.getOpenTime())
-                .closeTime(store.getCloseTime())
-                .build();
+        return new StoreResponse(store, isLiked);
     }
 
     @Override
