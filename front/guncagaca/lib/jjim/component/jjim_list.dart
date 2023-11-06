@@ -43,7 +43,7 @@ class _JjimListState extends State<JjimList> {
 
       try {
         Response response = await dio.get(
-          "$baseUrl/api/like/mypage/like-store",
+          "$baseUrl/api/store/mypage/like-store",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
@@ -53,7 +53,7 @@ class _JjimListState extends State<JjimList> {
         );
 
         if (response.statusCode == 200) {
-          List<dynamic> jsonData = json.decode(response.data);
+          List<dynamic> jsonData = response.data;
           dummyJjims = List<Map<String, dynamic>>.from(jsonData);
           print(dummyJjims);
           print("제대로 옴");
@@ -70,14 +70,14 @@ class _JjimListState extends State<JjimList> {
 
   }
 
-  void _toggleImage(int id) {
-    int index = dummyJjims.indexWhere((item) => item['id'] == id);
-    if (index != -1) {
-      setState(() {
-        toggleList[index] = !toggleList[index];
-      });
-    }
-  }
+  // void _toggleImage(int id) {
+  //   int index = dummyJjims.indexWhere((item) => item['id'] == id);
+  //   if (index != -1) {
+  //     setState(() {
+  //       toggleList[index] = !toggleList[index];
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +123,7 @@ class _JjimListState extends State<JjimList> {
                 SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    dummyJjims[index]['name'],
+                    dummyJjims[index]['cafeName'],
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
@@ -131,15 +131,15 @@ class _JjimListState extends State<JjimList> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => _toggleImage(id),
+                  // onTap: () => _toggleImage(id),
                   child: Container(
                     width: 30,
                     height: 30,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(toggleList[index]
-                            ? 'assets/image/h2.png'
-                            : 'assets/image/h1.png'),
+                        image: AssetImage(
+                            'assets/image/h2.png'
+                            ),
                         fit: BoxFit.cover,
                       ),
                     ),
