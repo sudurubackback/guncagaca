@@ -61,8 +61,15 @@ public class OrderController {
     // 사용자 주문 목록 조회
     @GetMapping("/member")
     @Operation(summary = "회원 주문 내역 조회", description = "현재 회원의 주문 내역 조회", tags = { "Order Controller" })
-    public ResponseEntity<List<Order>> getMemberOrder(@RequestHeader("Email") String email) {
+    public ResponseEntity<List<Order>> getMemberOrder(@RequestHeader("Email") String email ) {
         return ResponseEntity.ok(orderService.getMemberOrder(email));
+    }
+
+    // 특정 가게 사용자 주문 목록 조회
+    @GetMapping("/member/{storeId}")
+    @Operation(summary = "특정 가게 회원 주문 내역 조회", description = "현재 회원의 특정 가게 주문 내역 조회", tags = { "Order Controller" })
+    public ResponseEntity<List<Order>> getMemberStoreOrder(@RequestHeader("Email") String email, @PathVariable Long storeId) {
+        return ResponseEntity.ok(orderService.getMemberStoreOrder(email,storeId));
     }
 
     // 사용자 주문 목록 조회

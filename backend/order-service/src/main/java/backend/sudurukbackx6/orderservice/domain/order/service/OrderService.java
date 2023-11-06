@@ -188,4 +188,10 @@ public class OrderService {
         return orderList;
     }
 
+    public List<Order> getMemberStoreOrder(String email, Long storeId) {
+        Long memberId = memberServiceClient.getId(email);
+        List<Order> orderList = orderRepository.findByMemberIdAndStoreIdOrderByOrderTimeDesc(memberId, storeId);
+        return orderList;
+    }
+
 }

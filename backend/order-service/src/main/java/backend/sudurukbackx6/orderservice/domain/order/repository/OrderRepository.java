@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface OrderRepository extends MongoRepository<Order, String> {
     List<Order> findAllByMemberIdOrderByOrderTimeDesc(Long memberId);
+
+    List<Order> findByMemberIdAndStoreIdOrderByOrderTimeDesc(Long memberId, Long storeId);
+
 }
