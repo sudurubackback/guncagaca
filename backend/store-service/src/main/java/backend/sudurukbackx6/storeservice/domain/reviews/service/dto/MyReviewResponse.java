@@ -12,6 +12,8 @@ public class MyReviewResponse {
     private Double star;
     private String comment;
     private Long storeId;
+    private String storeName;
+    private double starTotal;
     private String img;
 
 
@@ -20,6 +22,8 @@ public class MyReviewResponse {
         this.star = review.getStar();
         this.comment = review.getComment();
         this.storeId = review.getStore().getId();
+        this.storeName = review.getStore().getName();
+        this.starTotal = review.getStore().getStarPoint();
         this.img = review.getStore().getImg();
     }
 }
