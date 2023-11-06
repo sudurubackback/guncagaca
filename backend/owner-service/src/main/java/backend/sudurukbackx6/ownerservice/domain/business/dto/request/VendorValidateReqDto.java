@@ -1,6 +1,5 @@
 package backend.sudurukbackx6.ownerservice.domain.business.dto.request;
 
-import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VendorVailidateReqDto {
+public class VendorValidateReqDto {
 
     private String email;
 

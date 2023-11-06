@@ -1,10 +1,8 @@
 package backend.sudurukbackx6.ownerservice.domain.business.service;
 
-import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorVailidateReqDto;
+import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorValidateReqDto;
 import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
 import backend.sudurukbackx6.ownerservice.domain.business.repository.BusinessRepository;
-import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
-import backend.sudurukbackx6.ownerservice.domain.owner.service.OwnerService;
 import backend.sudurukbackx6.ownerservice.openAPI.service.VendorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,7 @@ public class BusinessServiceImpl implements BusinessService {
     private final BusinessRepository businessRepository;
 
     @Override
-    public long checkBusinessValidation(VendorVailidateReqDto reqDto) throws URISyntaxException {
+    public long checkBusinessValidation(VendorValidateReqDto reqDto) throws URISyntaxException {
         int isValidate = vendorService.checkVendorValidation(reqDto);
         log.info("isValidate : {}", isValidate);
 
