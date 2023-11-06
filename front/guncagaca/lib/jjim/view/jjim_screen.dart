@@ -27,7 +27,7 @@ class JjimScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: JjimList(),
+            child: JjimList(mainViewModel: mainViewModel,),
           ),
         ],
       ),

@@ -6,7 +6,9 @@ import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:guncagaca/common/utils/dio_client.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../../common/layout/default_layout.dart';
 import '../../mypage/component/order_store_list.dart';
+import '../../store/view/store_detail_screen.dart';
 
 class PointList extends StatefulWidget {
   final MainViewModel mainViewModel;
@@ -66,6 +68,19 @@ class _PointListState extends State<PointList> {
     }
   }
 
+  void _goToStoreDetail(String cafeName, int id) {
+    print(id);
+    print("스토어아이디");
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DefaultLayout(
+          title: cafeName,
+          child: StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,) ,
+          mainViewModel: widget.mainViewModel,),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return dummyPoints == null || dummyPoints.isEmpty
@@ -96,7 +111,10 @@ class _PointListState extends State<PointList> {
             children: [
               Container(
                 padding: EdgeInsets.symmetric(vertical: 20), // 위아래 패딩 10 추가
-                child: Text(
+                child:
+                GestureDetector(
+                  onTap: () => _goToStoreDetail(dummyPoints[index]['name'], dummyPoints[index]['storeId']),
+                  child: Text(
                   point['name'],
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -104,19 +122,23 @@ class _PointListState extends State<PointList> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                ),
               ),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      image: DecorationImage(
-                        image: NetworkImage(point['img']),
-                        fit: BoxFit.cover,
+                  GestureDetector(
+                  onTap: () => _goToStoreDetail(dummyPoints[index]['name'], dummyPoints[index]['storeId']),
+                  child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          image: NetworkImage(point['img']),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),

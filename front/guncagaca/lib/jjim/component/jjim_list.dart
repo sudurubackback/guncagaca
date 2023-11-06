@@ -5,9 +5,15 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../common/layout/default_layout.dart';
 import '../../common/utils/dio_client.dart';
+import '../../kakao/main_view_model.dart';
+import '../../store/view/store_detail_screen.dart';
 
 class JjimList extends StatefulWidget {
+  final MainViewModel mainViewModel;
+
+  JjimList({ required this.mainViewModel});
 
   @override
   _JjimListState createState() => _JjimListState();
@@ -74,13 +80,17 @@ class _JjimListState extends State<JjimList> {
 
   }
 
-  void _toggleImage(int id) {
-    int index = dummyJjims.indexWhere((item) => item['id'] == id);
-    if (index != -1) {
-      setState(() {
-        // toggleList[index] = !toggleList[index];
-      });
-    }
+  void _goToStoreDetail(String cafeName, int id) {
+    print(id);
+    print("스토어아이디");
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DefaultLayout(
+          title: cafeName,
+          child: StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,) ,
+          mainViewModel: widget.mainViewModel,),
+      ),
+    );
   }
 
   @override
@@ -96,6 +106,7 @@ class _JjimListState extends State<JjimList> {
       itemCount: dummyJjims.length,
       itemBuilder: (BuildContext context, int index) {
         int id = dummyJjims[index]['id'];
+        print('id : ' + id.toString());
         return Container(
           margin: EdgeInsets.only(top: 15, left: 10, right: 10),
           decoration: BoxDecoration(
@@ -111,7 +122,9 @@ class _JjimListState extends State<JjimList> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween, // 변경된 부분
               children: [
-                Container(
+                GestureDetector(
+                onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
+          child: Container(
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
@@ -124,18 +137,23 @@ class _JjimListState extends State<JjimList> {
                     ),
                   ),
                 ),
+                ),
                 SizedBox(width: 16),
                 Expanded(
-                  child: Text(
+                  child:
+                  GestureDetector(
+                    onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
+                    child:Text(
                     dummyJjims[index]['cafeName'],
                     style: TextStyle(
-                      fontSize: 15.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  ),
                 ),
                 GestureDetector(
-                  onTap: () => _toggleImage(id),
+                  // onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
                   child: Container(
                     width: 30,
                     height: 30,
