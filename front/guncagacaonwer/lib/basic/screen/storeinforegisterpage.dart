@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:guncagacaonwer/basic/api/storeregister_api_service.dart';
-import 'package:guncagacaonwer/basic/models/storeregistermodel.dart';
+// import 'package:guncagacaonwer/basic/api/storeregister_api_service.dart';
+// import 'package:guncagacaonwer/basic/models/storeregistermodel.dart';
 import 'package:guncagacaonwer/login/screen/loginpage.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -30,20 +30,20 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
       });
     }
     // 나중에 사용할 때 null 체크를 수행
-    if (img != null) {
-      final storeRegisterRequest = StoreRegisterRequest(storeName, address, tel, img, description);
-    }
+    // if (img != null) {
+    //   final storeRegisterRequest = StoreRegisterRequest(storeName, address, tel, img, description);
+    // }
   }
-
-  late ApiService apiService;
-
-  @override
-  void initState() {
-    super.initState();
-
-    Dio dio = Dio();
-    apiService = ApiService(dio);
-  }
+  //
+  // late ApiService apiService;
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   Dio dio = Dio();
+  //   apiService = ApiService(dio);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -208,45 +208,45 @@ class _StoreInfoRegisterPageState extends State<StoreInfoRegisterPage> {
                 SizedBox(height: 15 * (deviceHeight / standardDeviceHeight)),
                 ElevatedButton(
                   onPressed: () async {
-                    try {
-                     // 요청 데이터 모델
-                     final formData = StoreRegisterRequest(storeName, address, tel, img, description).toFormData();
-
-                     // API 서비스 사용해 가게등록 요청
-                     final reponse = await apiService.storeRegister(formData);
-
-                     // 응답 처리
-                     if (reponse.status == 0) {
-                       // 가게 등록 성공 -> 로그인 창으로 이동
-                       Navigator.of(context).pushReplacement(
-                         MaterialPageRoute(
-                           builder: (context) => LoginPage(),
-                         ),
-                       );
-                     } else {
-                       // 가게 등록 실패
-                       showDialog(
-                         context: context,
-                         builder: (context) {
-                           return AlertDialog(
-                             title: Text("가게 등록 실패"),
-                             content: Text("가게 등록에 실패했습니다. 다시 시도해 주세요."),
-                             actions: <Widget> [
-                               ElevatedButton(
-                                 child: Text("확인"),
-                                 onPressed: () {
-                                   Navigator.of(context).pop();
-                                   },
-                                )
-                              ],
-                            );
-                          }
-                        );
-                      }
-                    } catch (e) {
-                      // 통신 실패시 예외 처리
-                      print("통신 실패 : $e");
-                    }
+                    // try {
+                    //  // 요청 데이터 모델
+                    //  final formData = StoreRegisterRequest(storeName, address, tel, img, description).toFormData();
+                    //
+                    //  // API 서비스 사용해 가게등록 요청
+                    //  final reponse = await apiService.storeRegister(formData);
+                    //
+                    //  // 응답 처리
+                    //  if (reponse.status == 0) {
+                    //    // 가게 등록 성공 -> 로그인 창으로 이동
+                    //    Navigator.of(context).pushReplacement(
+                    //      MaterialPageRoute(
+                    //        builder: (context) => LoginPage(),
+                    //      ),
+                    //    );
+                    //  } else {
+                    //    // 가게 등록 실패
+                    //    showDialog(
+                    //      context: context,
+                    //      builder: (context) {
+                    //        return AlertDialog(
+                    //          title: Text("가게 등록 실패"),
+                    //          content: Text("가게 등록에 실패했습니다. 다시 시도해 주세요."),
+                    //          actions: <Widget> [
+                    //            ElevatedButton(
+                    //              child: Text("확인"),
+                    //              onPressed: () {
+                    //                Navigator.of(context).pop();
+                    //                },
+                    //             )
+                    //           ],
+                    //         );
+                    //       }
+                    //     );
+                    //   }
+                    // } catch (e) {
+                    //   // 통신 실패시 예외 처리
+                    //   print("통신 실패 : $e");
+                    // }
                   },
                   style: ButtonStyle(
                     // 버튼의 최소 크기 설정

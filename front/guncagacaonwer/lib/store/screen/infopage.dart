@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:guncagacaonwer/basic/models/storeregistermodel.dart';
 import 'package:image_picker/image_picker.dart';
 
 class StoreInfoPage extends StatefulWidget {
