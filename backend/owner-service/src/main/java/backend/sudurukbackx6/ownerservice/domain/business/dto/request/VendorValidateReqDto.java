@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class VendorValidateReqDto {
 
-    private String email;
 
     //api에서 사용 하지는 않지만 필요한 정보
     private String business_name; //가게 이름
