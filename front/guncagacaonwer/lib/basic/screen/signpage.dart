@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/basic/api/sign_api_service.dart';
+import 'package:guncagacaonwer/basic/models/businessvalidationmodel.dart';
 import 'package:guncagacaonwer/basic/models/checkcodemodel.dart';
 import 'package:guncagacaonwer/basic/models/emailvalidationmodel.dart';
 import 'package:guncagacaonwer/basic/models/sendcodemodel.dart';
@@ -40,6 +41,14 @@ class _SignPageState extends State<SignPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController(); // 비밀번호 입력 필드를 위한 컨트롤러
   TextEditingController telController = TextEditingController(); // 전화번호 입력 필드를 위한 컨트롤러
+  TextEditingController businessNameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController businessNumberController = TextEditingController();
+  TextEditingController ownerNameController = TextEditingController();
+  TextEditingController openDateController = TextEditingController();
+  TextEditingController accountNumberController = TextEditingController();
+  String businessvalidationMessage = "";  // 인증 메시지 상태
+  int businessId = -1;  // business_id 상태
 
   Timer? emailValidationTimer;
 
@@ -331,16 +340,127 @@ class _SignPageState extends State<SignPage> {
                     },
                   ),
                 ),
+                SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                Padding(
+                  padding: EdgeInsets.only(left: 120 * (deviceWidth / standardDeviceWidth)),
+                  child: Row(
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Container(
+                                  height: 300 * (deviceHeight / standardDeviceHeight),  // 원하는 높이
+                                  width: 200 * (deviceWidth / standardDeviceWidth),  // 원하는 너비
+                                  child: Column(
+                                    children: <Widget>[
+                                      Flexible(  // Flexible 위젯을 추가
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: <Widget>[
+                                              TextFormField(
+                                                controller: businessNameController,
+                                                decoration: InputDecoration(hintText: "상호 명"),
+                                              ),
+                                              SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                                              TextFormField(
+                                                controller: addressController,
+                                                decoration: InputDecoration(hintText: "주소"),
+                                              ),
+                                              SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                                              TextFormField(
+                                                controller: businessNumberController,
+                                                decoration: InputDecoration(hintText: "사업자번호"),
+                                              ),
+                                              SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                                              TextFormField(
+                                                controller: ownerNameController,
+                                                decoration: InputDecoration(hintText: "사업자 명"),
+                                              ),
+                                              SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                                              TextFormField(
+                                                controller: openDateController,
+                                                decoration: InputDecoration(hintText: "영업시작일"),
+                                              ),
+                                              SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                                              TextFormField(
+                                                controller: accountNumberController,
+                                                decoration: InputDecoration(hintText: "계좌번호"),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)),
+                                      ElevatedButton(
+                                        child: Text('인증'),
+                                        onPressed: () async {
+                                          BusinessValidationRequest request = BusinessValidationRequest(
+                                              businessNameController.text,
+                                              addressController.text,
+                                              businessNumberController.text,
+                                              ownerNameController.text,
+                                              openDateController.text,
+                                              accountNumberController.text
+                                          );
+                                          try {
+                                            final response = await apiService.checkCert(request);
+                                            if (response.status == 200) {
+                                              Navigator.of(context).pop();
+                                              setState(() {
+                                                businessvalidationMessage = "인증 완료";
+                                                businessId = response.data.business_id;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                businessvalidationMessage = "인증 실패";
+                                              });
+                                            }
+                                          } catch (e) {
+                                            print("에러: $e");
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: Text(
+                          '인증하기',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all(Size(40 * (deviceWidth / standardDeviceWidth), 25 * (deviceHeight / standardDeviceHeight))),
+                          backgroundColor: MaterialStateProperty.all(Color(0xFFD63737)),
+                        ),
+                      ),
+                      SizedBox(width: 5 * (deviceWidth / standardDeviceWidth)),  // 버튼과 텍스트 사이의 간격
+                      businessvalidationMessage == "인증 완료" ? Text(  // 인증 완료 시에만 텍스트를 렌더링
+                        businessvalidationMessage,
+                        style: TextStyle(
+                          fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                          color: Colors.green,
+                        ),
+                      ) : Container()
+                    ],
+                  )
+                ),
                 SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
                 ElevatedButton(
                   onPressed: () async {
                     try {
                       // 요청 데이터 모델
-                      final signUpRequest = SignUpRequest(emailController.text, passwordController.text, telController.text, 0);
-
+                      final signUpRequest = SignUpRequest(emailController.text, passwordController.text, telController.text, businessId);
                       // API 서비스 사용해 회원가입 요청
                       final response = await apiService.signupUser(signUpRequest);
-
                       // 응답 처리
                       if (response.status == 200) {
                         // 회원가입 성공 -> 가게 정보 등록 창으로 이동

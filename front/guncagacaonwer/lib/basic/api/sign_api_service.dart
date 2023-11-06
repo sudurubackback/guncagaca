@@ -1,3 +1,4 @@
+import 'package:guncagacaonwer/basic/models/businessvalidationmodel.dart';
 import 'package:guncagacaonwer/basic/models/checkcodemodel.dart';
 import 'package:guncagacaonwer/basic/models/emailvalidationmodel.dart';
 import 'package:guncagacaonwer/basic/models/sendcodemodel.dart';
@@ -7,7 +8,7 @@ import 'package:guncagacaonwer/basic/models/signmodel.dart';
 
 part 'sign_api_service.g.dart';
 
-@RestApi(baseUrl: "http://k9d102.p.ssafy.io:8000")
+@RestApi(baseUrl: "https://k9d102.p.ssafy.io")
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
   
@@ -25,4 +26,7 @@ abstract class ApiService {
   
   @POST("/api/ceo/checkcode")
   Future<CheckCodeResponse> checkCode(@Body() CheckCodeRequest request);
+
+  @POST("/api/ceo/cert")
+  Future<BusinessValidationResponse> checkCert(@Body() BusinessValidationRequest request);
 }
