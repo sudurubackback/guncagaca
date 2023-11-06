@@ -65,7 +65,7 @@ dependencies:
 
   intl: ^0.18.1
 
-  firebase_core: ^1.17.1
+  firebase_core: ^2.21.0
 
 dev_dependencies:
   flutter_test:

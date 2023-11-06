@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -9,6 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
 
 import 'cart/controller/cart_controller.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
