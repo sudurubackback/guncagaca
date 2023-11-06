@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/menu/menu_detail.dart';
 import 'package:guncagaca/menu/menu_card.dart';
+import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
 import '../../common/utils/dio_client.dart';
 import '../../kakao/main_view_model.dart';
@@ -14,8 +15,9 @@ class MenuTabWidget extends StatefulWidget {
   final int cafeId;
   final String storeName;
   final MainViewModel mainViewModel;
+  final bool isOpen;
 
-  MenuTabWidget({required this.cafeId, required this.storeName, required this.mainViewModel});
+  MenuTabWidget({required this.isOpen, required this.cafeId, required this.storeName, required this.mainViewModel});
 
   @override
   _ReviewTabWidgetState createState() => _ReviewTabWidgetState();
@@ -77,21 +79,38 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
               children: categorizedMenus[category]!.map((menu) {
                 return InkWell(  // 여기서 InkWell을 사용
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => DefaultLayout(
-                          title: widget.storeName,
-                          mainViewModel: widget.mainViewModel,
-                          child: DetailPage(menu: menu, storeName: widget.storeName,),
+                    if (widget.isOpen) {  // isOpen이 true인 경우
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => DefaultLayout(
+                            title: widget.storeName,
+                            mainViewModel: widget.mainViewModel,
+                            child: DetailPage(menu: menu, storeName: widget.storeName,),
+                          ),
                         ),
-                      ),
-                    );
-
-                    // Get.to(() => DetailPage(menu: menu));  // 메뉴 디테일 페이지로 이동
+                      );
+                    } else {  // isOpen이 false인 경우
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Column(
+                            children: [
+                              Text('알림'),
+                              Divider(color: Colors.grey),  // 구분선 추가
+                            ],
+                          ),
+                          content: Text('영업중이 아닙니다.\n영업시간에 다시 방문해주세요.'),
+                          actions: [
+                            TextButton(
+                              child: Text('확인', style: TextStyle(color: PRIMARY_COLOR)),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
-                  child: MenuCard(
-                    menu: menu,
-                  ),
+                  child: MenuCard(menu: menu),
                 );
               }).toList(),
             ),
