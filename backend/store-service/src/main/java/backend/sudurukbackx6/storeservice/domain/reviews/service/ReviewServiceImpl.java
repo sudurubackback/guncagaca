@@ -82,26 +82,11 @@ public class ReviewServiceImpl implements ReviewService{
 
     }
 
+    @Override
     public List<MyReviewResponse> getReviewByMemberId(Long memberId) {
         List<Review> reviews = reviewRepository.getReviewByMemberId(memberId);
 
-        return reviews.stream().map(review -> {
-            MyReviewResponse response = new MyReviewResponse();
-
-            // 리뷰 정보를 MyReviewResponse로 매핑
-            response.setId(review.getId());
-            response.setStar(review.getStar());
-            response.setComment(review.getComment());
-            response.setStoreId(review.getStore().getId());
-            response.setName(review.getStore().getName());
-            response.setAddress(review.getStore().getAddress());
-            response.setTel(review.getStore().getTel());
-            response.setImg(review.getStore().getImg());
-            response.setDescription(review.getStore().getDescription());
-            response.setStarPoint(review.getStore().getStarPoint());
-
-            return response;
-        }).collect(Collectors.toList());
+        return reviews.stream().map(MyReviewResponse::new).collect(Collectors.toList());
     }
 
 }
