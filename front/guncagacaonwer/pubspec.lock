@@ -753,7 +753,7 @@ packages:
     source: hosted
     version: "4.0.3"
   retrofit_generator:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: retrofit_generator
       sha256: "96117547429535021d845e36a3daccc503af68281e9ebf5b2b3c051e4ff29ffc"

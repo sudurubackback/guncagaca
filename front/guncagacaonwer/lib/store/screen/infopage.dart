@@ -49,13 +49,41 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
         img = MultipartFile.fromFileSync(pickedFile.path);
       });
     }
-    // 나중에 사용할 때 null 체크를 수행
-    // if (img != null) {
-    //   final storeRegisterRequest = StoreRegisterRequest(storeName, address, tel, img, description);
-    // }
   }
 
   bool isButtonEnabled = true;
+
+  void updateInfo() async {
+    Dio dio = Dio();
+
+    FormData formData = FormData.fromMap({
+      "file" : img,
+      "tel" : telController.text,
+      "description" : desController.text,
+      "openTime" : openingTimeController.text,
+      "closeTime" : closingTimeController.text,
+    });
+
+    var response = await dio.put(
+      "http://k9d102.p.ssafy.io/api/store/",
+      data: formData,
+      options: Options(
+        headers: {
+          "Authorization" : "token",
+        }
+      )
+    );
+    // 응답 출력
+    print(response.data);
+
+    // 응답 처리
+    if (response.statusCode == 200) {
+      var responseBody = response.data;
+      print('Status: ${responseBody['status']}, Message: ${responseBody['message']}');
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -276,7 +304,7 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // 버튼 클릭 시 수행할 동작 추가
+
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(140, 60),
