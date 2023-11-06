@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://k9d102.p.ssafy.io:8000';
+    baseUrl ??= 'https://k9d102.p.ssafy.io';
   }
 
   final Dio _dio;

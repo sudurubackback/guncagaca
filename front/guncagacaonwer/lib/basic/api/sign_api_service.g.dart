@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://k9d102.p.ssafy.io:8000';
+    baseUrl ??= 'https://k9d102.p.ssafy.io';
   }
 
   final Dio _dio;
@@ -130,6 +130,35 @@ class _ApiService implements ApiService {
               baseUrl,
             ))));
     final value = CheckCodeResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<BusinessValidationResponse> checkCert(
+      BusinessValidationRequest request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<BusinessValidationResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/ceo/cert',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = BusinessValidationResponse.fromJson(_result.data!);
     return value;
   }
 
