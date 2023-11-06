@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-// import 'package:guncagacaonwer/store/screen/storepage.dart';
+import 'package:guncagacaonwer/basic/api/changepw_api_service.dart';
+import 'package:guncagacaonwer/store/screen/storepage.dart';
 
 class PasswordChangePage extends StatefulWidget {
   @override
@@ -10,6 +13,29 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
   String currentPassword = '';
   String newPassword = '';
   String confirmPassword = '';
+
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Dio dio = Dio();
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    apiService = ApiService(dio);
+  }
+
+  @override
+  void dispose() {
+    passwordMatchStreamController.close();
+    super.dispose();
+  }
+
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController newpasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  final passwordMatchStreamController = StreamController<bool>.broadcast();
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +66,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   width: 220 * (deviceWidth / standardDeviceWidth),
                   height: 40 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
+                    controller: passwordController,
                     decoration: InputDecoration(
                       labelText: '현재 비밀번호',
                       labelStyle: TextStyle(
@@ -56,6 +83,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   width: 220 * (deviceWidth / standardDeviceWidth),
                   height: 40 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
+                    controller: newpasswordController,
                     decoration: InputDecoration(
                       labelText: '새 비밀번호',
                       labelStyle: TextStyle(
@@ -65,6 +93,9 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                         borderSide: BorderSide(color: Color(0xFF9B5748)),
                       ),
                     ),
+                    onChanged: (_) {
+                      checkPasswordMatch();
+                    },
                   ),
                 ),
                 SizedBox(height: 10 * (deviceHeight / standardDeviceHeight)),
@@ -72,6 +103,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   width: 220 * (deviceWidth / standardDeviceWidth),
                   height: 40 * (deviceHeight / standardDeviceHeight),
                   child : TextFormField(
+                    controller: confirmPasswordController,
                     decoration: InputDecoration(
                       labelText: '새 비밀번호 확인',
                       labelStyle: TextStyle(
@@ -81,7 +113,22 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                         borderSide: BorderSide(color: Color(0xFF9B5748)),
                       ),
                     ),
+                    onChanged: (_) {
+                      checkPasswordMatch();
+                    },
                   ),
+                ),
+                StreamBuilder<bool>(
+                  stream: passwordMatchStreamController.stream,
+                  builder: (context, snapshot) {
+                    bool passwordsMatch = snapshot.data ?? false;
+                    return Text(
+                      passwordsMatch ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.',
+                      style: TextStyle(
+                        color: passwordsMatch ? Colors.green : Colors.red,
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: 10 * (deviceHeight / standardDeviceHeight)),
                 Row(
@@ -114,11 +161,11 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        // Navigator.of(context).pushReplacement(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => StorePage(),
-                        //   ),
-                        // );
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => StorePage(),
+                          ),
+                        );
                       },
                       style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all(Size(
@@ -142,5 +189,12 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
         ),
       ),
     );
+  }
+
+  void checkPasswordMatch() {
+    String password = passwordController.text;
+    String confirmPassword = confirmPasswordController.text;
+    bool passwordsMatch = password == confirmPassword;
+    passwordMatchStreamController.sink.add(passwordsMatch);
   }
 }
