@@ -12,5 +12,7 @@ public class StoreRequest {
     private String address;
     private String tel;
     private String description;
+    private String openTime;
+    private String closeTime;
 
 }

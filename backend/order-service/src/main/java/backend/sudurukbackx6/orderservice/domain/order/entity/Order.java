@@ -41,4 +41,8 @@ public class Order {
     private List<Menu> menus;
 
     private int price;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

@@ -11,13 +11,11 @@ import javax.persistence.OneToMany;
 
 import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store {
 
@@ -29,10 +27,8 @@ public class Store {
     @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String name;
 
-//    @Column(nullable = false)
     private Double latitude;
 
-//    @Column(nullable = false)
     private Double longitude;
 
     @Column(nullable = false,columnDefinition = "VARCHAR(500)")
@@ -47,7 +43,15 @@ public class Store {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private Double starPoint;
+
+    @Column(nullable = false)
+    private boolean isOpen;
+
+    private String openTime;
+
+    private String closeTime;
 
     @OneToMany(mappedBy = "store")
     private List<Review> review;
@@ -57,7 +61,7 @@ public class Store {
 
     @Builder
     public Store(Long id, String name, Double latitude, Double longitude, String address, String tel, String img,
-                 String description, List<Review> review) {
+                 String openTime, String closeTime, String description, List<Review> review) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -65,6 +69,9 @@ public class Store {
         this.address = address;
         this.tel = tel;
         this.img = img;
+        this.isOpen = false;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
         this.starPoint = 0.0;
         this.description = description;
         this.review = review;
