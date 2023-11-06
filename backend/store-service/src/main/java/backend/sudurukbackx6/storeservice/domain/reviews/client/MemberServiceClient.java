@@ -15,7 +15,6 @@ public interface MemberServiceClient {
     @GetMapping("/api/member/memberInfo")
     MemberInfoResponse getMemberInfo(@RequestHeader("Authorization") String token);
 
-    @PostMapping("/api/member/memberInfo")
-    List<MemberInfoResponse> getMemberInfo(@RequestBody List<Long> memberIds);
-
+    @PostMapping("/api/member/memberInfo/bulk")
+    List<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds);
 }

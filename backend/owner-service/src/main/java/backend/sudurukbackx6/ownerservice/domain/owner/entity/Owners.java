@@ -56,4 +56,8 @@ public class Owners extends TimeEntity {
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public void setStoreId(Long id) {
+        this.storeId = id;
+    }
 }

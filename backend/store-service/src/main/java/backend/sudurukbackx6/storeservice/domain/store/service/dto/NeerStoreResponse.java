@@ -20,4 +20,7 @@ public class NeerStoreResponse {
     private String img;
     private Double distance;
     private String address;
+    private boolean isOpen;
+    private String openTime;
+    private String closeTime;
 }

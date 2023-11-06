@@ -2,7 +2,7 @@ package backend.sudurukbackx6.orderservice.domain.order.service;
 
 import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
-import backend.sudurukbackx6.orderservice.client.OwnerServiceClient;
+import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Status;
 import backend.sudurukbackx6.orderservice.domain.order.repository.OrderRepository;
@@ -32,6 +32,7 @@ import java.util.*;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final MemberServiceClient memberServiceClient;
 
     @Value("${bootpay.clientId")
     private String CLIENT_ID;
@@ -42,11 +43,12 @@ public class OrderService {
     Bootpay bootpay = new Bootpay(CLIENT_ID, PRIVATE_KEY);
 
     // 주문 등록
-    public OrderResponseDto addOrder(OrderRequestDto orderRequestDto) {
+    public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
+        Long memberId = memberServiceClient.getId(email);
 
-        // TODO memberId 찾아서 order에 set
         Order newOrder = Order.builder()
                 .orderTime(LocalDateTime.now())
+                .memberId(memberId)
                 .storeId(orderRequestDto.getStoreId())
                 .receiptId(orderRequestDto.getReceiptId())
                 .status(Status.ORDERED)
@@ -58,7 +60,7 @@ public class OrderService {
 
         orderRepository.save(newOrder);
 
-        OrderResponseDto responseDto = new OrderResponseDto(null, null, orderRequestDto);
+        OrderResponseDto responseDto = new OrderResponseDto(orderRequestDto.getMemberId(), orderRequestDto.getStoreId(), orderRequestDto);
 
         return responseDto;
     }
@@ -169,5 +171,86 @@ public class OrderService {
         return new SalesSummaryResponse(totalSales, menuSalesCount, hourlySalesCount);
     }
 
+    public List<OrderResponseDto> getOrdersByStoreId(Long storeId) {
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+//        return orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
+    }
+
+    public List<OrderResponseDto> getDoneByStoreId(Long memberId) {
+//        return orderRepository.findByStoreIdAndStatus(memberId, Status.DONE);
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(memberId, Status.COMPLETE);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
+
+    public List<OrderResponseDto> getPreparingByStoreId(Long storeId) {
+//        return orderRepository.findByStoreIdAndStatus(storeId, Status.PREPARING);
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.REQUEST);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
+
+    public List<OrderResponseDto> getCancleByStoreId(Long storeId) {
+//        return orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
+        for(Order order : orders) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
+
+
+    public String requestOrder (String email, String obejctId) {
+        Order order = orderRepository.findById(obejctId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        Long memberId = memberServiceClient.getId(email);
+        log.info(memberId.toString());
+
+        order.setStatus(Status.REQUEST);
+        orderRepository.save(order);
+        // TODO 알림보내기 (Open Feign)
+
+        return "주문 접수가 완료되었습니다.";
+    }
+
+    public String completeOrder (String email, String obejctId) {
+        Order order = orderRepository.findById(obejctId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        Long memberId = memberServiceClient.getId(email);
+        log.info(memberId.toString());
+        
+        order.setStatus(Status.COMPLETE);
+        orderRepository.save(order);
+        // TODO 알림보내기 TODO 알림보내기 (Open Feign)
+
+        return "주문 상품이 완료되었습니다.";
+    }
+
+    public List<Order> getMemberOrder(String email) {
+        Long memberId = memberServiceClient.getId(email);
+        List<Order> orderList = orderRepository.findAllByMemberId(memberId);
+        return orderList;
+    }
 
 }
