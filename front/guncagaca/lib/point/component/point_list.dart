@@ -6,6 +6,8 @@ import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:guncagaca/common/utils/dio_client.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../../mypage/component/order_store_list.dart';
+
 class PointList extends StatefulWidget {
   final MainViewModel mainViewModel;
 
@@ -53,6 +55,7 @@ class _PointListState extends State<PointList> {
         if (response.statusCode == 200) {
           List<dynamic> jsonData = response.data;
           dummyPoints = List<Map<String, dynamic>>.from(jsonData);
+          print(dummyPoints);
           setState(() {});
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
@@ -123,6 +126,7 @@ class _PointListState extends State<PointList> {
                   ),
                 ],
               ),
+              OrderStoreList(mainViewModel: widget.mainViewModel, storeId:point['storeId'])
             ],
           ),
         );
