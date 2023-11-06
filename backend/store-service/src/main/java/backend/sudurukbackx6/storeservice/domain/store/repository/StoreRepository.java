@@ -8,10 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
     @Modifying
     @Transactional
     @Query("UPDATE Store s SET s.starPoint = :point WHERE s.id = :storeId")
     void updateStarPoint(@Param("point") Double point, @Param("storeId") Long storeId);
+
+    List<Store> findByNameContaining(String keyword);
 }

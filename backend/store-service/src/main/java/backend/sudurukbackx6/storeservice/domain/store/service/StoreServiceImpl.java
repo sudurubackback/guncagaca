@@ -130,6 +130,32 @@ public class StoreServiceImpl implements StoreService {
         return c;
     }
 
+    // 카페 검색
+    @Override
+    public List<NeerStoreResponse> searchCafe(Long memberId, String keyword, LocateRequest locateRequest) {
+        List<Store> stores = storeRepository.findByNameContaining(keyword);
+        List<NeerStoreResponse> nearCafes = new ArrayList<>();
+
+        if (!stores.isEmpty()) {
+            for (Store store : stores) {
+                // 거리 구하기
+                double c = getLocate(locateRequest, store);
+                double distance = EARTH_RADIUS * c;
+
+                // 찜 여부
+                boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, store.getId());
+
+                StoreResponse storeResponse = new StoreResponse(store, isLiked);
+
+                NeerStoreResponse cafe = new NeerStoreResponse(store.getLatitude(), store.getLongitude(),
+                        distance, storeResponse);
+
+                nearCafes.add(cafe);
+            }
+        }
+        return nearCafes;
+    }
+
     // 카페 기본 정보
     @Override
     public StoreResponse cafeDetail(Long memberId, Long cafeId) {
