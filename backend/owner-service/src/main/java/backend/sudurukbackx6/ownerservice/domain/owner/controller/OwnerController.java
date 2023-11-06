@@ -32,8 +32,8 @@ public class OwnerController {
 
     private final OwnerService ownerService;
 
-    @Operation(summary = "회원가입", description = "email, password, tel을 활용해서 회원가입 진행 \n\n")
-    //무슨 인자가 필요한지만 설명
+    @Operation(summary = "회원가입", description = "email, password, tel, business_id을 활용해서 회원가입 진행 \n" +
+            "/cert 을 한 후에 진행하도록 한다, 해당 api로 반환된 business_id 값을 넣어준다."+"\n")
     @PostMapping("/signup")
     public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody SignUpReqDto signUpReqDto) throws IOException, MessagingException {
         ownerService.signUp(signUpReqDto);
