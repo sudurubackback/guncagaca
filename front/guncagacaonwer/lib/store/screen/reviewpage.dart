@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:guncagacaonwer/store/api/review_api_service.dart';
+import 'package:guncagacaonwer/store/models/reviewmodel.dart';
 
 class ReviewPage extends StatefulWidget {
   @override
@@ -7,14 +10,43 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-  // 예시 리뷰 데이터. 실제 데이터로 교체해야 합니다.
-  List<Map<String, dynamic>> reviewData = [
-    {"star": 5, "content": "정말 좋은 제품입니다!"},
-    {"star": 4, "content": "다만 가격이 조금 비쌉니다."},
-    {"star": 5, "content": "완벽한 제품이에요!"},
-    {"star": 5, "content": "완벽한 맛 그자체!"},
-    // 추가 리뷰 데이터
-  ];
+  List<ReviewResponse> reviewData = [];
+
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Dio dio = Dio();
+    dio.interceptors.add(LogInterceptor(responseBody: true, responseHeader: true));
+    apiService = ApiService(dio);
+  }
+
+  void fetchReviews() async {
+    try {
+      final token = "";
+      final ownerResponse = await apiService.getOwnerInfo(token);
+      final cafeId = ownerResponse.store_id;
+
+      if (cafeId != null) {
+        final response = await apiService.getReview(token, cafeId);
+        if (response.isNotEmpty) {
+          setState(() {
+            reviewData = response;
+          });
+        } else {
+          // 서버에서 리뷰를 가져오지 못했을 때의 처리
+          print("리뷰를 가져오지 못했습니다.");
+        }
+      } else {
+        // store_id가 없을 때의 처리
+        print("store_id 값이 없습니다.");
+      }
+    } catch (e) {
+      print("에러 : $e");
+    }
+  }
 
 
   @override
@@ -51,7 +83,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             mainAxisAlignment: MainAxisAlignment.center, // 왼쪽 정렬
                             children: [
                               RatingBar.builder(
-                                initialRating: review["star"].toDouble(),
+                                initialRating: review.star.toDouble(),
                                 minRating: 1,
                                 direction: Axis.horizontal,
                                 allowHalfRating: true,
@@ -59,7 +91,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                 itemCount: 5,
                                 itemSize: 12 * (deviceWidth / standardDeviceWidth),
                                 itemBuilder: (context, index) {
-                                  if (index < review["star"].toDouble()) {
+                                  if (index < review.star.toDouble()) {
                                     return Icon(
                                       Icons.star,
                                       color: Colors.amber,
@@ -79,7 +111,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         Container(
                           margin: EdgeInsets.only(left: 16 * (deviceWidth / standardDeviceWidth)), // 왼쪽 마진 설정
                           child: Text(
-                            '리뷰 내용: ${review["content"]}',
+                            '리뷰 내용: ${review.content}',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 10 * (deviceWidth / standardDeviceWidth),

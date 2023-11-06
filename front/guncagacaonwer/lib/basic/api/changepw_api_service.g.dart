@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'storeregister_api_service.dart';
+part of 'changepw_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -21,22 +21,22 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<StoreRegisterResponse> storeRegister(
-      StoreRegisterRequest request) async {
+  Future<ChangePasswordResponse> changePassword(
+      ChangePasswordRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<StoreRegisterResponse>(Options(
-      method: 'POST',
+        _setStreamType<ChangePasswordResponse>(Options(
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/api/store/save',
+              '/api/ceo/changepw',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,7 +45,7 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = StoreRegisterResponse.fromJson(_result.data!);
+    final value = ChangePasswordResponse.fromJson(_result.data!);
     return value;
   }
 
