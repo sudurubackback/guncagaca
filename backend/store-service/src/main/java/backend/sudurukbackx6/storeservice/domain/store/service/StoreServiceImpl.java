@@ -205,7 +205,7 @@ public class StoreServiceImpl implements StoreService {
     public void updateStarPoint(Long storeId, Double point) {
         Store store = getCafe(storeId);
 
-        int reviewCount = store.getReview().size();
+        int reviewCount = store.getReviews().size();
         Double totalPoint = (reviewCount-1) * store.getStarPoint(); // 총점 (방금 작성한 리뷰는 카운트 x)
 
         Double newStarPoint = (totalPoint + point) / reviewCount;

@@ -27,7 +27,7 @@ public class StoreResponse {
         this.storeId = store.getId();
         this.cafeName = store.getName();
         this.starPoint = store.getStarPoint();
-        this.reviewCount = store.getReview().size();
+        this.reviewCount = store.getReviews().size();
         this.img = store.getImg();
         this.address = store.getAddress();
         this.description = store.getDescription();
