@@ -29,6 +29,7 @@ class StoreDetailScreen extends StatefulWidget {
 
 class _StoreDetailScreenState extends State<StoreDetailScreen> {
   bool? isLiked;  // 찜 상태를 관리할 변수
+  bool? isOpen;
   late Future<StoreDetail?> storeDetailFuture;
   late SharedPreferences prefs;
   final token = TokenManager().token;
@@ -62,6 +63,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     if (response.statusCode == 200) {
       print(response.data);
       isLiked = response.data['liked'];
+      isOpen = response.data['open'];
       return StoreDetail.fromMap(response.data);
     } else {
       throw Exception("Failed to fetch store detail."); // 예외 발생
@@ -111,8 +113,33 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
               child: Scaffold(
                 body: ListView(
                   children: [
-                    // 가게 사진
-                    Image.network(storeDetail!.img, height: 200.0, fit: BoxFit.fill,),
+                    Stack(
+                      children: [
+                        // 가게 사진
+                        Image.network(
+                          storeDetail!.img,
+                          width: MediaQuery.of(context).size.width,
+                          height: 200.0,
+                          fit: BoxFit.cover,
+                        ),
+                        if (!storeDetail!.isOpen) // 영업 중 아닐때 이미지 처리
+                          Positioned.fill(
+                            child: Container(
+                              color: Colors.black45,
+                              child: Center(
+                                child: Text(
+                                  "영업중이\n아닙니다",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -172,7 +199,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                                   height: 400,
                                   child: TabBarView(
                                     children: [
-                                      MenuTabWidget(storeName: storeDetail!.cafeName, cafeId: storeDetail!.storeId,mainViewModel: widget.mainViewModel,),
+                                      MenuTabWidget(isOpen: isOpen!, storeName: storeDetail!.cafeName, cafeId: storeDetail!.storeId,mainViewModel: widget.mainViewModel,),
                                       IntroTabWidget(description: storeDetail!.description),
                                       ReviewTabWidget(cafeId: storeDetail!.storeId,),
                                     ],

@@ -21,36 +21,14 @@ class StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (!store.storeDetail.isOpen) { // 영업중이 아니라면 다이얼로그 표시
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Column(
-                children: [
-                  Text('알림'),
-                  Divider(color: Colors.grey),  // 구분선 추가
-                ],
-              ),
-              content: Text('영업중이 아닙니다.\n영업시간에 다시 방문해주세요.'),
-              actions: [
-                TextButton(
-                  child: Text('확인',
-                  style: TextStyle(color: PRIMARY_COLOR),),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-          );
-        } else { // 영업중이라면 상세 화면으로 이동
-          Get.to(() =>
-              DefaultLayout(
-                title: store.storeDetail.cafeName,
-                mainViewModel: mainViewModel,
-                child: StoreDetailScreen(storeId: store.storeDetail.storeId, mainViewModel: mainViewModel),
-              )
-          );
-        }
+      onTap: () {// 영업중이라면 상세 화면으로 이동
+        Get.to(() =>
+          DefaultLayout(
+            title: store.storeDetail.cafeName,
+            mainViewModel: mainViewModel,
+            child: StoreDetailScreen(storeId: store.storeDetail.storeId, mainViewModel: mainViewModel),
+          )
+        );
       },
       child: Row(
         children: [
