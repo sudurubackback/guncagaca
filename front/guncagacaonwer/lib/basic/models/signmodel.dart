@@ -7,7 +7,7 @@ class SignUpRequest {
   final String email;
   final String password;
   final String tel;
-  final Long business_id;
+  final int business_id;
 
   SignUpRequest(this.email, this.password, this.tel, this.business_id);
 

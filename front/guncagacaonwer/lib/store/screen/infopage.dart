@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:guncagacaonwer/basic/models/storeregistermodel.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StoreInfoPage extends StatefulWidget {
   @override
@@ -8,9 +11,15 @@ class StoreInfoPage extends StatefulWidget {
 class _StoreInfoPageState extends State<StoreInfoPage> {
   TimeOfDay? openingTime;
   TimeOfDay? closingTime;
+  String tel = '';
+  MultipartFile? img;
+  String description = '';
+
 
   TextEditingController openingTimeController = TextEditingController();
   TextEditingController closingTimeController = TextEditingController();
+  TextEditingController telController = TextEditingController();
+  TextEditingController desController = TextEditingController();
 
   Future<void> _selectTime(BuildContext context, TextEditingController controller, TimeOfDay? selectedTime, bool isOpeningTime) async {
     final TimeOfDay? newTime = await showTimePicker(
@@ -30,6 +39,23 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
     }
   }
 
+  final picker = ImagePicker();
+
+  Future _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    // 이미지를 선택한 경우에만 할당
+    if (pickedFile != null) {
+      setState(() {
+        img = MultipartFile.fromFileSync(pickedFile.path);
+      });
+    }
+    // 나중에 사용할 때 null 체크를 수행
+    // if (img != null) {
+    //   final storeRegisterRequest = StoreRegisterRequest(storeName, address, tel, img, description);
+    // }
+  }
+
   bool isButtonEnabled = true;
 
   @override
@@ -46,48 +72,90 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: 20,
-                    left: 50 * (deviceWidth / standardDeviceWidth),
-                    bottom: 10),
-                  child: Text(
-                    "가게 소개",
-                    style: TextStyle(
-                      fontSize: 12 * (deviceWidth / standardDeviceWidth),
-                      fontWeight: FontWeight.bold,
+              SizedBox(
+                height: 10 * (deviceHeight / standardDeviceHeight),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 50 * (deviceWidth / standardDeviceWidth),
+                ),
+                child: Container(
+                  height: 30 * (deviceHeight / standardDeviceHeight), // 원하는 높이로 조절하세요
+                  child: Row(
+                    children: [
+                      Text(
+                        "가게 전화번호",
+                        style: TextStyle(
+                          fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                        ),
+                      ),
+                      SizedBox(width: 10 * (deviceWidth / standardDeviceWidth)),
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 1.0),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        width: 200 * (deviceWidth / standardDeviceWidth),
+                        child: TextField(
+                          controller: telController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10 * (deviceHeight / standardDeviceHeight)),
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: 50 * (deviceWidth / standardDeviceWidth),
+                    ),
+                    child: Text(
+                      "가게 소개",
+                      style: TextStyle(
+                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Container(
-                width: 350 * (deviceWidth / standardDeviceWidth),
-                height: 100 * (deviceHeight / standardDeviceHeight),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
+                  SizedBox(width: 26 * (deviceWidth / standardDeviceWidth)),
+                  Container(
+                    width: 200 * (deviceWidth / standardDeviceWidth),
+                    height: 40 * (deviceHeight / standardDeviceHeight),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: SingleChildScrollView(
+                        child: TextFormField(
+                          controller: desController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-              SizedBox(height: 5 * (deviceHeight / standardDeviceHeight)),
+              SizedBox(height: 10 * (deviceHeight / standardDeviceHeight)),
               Padding(
                 padding: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
                 child: Row(
                   children: [
                     Text(
-                      "영업 시작 시간 : ",
+                      "영업 시간 : ",
                       style: TextStyle(
                         fontSize: 9 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
-                    SizedBox(width: 13 * (deviceWidth / standardDeviceWidth)),
+                    SizedBox(width: 20 * (deviceWidth / standardDeviceWidth)),
                     GestureDetector(
                       onTap: () {
                         _selectTime(context, openingTimeController, openingTime, true);
@@ -113,21 +181,14 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
-              Padding(
-                padding: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
-                child: Row(
-                  children: [
+                    SizedBox(width: 7 * (deviceWidth / standardDeviceWidth)),
                     Text(
-                      "영업 종료 시간 : ",
+                      "~",
                       style: TextStyle(
                         fontSize: 9 * (deviceWidth / standardDeviceWidth),
                       ),
                     ),
-                    SizedBox(width: 13 * (deviceWidth / standardDeviceWidth)),
+                    SizedBox(width: 7 * (deviceWidth / standardDeviceWidth)),
                     GestureDetector(
                       onTap: () {
                         _selectTime(context, closingTimeController, closingTime, false);
@@ -157,6 +218,42 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
                 ),
               ),
               SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
+              Padding(
+                padding: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
+                child: Row(
+                  children: [
+                    Text(
+                      "사진첨부",
+                      style: TextStyle(
+                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(width: 29 * (deviceWidth / standardDeviceWidth)),
+                    ElevatedButton(
+                      onPressed: _pickImage,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Color(0xFFE54816)),
+                        minimumSize: MaterialStateProperty.all(Size(
+                            40 * (deviceWidth / standardDeviceWidth),
+                            20 * (deviceHeight / standardDeviceHeight))),
+                      ),
+                      child: Text(
+                        "이미지 선택",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8 * (deviceWidth / standardDeviceWidth),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20 * (deviceWidth / standardDeviceWidth),
+                    ),
+                    // Text(img as String), // 선택된 이미지 파일명 표시 또는 경로 표시
+                  ],
+                ),
+              ),
+              SizedBox(height: 15 * (deviceHeight / standardDeviceHeight)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
