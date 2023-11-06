@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/jjim/view/jjim_screen.dart';
 import 'package:guncagaca/mypage/nickname.dart';
 import 'package:guncagaca/myreview/view/review_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
+import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
 import '../../orderStatus/order_page.dart';
 import '../../point/component/point_list.dart';
@@ -19,8 +22,6 @@ import '../controller/mypage_controller.dart';
 class MypageComponent extends StatefulWidget {
   final MainViewModel mainViewModel;
 
-
-
   MypageComponent({
     required this.mainViewModel
   });
@@ -31,6 +32,7 @@ class MypageComponent extends StatefulWidget {
 
 class _MypageComponentState extends State<MypageComponent> {
   Map<String, dynamic> myData = {}; // 추가된 부분
+  final token = TokenManager().token;
 
   @override
   void initState() {
@@ -38,20 +40,26 @@ class _MypageComponentState extends State<MypageComponent> {
     loadMyDataFromAPI(); // 위젯이 초기화될 때 데이터를 불러오도록 설정
   }
 
+  String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
+  Future<String?> getEmailFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_email');
+  }
 
   Future<void> loadMyDataFromAPI() async {
-    final email = widget.mainViewModel.user?.kakaoAccount?.email;
+    String? email = await getEmailFromPreferences();
 
+    print(email);
     if (email != null) {
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8081/api/member/mypage",
+          "$baseUrl/api/member/mypage",
           options: Options(
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-              'email': email.toString(),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Email': email,
             },
           ),
         );
@@ -78,8 +86,6 @@ class _MypageComponentState extends State<MypageComponent> {
   @override
   Widget build(BuildContext context) {
     MypageController mypageController = MypageController(mainViewModel : widget.mainViewModel);
-
-
 
     return SingleChildScrollView(
       child: Column(

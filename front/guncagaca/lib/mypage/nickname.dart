@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagaca/common/view/custom_appbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/layout/default_layout.dart';
 import '../common/utils/dio_client.dart';
+import '../common/utils/oauth_token_manager.dart';
 import '../common/view/root_tab.dart';
 import '../kakao/main_view_model.dart';
 
@@ -24,6 +27,7 @@ class NicknamePage extends StatefulWidget {
 
 class _NicknameState extends State<NicknamePage> {
   String changeNickname = "회원";
+  final token = TokenManager().token;
 
   @override
   void initState() {
@@ -31,20 +35,26 @@ class _NicknameState extends State<NicknamePage> {
     // changeNicknameFromAPI();
   }
 
+  static Future<String?> getEmailFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_email');
+  }
+
+  String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
   Future<void> changeNicknameFromAPI() async {
-    final email = widget.mainViewModel.user?.kakaoAccount?.email;
+    String? email = await getEmailFromPreferences();
 
+    print(email);
     if (email != null) {
       try {
         Response response = await dio.put(
-          "http://k9d102.p.ssafy.io:8081/api/member/mypage/change-nickname",
+          "$baseUrl/api/member/mypage/change-nickname",
           options: Options(
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-              'email': email.toString(),
-            },
+              headers: {
+                'Authorization': "Bearer $token",
+              }
           ),
           queryParameters: {
             'nickname': changeNickname.toString(),

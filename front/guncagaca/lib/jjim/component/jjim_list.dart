@@ -29,31 +29,23 @@ class _JjimListState extends State<JjimList> {
   @override
   void initState() {
     super.initState();
-    _initSharedPreferences();
+    loadJjims();
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
-  Future<void> _initSharedPreferences() async {
-    prefs = await SharedPreferences.getInstance();
-    loadDummyJjims();
-  }
-
-  void loadDummyJjims() async {
-    final token = prefs.getString('accessToken');
+  Future<void> loadJjims() async {
 
     if (token != null) {
       print(token);
-      print(prefs.getString('email'));
       print("통신");
 
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8085/api/store/mypage/like-store",
+          "$baseUrl/api/store/mypage/like-store",
           options: Options(
-            headers: <String, String>{
-              'Content-Type': 'application/json',
+            headers: {
               'Authorization': 'Bearer $token',
             },
           ),
@@ -76,7 +68,7 @@ class _JjimListState extends State<JjimList> {
   }
 
   Future<void> toggleFavorite(int storeId) async {
-    final String apiUrl = "http://k9d102.p.ssafy.io:8085/api/store/$storeId/like";
+    final String apiUrl = "$baseUrl/api/store/$storeId/like";
 
     final response = await dio.post(
         apiUrl,
@@ -271,7 +263,7 @@ class _JjimListState extends State<JjimList> {
                     child:Text(
                       dummyJjims[index]['cafeName'],
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -58,6 +58,7 @@ class ReviewInputComponent extends StatelessWidget {
             controller: textEditingController,
             textAlignVertical: TextAlignVertical.top,
             maxLines: null,
+            maxLength: 50,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: '리뷰를 작성해주세요',
