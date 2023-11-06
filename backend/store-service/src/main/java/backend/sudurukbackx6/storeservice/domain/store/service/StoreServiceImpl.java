@@ -14,6 +14,7 @@ import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import backend.sudurukbackx6.storeservice.global.s3.S3Uploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,8 @@ public class StoreServiceImpl implements StoreService {
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
 
+        log.info("주소 : {}", request.getAddress());
+
         String latitude = null;
         String longitude = null;
 
@@ -107,6 +110,24 @@ public class StoreServiceImpl implements StoreService {
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         store.setImg(upload);
     }
+
+    @Override
+    public void updateCafeInfo(String token, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        Long cafeId = ownerInfo.getStoreId();
+
+        log.info("description : {}", storeUpdateReqDto.getDescription());
+        System.out.println(storeUpdateReqDto.getDescription());
+
+        if(multipartFile==null || multipartFile.isEmpty()) {
+            Store store = storeRepository.findById(cafeId).orElseThrow();
+            storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), store.getImg(), cafeId);
+            return;
+        }
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
+        storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
+    }
+
 
     // 주변 카페 리스트
     @Override

@@ -11,6 +11,7 @@ import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreMenuResp
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreRequest;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreResponse;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreReviewResponse;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface StoreService {
@@ -25,4 +26,6 @@ public interface StoreService {
     Store getCafe(Long cafeId);
     void updateStarPoint(Long storeId, Double point);
     void cafeImgChage(MultipartFile multipartFile, String token) throws IOException;
+    void updateCafeInfo(String token, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException;
+
 }
