@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VendorVailidateResDto {
+public class VendorValidateResDto {
     private long business_id;
 }
