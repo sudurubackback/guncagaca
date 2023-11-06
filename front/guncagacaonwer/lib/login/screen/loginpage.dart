@@ -64,6 +64,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceWidth = 500;
+    final standardDeviceHeight = 350;
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -75,15 +80,18 @@ class _LoginPageState extends State<LoginPage> {
               Stack(
                 alignment: AlignmentDirectional.topCenter,
                 children: <Widget>[
-                  Image.asset('assets/geuncagaca.png', width: 400, height: 200,),
+                  Image.asset(
+                    'assets/geuncagaca.png',
+                    width: 200 * (deviceWidth / standardDeviceWidth),
+                    height: 80 * (deviceHeight / standardDeviceHeight)),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
               Column(
                 children: <Widget>[
                   Container(
-                    width: 400,
-                    height: 70,
+                    width: 200 * (deviceWidth / standardDeviceWidth),
+                    height: 30 * (deviceHeight / standardDeviceHeight),
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -106,10 +114,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.0),
+                  SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
                   Container(
-                    width: 400,
-                    height: 70,
+                    width: 200 * (deviceWidth / standardDeviceWidth),
+                    height: 30 * (deviceHeight / standardDeviceHeight),
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -132,10 +140,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 12 * (deviceHeight / standardDeviceHeight)),
                   Row(
                     children: <Widget>[
-                      SizedBox(width: 428), // 왼쪽 여백 조절
+                      SizedBox(width: 140 * (deviceWidth / standardDeviceWidth)), // 왼쪽 여백 조절
                       Container(
                         child: InkWell(
                           onTap: () {
@@ -145,8 +153,8 @@ class _LoginPageState extends State<LoginPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Container(
-                                width: 20,
-                                height: 20,
+                                width: 10 * (deviceWidth / standardDeviceWidth),
+                                height: 12 * (deviceHeight / standardDeviceHeight),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.rectangle,
                                   color: loginState ? Colors.black : Colors.white,
@@ -164,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 12 * (deviceHeight / standardDeviceHeight)),
                   ElevatedButton(
                     onPressed: () async {
                       bool result = await apiService.signin(email.text, password.text);
@@ -181,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     style: ButtonStyle(
                       // 버튼의 최소 크기 설정
-                      minimumSize: MaterialStateProperty.all(Size(400, 60)), // 가로 150, 세로 50
+                      minimumSize: MaterialStateProperty.all(Size(200 * (deviceWidth / standardDeviceWidth), 30 * (deviceHeight / standardDeviceHeight))), // 가로 150, 세로 50
 
                       // 버튼의 배경 색상 설정
                       backgroundColor: MaterialStateProperty.all(Color(0xFF9B5748).withOpacity(0.5)), // 배경 색상
@@ -190,11 +198,11 @@ class _LoginPageState extends State<LoginPage> {
                       'Login',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 28,// 텍스트 색상
+                        fontSize: 13 * (deviceWidth / standardDeviceWidth),// 텍스트 색상
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.0), // 로그인 버튼과 추가 요소 사이 간격 조절
+                  SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
