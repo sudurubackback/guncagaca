@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'storeregister_api_service.dart';
+part of 'review_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -12,31 +12,31 @@ class _ApiService implements ApiService {
   _ApiService(
     this._dio, {
     this.baseUrl,
-  }) {
-    baseUrl ??= 'http://k9d102.p.ssafy.io:8000';
-  }
+  });
 
   final Dio _dio;
 
   String? baseUrl;
 
   @override
-  Future<StoreRegisterResponse> storeRegister(
-      StoreRegisterRequest request) async {
+  Future<List<ReviewResponse>> getReview(
+    String token,
+    InvalidType cafeId,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<StoreRegisterResponse>(Options(
-      method: 'POST',
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<ReviewResponse>>(Options(
+      method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/api/store/save',
+              '/cafe/${cafeId}/review',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,7 +45,9 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = StoreRegisterResponse.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => ReviewResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 
