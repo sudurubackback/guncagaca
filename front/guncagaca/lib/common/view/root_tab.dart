@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:guncagaca/home/view/home_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'package:guncagaca/mypage/view/mypage_view.dart';
 import 'package:guncagaca/order/view/order_view.dart';
 
 import '../../kakao/main_view_model.dart';
+import '../../mypage/component/mypage_component.dart';
 
 class RootTab extends StatefulWidget {
   final int initialIndex;
@@ -82,7 +82,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
 
           OrderView(mainViewModel: widget.mainViewModel,),
           HomeScreen(mainViewModel: widget.mainViewModel,),
-          MypageView(mainViewModel: widget.mainViewModel,),
+          MypageComponent(mainViewModel: widget.mainViewModel,),
         ],
       ),
         mainViewModel: widget.mainViewModel,

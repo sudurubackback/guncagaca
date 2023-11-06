@@ -1,78 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:guncagaca/mypage/component/mypage_component.dart';
-import 'package:guncagaca/mypage/nickname.dart';
-import 'package:guncagaca/mypage/passwordchange.dart';
-import 'package:guncagaca/myreview/view/review_screen.dart';
-import 'package:guncagaca/point/view/point_screen.dart';
 
-import '../../jjim/view/jjim_screen.dart';
 import '../../kakao/main_view_model.dart';
 import '../../login/loginpage.dart';
-import '../../orderStatus/order_page.dart';
 
+class MypageController {
 
-
-
-class MypageView extends StatelessWidget {
   final MainViewModel mainViewModel;
 
-  const MypageView ({required this.mainViewModel});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: null,
-      body: MypageComponent(
-        onOrderTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: mainViewModel,)),
-          );
-        },
-        onReviewTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: mainViewModel,)),
-          );
-        },
-        onJjimTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: mainViewModel,)),
-          );
-        },
-        onPointTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PointScreen(mainViewModel: mainViewModel,)),
-          );
-        },
-        onNicknameTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: mainViewModel,)),
-          );
-        },
-        onPasswordTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PasswordPage(mainViewModel: mainViewModel,)),
-          );
-        },
-        onLogoutTap: () {
-          _showDialogLogOut(context);
-        },
-        onWithdrawalTap: () {
-          _showOut(context);
-        },
-        showDialogLogOut: _showDialogLogOut,
-        showOut: _showOut, mainViewModel: mainViewModel,
-      ),
-    );
-  }
+  MypageController({required this.mainViewModel});
 
   // 회원 탈퇴
-  Future<void> _showOut(BuildContext context) async {
+  Future<void> showOut(BuildContext context) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -156,7 +94,7 @@ class MypageView extends StatelessWidget {
   }
 
   // 로그아웃
-  Future<void> _showDialogLogOut(BuildContext context) async {
+  Future<void> showDialogLogOut(BuildContext context) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -240,5 +178,4 @@ class MypageView extends StatelessWidget {
       },
     );
   }
-
 }
