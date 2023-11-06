@@ -16,7 +16,7 @@ class JjimList extends StatefulWidget {
 class _JjimListState extends State<JjimList> {
   late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyJjims = [];
-  List<bool> toggleList = [];
+  // List<bool> toggleList = [];
 
   @override
   void initState() {
@@ -39,18 +39,22 @@ class _JjimListState extends State<JjimList> {
     if (token != null) {
       // String baseUrl = dotenv.env['BASE_URL']!;
       print(token);
+      print(prefs.getString('email'));
       print("통신");
 
       try {
         Response response = await dio.get(
-          "$baseUrl/api/store/mypage/like-store",
+          "http://k9d102.p.ssafy.io:8085/api/store/mypage/like-store",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
-              'Authorization': token.toString(),
+              'Authorization': 'Bearer $token',
             },
           ),
         );
+        print("리스폰스 값");
+        print(response.toString());
+        print(response.data.runtimeType);
 
         if (response.statusCode == 200) {
           List<dynamic> jsonData = response.data;
@@ -70,21 +74,21 @@ class _JjimListState extends State<JjimList> {
 
   }
 
-  // void _toggleImage(int id) {
-  //   int index = dummyJjims.indexWhere((item) => item['id'] == id);
-  //   if (index != -1) {
-  //     setState(() {
-  //       toggleList[index] = !toggleList[index];
-  //     });
-  //   }
-  // }
+  void _toggleImage(int id) {
+    int index = dummyJjims.indexWhere((item) => item['id'] == id);
+    if (index != -1) {
+      setState(() {
+        // toggleList[index] = !toggleList[index];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return dummyJjims.isEmpty
         ? Center(
       child: Text(
-        "포인트함이 비었습니다.",
+        "찜 목록이 비었습니다.",
         style: TextStyle(fontSize: 18.0),
       ),
     )
@@ -131,15 +135,14 @@ class _JjimListState extends State<JjimList> {
                   ),
                 ),
                 GestureDetector(
-                  // onTap: () => _toggleImage(id),
+                  onTap: () => _toggleImage(id),
                   child: Container(
                     width: 30,
                     height: 30,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
-                            'assets/image/h2.png'
-                            ),
+                            'assets/image/h2.png'),
                         fit: BoxFit.cover,
                       ),
                     ),

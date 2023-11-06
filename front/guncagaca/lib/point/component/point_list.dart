@@ -40,7 +40,7 @@ class _PointListState extends State<PointList> {
     if (email != null) {
       try {
         Response response = await dio.get(
-          "$baseUrl/api/member/mypage/point",
+          "http://k9d102.p.ssafy.io:8081/api/member/mypage/point",
           options: Options(
             headers: <String, String>{
               'Content-Type': 'application/json',
