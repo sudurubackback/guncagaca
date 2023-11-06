@@ -7,6 +7,7 @@ import 'package:guncagaca/common/utils/dio_client.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import '../../common/layout/default_layout.dart';
+import '../../common/utils/oauth_token_manager.dart';
 import '../../mypage/component/order_store_list.dart';
 import '../../store/view/store_detail_screen.dart';
 
@@ -20,36 +21,34 @@ class PointList extends StatefulWidget {
 }
 
 class _PointListState extends State<PointList> {
-  late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyPoints = [];
+  final token = TokenManager().token;
 
   @override
   void initState() {
     super.initState();
-    _initSharedPreferences();
+    loadPointsFromAPI();
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
-  Future<void> _initSharedPreferences() async {
-    prefs = await SharedPreferences.getInstance();
-    loadPointsFromAPI();
+  Future<String?> getEmailFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_email');
   }
 
   Future<void> loadPointsFromAPI() async {
-    final email = widget.mainViewModel.user?.kakaoAccount?.email;
-    final token = prefs.getString('accessToken');
+    String? email = await getEmailFromPreferences();
 
     if (email != null) {
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8081/api/member/mypage/point",
+          "$baseUrl/api/member/mypage/point",
           options: Options(
-            headers: <String, String>{
-              'Content-Type': 'application/json',
+            headers: {
               'Authorization': 'Bearer $token',
-              'email': email.toString(),
+              'Email': email,
             },
           ),
         );

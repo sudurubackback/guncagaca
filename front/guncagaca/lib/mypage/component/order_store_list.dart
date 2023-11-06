@@ -34,9 +34,7 @@ class _OrderStoreListState extends State<OrderStoreList> {
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
-
   Dio dio = DioClient.getInstance();
-
 
   Future<void> loadOrdersFromAPI() async {
     final email = widget.mainViewModel.user?.kakaoAccount?.email;
