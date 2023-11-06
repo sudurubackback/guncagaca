@@ -255,7 +255,8 @@ class _SignPageState extends State<SignPage> {
                       SizedBox(width: 2 * (deviceWidth / standardDeviceWidth)),
                       ElevatedButton(
                         onPressed: () async {
-                          // 새로운 필드 버튼을 누를 때의 동작
+                          // 재요청 동작
+                          sendCode(emailController.text);
                         },
                         style: ButtonStyle(
                           minimumSize: MaterialStateProperty.all(

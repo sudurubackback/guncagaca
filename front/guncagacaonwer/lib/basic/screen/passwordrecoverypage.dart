@@ -18,8 +18,12 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
     super.initState();
 
     Dio dio = Dio();
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     apiService = ApiService(dio);
   }
+
+  TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -56,6 +60,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                 width: 250 * (deviceWidth / standardDeviceWidth),
                 height: 50 * (deviceHeight / standardDeviceHeight),
                 child: TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: '이메일',
                     labelStyle: TextStyle(
@@ -102,10 +107,8 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                   ElevatedButton(
                     onPressed: () async {
                       // 이메일을 사용하여 비밀번호 초기화 메일을 보내는 로직을 추가
-                      final request = ResetPasswordRequest(email);
-
                       try {
-                        final response = await apiService.resetPassword(ResetPasswordRequest(email));
+                        final response = await apiService.resetPassword(ResetPasswordRequest(emailController.text));
 
                         if (response.status == 200) {
                           // 비밀번호 초기화 성공
