@@ -48,7 +48,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
 
   // 가게 상세 정보를 가져오는 메서드
   Future<StoreDetail> fetchStoreDetail() async {
-    final String apiUrl = "$baseUrl/api/store/${widget.storeId}";
+    final String apiUrl = "http://k9d102.p.ssafy.io:8085/api/store/${widget.storeId}";
 
     final response = await dio.get(
         apiUrl,

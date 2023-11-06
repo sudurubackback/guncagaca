@@ -99,7 +99,7 @@ class _NicknameState extends State<NicknamePage> {
             children: [
               Container(
                 color: Color(0xff9B5748),
-                height: 2.0,
+                height: 0.0,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               Container(

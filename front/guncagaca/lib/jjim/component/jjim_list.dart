@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/layout/default_layout.dart';
 import '../../common/utils/dio_client.dart';
+import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
 import '../../store/view/store_detail_screen.dart';
 
@@ -20,9 +21,10 @@ class JjimList extends StatefulWidget {
 }
 
 class _JjimListState extends State<JjimList> {
+  bool? isLiked;
+  final token = TokenManager().token;
   late SharedPreferences prefs;
   List<Map<String, dynamic>> dummyJjims = [];
-  // List<bool> toggleList = [];
 
   @override
   void initState() {
@@ -33,7 +35,6 @@ class _JjimListState extends State<JjimList> {
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
-  // SharedPreferences 초기화
   Future<void> _initSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
     loadDummyJjims();
@@ -43,7 +44,6 @@ class _JjimListState extends State<JjimList> {
     final token = prefs.getString('accessToken');
 
     if (token != null) {
-      // String baseUrl = dotenv.env['BASE_URL']!;
       print(token);
       print(prefs.getString('email'));
       print("통신");
@@ -53,20 +53,16 @@ class _JjimListState extends State<JjimList> {
           "http://k9d102.p.ssafy.io:8085/api/store/mypage/like-store",
           options: Options(
             headers: <String, String>{
-              'Content-Type': 'application/json', // JSON 데이터를 보내는 것을 명시
+              'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             },
           ),
         );
-        print("리스폰스 값");
-        print(response.toString());
-        print(response.data.runtimeType);
 
         if (response.statusCode == 200) {
           List<dynamic> jsonData = response.data;
           dummyJjims = List<Map<String, dynamic>>.from(jsonData);
           print(dummyJjims);
-          print("제대로 옴");
           setState(() {});
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
@@ -77,7 +73,28 @@ class _JjimListState extends State<JjimList> {
     } else {
       print(token);
     }
+  }
 
+  Future<void> toggleFavorite(int storeId) async {
+    final String apiUrl = "http://k9d102.p.ssafy.io:8085/api/store/$storeId/like";
+
+    final response = await dio.post(
+        apiUrl,
+        options: Options(
+            headers: {
+              'Authorization': "Bearer $token",
+            }
+        )
+    );
+
+    if (response.statusCode == 200) {
+      print(response.data);
+      setState(() {
+        isLiked = response.data['liked'];
+      });
+    } else {
+      print("Failed to toggle favorite status.");
+    }
   }
 
   void _goToStoreDetail(String cafeName, int id) {
@@ -88,8 +105,117 @@ class _JjimListState extends State<JjimList> {
         builder: (context) => DefaultLayout(
           title: cafeName,
           child: StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,) ,
-          mainViewModel: widget.mainViewModel,),
+          mainViewModel: widget.mainViewModel,
+        ),
       ),
+    );
+  }
+
+  void _confirmDelete(int storeId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          contentPadding: EdgeInsets.all(20.0),
+          content: Container(
+            width: MediaQuery
+                .of(context)
+                .size
+                .width * 0.8,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height * 0.2,
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  const Center(
+                    child:
+                    Text(
+                      '찜 해제하시겠습니까?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Center(
+                    child: Image.asset(
+                      'assets/image/close2.png',
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
+              children: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: Color(0xff9B5748),
+                  ),
+                  child: Text('확인', style: TextStyle(color: Color(0xffffffff))),
+                        onPressed: () async {
+                          await toggleFavorite(storeId);
+                          setState(() {
+                            dummyJjims.removeWhere((jjim) => jjim['storeId'] == storeId);
+                          });
+                          print("찜 해제");
+                          Navigator.of(context).pop();
+
+                        },
+                ),
+                SizedBox(width: 30), // 버튼 사이 간격 조절
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: Color(0xff9B5748),
+                  ),
+                  child: Text('취소', style: TextStyle(color: Color(0xffffffff))),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 15),
+          ],
+        );
+        // return AlertDialog(
+        //   title: Text("찜목록에서 삭제"),
+        //   content: Text("정말로 찜목록에서 삭제하시겠습니까?"),
+        //   actions: <Widget>[
+        //     TextButton(
+        //       child: Text("취소"),
+        //       onPressed: () {
+        //         Navigator.of(context).pop();
+        //       },
+        //     ),
+        //     TextButton(
+        //       child: Text("확인"),
+        //       onPressed: () async {
+        //         await toggleFavorite(storeId);
+        //         setState(() {
+        //           dummyJjims.removeWhere((jjim) => jjim['storeId'] == storeId);
+        //         });
+        //         Navigator.of(context).pop();
+        //       },
+        //     ),
+        //   ],
+        // );
+      },
     );
   }
 
@@ -105,6 +231,7 @@ class _JjimListState extends State<JjimList> {
         : ListView.builder(
       itemCount: dummyJjims.length,
       itemBuilder: (BuildContext context, int index) {
+        isLiked = dummyJjims[index]['liked'];
         int id = dummyJjims[index]['id'];
         print('id : ' + id.toString());
         return Container(
@@ -117,50 +244,49 @@ class _JjimListState extends State<JjimList> {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            contentPadding:
-            EdgeInsets.symmetric(vertical: 13.0, horizontal: 16.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 13.0, horizontal: 16.0),
             title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // 변경된 부분
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
-          child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        dummyJjims[index]['img'],
+                  onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          dummyJjims[index]['img'],
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
                 ),
                 SizedBox(width: 16),
                 Expanded(
-                  child:
-                  GestureDetector(
+                  child: GestureDetector(
                     onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
                     child:Text(
-                    dummyJjims[index]['cafeName'],
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+                      dummyJjims[index]['cafeName'],
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
                   ),
                 ),
                 GestureDetector(
-                  // onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
+                  onTap: () => _confirmDelete(dummyJjims[index]['storeId']),
                   child: Container(
                     width: 30,
                     height: 30,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
-                            'assets/image/h2.png'),
+                            'assets/image/h2.png'
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
