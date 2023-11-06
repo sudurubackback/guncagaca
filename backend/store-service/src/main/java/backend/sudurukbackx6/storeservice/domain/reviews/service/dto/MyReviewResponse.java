@@ -7,8 +7,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class MyReviewResponse {
-
+    private Long id;
     private Double star;
     private String comment;
-    private Store store;
+    private Long storeId;
+    private String name;
+    private String address;
+    private String tel;
+    private String img;
+    private String description;
+    private Double starPoint;
+
 }
