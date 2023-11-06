@@ -1,4 +1,3 @@
-import 'dart:js_interop';
 import 'package:dio/dio.dart';
 
 // 가게 등록 요청데이터 모델
