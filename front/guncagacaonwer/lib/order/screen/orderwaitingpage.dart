@@ -30,7 +30,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
       final token = "";
       final ownerResponse = await apiService.getOwnerInfo(token);
       int storeId = ownerResponse.store_id;
-      List<Order> orderList = await apiService.getWaitingList(storeId, "ORDERED");
+      List<Order> orderList = await apiService.getWaitingList(storeId, "1");
       setState(() {
         orders = orderList;
       });
