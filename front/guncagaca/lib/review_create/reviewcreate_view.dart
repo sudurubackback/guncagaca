@@ -101,7 +101,7 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
                 Padding(
                   padding: EdgeInsets.only(left: 20.0, top: 20),
                   child: Opacity(
-                    opacity: 0.0, // 아이콘을 투명하게 만듭니다.
+                    opacity: 0.0,
                     child: IconButton(
                       icon: Icon(Icons.arrow_back),
                       iconSize: 30.0,

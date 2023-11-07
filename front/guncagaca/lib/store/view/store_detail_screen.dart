@@ -28,7 +28,7 @@ class StoreDetailScreen extends StatefulWidget {
 }
 
 class _StoreDetailScreenState extends State<StoreDetailScreen> {
-  bool? isLiked;  // 찜 상태를 관리할 변수
+  bool? isLiked;
   bool? isOpen;
   late Future<StoreDetail?> storeDetailFuture;
   late SharedPreferences prefs;
@@ -66,7 +66,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
       isOpen = response.data['open'];
       return StoreDetail.fromMap(response.data);
     } else {
-      throw Exception("Failed to fetch store detail."); // 예외 발생
+      throw Exception("Failed to fetch store detail.");
     }
 
   }
@@ -103,11 +103,11 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();  // 로딩 중
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');  // 에러 발생
+          return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data == null) {
-          return Text('No Data');  // 데이터 없음
+          return Text('No Data');
         } else {
-          storeDetail = snapshot.data!;  // 데이터 있음
+          storeDetail = snapshot.data!;
           return Hero(
               tag: "store",
               child: Scaffold(
@@ -115,7 +115,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                   children: [
                     Stack(
                       children: [
-                        // 가게 사진
                         Image.network(
                           storeDetail!.img,
                           width: MediaQuery.of(context).size.width,

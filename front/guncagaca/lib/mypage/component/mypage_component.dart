@@ -31,13 +31,13 @@ class MypageComponent extends StatefulWidget {
 }
 
 class _MypageComponentState extends State<MypageComponent> {
-  Map<String, dynamic> myData = {}; // 추가된 부분
+  Map<String, dynamic> myData = {};
   final token = TokenManager().token;
 
   @override
   void initState() {
     super.initState();
-    loadMyDataFromAPI(); // 위젯이 초기화될 때 데이터를 불러오도록 설정
+    loadMyDataFromAPI();
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
@@ -142,10 +142,10 @@ class _MypageComponentState extends State<MypageComponent> {
               borderRadius: BorderRadius.circular(20.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2), // 그림자 색상 및 투명도 조절
-                  spreadRadius: 0, // 그림자 크기 조절
-                  blurRadius: 10, // 그림자 흐릿함 정도 조절
-                  offset: Offset(0, 5), // 그림자 위치 조절
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 0,
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
                 ),
               ],
             ),
@@ -154,13 +154,13 @@ class _MypageComponentState extends State<MypageComponent> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 위 아래 간격 조정
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
                           );
                         },
                         child: Image.asset(
@@ -184,13 +184,13 @@ class _MypageComponentState extends State<MypageComponent> {
                     ],
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 위 아래 간격 조정
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)),
                           );
                         },
                         child: Image.asset(
@@ -214,13 +214,13 @@ class _MypageComponentState extends State<MypageComponent> {
                     ],
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 위 아래 간격 조정
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)), // OrderPage()는 order.dart 파일에서 가져오는 클래스명입니다. 실제 클래스명으로 대체해주세요.
+                            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)),
                           );
                         },
                         child: Image.asset(
@@ -284,7 +284,7 @@ class _MypageComponentState extends State<MypageComponent> {
             decoration: BoxDecoration(
               // color: PRIMARY_COLOR,
               border: Border(
-                top: BorderSide(width: 2.0, color: PRIMARY_COLOR), // 상단 테두리
+                top: BorderSide(width: 2.0, color: PRIMARY_COLOR),
                 bottom: BorderSide(width: 2.0, color: PRIMARY_COLOR),
               ),
               // borderRadius: BorderRadius.circular(20.0),
@@ -306,8 +306,8 @@ class _MypageComponentState extends State<MypageComponent> {
                     ),
                     Image.asset(
                       'assets/image/point.png',
-                      width: 40.0, // 이미지 너비 설정
-                      height: 40.0, // 이미지 높이 설정
+                      width: 40.0,
+                      height: 40.0,
                     ),
                   ],
                 ),

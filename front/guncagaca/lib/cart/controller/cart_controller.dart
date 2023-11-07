@@ -35,7 +35,7 @@ class CartController extends GetxController {
     if (existingOrder != null) {
       increaseQuantity(existingOrder);
     } else {
-      order.quantity = RxInt(1); // 새로운 주문 항목의 경우, 수량을 1로 초기화
+      order.quantity = RxInt(1);
       cartItems.add(order);
     }
   }

@@ -252,10 +252,10 @@ class _OrderStoreListState extends State<OrderStoreList> {
                           child: storeOrders[index]['reviewYn']
                               ? ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: BACK_COLOR, // 배경색 변경
+                                    backgroundColor: BACK_COLOR,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
-                                      side: BorderSide(color: PRIMARY_COLOR, width: 2)// 둥근 모서리 설정
+                                      side: BorderSide(color: PRIMARY_COLOR, width: 2)
                                     ),
                                   ),
                                 onPressed: () {
@@ -266,10 +266,10 @@ class _OrderStoreListState extends State<OrderStoreList> {
                                 )
                               : ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: PRIMARY_COLOR, // 배경색 변경
+                                    backgroundColor: PRIMARY_COLOR,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
-                                      side: BorderSide(color: PRIMARY_COLOR, width: 2), // 둥근 모서리 설정
+                                      side: BorderSide(color: PRIMARY_COLOR, width: 2),
                                     ),
                                   ),
                                   onPressed: () async {
@@ -279,7 +279,7 @@ class _OrderStoreListState extends State<OrderStoreList> {
                                         storeId: storeOrders[index]['store']['storeId'],
                                         orderId: storeOrders[index]['id'],
                                       )
-                                      ), // ReviewCreateScreen으로 이동
+                                      ),
                                     );
                                     if (result == 'true') {
                                       loadOrdersFromAPI();

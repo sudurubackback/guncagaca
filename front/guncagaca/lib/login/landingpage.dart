@@ -15,7 +15,6 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     Timer(Duration(seconds: 3),() {
       Get.to(LoginPage());
-      // print("제대로 작동");
     });
     // TODO: implement initState
     super.initState();
@@ -27,7 +26,7 @@ class _LandingPageState extends State<LandingPage> {
       body: Container(
         color: Color(0xfff8e9d7),
         child: Center(
-          child: Image.asset('assets/image/main_img.png'), // 이미지를 화면 가운데로 이동
+          child: Image.asset('assets/image/main_img.png'),
         ),
       ),
     );

@@ -43,7 +43,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
             color: Colors.black,
             height: 1.8
           ),
-          textAlign: TextAlign.center, // 가운데 정렬 추가
+          textAlign: TextAlign.center,
         ),
       ),
     );

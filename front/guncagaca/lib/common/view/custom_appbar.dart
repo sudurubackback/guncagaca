@@ -13,7 +13,7 @@ class CustomAppbar extends StatelessWidget{
   Widget build(BuildContext context){
     return AppBar(
       backgroundColor: Colors.white,
-      elevation: 0, // 밑 줄 제거
+      elevation: 0,
       automaticallyImplyLeading: false, // leading 영역을 자동으로 생성하지 않도록 설정
       flexibleSpace: Center(
         child: Row(
@@ -39,13 +39,13 @@ class CustomAppbar extends StatelessWidget{
                     style: TextStyle(color: Colors.black, fontSize: 29.0),
                     textAlign: TextAlign.center,
                   ),
-                  if (imagePath != null) // imagePath가 null이 아닌 경우에만 이미지 표시
-                    SizedBox(width: 10.0), // 이미지와 텍스트 사이 간격 조절
-                  if (imagePath != null) // imagePath가 null이 아닌 경우에만 이미지 표시
+                  if (imagePath != null)
+                    SizedBox(width: 10.0),
+                  if (imagePath != null)
                     Image.asset(
-                      imagePath!, // 이미지 파일 경로 설정
-                      width: 30.0, // 이미지 너비 설정
-                      height: 30.0, // 이미지 높이 설정
+                      imagePath!,
+                      width: 30.0,
+                      height: 30.0,
                     ),
                 ],
               ),
@@ -53,7 +53,7 @@ class CustomAppbar extends StatelessWidget{
             Padding(
               padding: EdgeInsets.only(left: 20.0, top: 20),
               child: Opacity(
-                opacity: 0.0, // 아이콘을 투명하게 만듭니다.
+                opacity: 0.0,
                 child: IconButton(
                   icon: Icon(Icons.arrow_back),
                   iconSize: 30.0,

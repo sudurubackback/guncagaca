@@ -17,7 +17,7 @@ class OrderDetailList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
         Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
+        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05),
         child: Text(menuName,style: TextStyle(fontSize: 18.0,
           height: 1.5,color: PRIMARY_COLOR)),
             ),
@@ -30,7 +30,7 @@ class OrderDetailList extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.005, left: MediaQuery.of(context).size.width * 0.05),
                   child: Text(
-                    "$optionName: $selectedOption", // optionName과 selectedOption을 함께 출력
+                    "$optionName: $selectedOption",
                     style: TextStyle(fontSize: 15.0, height: 1.5),
                   ),
                 );
@@ -40,7 +40,7 @@ class OrderDetailList extends StatelessWidget {
             Divider(
               color: Color(0xffD9D9D9),
               thickness: 1,
-            ), // 각 메뉴 사이에 구분선 추가
+            ),
           ],
         );
       }).toList(),

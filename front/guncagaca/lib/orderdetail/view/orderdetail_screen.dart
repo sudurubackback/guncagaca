@@ -71,10 +71,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ),
         body:SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬 추가
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05, right:MediaQuery.of(context).size.width * 0.05 ), // 위아래 패딩 값 설정
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05, right:MediaQuery.of(context).size.width * 0.05 ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -111,7 +111,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05),
             child: Text(
               widget.orderHistory['store']['cafeName'],
               style: TextStyle(
@@ -120,7 +120,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05),
             child: Text(
               widget.orderHistory['menus'].length > 1
               ? widget.orderHistory['menus'][0]['menuName']+
@@ -154,7 +154,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 Center(
             child: Container(
               margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.03),
-              width: MediaQuery.of(context).size.width * 0.85, // 버튼의 폭을 조절하세요 (원하는 크기로 설정)
+              width: MediaQuery.of(context).size.width * 0.85,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.02),
@@ -183,7 +183,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             thickness: 1,
           ),
           Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02, left: MediaQuery.of(context).size.width * 0.05),
             child: Text("메뉴",
               style: TextStyle(fontSize: 20.0,
                 height: 1.5,),),
@@ -192,7 +192,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           OrderDetailList(orderMenus: widget.orderHistory['menus']),
 
           Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03, left: MediaQuery.of(context).size.width * 0.05), // 위아래 패딩 값 설정
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03, left: MediaQuery.of(context).size.width * 0.05),
             child: Text("결제 금액 : ${widget.orderHistory['price']}원",
               style: TextStyle(fontSize: 20.0),)
           ),

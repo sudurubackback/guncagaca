@@ -32,7 +32,6 @@ class _NicknameState extends State<NicknamePage> {
   @override
   void initState() {
     super.initState();
-    // changeNicknameFromAPI();
   }
 
   static Future<String?> getEmailFromPreferences() async {

@@ -25,8 +25,8 @@ class OrderPage extends StatelessWidget {
         preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
         child: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0, // 밑 줄 제거
-          automaticallyImplyLeading: false, // leading 영역을 자동으로 생성하지 않도록 설정
+          elevation: 0,
+          automaticallyImplyLeading: false,
           flexibleSpace: Center(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

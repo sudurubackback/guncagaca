@@ -110,7 +110,7 @@ class _DetailState extends State<DetailPage> {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,  // 이렇게 설정하면, 가로 크기를 최소한으로 설정하여 버튼들이 오른쪽 정렬됩니다.
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextButton(
                       child: Text(
@@ -235,7 +235,7 @@ class _DetailState extends State<DetailPage> {
                         onOptionSelected: (index, price) {
                           setState(() {
                             selectedOptionIndices[menuIndex] = index;
-                            selectedOptionPrices[menuIndex] = price;  // 가격 정보 저장
+                            selectedOptionPrices[menuIndex] = price;
                           });
                         },),
                       if (menuIndex != widget.menu.options.length - 1)

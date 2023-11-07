@@ -48,7 +48,6 @@ class _OrderListState extends State<OrderList> {
       if (orderResponse.statusCode == 200) {
         List<dynamic> orders = orderResponse.data;
 
-        // 모든 가게 정보를 비동기적으로 가져옵니다.
         var storeRequests = <Future>[];
         for (var order in orders) {
           int storeId = order['storeId'];
@@ -62,13 +61,11 @@ class _OrderListState extends State<OrderList> {
 
         var storeResponses = await Future.wait(storeRequests);
 
-        // 주문 내역과 가게 정보를 하나의 리스트로 결합합니다.
         for (var i = 0; i < orders.length; i++) {
           var storeResponse = storeResponses[i];
           if (storeResponse.statusCode == 200) {
             orders[i]['store'] = storeResponse.data;
           } else {
-            // 오류 처리
             print('Store data could not be fetched for order ${orders[i]['id']}');
           }
         }
@@ -79,11 +76,9 @@ class _OrderListState extends State<OrderList> {
         });
 
       } else {
-        // 오류 처리
         print('Order data could not be fetched');
       }
     } catch (e) {
-      // 오류 처리
       print('Error fetching data: $e');
     }
   }
@@ -265,10 +260,10 @@ class _OrderListState extends State<OrderList> {
                           child: storeOrders[index]['reviewYn']
                               ? ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: BACK_COLOR, // 배경색 변경
+                                    backgroundColor: BACK_COLOR,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
-                                      side: BorderSide(color: PRIMARY_COLOR, width: 2)// 둥근 모서리 설정
+                                      side: BorderSide(color: PRIMARY_COLOR, width: 2)
                                     ),
                                   ),
                                 onPressed: () {
@@ -279,10 +274,10 @@ class _OrderListState extends State<OrderList> {
                                 )
                               : ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: PRIMARY_COLOR, // 배경색 변경
+                                    backgroundColor: PRIMARY_COLOR,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
-                                      side: BorderSide(color: PRIMARY_COLOR, width: 2), // 둥근 모서리 설정
+                                      side: BorderSide(color: PRIMARY_COLOR, width: 2),
                                     ),
                                   ),
                                   onPressed: () async {
@@ -292,7 +287,7 @@ class _OrderListState extends State<OrderList> {
                                         storeId: storeOrders[index]['store']['storeId'],
                                         orderId: storeOrders[index]['id'],
                                       )
-                                      ), // ReviewCreateScreen으로 이동
+                                      ),
                                     );
                                     if (result == 'true') {
                                       loadOrders();

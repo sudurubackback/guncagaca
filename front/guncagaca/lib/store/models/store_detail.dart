@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class StoreDetail {
   final int storeId;
-  final String cafeName;          // 가게 이름
-  final double starTotal;        // 평점
-  final int reviewCount;      // 리뷰 수
-  final String img;  // 가게 이미지
+  final String cafeName;
+  final double starTotal;
+  final int reviewCount;
+  final String img;
   final String address;
   final String description;
   final String openTime;

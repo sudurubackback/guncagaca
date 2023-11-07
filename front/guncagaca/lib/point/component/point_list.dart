@@ -109,7 +109,7 @@ class _PointListState extends State<PointList> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(vertical: 20), // 위아래 패딩 10 추가
+                padding: EdgeInsets.symmetric(vertical: 20),
                 child:
                 GestureDetector(
                   onTap: () => _goToStoreDetail(dummyPoints[index]['name'], dummyPoints[index]['storeId']),

@@ -38,8 +38,8 @@ class StoreCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
                 child: Image.network(
                   store.storeDetail.img,
-                  width: 80,  // 원하는 이미지의 넓이로 조절하세요.
-                  height: 80, // 원하는 이미지의 높이로 조절하세요.
+                  width: 80,
+                  height: 80,
                   fit: BoxFit.cover,
                 ),
               ),

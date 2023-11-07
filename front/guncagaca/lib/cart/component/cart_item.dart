@@ -54,7 +54,7 @@ class CartItem extends StatelessWidget {
               Expanded(
                 child: _buildOptionList(item.selectedOptions ?? []),
               ),
-              SizedBox(width: 20), // 추가된 코드: 가격과 버튼 사이의 간격
+              SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

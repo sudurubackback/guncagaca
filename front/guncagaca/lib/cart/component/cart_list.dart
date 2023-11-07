@@ -22,7 +22,7 @@ class CartList extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
-              cartController.cartItems[0].storeName, // 예시로 넣은 가게이름. 실제 데이터로 대체 필요.
+              cartController.cartItems[0].storeName,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
@@ -33,8 +33,8 @@ class CartList extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 return Column(
                   children: [
-                    CartItem(item: cartController.cartItems[index]),  // 여러분의 CartItem 위젯
-                    if (index != cartController.cartItems.length - 1)  // 마지막 아이템이 아닐 때만 구분선 추가
+                    CartItem(item: cartController.cartItems[index]),
+                    if (index != cartController.cartItems.length - 1)
                       Divider(color: Colors.grey, thickness: 1.0,),
                   ],
                 );

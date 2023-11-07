@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  location: ^4.3.0
+
   provider: ^6.0.5
 #  flutter_naver_map: ^1.0.0
   naver_map_plugin:

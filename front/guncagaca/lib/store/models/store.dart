@@ -5,7 +5,7 @@ class Store {
   final StoreDetail storeDetail;
   final double latitude;
   final double longitude;
-  final double distance;      // 거리
+  final double distance;
 
   Store({
     required this.storeDetail,

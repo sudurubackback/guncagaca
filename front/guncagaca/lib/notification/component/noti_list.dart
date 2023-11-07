@@ -30,10 +30,10 @@ class _NotiListState extends State<NotiList> {
       ),
     )
         : ListView.builder(
-      itemCount: widget.notifications.length + 1, // 한 개를 추가합니다.
+      itemCount: widget.notifications.length + 1,
       itemBuilder: (BuildContext context, int index) {
         if (index == widget.notifications.length) {
-          return SizedBox(height: 20); // 마지막 아이템일 때 공간을 추가합니다.
+          return SizedBox(height: 20);
         }
 
         return Container(

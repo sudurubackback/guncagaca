@@ -44,7 +44,7 @@ class _CompletePageState extends State<CompletePage> {
             color: Colors.black,
             height: 1.8
           ),
-          textAlign: TextAlign.center, // 가운데 정렬 추가
+          textAlign: TextAlign.center,
         ),
       ),
     );
@@ -57,7 +57,7 @@ class _CompletePageState extends State<CompletePage> {
       appBar: AppBar(
         backgroundColor: Color(0xfff8e9d7),
         leading: Padding(
-          padding: EdgeInsets.only(top: 20.0), // 아이콘을 아래로 이동
+          padding: EdgeInsets.only(top: 20.0),
           child: IconButton(
             icon: Icon(Icons.close),
             iconSize: 30.0,
@@ -67,7 +67,7 @@ class _CompletePageState extends State<CompletePage> {
             },
           ),
         ),
-        elevation: 0, // 밑 줄 제거
+        elevation: 0,
       ),
       body: Container(
         color: Color(0xfff8e9d7),
@@ -80,7 +80,7 @@ class _CompletePageState extends State<CompletePage> {
             Container(
               width: 350,
               height: 350,
-              padding: EdgeInsets.symmetric(vertical: 20.0), // 위아래로 패딩을 줍니다
+              padding: EdgeInsets.symmetric(vertical: 20.0),
               child: Image.asset(
                 'assets/image/coffeelove.png',
                 fit: BoxFit.contain,
@@ -103,7 +103,7 @@ class _CompletePageState extends State<CompletePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)), // OrderPage로 이동
+                    MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
                   );
                 },
                 child: const Center(

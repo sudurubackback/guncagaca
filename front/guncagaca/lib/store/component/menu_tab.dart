@@ -77,9 +77,9 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
             ),
             Column(
               children: categorizedMenus[category]!.map((menu) {
-                return InkWell(  // 여기서 InkWell을 사용
+                return InkWell(
                   onTap: () {
-                    if (widget.isOpen) {  // isOpen이 true인 경우
+                    if (widget.isOpen) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => DefaultLayout(
@@ -89,14 +89,14 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
                           ),
                         ),
                       );
-                    } else {  // isOpen이 false인 경우
+                    } else {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                           title: Column(
                             children: [
                               Text('알림'),
-                              Divider(color: Colors.grey),  // 구분선 추가
+                              Divider(color: Colors.grey),
                             ],
                           ),
                           content: Text('영업중이 아닙니다.\n영업시간에 다시 방문해주세요.'),

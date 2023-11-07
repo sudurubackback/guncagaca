@@ -147,7 +147,7 @@ class _JjimListState extends State<JjimList> {
           ),
           actions: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextButton(
                   style: TextButton.styleFrom(
@@ -167,7 +167,7 @@ class _JjimListState extends State<JjimList> {
 
                         },
                 ),
-                SizedBox(width: 30), // 버튼 사이 간격 조절
+                SizedBox(width: 30),
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),

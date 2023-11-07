@@ -20,7 +20,7 @@ class StoreCardList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: StoreCard(
             store: stores[index],
-            mainViewModel: mainViewModel,// 이 부분을 수정했습니다.
+            mainViewModel: mainViewModel,
           ),
         );
       },

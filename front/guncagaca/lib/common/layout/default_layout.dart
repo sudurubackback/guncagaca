@@ -42,10 +42,8 @@ class DefaultLayout extends StatelessWidget {
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // 가운데 정렬을 위해 추가된 부분
           children: [
             SizedBox(width: MediaQuery.of(context).size.width * 0.1,),
-            // Container(),
             Flexible(
                 child: Center(
                   child: Text(

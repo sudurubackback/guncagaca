@@ -29,7 +29,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   void initState() {
     super.initState();
     current_index = widget.initialIndex;
-    controller = TabController(initialIndex: widget.initialIndex, length: 3, vsync: this); // initialIndex를 사용
+    controller = TabController(initialIndex: widget.initialIndex, length: 3, vsync: this);
     controller.addListener((tabListener));
   }
   @override
@@ -76,7 +76,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         ],
       ),
       child: TabBarView(
-        physics: NeverScrollableScrollPhysics(), // 상하로만 스크롤
+        physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
 
