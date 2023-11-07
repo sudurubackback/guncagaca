@@ -1,3 +1,4 @@
+import 'package:guncagacaonwer/order/models/ordercancelmodel.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:guncagacaonwer/order/models/orderrequestmodel.dart';
 import 'package:guncagacaonwer/store/models/ownerinfomodel.dart';
@@ -21,4 +22,7 @@ abstract class ApiService {
 
   @GET("/api/ceo/ownerInfo")
   Future<OwnerInfoResponse> getOwnerInfo(@Header("Authorization") String token);
+
+  @POST("/api/order/cancel")
+  Future<String> cancelOrder(@Header("Email") String email, @Body() OrderCancelRequest request);
 }

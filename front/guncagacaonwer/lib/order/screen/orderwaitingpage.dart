@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/order/api/waitingpage_api_service.dart';
+import 'package:guncagacaonwer/order/models/ordercancelmodel.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 
@@ -25,6 +26,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
     fetchOrders();
   }
 
+  // 주문 접수 리스트 (get)
   Future<void> fetchOrders() async {
     try {
       final token = "";
@@ -39,7 +41,67 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
     }
   }
 
-  List<Map<String, dynamic>> processingOrders = [];
+  // 취소 사유 리스트
+  List<String> cancelReasons = ['사유1', '사유2', '사유3'];
+  String selectedReason = "";
+
+  // 주문 취소 요청
+  Future<void> cancelOrder(Order order) async {
+    String email = "";
+    OrderCancelRequest orderCancelRequest = OrderCancelRequest(
+      reason: selectedReason,
+      receiptId: order.receiptId,
+      orderId: order.id,
+    );
+
+    try {
+      final response = await apiService.cancelOrder(email, orderCancelRequest);
+      print("주문 취소 성공: $response");
+    } catch (e) {
+      print("주문 취소 에러: $e");
+    }
+  }
+
+  // 취소 요청 모달
+  Future<void> showCancelDialog(Order order) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext content) {
+        return AlertDialog(
+          title: Text("주문 취소"),
+          content: DropdownButton<String>(
+            value: selectedReason,
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedReason = newValue!;
+              });
+            },
+            items: cancelReasons.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('확인'),
+              onPressed: () async {
+                await cancelOrder(order);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,9 +263,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 ElevatedButton(
                                   onPressed: () {
                                     // 주문 취소 버튼 클릭 시 수행할 동작 추가
-                                    setState(() {
-                                      orders.removeAt(index);
-                                    });
+                                    showCancelDialog(order);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFFD63737), // 버튼의 배경색
