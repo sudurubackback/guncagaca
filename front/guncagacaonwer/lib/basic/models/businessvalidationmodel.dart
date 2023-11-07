@@ -11,7 +11,7 @@ class BusinessValidationRequest {
 
   BusinessValidationRequest(this.business_name, this.address, this.business_number, this.owner_name, this.open_date, this.account_number);
 
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
       'business_name' : business_name,
       'address' : address,
