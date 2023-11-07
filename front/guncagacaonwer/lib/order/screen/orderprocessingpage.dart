@@ -29,6 +29,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
     fetchOrders();
   }
 
+  // 주문 처리 데이터 get
   Future<void> fetchOrders() async {
     try {
       final token = "";
@@ -40,6 +41,16 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
       });
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> completeOrder(Order order) async {
+    try {
+      final response = await apiService.completeOrder("token", order.id);
+      print("주문 완료 성공: ${response.message}");
+      fetchOrders();
+    } catch (e) {
+      print("주문 완료 에러: $e");
     }
   }
 
@@ -289,7 +300,6 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                     // "제작" 버튼이 눌렸을 때의 기능 추가
                                                     // 예: 어떤 작업을 실행하거나 상태 변경
                                                     order.inProgress = true;
-                                                    isSelected = true; // isSelected를 true로 설정
                                                   } else {
                                                     // "완료" 버튼이 눌렸을 때의 기능 추가
                                                     // 모달 다이얼로그 구현
@@ -323,11 +333,8 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                           actions: [
                                                             TextButton(
                                                               onPressed: () {
-                                                                // 선택 해제
-                                                                orders.remove(order); // 해당 항목을 리스트에서 삭제
-                                                                setState(() {
-                                                                  isSelected = false;
-                                                                });
+                                                                // 완료 처리
+                                                                completeOrder(order);
                                                                 Navigator.of(context).pop(); // 모달 닫기
                                                               },
                                                               child: Text('확인'),
