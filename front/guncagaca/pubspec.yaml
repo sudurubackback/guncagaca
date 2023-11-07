@@ -51,8 +51,6 @@ dependencies:
 
   fluttertoast: ^8.2.1
 
-  uuid: ^3.0.7
-
   bootpay: ^4.7.1
 
   synchronized: ^3.1.0
@@ -61,7 +59,8 @@ dependencies:
 
   carousel_slider: ^4.2.1
 
-  geolocator: ^10.1.0
+  geolocator: ^10.0.1
+#  location: ^4.3.0
 
   intl: ^0.18.1
 

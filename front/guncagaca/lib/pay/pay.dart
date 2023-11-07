@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:guncagaca/cart/view/cart_screen.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 import '../cart/controller/cart_controller.dart';
 import '../common/utils/dio_client.dart';
@@ -151,8 +150,7 @@ class PaymentService{
       Item item = Item();
       item.name = order.name;
       item.qty = order.quantity.value;
-      var uuid = Uuid();
-      item.id = uuid.v4();
+      item.id = order.menuId;
       item.price = order.totalPrice.toDouble(); // initPrice를 double로 변환
       return item;
     }).toList();
