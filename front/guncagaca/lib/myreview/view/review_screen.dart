@@ -29,7 +29,7 @@ class ReviewScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ReviewList(),
+            child: ReviewList(mainViewModel: mainViewModel,),
           ),
         ],
       ),

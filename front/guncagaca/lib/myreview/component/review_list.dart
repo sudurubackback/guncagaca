@@ -4,12 +4,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../../common/layout/default_layout.dart';
 import '../../common/utils/dio_client.dart';
 import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
+import '../../store/view/store_detail_screen.dart';
 import '../my_review.dart';
 
 class ReviewList extends StatefulWidget {
+  final MainViewModel mainViewModel;
+  ReviewList({required this.mainViewModel});
 
   @override
   _ReviewListState createState() => _ReviewListState();
@@ -56,6 +60,20 @@ class _ReviewListState extends State<ReviewList> {
     } catch (e) {
       print('에러: $e');
     }
+  }
+
+  void _goToStoreDetail(String cafeName, int id) {
+    print(id);
+    print("스토어아이디");
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DefaultLayout(
+          title: cafeName,
+          child: StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,) ,
+          mainViewModel: widget.mainViewModel,
+        ),
+      ),
+    );
   }
 
 
@@ -157,7 +175,7 @@ class _ReviewListState extends State<ReviewList> {
               ],
             ),
             onTap: () {
-              // 알림을 눌렀을 때의 동작을 추가하세요.
+              _goToStoreDetail(myReviews[index].storeName, myReviews[index].storeId);
             },
           ),
         );
