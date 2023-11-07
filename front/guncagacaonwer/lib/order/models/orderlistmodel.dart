@@ -12,6 +12,7 @@ class Order {
   final bool reviewYn;
   final List<Menu> menus;
   final int price;
+  bool inProgress; // 추가된 프로퍼티
 
   Order({
     required this.id,
@@ -24,6 +25,7 @@ class Order {
     required this.reviewYn,
     required this.menus,
     required this.price,
+    this.inProgress = false,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
