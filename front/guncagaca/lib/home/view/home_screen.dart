@@ -29,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
 
-  TextEditingController searchController = TextEditingController(); // 검색어를 입력 받기 위한 컨트롤러 추가
+  TextEditingController searchController = TextEditingController();
   String? searchKeyword; // 검색어를 저장하기 위한 변수 추가
 
   @override
@@ -239,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   controller: searchController, // 검색어를 입력 받을 컨트롤러
                   onChanged: (value) {
                     setState(() {
-                      // StoreCardList에 검색어를 전달하여 필터링합니다.
+                      // StoreCardList에 검색어를 전달하여 필터링
                       searchKeyword = value;
                     });
                   },
@@ -273,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     child: StoreCardList(
                       stores: storeData,
                       mainViewModel: widget.mainViewModel,
-                      searchKeyword: searchKeyword, // 검색어를 전달합니다.
+                      searchKeyword: searchKeyword, // 검색어를 전달
                     ),
                   ),
                 ),

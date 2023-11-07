@@ -17,19 +17,19 @@ class StoreCardList extends StatelessWidget {
 
     List<Store> filteredStores = stores;
 
-    // 만약 검색어가 있다면, 해당 검색어가 포함된 가게만 필터링합니다.
+    // 만약 검색어가 있다면, 해당 검색어가 포함된 가게만 필터링
     if (searchKeyword != null && searchKeyword!.isNotEmpty) {
       filteredStores = stores.where((store) =>
           store.storeDetail.cafeName.toLowerCase().contains(searchKeyword!.toLowerCase())).toList();
     }
 
     return ListView.builder(
-      itemCount: filteredStores.length,  // <-- stores.length 대신에 filteredStores.length를 사용합니다
+      itemCount: filteredStores.length,  // <-- stores.length 대신에 filteredStores.length를 사용
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: StoreCard(
-            store: filteredStores[index],  // <-- stores[index] 대신에 filteredStores[index]를 사용합니다
+            store: filteredStores[index],  // <-- stores[index] 대신에 filteredStores[index]를 사용
             mainViewModel: mainViewModel,
           ),
         );
