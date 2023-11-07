@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
+
+import '../api/completepage_api_service.dart';
 
 
 class OrderCompletePage extends StatefulWidget {
@@ -10,32 +14,33 @@ class OrderCompletePage extends StatefulWidget {
 
 class _OrderCompletePageState extends State<OrderCompletePage> {
 
-  final List<Map<String, dynamic>> processingOrders = [
-    {
-      "orderTime": "2023-10-27 12:30",
-      "totalMenuCount": 3,
-      "totalPrice" : 15000,
-      "menuList": ["아메리카노 x 1", "카페라떼 x 2"],
-      "nickname" : "민승",
-      "arrivalTime": "2023-10-27 13:15",
-    },
-    {
-      "orderTime": "2023-10-27 13:00",
-      "totalMenuCount": 2,
-      "totalPrice" : 9000,
-      "menuList": ["카페모카 x 2"],
-      "nickname" : "민승",
-      "arrivalTime": "2023-10-27 13:45",
-    },
-    {
-      "orderTime": "2023-10-27 14:15",
-      "totalMenuCount": 1,
-      "totalPrice" : 4500,
-      "menuList": ["카페라떼 x 1"],
-      "nickname" : "민승",
-      "arrivalTime": "2023-10-27 15:00",
-    },
-  ];
+  List<Order> orders = [];
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Dio dio = Dio();
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+    apiService = ApiService(dio);
+    fetchOrders();
+  }
+
+  // 주문 처리 데이터 get
+  Future<void> fetchOrders() async {
+    try {
+      final token = "";
+      final ownerResponse = await apiService.getOwnerInfo(token);
+      int storeId = ownerResponse.store_id;
+      List<Order> orderList = await apiService.getCompleteList(storeId, "3");
+      setState(() {
+        orders = orderList;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +54,14 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: processingOrders.length,
+              itemCount: orders.length,
               itemBuilder: (BuildContext context, int index) {
-                final processingorder = processingOrders[index];
+                final order = orders[index];
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(processingorder["totalPrice"]);
+                int totalQuantity = order.menus.map((menu) => menu.quantity).reduce((a, b) => a + b);
+                String formattedTotalPrice = formatter.format(order.price);
                 // 주문 시간에서 날짜와 시간 추출
-                List<String> orderTimeParts = processingorder["orderTime"].split(" ");
+                List<String> orderTimeParts = order.orderTime.split(" ");
                 String timeOfDay = "";
                 String time = orderTimeParts[1];
                 // 시간을 오전/오후로 나누기
@@ -132,7 +138,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 height: 4 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '메뉴 [${processingorder["totalMenuCount"]}]개 / '+formattedTotalPrice+"원",
+                                '메뉴 [$totalQuantity]개 / '+formattedTotalPrice+"원",
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
@@ -141,7 +147,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '닉네임 : ${processingorder['nickname']}',
+                                '주문자 번호 : ${order.memberId}',
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                   color: Color(0xFF9B5748),
