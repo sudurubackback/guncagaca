@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'waitingpage_api_service.dart';
+part of 'completepage_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -21,38 +21,7 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<OrderRequestResponse> requestOrder(
-    String email,
-    String orderId,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Email': email};
-    _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<OrderRequestResponse>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/api/order/request/${orderId}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = OrderRequestResponse.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
-  Future<List<Order>> getWaitingList(
+  Future<List<Order>> getCompleteList(
     int storeId,
     String status,
   ) async {
@@ -108,37 +77,6 @@ class _ApiService implements ApiService {
               baseUrl,
             ))));
     final value = OwnerInfoResponse.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
-  Future<String> cancelOrder(
-    String email,
-    OrderCancelRequest request,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Email': email};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
-    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/api/order/cancel',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
-    final value = _result.data!;
     return value;
   }
 
