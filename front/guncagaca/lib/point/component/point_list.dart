@@ -147,7 +147,10 @@ class _PointListState extends State<PointList> {
                   ),
                 ],
               ),
-              OrderStoreList(mainViewModel: widget.mainViewModel, storeId:point['storeId'])
+                  Expanded(
+                    child:
+                    OrderStoreList(mainViewModel: widget.mainViewModel, storeId:point['storeId']),
+                  ),
             ],
           ),
         );

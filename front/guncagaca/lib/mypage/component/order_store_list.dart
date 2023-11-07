@@ -7,6 +7,7 @@ import 'dart:convert';
 
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/review_create/reviewcreate_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/utils/dio_client.dart';
 import '../../common/utils/oauth_token_manager.dart';
@@ -36,29 +37,38 @@ class _OrderStoreListState extends State<OrderStoreList> {
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
+  Future<String?> getEmailFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_email');
+  }
+
   Future<void> loadOrdersFromAPI() async {
-    final email = widget.mainViewModel.user?.kakaoAccount?.email;
+    String? email = await getEmailFromPreferences();
     print('storeId' + widget.storeId.toString());
+    print(email);
     if (email != null) {
       try {
         // 주문 내역 가져오기
-        final String apiUrl = '$baseUrl/api/store/${widget.storeId}';
+        final String apiUrl = 'http://k9d102.p.ssafy.io:8083/api/order/member/${widget.storeId}';
+        print(apiUrl);
         var orderResponse = await dio.get(
             apiUrl,
             options: Options(
                 headers: {
-                  'Authorization': "Bearer $token",
+                  'Email': email,
                 }
             ),
             queryParameters: {
               'storeId': widget.storeId
             }
         );
-
+        print("주문목록");
+        print(orderResponse.data);
+        print(orderResponse.data.runtimeType);
         if (orderResponse.statusCode == 200) {
+          print("여기 들어옴");
           List<dynamic> jsonData = orderResponse.data;
           storeOrders = List<Map<String, dynamic>>.from(jsonData);
-
           print(storeOrders);
           setState(() {});
         } else {
@@ -72,7 +82,6 @@ class _OrderStoreListState extends State<OrderStoreList> {
 
   String formatOrderTime(String datetimeStr) {
     DateTime datetime = DateTime.parse(datetimeStr);
-
     // 날짜 및 시간 형식
     String year = datetime.year.toString().substring(2, 4);
     String month = datetime.month.toString().padLeft(2, '0');
@@ -81,12 +90,12 @@ class _OrderStoreListState extends State<OrderStoreList> {
     String hour = (datetime.hour <= 12 ? datetime.hour : datetime.hour - 12).toString().padLeft(2, '0');
     String minute = datetime.minute.toString().padLeft(2, '0');
 
-    return "$year.$month.$day $period $hour:$minute";
+    return "$year.$month.$day ";
   }
 
   @override
   Widget build(BuildContext context) {
-    return storeOrders.isEmpty
+    return storeOrders.isEmpty || storeOrders.length == 0
         ? Center(
           child: Column(
             children: [
@@ -98,207 +107,72 @@ class _OrderStoreListState extends State<OrderStoreList> {
             ],
           )
         )
-        : ListView.builder(
-          itemCount: storeOrders.length + 1,
+        :
+    ListView.builder(
+          itemCount: storeOrders.length,
           itemBuilder: (BuildContext context, int index) {
-          if (index == storeOrders.length) {
-            return SizedBox(height: 20);
+          if (index == storeOrders[index].length) {
+            return Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1,),
+                    Text(
+                      "주문내역이 없습니다.",
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                )
+            );
           }
 
-          return Container(
-            margin: EdgeInsets.only(top: 15, left: 10, right: 10),
-            decoration: BoxDecoration(
-            border: Border.all(
-              color: Color(0xff9B5748),
-              width: 1.0,
-              ),
-            borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: ListTile(
-              contentPadding:
-              EdgeInsets.symmetric(vertical: 13.0, horizontal: 16.0),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.access_time, color: Colors.grey),
-                      SizedBox(width: 8.0),
-                      // 주문시간
-                      Expanded(
-                        child: Text(
+          return
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, ),
+              child: Column(
+                children:[
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬을 추가
+                      children: [
+                        Text(
                           formatOrderTime(storeOrders[index]['orderTime']),
                           style: TextStyle(
                             fontSize: 15.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
-                Row(
-                  children: [
-                    // 가게 사진
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            storeOrders[index]['store']['img'],
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 주문 정보
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OrderDetailScreen(
-                                  orderHistory: storeOrders[index],
-                                  mainViewModel: widget.mainViewModel,),
-                              ),
-                            );
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                storeOrders[index]['store']['cafeName'],
-                                style: TextStyle(fontSize: 18.0),
-                              ),
-                              SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
-                              Text(
-                                // 1개일때, 2개 이상일때
-                                storeOrders[index]['menus'].length > 1
-                                    ? storeOrders[index]['menus'][0]['menuName'] +
-                                    " 외 " +
-                                    (storeOrders[index]['menus'].length - 1).toString() +
-                                    "개\n" +
-                                    storeOrders[index]['price'].toString() +
-                                    "원"
-                                    : storeOrders[index]['menus'][0]['menuName']+
-                                    "\n" +
-                                    storeOrders[index]['price'].toString() +
-                                    "원",
-                                style: TextStyle(fontSize: 15.0),
-                              ),
-                            ],
+                        Spacer(),
+                        Text(
+                          storeOrders[index]['menus'].length > 1
+                              ? storeOrders[index]['menus'][0]['menuName'] +
+                              " 외 " +
+                              (storeOrders[index]['menus'].length - 1).toString()
+                              : storeOrders[index]['menus'][0]['menuName'].toString(),
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.width * 0.02,),
-                        Row(
-                          children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: PRIMARY_COLOR,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                            child: Text(
-                              {
-                                'ORDERED': '접수 대기',
-                                'REQUEST': '주문 접수',
-                                'CANCELED': '주문 취소',
-                                'COMPLETE': '완료',
-                              }[storeOrders[index]['status']] ?? '알 수 없는 상태',
-                              style: TextStyle(fontSize: 12.0),
-                            ),
+                        Spacer(),
+                        Text(
+                          "${storeOrders[index]['menus'][0]['totalPrice'].toString()}원",
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: storeOrders[index]['takeoutYn']
-                                    ? Colors.green
-                                    : Colors.red,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                            child: Text(
-                              storeOrders[index]['takeoutYn'] ? '포장' : '매장',
-                              style: TextStyle(fontSize: 12.0),
-                            ),
-                          ),
-                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: storeOrders[index]['reviewYn']
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: BACK_COLOR,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      side: BorderSide(color: PRIMARY_COLOR, width: 2)
-                                    ),
-                                  ),
-                                onPressed: () {
-                                // 리뷰 작성 완료 버튼 클릭 시 동작 추가
-                                },
-                                child: Text('리뷰 작성 완료',
-                                style: TextStyle(color: Colors.black),),
-                                )
-                              : ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: PRIMARY_COLOR,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      side: BorderSide(color: PRIMARY_COLOR, width: 2),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    var result = await Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => ReviewCreatePage(
-                                        cafeName: storeOrders[index]['store']['cafeName'],
-                                        storeId: storeOrders[index]['store']['storeId'],
-                                        orderId: storeOrders[index]['id'],
-                                      )
-                                      ),
-                                    );
-                                    if (result == 'true') {
-                                      loadOrdersFromAPI();
-                                    }
-                                  },
-                                  child: Text('리뷰 쓰기'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
                   ),
-                onTap: () {
-              // 알림을 눌렀을 때의 동작을 추가하세요.
-            },
-          ),
-        );
+                  Divider(
+                    color: Color(0xffD9D9D9),
+                    thickness: 1,
+                  ),
+                ],
+              ),
+            );
+
       },
     );
   }
