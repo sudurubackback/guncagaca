@@ -28,6 +28,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
+
+  TextEditingController searchController = TextEditingController(); // 검색어를 입력 받기 위한 컨트롤러 추가
+  String? searchKeyword; // 검색어를 저장하기 위한 변수 추가
+
   @override
   bool get wantKeepAlive => true;
 
@@ -232,16 +236,20 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   ],
                 ),
                 child: TextField(
+                  controller: searchController, // 검색어를 입력 받을 컨트롤러
+                  onChanged: (value) {
+                    setState(() {
+                      // StoreCardList에 검색어를 전달하여 필터링합니다.
+                      searchKeyword = value;
+                    });
+                  },
                   decoration: const InputDecoration(
                     hintText: '검색...',
                     border: InputBorder.none,
                     icon: Icon(Icons.search),
                   ),
-                  onSubmitted: (value) {
-                    // 검색값 제출 시 수행될 로직 작성
-                  },
-
                 ),
+
               ),
               Expanded(
                 flex: 1,
@@ -262,10 +270,16 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: StoreCardList(stores: storeData, mainViewModel: widget.mainViewModel,),
+                    child: StoreCardList(
+                      stores: storeData,
+                      mainViewModel: widget.mainViewModel,
+                      searchKeyword: searchKeyword, // 검색어를 전달합니다.
+                    ),
                   ),
                 ),
               ),
+
+
             ],
           )
         ),
