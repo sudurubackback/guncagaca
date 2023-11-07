@@ -46,7 +46,10 @@ class StoreCard extends StatelessWidget {
               if (!store.storeDetail.isOpen)
                 Positioned.fill(
                   child: Container(
-                    color: Colors.black45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: Colors.black45,
+                    ),
                     child: Center(
                       child: Text(
                         "영업중이\n아닙니다",

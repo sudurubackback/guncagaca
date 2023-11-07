@@ -185,28 +185,7 @@ class _JjimListState extends State<JjimList> {
             SizedBox(height: 15),
           ],
         );
-        // return AlertDialog(
-        //   title: Text("찜목록에서 삭제"),
-        //   content: Text("정말로 찜목록에서 삭제하시겠습니까?"),
-        //   actions: <Widget>[
-        //     TextButton(
-        //       child: Text("취소"),
-        //       onPressed: () {
-        //         Navigator.of(context).pop();
-        //       },
-        //     ),
-        //     TextButton(
-        //       child: Text("확인"),
-        //       onPressed: () async {
-        //         await toggleFavorite(storeId);
-        //         setState(() {
-        //           dummyJjims.removeWhere((jjim) => jjim['storeId'] == storeId);
-        //         });
-        //         Navigator.of(context).pop();
-        //       },
-        //     ),
-        //   ],
-        // );
+
       },
     );
   }
@@ -236,13 +215,12 @@ class _JjimListState extends State<JjimList> {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            contentPadding: EdgeInsets.symmetric(vertical: 13.0, horizontal: 16.0),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
-                  child: Container(
+            contentPadding: EdgeInsets.only(top: 13, bottom: 13, left: 16, right: 20),
+            title: GestureDetector(
+              onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
+              child: Row(
+                children: [
+                  Container(
                     width: 100,
                     height: 100,
                     decoration: BoxDecoration(
@@ -255,36 +233,57 @@ class _JjimListState extends State<JjimList> {
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => _goToStoreDetail(dummyJjims[index]['cafeName'], dummyJjims[index]['storeId']),
-                    child:Text(
-                      dummyJjims[index]['cafeName'],
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => _confirmDelete(dummyJjims[index]['storeId']),
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                            'assets/image/h2.png'
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          dummyJjims[index]['cafeName'],
+                          style: TextStyle(
+                            fontSize: 17.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        fit: BoxFit.cover,
+                        SizedBox(height: 8),
+                        Text(
+                          dummyJjims[index]['address'],
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          dummyJjims[index]['description'].length > 15
+                              ? dummyJjims[index]['description'].substring(0, 15) + "..."
+                              : dummyJjims[index]['description'],
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => _confirmDelete(dummyJjims[index]['storeId']),
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                              'assets/image/h2.png'
+                          ),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             onTap: () {
               // 알림을 눌렀을 때의 동작을 추가하세요.
