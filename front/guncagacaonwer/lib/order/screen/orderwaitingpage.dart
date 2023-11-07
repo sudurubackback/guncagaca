@@ -41,13 +41,23 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
     }
   }
 
+  // 주문 접수 요청
+  Future<void> requestOrder(Order order) async {
+    try {
+      final response = await apiService.requestOrder("token", order.id);
+      print("주문 접수 성공 : ${response.message}");
+      fetchOrders();
+    } catch (e) {
+      print("주문 접수 에러: $e");
+    }
+  }
+
   // 취소 사유 리스트
   List<String> cancelReasons = ['사유1', '사유2', '사유3'];
   String selectedReason = "";
 
   // 주문 취소 요청
   Future<void> cancelOrder(Order order) async {
-    String email = "";
     OrderCancelRequest orderCancelRequest = OrderCancelRequest(
       reason: selectedReason,
       receiptId: order.receiptId,
@@ -55,8 +65,9 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
     );
 
     try {
-      final response = await apiService.cancelOrder(email, orderCancelRequest);
+      final response = await apiService.cancelOrder("token", orderCancelRequest);
       print("주문 취소 성공: $response");
+      fetchOrders();
     } catch (e) {
       print("주문 취소 에러: $e");
     }
@@ -239,11 +250,9 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     // 접수하기 버튼 클릭 시 수행할 동작 추가
-                                    setState(() {
-                                      orders.removeAt(index);
-                                    });
+                                    await requestOrder(order);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFF406AD6), // 버튼의 배경색
