@@ -154,7 +154,7 @@ class _PointListState extends State<PointList> {
       },
       options: CarouselOptions(
         height: MediaQuery.of(context).size.height * 0.6,
-        enableInfiniteScroll: true,
+        enableInfiniteScroll: false,
         initialPage: 0,
         viewportFraction: 0.90,
       ),
