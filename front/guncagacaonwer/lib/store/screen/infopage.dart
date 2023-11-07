@@ -65,7 +65,7 @@ class _StoreInfoPageState extends State<StoreInfoPage> {
     });
 
     var response = await dio.put(
-      "http://k9d102.p.ssafy.io/api/store/",
+      "https://k9d102.p.ssafy.io/api/store/",
       data: formData,
       options: Options(
         headers: {
