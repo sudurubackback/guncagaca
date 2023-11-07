@@ -26,7 +26,7 @@ class OrderStoreList extends StatefulWidget {
 
 class _OrderStoreListState extends State<OrderStoreList> {
   List<Map<String, dynamic>> storeOrders = [];
-  final token = TokenManager().token;
+
 
   @override
   void initState() {
