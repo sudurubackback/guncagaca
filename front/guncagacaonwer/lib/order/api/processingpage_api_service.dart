@@ -11,7 +11,7 @@ abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
   // 주문 목록 리스트
-  @GET("/api//list/{storeId}/{status}")
+  @GET("/api/list/{storeId}/{status}")
   Future<List<Order>> getProcessingList(
       @Path("storeId") int storeId,
       @Path("status") String status,
