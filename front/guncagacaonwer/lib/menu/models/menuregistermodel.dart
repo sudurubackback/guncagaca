@@ -1,10 +1,8 @@
-import 'dart:ffi';
-
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class MenuRegisterRequest {
-  final Long cafeId;
+  final int cafeId;
   final String name;
   final int price;
   final String description;
@@ -21,7 +19,7 @@ class MenuRegisterRequest {
 
   factory MenuRegisterRequest.fromJson(Map<String, dynamic> json) {
     return MenuRegisterRequest(
-      cafeId: json['cafeId'] as Long,
+      cafeId: json['cafeId'] as int,
       name: json['name'] as String,
       price: json['price'] as int,
       description: json['description'] as String,
@@ -29,11 +27,22 @@ class MenuRegisterRequest {
       optionsList: (json['optionsList'] as List).map((i) => OptionsEntity.fromJson(i)).toList(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'cafeId': cafeId,
+      'name': name,
+      'price': price,
+      'description': description,
+      'category': category.index,
+      'optionsList': optionsList.map((option) => option.toJson()).toList(),
+    };
+  }
 }
 
 @JsonSerializable()
 class OptionsEntity {
-  final String optionName;
+  late final String optionName;
   final List<DetailsOptionEntity> detailsOptions;
 
   OptionsEntity({
@@ -46,12 +55,19 @@ class OptionsEntity {
       detailsOptions: (json['detailsOptions'] as List).map((i) => DetailsOptionEntity.fromJson(i)).toList(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'optionName': optionName,
+      'detailsOptions': detailsOptions.map((option) => option.toJson()).toList(),
+    };
+  }
 }
 
 @JsonSerializable()
 class DetailsOptionEntity {
   final String detailOptionName;
-  final int additionalPrice;
+  late final int additionalPrice;
 
   DetailsOptionEntity({
     required this.detailOptionName,
@@ -62,6 +78,13 @@ class DetailsOptionEntity {
       detailOptionName: json['detailOptionName'] as String,
       additionalPrice: json['additionalPrice'] as int,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'detailOptionName': detailOptionName,
+      'additionalPrice': additionalPrice,
+    };
   }
 }
 
