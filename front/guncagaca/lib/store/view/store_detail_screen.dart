@@ -199,7 +199,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                                   child: TabBarView(
                                     children: [
                                       MenuTabWidget(isOpen: isOpen!, storeName: storeDetail!.cafeName, cafeId: storeDetail!.storeId,mainViewModel: widget.mainViewModel,),
-                                      IntroTabWidget(description: storeDetail!.description),
+                                      IntroTabWidget(storeDetail: storeDetail),
                                       ReviewTabWidget(cafeId: storeDetail!.storeId,),
                                     ],
                                   ),

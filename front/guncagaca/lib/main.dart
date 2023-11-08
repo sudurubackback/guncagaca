@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:guncagaca/login/landingpage.dart';
@@ -20,7 +21,11 @@ void main() async {
 
   await KakaoTokenManager.TokenManager().initialize();
 
-
+  await NaverMapSdk.instance.initialize(
+      clientId: dotenv.env['NAVER_MAP_CLIENT_ID'],
+      onAuthFailed: (error) {
+        print('Auth failed: $error');
+      });
   runApp(const MyApp());
   initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();

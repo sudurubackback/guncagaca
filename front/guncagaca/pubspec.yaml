@@ -32,9 +32,9 @@ dependencies:
     sdk: flutter
 
   provider: ^6.0.5
-#  flutter_naver_map: ^1.0.0
-  naver_map_plugin:
-    git: https://github.com/LBSTECH/naver_map_plugin.git
+  flutter_naver_map: ^1.0.0
+#  naver_map_plugin:
+#    git: https://github.com/LBSTECH/naver_map_plugin.git
   shared_preferences: ^2.0.7
 
   cupertino_icons: ^1.0.2

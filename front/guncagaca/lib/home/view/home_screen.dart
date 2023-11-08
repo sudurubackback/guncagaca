@@ -2,16 +2,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart' as naver;
-import 'package:naver_map_plugin/naver_map_plugin.dart';
+import 'package:guncagaca/home/component/overlay_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/utils/dio_client.dart';
 import '../../common/utils/location_service.dart';
-import '../../common/utils/location_utils.dart';
 import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
 import '../component/store_card_list.dart';
@@ -35,9 +34,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   bool get wantKeepAlive => true;
 
-  naver.NaverMapController? _controller;
+  NOverlayType willCreateOverlayType = NOverlayType.marker;
+  NAddableOverlay? willCreateOverlay;
+  NaverMapController? _controller;
   Position? currentLocation;
-  OverlayImage? heartIcon;
+  late NLatLng nLatLng;
   bool loading = true;
   final token = TokenManager().token;
 
@@ -45,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   void initState() {
     super.initState();
     dotenv.load(fileName: '.env');  // .env 파일 로드
-    _loadMarkerImages();
     _permission();
     _initCurrentLocationAndFetchCafes();
+
   }
 
   // 위치 권한 받기
@@ -60,24 +61,18 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   List<Store> storeData = []; // 카페 정보
-  List<Marker> markers = []; // 마커 정보
+  Set<NAddableOverlay> markers = {}; // 마커 정보
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
   final LocationService locationService = LocationService();
 
-  Future<void> _loadMarkerImages() async {
-    heartIcon = await OverlayImage.fromAssetImage(
-        assetName: 'assets/image/free-icon-heart.png',
-      // devicePixelRatio: window.devicePixelRatio,
-      // size: Size(5, 5),
-    );
-  }
-
   // 위치 정보를 초기화하고 카페 정보를 가져오는 함수
   Future<void> _initCurrentLocationAndFetchCafes() async {
     currentLocation = await locationService.getCurrentPosition();
+
     if (currentLocation != null) {
+      nLatLng = NLatLng(currentLocation!.latitude, currentLocation!.longitude);
       fetchCafes();
     } else {
       print("위치 정보를 가져오지 못했습니다.");
@@ -93,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     print(currentLocation);
 
     final String apiUrl = "$baseUrl/api/store/list";
-
     final response = await dio.get(
         apiUrl,
         options: Options(
@@ -106,8 +100,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           'lon': currentLocation!.longitude
         }
     );
-    print('${currentLocation!.latitude} 위도');
-    print('${currentLocation!.longitude} 경도');
 
     if (response.statusCode == 200) {
       List<dynamic> data = response.data;
@@ -127,23 +119,19 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   void createMarkersFromStores() {
     markers.clear();
     for (Store store in storeData) {
-      Marker marker = Marker(
-        markerId: store.storeDetail.storeId.toString(),
-        position: LatLng(store.latitude, store.longitude),
-        captionText: store.storeDetail.cafeName,
-        icon: store.storeDetail.isLiked
-            ? heartIcon : null,
-        onMarkerTab: (naver.Marker? marker, Map<String, int?>? iconSize) {
-          if (marker != null) {
-            // 카메라를 해당 마커 위치로 이동
-            _controller?.moveCamera(naver.CameraUpdate.scrollTo(marker.position!));
-            // 가게 정보 다이얼로그 표시
-            _showStoreInfoDialog(store);
-          }
-        },
+      // final overlay = NOverlayMakerUtil.makeOverlay(
+      //     type: NOverlayType.marker,
+      //     cameraPosition: NCameraPosition(target: NLatLng(store.latitude, store.longitude), zoom: 15),
+      //     id: store.storeDetail.storeId.toString());
+      final marker = NMarker(
+        id: store.storeDetail.storeId.toString(),
+        position: NLatLng(store.latitude, store.longitude),
+        // subCaption: NOverlayCaption(text: store.storeDetail.cafeName),
+        // icon: NOverlayImage('assets/image/free-icon-heart.png', file),
       );
       markers.add(marker);
     }
+    print(markers);
   }
 
 
@@ -211,7 +199,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
 
-
     return GestureDetector(
       onTap: () {
         // 화면 어디를 탭하더라도 포커스를 해제
@@ -252,20 +239,23 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 ),
 
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: loading
-              //       ? Center(child: CircularProgressIndicator())  // 로딩 중일 때 로딩 인디케이터 표시
-              //       : naver.NaverMap(
-              //     initLocationTrackingMode: naver.LocationTrackingMode.Follow,
-              //     initialCameraPosition: naver.CameraPosition(target: naverConvertToLatLng(currentLocation)),
-              //     locationButtonEnable: true,
-              //     markers: List.from(markers),
-              //     onMapCreated: (naver.NaverMapController controller) {
-              //       _controller = controller;
-              //     },
-              //   ),
-              // ),
+              Expanded(
+                flex: 1,
+                child: loading
+                    ? Center(child: CircularProgressIndicator())  // 로딩 중일 때 로딩 인디케이터 표시
+                    : NaverMap(
+                  options: NaverMapViewOptions(
+                    locationButtonEnable: true,
+                    initialCameraPosition: NCameraPosition(target: nLatLng, zoom: 15),
+                  ),
+                  onMapReady: (controller) async {
+                    _controller = controller;
+                    await _controller?.setLocationTrackingMode(NLocationTrackingMode.follow);
+                    await _controller?.addOverlayAll(markers);
+
+                  }
+                ),
+              ),
               Expanded(
                 flex: 1,
                 child: Center(
@@ -279,8 +269,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   ),
                 ),
               ),
-
-
             ],
           )
         ),

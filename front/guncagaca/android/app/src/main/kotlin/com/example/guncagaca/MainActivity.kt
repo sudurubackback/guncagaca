@@ -9,8 +9,13 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import android.os.Build
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Bundle
 
 class MainActivity: FlutterActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        intent.putExtra("background_mode", "transparent")
+        super.onCreate(savedInstanceState)
+    }
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
 
