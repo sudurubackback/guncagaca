@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.orderservice.domain.order.service;
 
 import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
+import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderCancelRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
@@ -155,6 +156,48 @@ public class OrderService {
 
         return storeOrderResponses;
     }
+
+    public List<OrderListResDto> getOrdersByStoreId(Long storeId) {
+        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
+        for(Order order : orders) {
+            OrderListResDto orderResponseDto = new OrderListResDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+        return orderResponseDtos;
+    }
+
+    public List<OrderListResDto> getDoneByStoreId(Long memberId) {
+        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(memberId, Status.COMPLETE);
+        for(Order order : orders) {
+            OrderListResDto orderResponseDto = new OrderListResDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
+
+    public List<OrderListResDto> getPreparingByStoreId(Long storeId) {
+        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.REQUEST);
+        for(Order order : orders) {
+            OrderListResDto orderResponseDto = new OrderListResDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+        return orderResponseDtos;
+    }
+
+    public List<OrderListResDto> getCancleByStoreId(Long storeId) {
+        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
+        for(Order order : orders) {
+            OrderListResDto orderResponseDto = new OrderListResDto(order);
+            orderResponseDtos.add(orderResponseDto);
+        }
+        return orderResponseDtos;
+    }
+
 
     public String requestOrder (String email, String obejctId) {
         Order order = orderRepository.findById(obejctId)

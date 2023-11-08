@@ -1,5 +1,8 @@
 package backend.sudurukbackx6.orderservice.domain.order.controller;
 
+
+import backend.sudurukbackx6.orderservice.domain.order.dto.*;
+import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderCancelRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
@@ -8,9 +11,12 @@ import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -42,6 +48,53 @@ public class OrderController {
     @Operation(summary = "사장님 주문 조회", description = "주문 조회", tags = { "Owner Controller" })
     public List<StoreOrderResponse> getStoredOrder (@PathVariable Long storeId){
         return orderService.getStoredOrder(storeId);
+    }
+
+/*    @GetMapping("/store/{storeId}/orders/summary")
+    public ResponseEntity<SalesSummaryResponse> getSalesSummary(
+            @PathVariable Long storeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        if (startDate == null || endDate == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        SalesSummaryResponse summary = orderService.getSalesSummary(storeId, startDate, endDate);
+        return ResponseEntity.ok(summary);
+    }*/
+
+    @GetMapping("waitlist/{storeId}")
+    public ResponseEntity<BaseResponseBody> getWaitList(@PathVariable Long storeId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(200, "사업자 인증 성공"));
+    }
+
+    @GetMapping("/list/{storeId}/{status}")
+    public BaseResponseBody<List<OrderListResDto>> getOrderList(@PathVariable Long storeId, @PathVariable String status) {
+//        return ResponseEntity.ok(orderService.getOrdersByStoreId(storeId));
+        //status가 1일 경우 order 조회
+        if (status.equals("1")) {
+            return new BaseResponseBody<>(200, "주문 조회 성공", orderService.getOrdersByStoreId(storeId));
+        }
+
+        //status가 2일 경우 preparing조회
+        else if (status.equals("2")) {
+            return new BaseResponseBody<>(200, "preparing 조회 성공", orderService.getPreparingByStoreId(storeId));
+        }
+        //status가 3인 경우 done조회
+        else if (status.equals("3")) {
+            return new BaseResponseBody<>(200, "done 조회 성공", orderService.getDoneByStoreId(storeId));
+        }
+
+        //status가 4인경우 cancle
+        else if (status.equals("4")) {
+            return new BaseResponseBody<>(200, "cancle 조회 성공", orderService.getCancleByStoreId(storeId));
+        }
+
+        else {
+            return new BaseResponseBody<>(400, "조회 실패", null);
+        }
+
     }
 
     // 사장님이 주문 접수
