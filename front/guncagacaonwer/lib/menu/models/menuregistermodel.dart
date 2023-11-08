@@ -8,6 +8,7 @@ class MenuRegisterRequest {
   final String description;
   final Category category;
   final List<OptionsEntity> optionsList;
+  final Status status;
 
   MenuRegisterRequest({
     required this.cafeId,
@@ -15,7 +16,9 @@ class MenuRegisterRequest {
     required this.price,
     required this.description,
     required this.category,
-    required this.optionsList});
+    required this.optionsList,
+    required this.status,
+  });
 
   factory MenuRegisterRequest.fromJson(Map<String, dynamic> json) {
     return MenuRegisterRequest(
@@ -25,6 +28,7 @@ class MenuRegisterRequest {
       description: json['description'] as String,
       category: Category.values[json['category'] as int],
       optionsList: (json['optionsList'] as List).map((i) => OptionsEntity.fromJson(i)).toList(),
+      status: Status.values[json['status'] as int],
     );
   }
 
@@ -36,6 +40,7 @@ class MenuRegisterRequest {
       'description': description,
       'category': category.index,
       'optionsList': optionsList.map((option) => option.toJson()).toList(),
+      'status' : status.index,
     };
   }
 }
@@ -90,4 +95,8 @@ class DetailsOptionEntity {
 
 enum Category {
   COFFEE, OTHERS, SMOOTHIE, AID, TEA, DESSERT, DRINK
+}
+
+enum Status {
+  ON_SALE, SOLD_OUT
 }

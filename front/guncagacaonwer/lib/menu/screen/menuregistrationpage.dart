@@ -137,6 +137,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
       description: desController.text,
       category: selectedCategory!,
       optionsList: optionsList,
+      status: Status.ON_SALE,
     );
 
     // MenuRegisterRequest 인스턴스를 JSON 형태로 변환
@@ -149,7 +150,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
     });
 
     try {
-      Response response = await dio.post("/menu/register", data: formData);
+      Response response = await dio.post("/api/ceo/menu/register", data: formData);
 
       if (response.statusCode == 200) {
         // 성공적으로 메뉴가 등록되었습니다.
