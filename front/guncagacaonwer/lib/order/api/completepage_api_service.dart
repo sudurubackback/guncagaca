@@ -23,11 +23,8 @@ class AuthInterceptor extends Interceptor {
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
-  @GET("/api/list/{storeId}/{status}")
-  Future<List<Order>> getCompleteList(
-      @Path("storeId") int storeId,
-      @Path("status") String status,
-      );
+  @GET("/store/{storeId}/orders")
+  Future<List<StoreOrderResponse>> getStoreOrdersForDateRange(@Path() int storeId, @Query('startDate') String startDate, @Query('endDate') String endDate);
 
   @GET("/api/ceo/ownerInfo")
   Future<OwnerInfoResponse> getOwnerInfo();

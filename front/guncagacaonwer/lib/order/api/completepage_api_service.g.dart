@@ -21,23 +21,27 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<List<Order>> getCompleteList(
+  Future<List<StoreOrderResponse>> getStoreOrdersForDateRange(
     int storeId,
-    String status,
+    String startDate,
+    String endDate,
   ) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'startDate': startDate,
+      r'endDate': endDate,
+    };
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Order>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<StoreOrderResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/api/list/${storeId}/${status}',
+              '/store/${storeId}/orders',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -47,7 +51,8 @@ class _ApiService implements ApiService {
               baseUrl,
             ))));
     var value = _result.data!
-        .map((dynamic i) => Order.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) =>
+            StoreOrderResponse.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }

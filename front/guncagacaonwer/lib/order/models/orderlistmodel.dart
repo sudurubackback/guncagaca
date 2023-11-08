@@ -39,6 +39,36 @@ class Order {
 }
 
 @JsonSerializable()
+class StoreOrderResponse {
+  final int memberId;
+  final String orderTime;
+  final String status;
+  final bool takeoutYn;
+  final List<Menu> menuList;
+  final double price;
+
+  StoreOrderResponse({
+    required this.memberId,
+    required this.orderTime,
+    required this.status,
+    required this.takeoutYn,
+    required this.menuList,
+    required this.price,
+  });
+
+  factory StoreOrderResponse.fromJson(Map<String, dynamic> json) {
+    return StoreOrderResponse(
+      memberId: json['memberId'],
+      orderTime: json['orderTime'],
+      status: json['status'],
+      takeoutYn: json['takeoutYn'],
+      menuList: (json['menus'] as List).map((item) => Menu.fromJson(item)).toList(),
+      price: json['price'],
+    );
+  }
+}
+
+@JsonSerializable()
 class Menu {
   final String menuId;
   final String menuName;

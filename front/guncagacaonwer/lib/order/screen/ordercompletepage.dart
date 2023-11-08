@@ -15,7 +15,7 @@ class OrderCompletePage extends StatefulWidget {
 
 class _OrderCompletePageState extends State<OrderCompletePage> {
 
-  List<Order> orders = [];
+  List<StoreOrderResponse> orders = [];
   late ApiService apiService;
 
   static final storage = FlutterSecureStorage();
@@ -41,7 +41,10 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
       int storeId = ownerResponse.store_id;
-      List<Order> orderList = await apiService.getCompleteList(storeId, "3");
+      String endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      String startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      List<StoreOrderResponse> orderList = await apiService.getStoreOrdersForDateRange(storeId, startDate, endDate);
       setState(() {
         orders = orderList;
       });
@@ -66,8 +69,8 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
               itemBuilder: (BuildContext context, int index) {
                 final order = orders[index];
                 final formatter = NumberFormat('#,###');
-                int totalQuantity = order.menus.map((menu) => menu.quantity).reduce((a, b) => a + b);
-                String formattedTotalPrice = formatter.format(order.orderPrice);
+                int totalQuantity = order.menuList.map((menu) => menu.quantity).reduce((a, b) => a + b);
+                String formattedTotalPrice = formatter.format(order.price);
                 // 주문 시간에서 날짜와 시간 추출
                 DateTime dateTime = DateTime.parse(order.orderTime);
                 String timeOfDay = "";
