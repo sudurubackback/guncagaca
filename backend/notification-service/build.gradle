@@ -46,6 +46,8 @@ dependencies {
 	// firebase
 	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '9.1.1'
 
+	//openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 dependencyManagement {

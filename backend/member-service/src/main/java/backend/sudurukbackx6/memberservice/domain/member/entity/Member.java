@@ -27,11 +27,18 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Point> points;
 
+    private String fcmToken;
+
     @Builder
-    public Member(Long id, String nickname, String email) {
+    public Member(Long id, String nickname, String email, String fcmToken) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
+        this.fcmToken = fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 

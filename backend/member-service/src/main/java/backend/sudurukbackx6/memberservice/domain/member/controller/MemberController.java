@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/member")
@@ -49,6 +51,12 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMemberInfo(token));
     }
 
+    // memberId 리스트로 받아서 리스트로 반환
+    @PostMapping("/memberInfo/bulk")
+    public List<MemberInfoResponse> getMemberInfoBulk(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds) {
+        return memberService.getMemberInfoBulk(memberIds);
+    }
+
     @GetMapping("/mypage/point")
     public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Authorization") String token,@RequestHeader("Email") String email) {
         return ResponseEntity.ok(memberService.myPoint(email,token));
@@ -58,4 +66,19 @@ public class MemberController {
     public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Authorization") String token, @RequestHeader("Email") String email,@PathVariable Long cafe_id){
         return ResponseEntity.ok(memberService.pointStore(email,token, cafe_id));
     }
+
+    @GetMapping("/id")
+    public ResponseEntity<Long> getId(@RequestParam String email) {
+        return ResponseEntity.ok(memberService.getId(email));
+    }
+
+    @GetMapping("/firebaseToken")
+    public ResponseEntity<Map<String,String>> getFirebaseToken(@RequestHeader("Authorization") String token) {
+        System.out.println("*****************************불리긴 함 **************************");
+        Map<String, String> map = new HashMap<>();
+        System.out.println("token = " + token);
+        map.put("firebase_token", memberService.getFirebaseToken(token));
+        return ResponseEntity.ok(map);
+    }
 }
+
