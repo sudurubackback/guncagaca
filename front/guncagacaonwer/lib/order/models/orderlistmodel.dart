@@ -5,26 +5,22 @@ class Order {
   final String id;
   final int memberId;
   final int storeId;
-  final String receiptId;
+  final int orderPrice;
   final String orderTime;  // 또는 DateTime orderTime;
-  final String status;
   final bool takeoutYn;
-  final bool reviewYn;
+  final String receiptId;
   final List<Menu> menus;
-  final int price;
   bool inProgress; // 추가된 프로퍼티
 
   Order({
     required this.id,
     required this.memberId,
     required this.storeId,
-    required this.receiptId,
+    required this.orderPrice,
     required this.orderTime,
-    required this.status,
     required this.takeoutYn,
-    required this.reviewYn,
+    required this.receiptId,
     required this.menus,
-    required this.price,
     this.inProgress = false,
   });
 
@@ -33,12 +29,40 @@ class Order {
       id: json['id'],
       memberId: json['memberId'],
       storeId: json['storeId'],
+      orderPrice: json['orderPrice'],
+      orderTime: json['orderTime'],
+      takeoutYn: json['takeoutYn'],
       receiptId: json['receiptId'],
+      menus: (json['menus'] as List).map((item) => Menu.fromJson(item)).toList(),
+    );
+  }
+}
+
+@JsonSerializable()
+class StoreOrderResponse {
+  final int memberId;
+  final String orderTime;
+  final String status;
+  final bool takeoutYn;
+  final List<Menu> menuList;
+  final double price;
+
+  StoreOrderResponse({
+    required this.memberId,
+    required this.orderTime,
+    required this.status,
+    required this.takeoutYn,
+    required this.menuList,
+    required this.price,
+  });
+
+  factory StoreOrderResponse.fromJson(Map<String, dynamic> json) {
+    return StoreOrderResponse(
+      memberId: json['memberId'],
       orderTime: json['orderTime'],
       status: json['status'],
       takeoutYn: json['takeoutYn'],
-      reviewYn: json['reviewYn'],
-      menus: (json['menus'] as List).map((item) => Menu.fromJson(item)).toList(),
+      menuList: (json['menus'] as List).map((item) => Menu.fromJson(item)).toList(),
       price: json['price'],
     );
   }

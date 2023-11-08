@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'completepage_api_service.dart';
+part of 'trackingpage_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -21,7 +21,7 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<List<StoreOrderResponse>> getStoreOrdersForDateRange(
+  Future<List<StoreOrderResponse>> getStoreOrdersForDaterRange(
     int storeId,
     String startDate,
     String endDate,
