@@ -1,5 +1,7 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
+import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart';
+import 'package:guncagacaonwer/menu/models/ownerinfomodel.dart';
 
 part 'menuallpage_api_service.g.dart';
 
@@ -26,4 +28,10 @@ abstract class ApiService {
 
   @DELETE("/api/ceo/menu/delete")
   Future<void> deleteMenu(@Body() Map<String, dynamic> menuId);
+  
+  @GET("/api/ceo/{storeId}/menu")
+  Future<Map<String, List<MenuEntity>>> getMenues(@Path() String storeId);
+
+  @GET("/api/ceo/ownerInfo")
+  Future<OwnerInfoResponse> getOwnerInfo();
 }
