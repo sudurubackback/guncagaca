@@ -25,7 +25,7 @@ public class FCMNotificationService {
 	public String sendNotification(FCMNotificationRequestDto requestDto) {
 
 //		Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(()
-//			-> new BusinessException(ErrorCode.NOT_EXISTS_USER_ID)
+//				-> new BusinessException(ErrorCode.NOT_EXISTS_USER_ID)
 //		);
 //
 //		if (member.getFirebaseToken() != null) {

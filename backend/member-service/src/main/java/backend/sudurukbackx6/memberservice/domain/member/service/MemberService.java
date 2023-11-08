@@ -42,6 +42,7 @@ public class MemberService {
             Member member = Member.builder()
                     .email(signRequestDto.getEmail())
                     .nickname(signRequestDto.getNickname())
+                    .fcmToken(signRequestDto.getFcmToken())
                     .build();
             memberRepository.save(member);
         }
@@ -103,6 +104,21 @@ public class MemberService {
                 .build();
     }
 
+    public List<MemberInfoResponse> getMemberInfoBulk(List<Long> memberIds){
+
+        List<Member> members = memberRepository.findByIdIn(memberIds);
+
+        List<MemberInfoResponse> memberInfoResponses = members.stream().map(member ->
+                MemberInfoResponse.builder()
+                        .id(member.getId())
+                        .email(member.getEmail())
+                        .nickname(member.getNickname())
+                        .build()
+        ).collect(Collectors.toList());
+
+        return memberInfoResponses;
+    }
+
 
     public List<MyPointsResponse> myPoint(String email, String token) {
 
@@ -120,7 +136,10 @@ public class MemberService {
 
         for (Long cafeId : cafeIds) {
             StoreResponse storeInfo = storeFeignClient.cafeDetail(token, cafeId);
-            String name = storeInfo.getName();
+
+            log.info(storeInfo.toString());
+            String name = storeInfo.getCafeName();
+
             String img = storeInfo.getImg();
 
             List<Point> cafePoints = pointList.stream()
@@ -165,5 +184,11 @@ public class MemberService {
         } else {
             throw new IllegalArgumentException("해당 멤버의 카페 포인트 정보가 없습니다.");
         }
+    }
+
+    public Long getId(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+        return member.getId();
     }
 }
