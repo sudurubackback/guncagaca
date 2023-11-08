@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.orderservice.domain.order.controller;
 
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
+import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +74,7 @@ public class OrderController {
     }
 
     @GetMapping("/list/{storeId}/{status}")
-    public BaseResponseBody<List<OrderResponseDto>> getOrderList(@PathVariable Long storeId, @PathVariable String status) {
+    public BaseResponseBody<List<OrderListResDto>> getOrderList(@PathVariable Long storeId, @PathVariable String status) {
 //        return ResponseEntity.ok(orderService.getOrdersByStoreId(storeId));
         //status가 1일 경우 order 조회
         if (status.equals("1")) {
