@@ -74,7 +74,9 @@ public class MemberController {
 
     @GetMapping("/firebaseToken")
     public ResponseEntity<Map<String,String>> getFirebaseToken(@RequestHeader("Authorization") String token) {
+        System.out.println("*****************************불리긴 함 **************************");
         Map<String, String> map = new HashMap<>();
+        System.out.println("token = " + token);
         map.put("firebase_token", memberService.getFirebaseToken(token));
         return ResponseEntity.ok(map);
     }

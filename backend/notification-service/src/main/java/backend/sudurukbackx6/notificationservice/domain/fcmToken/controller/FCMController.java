@@ -23,6 +23,7 @@ public class FCMController {
 
 	@PostMapping("/sendMember")
 	public ResponseEntity<? extends BaseResponseBody> sendPushMember(@RequestHeader("Authorization") String header,  @RequestBody FCMNotificationRequestDto requestDto) throws FirebaseMessagingException {
+		fcmNotificationService.sendMemberFCM(requestDto, header);
 		return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "알림 전송 성공"));
 	}
 }

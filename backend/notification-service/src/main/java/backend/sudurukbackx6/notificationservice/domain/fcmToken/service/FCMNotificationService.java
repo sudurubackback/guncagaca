@@ -30,6 +30,7 @@ public class FCMNotificationService {
 	public void sendMemberFCM(FCMNotificationRequestDto requestDto, String token) throws FirebaseMessagingException {
 
 		MemberResDto firebaseToken = memberFeignClient.getFirebaseToken(token);
+		System.out.println(firebaseToken.getFirebase_token());
 		if(firebaseToken==null|| firebaseToken.getFirebase_token()==null){
 			throw new BadRequestException(ErrorCode.EMPTY_FIREBASE_TOKEN);
 		}
@@ -39,13 +40,13 @@ public class FCMNotificationService {
 		Notification notification = Notification.builder()
 				.setTitle(requestDto.getTitle())
 				.setBody(requestDto.getBody())
-				.setImage(requestDto.getImageUrl())
+//				.setImage(requestDto.getImageUrl())
 				.build();
 
 		Message message = Message.builder()
 				.setToken(firebaseToken.getFirebase_token())
 				.setNotification(notification)
-				.putData("productCode", requestDto.getProductCode())
+//				.putData("productCode", requestDto.getProductCode())
 				.build();
 
 		firebaseMessaging.send(message);
