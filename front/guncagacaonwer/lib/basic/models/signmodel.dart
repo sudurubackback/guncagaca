@@ -1,5 +1,4 @@
 // 회원가입 요청 데이터 모델
-import 'dart:ffi';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
