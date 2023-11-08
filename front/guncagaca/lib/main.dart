@@ -19,6 +19,8 @@ void main() async {
   await fcmSetting(); // FCM 설정 초기화
 
   await KakaoTokenManager.TokenManager().initialize();
+
+
   runApp(const MyApp());
   initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();

@@ -31,29 +31,20 @@ Future<void> fcmSetting() async {
   print('User granted permission: ${settings.authorizationStatus}');
 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'notification',
-    'notification',
+    'high_importance_channel', // 임의의 id
+    'High Importance Notifications', // 설정에 보일 채널명
     description: '알림입니다.',
-    importance: Importance.max,
+    importance: Importance.high,
   );
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
-  // // 아이콘 설정 추가
-  // const AndroidInitializationSettings initializationSettingsAndroid =
-  // AndroidInitializationSettings('app_icon');
-  //
-  //
-  // final InitializationSettings initializationSettings =
-  // InitializationSettings(android: initializationSettingsAndroid);
 
-  // await flutterLocalNotificationsPlugin.initialize(
-  //   initializationSettings,
-  //   onSelectNotification: (String? payload) async {
-  //     // 알림을 클릭했을 때의 동작을 추가할 수 있습니다.
-  //   },
-  // );
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
@@ -73,6 +64,7 @@ Future<void> fcmSetting() async {
             channel.name,
             channelDescription: channel.description,
             icon: 'main_img', // 아이콘의 리소스 이름
+            priority: Priority.high,
           ),
         ),
       );
@@ -84,4 +76,5 @@ Future<void> fcmSetting() async {
   String? firebaseToken = await messaging.getToken();
 
   print("firebaseToken : ${firebaseToken}");
+
 }

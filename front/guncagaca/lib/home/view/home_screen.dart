@@ -211,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
 
+
     return GestureDetector(
       onTap: () {
         // 화면 어디를 탭하더라도 포커스를 해제
@@ -251,20 +252,20 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 ),
 
               ),
-              Expanded(
-                flex: 1,
-                child: loading
-                    ? Center(child: CircularProgressIndicator())  // 로딩 중일 때 로딩 인디케이터 표시
-                    : naver.NaverMap(
-                  initLocationTrackingMode: naver.LocationTrackingMode.Follow,
-                  initialCameraPosition: naver.CameraPosition(target: naverConvertToLatLng(currentLocation)),
-                  locationButtonEnable: true,
-                  markers: List.from(markers),
-                  onMapCreated: (naver.NaverMapController controller) {
-                    _controller = controller;
-                  },
-                ),
-              ),
+              // Expanded(
+              //   flex: 1,
+              //   child: loading
+              //       ? Center(child: CircularProgressIndicator())  // 로딩 중일 때 로딩 인디케이터 표시
+              //       : naver.NaverMap(
+              //     initLocationTrackingMode: naver.LocationTrackingMode.Follow,
+              //     initialCameraPosition: naver.CameraPosition(target: naverConvertToLatLng(currentLocation)),
+              //     locationButtonEnable: true,
+              //     markers: List.from(markers),
+              //     onMapCreated: (naver.NaverMapController controller) {
+              //       _controller = controller;
+              //     },
+              //   ),
+              // ),
               Expanded(
                 flex: 1,
                 child: Center(

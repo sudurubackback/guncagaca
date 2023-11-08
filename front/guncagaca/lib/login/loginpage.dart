@@ -108,6 +108,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? firebaseToken = await messaging.getToken();
+    print("로그인 fcm토큰 : $firebaseToken");
     final String apiUrl = "$baseUrl/api/member/sign";
 
     final response = await dio.post(
@@ -120,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
         data: {
           'nickname': nickname,
           'email': email,
+          'fcmToken' : firebaseToken,
         }
     );
 
