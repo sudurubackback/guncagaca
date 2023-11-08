@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guncagacaonwer/order/api/trackingpage_api_service.dart';
+import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 
 class OrderTrackingPage extends StatefulWidget {
@@ -8,32 +12,6 @@ class OrderTrackingPage extends StatefulWidget {
 }
 
 class _OrderTrackingPageState extends State<OrderTrackingPage> {
-  final List<Map<String, dynamic>> processingOrders = [
-    {
-      "orderTime": "2023-10-27 12:30",
-      "totalMenuCount": 3,
-      "totalPrice" : 15000,
-      "menuList": ["아메리카노 x 1", "카페라떼 x 2"],
-      "nickname" : "민승",
-      "arrivalTime": "2023-10-27 13:15",
-    },
-    {
-      "orderTime": "2023-10-27 13:00",
-      "totalMenuCount": 2,
-      "totalPrice" : 9000,
-      "menuList": ["카페모카 x 2"],
-      "nickname" : "민승",
-      "arrivalTime": "2023-10-27 13:45",
-    },
-    {
-      "orderTime": "2023-10-27 14:15",
-      "totalMenuCount": 1,
-      "totalPrice" : 4500,
-      "menuList": ["카페라떼 x 1"],
-      "nickname" : "민승",
-      "arrivalTime": "2023-10-27 15:00",
-    },
-  ];
 
   DateTime? startingDate;
   DateTime? endingDate;
@@ -62,32 +40,51 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
       controller.text = DateFormat('yyyy-MM-dd').format(picked);
     }
   }
-  List<Map<String, dynamic>> filteredOrders = [];
+  List<StoreOrderResponse> orders = [];
+  late ApiService apiService;
 
-  // 날짜 필터링
-  List<Map<String, dynamic>> filterOrdersByDate(
-      List<Map<String, dynamic>> orders,
-      DateTime? startingDate,
-      DateTime? endingDate,
-      ) {
-    if (startingDate == null || endingDate == null) {
-      return orders; // 선택된 날짜 범위가 없으면 모든 주문 반환
-    }
+  static final storage = FlutterSecureStorage();
 
-    return orders.where((order) {
-      DateTime orderTime = DateTime.parse(order['orderTime']);
-      return orderTime.isAfter(startingDate) && orderTime.isBefore(endingDate);
-    }).toList();
+  Future<void> setupApiService() async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    Dio dio = Dio();
+    dio.interceptors.add(AuthInterceptor(accessToken));
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+    apiService = ApiService(dio);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setupApiService();
   }
 
   void applyDateFilter() {
-    if (startingDate != null && endingDate != null) {
+    // 사용자가 입력한 시작 날짜와 종료 날짜를 가져옵니다.
+    String startDate = startingDateController.text;
+    String endDate = endingDateController.text;
+
+    // 가져온 날짜로 주문을 조회합니다.
+    fetchOrders(startDate, endDate);
+  }
+
+  // 주문 처리 데이터 get
+  // 주문 처리 데이터 get
+  Future<void> fetchOrders(String startDate, String endDate) async {
+    try {
+      final ownerResponse = await apiService.getOwnerInfo();
+      int storeId = ownerResponse.store_id;
+
+      List<StoreOrderResponse> orderList = await apiService.getStoreOrdersForDaterRange(storeId, startDate, endDate);
       setState(() {
-        // filteredOrders에 날짜 필터 적용
-        filteredOrders = filterOrdersByDate(processingOrders, startingDate, endingDate);
+        orders = orderList;
       });
+    } catch (e) {
+      print(e);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,15 +174,18 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
           SizedBox(height: 3 * (deviceHeight / standardDeviceHeight)),
           Expanded(
             child: ListView.builder(
-              itemCount: filteredOrders.length,
+              itemCount: orders.length,
               itemBuilder: (BuildContext context, int index) {
-                final order = filteredOrders[index];
+                final order = orders[index];
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(order["totalPrice"]);
+                int totalQuantity = order.menuList.map((menu) => menu.quantity).reduce((a, b) => a + b);
+                String formattedTotalPrice = formatter.format(order.price);
                 // 주문 시간에서 날짜와 시간 추출
-                List<String> orderTimeParts = order["orderTime"].split(" ");
+                DateTime dateTime = DateTime.parse(order.orderTime);
                 String timeOfDay = "";
-                String time = orderTimeParts[1];
+                String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+                List<String> dateTimeParts = formattedTime.split(" ");
+                String time = dateTimeParts[1].substring(0, 5);
                 // 시간을 오전/오후로 나누기
                 int hour = int.parse(time.split(":")[0]);
                 if (hour >= 12) {
@@ -260,7 +260,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                 height: 4 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '메뉴 [${order["totalMenuCount"]}]개 / '+formattedTotalPrice+"원",
+                                '메뉴 [$totalQuantity]개 / '+formattedTotalPrice+"원",
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
@@ -269,7 +269,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '닉네임 : ${order['nickname']}',
+                                '주문자 번호 : ${order.memberId}',
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                   color: Color(0xFF9B5748),
