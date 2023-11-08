@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 
@@ -14,26 +15,36 @@ class OrderCompletePage extends StatefulWidget {
 
 class _OrderCompletePageState extends State<OrderCompletePage> {
 
-  List<Order> orders = [];
+  List<StoreOrderResponse> orders = [];
   late ApiService apiService;
+
+  static final storage = FlutterSecureStorage();
+
+  Future<void> setupApiService() async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    Dio dio = Dio();
+    dio.interceptors.add(AuthInterceptor(accessToken));
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+    apiService = ApiService(dio);
+  }
 
   @override
   void initState() {
     super.initState();
 
-    Dio dio = Dio();
-    dio.interceptors.add(LogInterceptor(responseBody: true));
-    apiService = ApiService(dio);
+    setupApiService();
     fetchOrders();
   }
 
   // 주문 처리 데이터 get
   Future<void> fetchOrders() async {
     try {
-      final token = "";
-      final ownerResponse = await apiService.getOwnerInfo(token);
+      final ownerResponse = await apiService.getOwnerInfo();
       int storeId = ownerResponse.store_id;
-      List<Order> orderList = await apiService.getCompleteList(storeId, "3");
+      String endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      String startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      List<StoreOrderResponse> orderList = await apiService.getStoreOrdersForDateRange(storeId, startDate, endDate);
       setState(() {
         orders = orderList;
       });
@@ -58,12 +69,14 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
               itemBuilder: (BuildContext context, int index) {
                 final order = orders[index];
                 final formatter = NumberFormat('#,###');
-                int totalQuantity = order.menus.map((menu) => menu.quantity).reduce((a, b) => a + b);
+                int totalQuantity = order.menuList.map((menu) => menu.quantity).reduce((a, b) => a + b);
                 String formattedTotalPrice = formatter.format(order.price);
                 // 주문 시간에서 날짜와 시간 추출
-                List<String> orderTimeParts = order.orderTime.split(" ");
+                DateTime dateTime = DateTime.parse(order.orderTime);
                 String timeOfDay = "";
-                String time = orderTimeParts[1];
+                String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+                List<String> dateTimeParts = formattedTime.split(" ");
+                String time = dateTimeParts[1].substring(0, 5);
                 // 시간을 오전/오후로 나누기
                 int hour = int.parse(time.split(":")[0]);
                 if (hour >= 12) {
