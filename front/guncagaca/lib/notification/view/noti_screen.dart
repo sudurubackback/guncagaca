@@ -23,7 +23,7 @@ class NotiScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: NotiList(notifications: notifications),
+            child: NotiList(),
           ),
         ],
       ),
