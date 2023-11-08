@@ -4,9 +4,6 @@ import 'package:guncagaca/common/view/custom_appbar.dart';
 import '../component/noti_list.dart';
 
 class NotiScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> notifications;
-
-  NotiScreen({required this.notifications});
 
   @override
   Widget build(BuildContext context) {

@@ -38,7 +38,7 @@ class NotiIconWidget extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => DefaultLayout(
-                  child: NotiScreen(notifications: dummyNotifications),
+                  child: NotiScreen(),
                   mainViewModel: mainViewModel,
                 ),
               ),

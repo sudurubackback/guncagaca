@@ -97,9 +97,15 @@ class _OrderListState extends State<OrderList> {
     return "$year.$month.$day $period $hour:$minute";
   }
 
+  Future<void> _refreshData() async {
+    await loadOrders();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return storeOrders.isEmpty
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: storeOrders.isEmpty
         ? Center(
           child: Text(
            "주문내역이 없습니다.",
@@ -303,11 +309,19 @@ class _OrderListState extends State<OrderList> {
                     ],
                   ),
                 onTap: () {
-              // 알림을 눌렀을 때의 동작을 추가하세요.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OrderDetailScreen(
+                        orderHistory: storeOrders[index],
+                        mainViewModel: widget.mainViewModel,),
+                    ),
+                  );
             },
           ),
         );
       },
+        ),
     );
   }
 }

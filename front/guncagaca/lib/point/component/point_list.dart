@@ -147,6 +147,7 @@ class _PointListState extends State<PointList> {
                   ),
                 ],
               ),
+                  SizedBox(height: 10,),
                   Expanded(
                     child:
                     OrderStoreList(mainViewModel: widget.mainViewModel, storeId:point['storeId']),

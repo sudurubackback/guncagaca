@@ -55,7 +55,7 @@ class _MypageComponentState extends State<MypageComponent> {
     if (email != null) {
       try {
         Response response = await dio.get(
-          "$baseUrl/api/member/mypage",
+          "http://k9d102.p.ssafy.io:8081/api/member/mypage",
           options: Options(
             headers: {
               'Authorization': 'Bearer $token',
@@ -65,6 +65,8 @@ class _MypageComponentState extends State<MypageComponent> {
         );
 
         if (response.statusCode == 200) {
+
+          print("내정보: ${response.data}");
 
           setState(() {
             myData = response.data;
