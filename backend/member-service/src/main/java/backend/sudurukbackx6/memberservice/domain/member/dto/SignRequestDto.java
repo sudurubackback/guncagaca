@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class SignRequestDto {
     public String nickname;
     public String email;
+    public String fcmToken;
 }
