@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.notificationservice.domain.fcmToken.controller;
 
 
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.MemberFeignClient;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.AlertHistoryService;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.AlertHistoryDto;
 import lombok.RequiredArgsConstructor;
@@ -15,23 +16,24 @@ import java.util.List;
 public class AlertHistoryController {
 	private final AlertHistoryService alertHistoryService;
 
+
 	// 알림 목록 조회
 	@GetMapping("/history")
-	public ResponseEntity<List<AlertHistoryDto>> getAlertHistory() {
-//		return ResponseEntity.ok(alertHistoryService.getAlertHistory(membersInfo.getId()));
-		return null;
+	public ResponseEntity<List<AlertHistoryDto>> getAlertHistory(@RequestHeader("Authorization") String token) {
+		return ResponseEntity.ok(alertHistoryService.getAlertHistory(token));
 	}
+
 //	@GetMapping("/history")
 //	public ResponseEntity<List<AlertHistoryDto>> getAlertHistory(@MemberInfo MembersInfo membersInfo) {
 //		return ResponseEntity.ok(alertHistoryService.getAlertHistory(membersInfo.getId()));
 //	}
 //
-//	// 알림 단일 삭제
-//	@DeleteMapping("/history/{alertId}")
-//	public ResponseEntity<String> deleteAlertHistory(@MemberInfo MembersInfo membersInfo, @PathVariable Long alertId) {
-//		alertHistoryService.deleteAlertHistory(alertId, membersInfo.getId());
-//		return ResponseEntity.ok(String.format("%d번 알림 삭제", alertId));
-//	}
+	// 알림 단일 삭제
+	@DeleteMapping("/history/{alertId}")
+	public ResponseEntity<String> deleteAlertHistory(@RequestHeader("Authorization") String token, @PathVariable Long alertId) {
+		alertHistoryService.deleteAlertHistory(token, alertId);
+		return ResponseEntity.ok(String.format("%d번 알림 삭제", alertId));
+	}
 //
 //	// 알림 전체 삭제
 //	@DeleteMapping("/history/all")
