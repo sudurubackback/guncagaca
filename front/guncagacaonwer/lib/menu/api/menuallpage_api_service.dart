@@ -23,4 +23,7 @@ abstract class ApiService {
 
   @PUT("/api/ceo/menu/sale")
   Future<void> updateMenuStatus(@Body() Map<String, dynamic> menuId);
+
+  @DELETE("/api/ceo/menu/delete")
+  Future<void> deleteMenu(@Body() Map<String, dynamic> menuId);
 }

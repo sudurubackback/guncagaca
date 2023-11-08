@@ -78,6 +78,10 @@ class _MenuAllPageState extends State<MenuAllPage> {
     await apiService.updateMenuStatus({'menuId': menuId});
   }
 
+  void deleteMenu(String menuId) async {
+    await apiService.deleteMenu({'menuId': menuId});
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -178,14 +182,15 @@ class _MenuAllPageState extends State<MenuAllPage> {
                               TextButton(
                                 onPressed: () {
                                   // "삭제" 버튼을 누를 때 해당 항목을 리스트에서 제거하고 화면을 업데이트
-                                  setState(() {
-                                    // 리스트에서 항목 삭제하는 코드 (여기서는 예시로 index를 이용)
-                                    int index = menulists.indexOf(menu); // menu는 삭제하려는 항목
-                                    if (index != -1) {
-                                      menulists.removeAt(index);
-                                    }
-                                  });
-                                  Navigator.of(context).pop();
+                                  // deleteMenu(menu);
+                                  // setState(() {
+                                  //   // 리스트에서 항목 삭제하는 코드 (여기서는 예시로 index를 이용)
+                                  //   int index = menulists.indexOf(menu); // menu는 삭제하려는 항목
+                                  //   if (index != -1) {
+                                  //     menulists.removeAt(index);
+                                  //   }
+                                  // });
+                                  // Navigator.of(context).pop();
                                 },
                                 child: Text('삭제'),
                               ),
