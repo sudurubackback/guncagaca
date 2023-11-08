@@ -19,14 +19,14 @@ class _NotiListState extends State<NotiList> {
   @override
   void initState() {
     super.initState();
-    test();
+    MyAlertListFromAPI();
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
 
-  Future<void> test() async {
+  Future<void> MyAlertListFromAPI() async {
     final String apiUrl = "http://k9d102.p.ssafy.io:8082/api/alert/history";
 
     final response = await dio.get(
@@ -44,6 +44,32 @@ class _NotiListState extends State<NotiList> {
       notifications = List<Map<String, dynamic>>.from(jsonData);
       print(notifications);
       setState(() {});
+    } else {
+      throw Exception("Failed to fetch menus.");
+    }
+  }
+
+  Future<void> DeleteAlertFromAPI(int alertId) async {
+    final String apiUrl = "http://k9d102.p.ssafy.io:8082/api/alert/history/$alertId";
+
+    final response = await dio.delete(
+      apiUrl,
+      options: Options(
+          headers: {
+            'Authorization': "Bearer $token",
+          }
+      ),
+        queryParameters: {
+          'alertId': alertId
+        }
+
+    );
+
+    if (response.statusCode == 200) {
+      print("삭제 성공");
+      setState(() {
+        MyAlertListFromAPI();
+      });
     } else {
       throw Exception("Failed to fetch menus.");
     }
@@ -97,7 +123,7 @@ class _NotiListState extends State<NotiList> {
             ),
             trailing: GestureDetector(
               onTap: () {
-                // _removeNotification(index);
+                DeleteAlertFromAPI(notifications[index]['id']);
               },
               child: Icon(Icons.close),
             ),
