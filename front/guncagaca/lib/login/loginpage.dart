@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
@@ -65,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
       final nickname = mainViewModel.user?.kakaoAccount?.profile?.nickname;
       final email = mainViewModel.user?.kakaoAccount?.email;
       print('버튼 클릭 완료');
-
       final tokens = await _fetchTokens(nickname, email);
       print(tokens);
       if (tokens != null) {

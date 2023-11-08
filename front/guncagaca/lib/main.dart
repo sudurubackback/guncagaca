@@ -10,17 +10,19 @@ import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
 import 'cart/controller/cart_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'common/fcm/fcmsetting.dart'; // fcmSetting 함수를 호출할 파일을 import
 
 void main() async {
-  await dotenv.load(fileName: ".env");	// .env 파일 Path
+  await dotenv.load(fileName: ".env"); // .env 파일 Path
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_SDK_NATIVE_KEY']);
-  WidgetsFlutterBinding.ensureInitialized();
+
+  await fcmSetting(); // FCM 설정 초기화
+
   await KakaoTokenManager.TokenManager().initialize();
   runApp(const MyApp());
   initializeDateFormatting();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
 class MyApp extends StatelessWidget {
@@ -34,12 +36,10 @@ class MyApp extends StatelessWidget {
     ));
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-
-      // home: DefaultLayout(child: RootTab()),
       home: LandingPage(),
       initialBinding: AppBinding(),
       theme: ThemeData(
-          fontFamily: 'omu',
+        fontFamily: 'omu',
       ),
       themeMode: ThemeMode.system,
     );
