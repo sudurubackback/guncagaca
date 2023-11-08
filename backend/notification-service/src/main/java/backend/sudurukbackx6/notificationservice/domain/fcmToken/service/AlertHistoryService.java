@@ -1,5 +1,7 @@
 package backend.sudurukbackx6.notificationservice.domain.fcmToken.service;
 
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.MemberFeignClient;
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.dto.response.MemberInfoResponse;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.AlertHistoryDto;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.AlertHistory;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.repository.AlertHistoryRepository;
@@ -13,25 +15,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlertHistoryService {
 	private final AlertHistoryRepository alertHistoryRepository;
+	private final MemberFeignClient memberFeignClient;
 
 	// 알림 목록 조회
-//	public List<AlertHistoryDto> getAlertHistory(Long memberId) {
-//
-//		List<AlertHistoryDto> alertHistoryDtos = new ArrayList<>();
-//		for (AlertHistory alertHistory : alertHistories) {
-//			AlertHistoryDto alertHistoryDto = AlertHistoryDto.builder()
-//				.alertId(alertHistory.getId())
-//				.title(alertHistory.getTitle())
-//				.body(alertHistory.getBody())
-//				.time(alertHistory.getCreateTime())
-//				.imageUrl(alertHistory.getImageUrl())
-//				.productCode(alertHistory.getProductCode())
-//				.build();
-//			alertHistoryDtos.add(alertHistoryDto);
-//		}
-//
-//		return alertHistoryDtos;
-//	}
+	public List<AlertHistoryDto> getAlertHistory(String token) {
+		MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(token);
+		Long myId = memberInfo.getId();
+		List<AlertHistory> alertHistories = alertHistoryRepository.findAllByMemberId(myId);
+
+		List<AlertHistoryDto> alertHistoryDtos = new ArrayList<>();
+
+		for (AlertHistory alertHistory : alertHistories) {
+			AlertHistoryDto alertHistoryDto = AlertHistoryDto.builder()
+					.alertId(alertHistory.getId())
+					.title(alertHistory.getTitle())
+					.body(alertHistory.getBody())
+					.build();
+
+			alertHistoryDtos.add(alertHistoryDto);
+		}
+
+		return alertHistoryDtos;
+
+
+	}
 //
 //	// 알림 삭제
 //	public void deleteAlertHistory(Long alertId, Long memberId) {

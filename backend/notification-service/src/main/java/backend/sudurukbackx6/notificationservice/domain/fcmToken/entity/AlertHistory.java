@@ -24,10 +24,10 @@ public class AlertHistory extends BaseTimeEntity {
 
 	private String productCode;
 
-	private String memberId;
+	private Long memberId;
 
 	@Builder
-	public AlertHistory(Long id, String title, String body, String imageUrl, String productCode, String memberId) {
+	public AlertHistory(Long id, String title, String body, String imageUrl, String productCode, Long memberId) {
 		this.id = id;
 		this.title = title;
 		this.body = body;
