@@ -140,9 +140,11 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                 final formatter = NumberFormat('#,###');
                 String formattedTotalPrice = formatter.format(order.orderPrice);
                 // 주문 시간에서 날짜와 시간 추출
-                List<String> orderTimeParts = order.orderTime.split(" ");
+                DateTime dateTime = DateTime.parse(order.orderTime);
                 String timeOfDay = "";
-                String time = orderTimeParts[1];
+                String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+                List<String> dateTimeParts = formattedTime.split(" ");
+                String time = dateTimeParts[1].substring(0, 5);
                 // 시간을 오전/오후로 나누기
                 int hour = int.parse(time.split(":")[0]);
                 if (hour >= 12) {
