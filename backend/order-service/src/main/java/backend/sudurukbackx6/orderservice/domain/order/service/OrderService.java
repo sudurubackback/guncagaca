@@ -1,8 +1,11 @@
 package backend.sudurukbackx6.orderservice.domain.order.service;
 
-import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
-import backend.sudurukbackx6.orderservice.domain.order.dto.*;
 import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
+import backend.sudurukbackx6.orderservice.domain.order.dto.OrderCancelRequestDto;
+import backend.sudurukbackx6.orderservice.domain.order.dto.OrderRequestDto;
+import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
+import backend.sudurukbackx6.orderservice.client.OwnerServiceClient;
+import backend.sudurukbackx6.orderservice.domain.order.dto.StoreOrderResponse;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Status;
 import backend.sudurukbackx6.orderservice.domain.order.repository.OrderRepository;
@@ -11,19 +14,18 @@ import kr.co.bootpay.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import java.time.LocalTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +36,12 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberServiceClient memberServiceClient;
 
-    @Value("${bootpay.clientId")
+    @Value("${bootpay.clientId}")
     private String CLIENT_ID;
 
-    @Value("${bootpay.secretKey")
+    @Value("${bootpay.secretKey}")
     private String PRIVATE_KEY;
 
-    Bootpay bootpay = new Bootpay(CLIENT_ID, PRIVATE_KEY);
 
     // 주문 등록
     public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
@@ -54,13 +55,15 @@ public class OrderService {
                 .status(Status.ORDERED)
                 .takeoutYn(orderRequestDto.isTakeoutYn())
                 .reviewYn(false)
+                .payMethod(orderRequestDto.getPayMethod())
+                .eta(orderRequestDto.getEta())
                 .price(orderRequestDto.getTotalOrderPrice())
                 .menus(orderRequestDto.getMenus())
                 .build();
 
         orderRepository.save(newOrder);
 
-        OrderResponseDto responseDto = new OrderResponseDto(orderRequestDto.getMemberId(), orderRequestDto.getStoreId(), orderRequestDto);
+        OrderResponseDto responseDto = new OrderResponseDto(memberId, orderRequestDto.getStoreId(), orderRequestDto);
 
         return responseDto;
     }
@@ -84,142 +87,74 @@ public class OrderService {
     }
 
     // 결제 취소
-    public void cancelPay(String email, String receiptId, String reason) {
-
+    @Transactional
+    public boolean cancelPay(String email, String receiptId, String reason) {
         try {
+            Bootpay bootpay = new Bootpay(CLIENT_ID, PRIVATE_KEY);
+
+            log.info("부트페이 호출");
             HashMap<String, Object> token = bootpay.getAccessToken();
             if(token.get("error_code") != null) { //failed
-                return;
+                return false;
             }
+            log.info("token획득");
             Cancel cancel = new Cancel();
             cancel.receiptId = receiptId;
             cancel.cancelMessage = reason;
             cancel.cancelUsername = email;
 
+            log.info("취소생성");
             HashMap<String, Object> res = bootpay.receiptCancel(cancel);
             if(res.get("error_code") == null) { //success
                 log.info("receiptCancel success: " + res);
+                return true;
             } else {
                 log.info("receiptCancel false: " + res);
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     // 주문 취소
-    public void cancelOrder(String email, OrderCancelRequestDto orderCancelRequestDto) {
+    @Transactional
+    public boolean cancelOrder(String email, OrderCancelRequestDto orderCancelRequestDto) {
 
         // 결제 취소부터
-        cancelPay(email, orderCancelRequestDto.getReceiptId(), orderCancelRequestDto.getReason());
-
-        // 주문 내역 취소로 업데이트
-        Order order = getOrder(orderCancelRequestDto.getOrderId());
-        order.setStatus(Status.CANCELED);
-        orderRepository.save(order);
-
+        if (cancelPay(email, orderCancelRequestDto.getReceiptId(), orderCancelRequestDto.getReason())) {
+            // 주문 내역 취소로 업데이트
+            Order order = getOrder(orderCancelRequestDto.getOrderId());
+            order.setStatus(Status.CANCELED);
+            orderRepository.save(order);
+            return true;
+        }
+        return false;
     }
 
     // Owner에서 통계용
-    // TODO : 가게 별 운영 시간에 맞춰서 작성
-    public List<StoreOrderResponse> getStoreOrdersForDateRange(Long storeId, LocalDate startDate, LocalDate endDate) {
-        LocalDateTime startOfStartDate = startDate.atStartOfDay(); // 시작 날짜의 시작 시각 (00:00)
-        LocalDateTime endOfEndDate = endDate.atTime(LocalTime.MAX); // 종료 날짜의 끝 시각 (23:59:59.999999999)
-        System.out.println(startOfStartDate);
-        System.out.println(endOfEndDate);
-        Sort sort = Sort.by(Sort.Direction.ASC, "orderTime"); // orderTime에 대해 오름차순 정렬
-
-        List<Order> orders = orderRepository.findByStoreIdAndOrderTimeBetween(storeId, startOfStartDate, endOfEndDate, sort);
+    public List<StoreOrderResponse> getStoredOrder (Long storeId){
 
         List<StoreOrderResponse> storeOrderResponses = new ArrayList<>();
-        for (Order order : orders) {
-            StoreOrderResponse storeOrderResponse = StoreOrderResponse.builder()
-                    .memberId(order.getMemberId())
-                    .orderTime(order.getOrderTime())
-                    .status(String.valueOf(order.getStatus()))
-                    .takeoutYn(order.isTakeoutYn())
-                    .menuList(order.getMenus())
-                    .price(BigDecimal.valueOf(order.getPrice()))
-                    .build();
-            storeOrderResponses.add(storeOrderResponse);
-        }
-        return storeOrderResponses;
-    }
 
-
-    public SalesSummaryResponse getSalesSummary(Long storeId, LocalDate startDate, LocalDate endDate) {
-        List<StoreOrderResponse> orders = getStoreOrdersForDateRange(storeId, startDate, endDate);
-
-        BigDecimal totalSales = orders.stream()
-                .map(StoreOrderResponse::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        Map<String, Integer> menuSalesCount = new HashMap<>();
-        Map<Integer, Integer> hourlySalesCount = new HashMap<>();
-
-        for (StoreOrderResponse order : orders) {
-            // 시간대별 판매량 계산
-            int hour = order.getOrderTime().getHour();
-            hourlySalesCount.merge(hour, 1, Integer::sum);
-
-            // 메뉴별 판매량 계산
-            for (Menu menu : order.getMenuList()) {
-                menuSalesCount.merge(menu.getMenuName(), 1, Integer::sum);
+        List<Order> all = orderRepository.findAll();
+        for (Order order : all) {
+            if(Objects.equals(order.getStoreId(), storeId)){
+                StoreOrderResponse storeOrderResponse = StoreOrderResponse.builder()
+                        .memberId(order.getMemberId())
+                        .orderTime(order.getOrderTime())
+                        .status(order.getStatus())
+                        .takeoutYn(order.isTakeoutYn())
+                        .menuList(order.getMenus())
+                        .price(order.getPrice())
+                        .build();
+                storeOrderResponses.add(storeOrderResponse);
             }
         }
 
-        return new SalesSummaryResponse(totalSales, menuSalesCount, hourlySalesCount);
+        return storeOrderResponses;
     }
-
-    public List<OrderResponseDto> getOrdersByStoreId(Long storeId) {
-        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
-
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
-        for(Order order : orders) {
-            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-
-        return orderResponseDtos;
-//        return orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
-    }
-
-    public List<OrderResponseDto> getDoneByStoreId(Long memberId) {
-//        return orderRepository.findByStoreIdAndStatus(memberId, Status.DONE);
-        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(memberId, Status.COMPLETE);
-        for(Order order : orders) {
-            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-
-        return orderResponseDtos;
-    }
-
-    public List<OrderResponseDto> getPreparingByStoreId(Long storeId) {
-//        return orderRepository.findByStoreIdAndStatus(storeId, Status.PREPARING);
-        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.REQUEST);
-        for(Order order : orders) {
-            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-
-        return orderResponseDtos;
-    }
-
-    public List<OrderResponseDto> getCancleByStoreId(Long storeId) {
-//        return orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
-        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
-        for(Order order : orders) {
-            OrderResponseDto orderResponseDto = new OrderResponseDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-
-        return orderResponseDtos;
-    }
-
 
     public String requestOrder (String email, String obejctId) {
         Order order = orderRepository.findById(obejctId)
@@ -239,7 +174,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
         Long memberId = memberServiceClient.getId(email);
         log.info(memberId.toString());
-        
+
         order.setStatus(Status.COMPLETE);
         orderRepository.save(order);
         // TODO 알림보내기 TODO 알림보내기 (Open Feign)
@@ -249,7 +184,13 @@ public class OrderService {
 
     public List<Order> getMemberOrder(String email) {
         Long memberId = memberServiceClient.getId(email);
-        List<Order> orderList = orderRepository.findAllByMemberId(memberId);
+        List<Order> orderList = orderRepository.findAllByMemberIdOrderByOrderTimeDesc(memberId);
+        return orderList;
+    }
+
+    public List<Order> getMemberStoreOrder(String email, Long storeId) {
+        Long memberId = memberServiceClient.getId(email);
+        List<Order> orderList = orderRepository.findByMemberIdAndStoreIdOrderByOrderTimeDesc(memberId, storeId);
         return orderList;
     }
 

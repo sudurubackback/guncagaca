@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(url = "http://k9d102.p.ssafy.io:8081", name="member-service")
 public interface MemberServiceClient {
 
-    @GetMapping("api/member/id")
+    @GetMapping("/api/member/id")
     Long getId(@RequestParam String email);
 }

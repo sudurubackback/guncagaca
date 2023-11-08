@@ -38,6 +38,10 @@ public class Order {
 
     private boolean reviewYn;
 
+    private int eta;
+
+    private String payMethod;
+
     private List<Menu> menus;
 
     private int price;
