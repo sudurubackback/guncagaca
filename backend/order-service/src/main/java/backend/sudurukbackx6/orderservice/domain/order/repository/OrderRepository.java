@@ -15,10 +15,11 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends MongoRepository<Order, String> {
 
-    List<Order> findByStoreIdAndOrderTimeBetween(Long storeId, LocalDateTime start, LocalDateTime end, Sort sort);
-    //storeid와 status가 같은 order를 찾는다.
-    List<Order> findByStoreIdAndStatus(Long storeId, Status status);
-    List<Order> findAllByMemberId(Long memberId);
+    
 
+    List<Order> findAllByMemberIdOrderByOrderTimeDesc(Long memberId);
+
+    List<Order> findByMemberIdAndStoreIdOrderByOrderTimeDesc(Long memberId, Long storeId);
+    List<Order> findByStoreIdAndStatus(Long storeId, Status status);
 }
 
