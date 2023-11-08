@@ -2,6 +2,7 @@ package backend.sudurukbackx6.ownerservice.domain.menu.controller;
 
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.MenuEntity;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.Category;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import backend.sudurukbackx6.ownerservice.domain.menu.service.dto.*;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/ceo")
 @RequiredArgsConstructor
+@Slf4j
 public class MenuController {
 	private final MenuService menuService;
 
