@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guncagacaonwer/menu/api/menuallpage_api_service.dart';
 import 'package:guncagacaonwer/menu/screen/menueditpage.dart';
 
 class MenuAllPage extends StatefulWidget {
@@ -53,6 +56,29 @@ class _MenuAllPageState extends State<MenuAllPage> {
   //   );
   // }
 
+  late ApiService apiService;
+  static final storage = FlutterSecureStorage();
+
+  Future<void> setupApiService() async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    Dio dio = Dio();
+    dio.interceptors.add(AuthInterceptor(accessToken));
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+    apiService = ApiService(dio);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setupApiService();
+  }
+
+  void changeMenuStatus(String menuId) async {
+    await apiService.updateMenuStatus({'menuId': menuId});
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -84,11 +110,28 @@ class _MenuAllPageState extends State<MenuAllPage> {
           child: Column(
             children: [
               // 이미지
-              Image.asset(
-                imagePath, // 이미지 파일 경로
-                width: 90 * (deviceWidth / standardDeviceWidth),
-                height: 80 * (deviceHeight / standardDeviceHeight),
-                fit: BoxFit.cover,
+              GestureDetector(
+                onTap: () {
+                  // changeMenuStatus(menuId);
+                },
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      imagePath, // 이미지 파일 경로
+                      width: 90 * (deviceWidth / standardDeviceWidth),
+                      height: 80 * (deviceHeight / standardDeviceHeight),
+                      fit: BoxFit.cover,
+                      // color: menuStatus == 'SOLD_OUT' ? Color.fromRGBO(0, 0, 0, 0.4) : null,
+                    ),
+                    // if (menuStatus == 'SOLD_OUT')
+                    //   Center(
+                    //     child: Text(
+                    //       'SOLD OUT',
+                    //       style: TextStyle(color: Colors.red, fontSize: 30),
+                    //     ),
+                    //   ),
+                  ],
+                ),
               ),
               // 텍스트 중앙에 위치
               SizedBox(

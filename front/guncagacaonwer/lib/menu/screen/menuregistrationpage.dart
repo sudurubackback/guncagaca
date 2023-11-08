@@ -150,7 +150,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
     });
 
     try {
-      Response response = await dio.post("/menu/register", data: formData);
+      Response response = await dio.post("/api/ceo/menu/register", data: formData);
 
       if (response.statusCode == 200) {
         // 성공적으로 메뉴가 등록되었습니다.
