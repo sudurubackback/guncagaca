@@ -137,6 +137,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
       description: desController.text,
       category: selectedCategory!,
       optionsList: optionsList,
+      status: Status.ON_SALE,
     );
 
     // MenuRegisterRequest 인스턴스를 JSON 형태로 변환

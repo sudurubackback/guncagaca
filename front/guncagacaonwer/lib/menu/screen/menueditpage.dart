@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:guncagacaonwer/menu/models/menuregistermodel.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:dio/dio.dart';
 
 class MenuEditPage extends StatefulWidget {
   final Map<String, dynamic> menuData; // 가상 데이터 모델
@@ -14,42 +19,44 @@ class _MenuEditPageState extends State<MenuEditPage> {
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
 
+  String selectedImage = ""; // 선택된 이미지의 파일 경로
+  String selectedImageName = ""; // 선택된 이미지의 파일 이름
+  Category? selectedCategory ; // 선택된 카테고리를 저장할 변수
 
-  String? selectedCategory; // 선택된 카테고리를 저장할 변수
-  // 카테고리 목록
-  List<String> categories = [
-    '커피',
-    '논-커피',
-    '디저트',
-    // 다른 카테고리 항목들
-  ];
-  List<List<String>> optionList = []; // 옵션 목록을 저장할 리스트
-  List<Widget> itemWidgets = []; // 세부 옵션을 저장할 리스트
+  List<OptionsEntity> optionsList = []; // 옵션 목록을 저장할 리스트
+  List<Widget> itemWidgets = [];
 
-  void _addItem(String optionName, String optionPrice) {
+  void _addItem() {
+    TextEditingController optionController = TextEditingController();
+    TextEditingController priceController = TextEditingController();
+
     setState(() {
-      final index = itemWidgets.length; // 현재 항목의 인덱스 저장
-
+      int index = itemWidgets.length;
       itemWidgets.add(Row(
         children: [
-          Expanded(
-            child:
-              Container(
-                width: 150 ,
-                child: TextField(
-                  controller: TextEditingController(text: optionName),
-                  decoration: InputDecoration(
-                    hintText: '옵션 명',
-                  ),
-                ),
-              ),
-          ),
-          SizedBox(width: 10),
           Expanded(
             child: Container(
               width: 150,
               child: TextField(
-                controller: TextEditingController(text: optionPrice),
+                controller: optionController,
+                onChanged: (value) {
+                  optionsList[index].optionName = value; // 사용자가 입력한 옵션 이름 저장
+                },
+                decoration: InputDecoration(
+                  hintText: '옵션 명',
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: Container(
+              width: 150,
+              child: TextField(
+                controller: priceController,
+                onChanged: (value) {
+                  optionsList[index].detailsOptions[0].additionalPrice = int.parse(value); // 사용자가 입력한 가격 저장
+                },
                 decoration: InputDecoration(
                   hintText: '가격',
                 ),
@@ -61,32 +68,89 @@ class _MenuEditPageState extends State<MenuEditPage> {
             onPressed: () {
               setState(() {
                 itemWidgets.removeAt(index); // 해당 항목을 삭제
-                optionList.removeAt(index); // 해당 항목의 데이터도 삭제
+                optionsList.removeAt(index); // 해당 항목의 데이터도 삭제
               });
             },
           ),
         ],
       ));
-      optionList.add([optionName, optionPrice]);
+      // 해당 항목의 데이터를 optionsList에 추가
+      optionsList.add(OptionsEntity(
+        optionName: optionController.text, // 옵션 명
+        detailsOptions: [DetailsOptionEntity(
+          detailOptionName: optionController.text,
+          additionalPrice: int.parse(priceController.text),
+        )],
+      ));
     });
   }
-  @override
-  void initState() {
-    super.initState();
 
-    // widget의 menuData에서 메뉴명과 가격을 가져와 초기값으로 설정
-    textController1.text = widget.menuData['text'];
-    textController2.text = widget.menuData['price'];
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    // 기존 옵션 데이터 가져와 초기값으로 설정
-    if (widget.menuData['options'] != null) {
-      for (var key in widget.menuData['options'].keys) {
-        String optionName = key;
-        String optionPrice = widget.menuData['options'][key];
-        _addItem(optionName, optionPrice);
-      }
+    if (pickedFile != null) {
+      setState(() {
+        selectedImage = pickedFile.path; // 선택한 이미지의 파일 경로를 저장
+        selectedImageName = path.basename(pickedFile.path);
+      });
     }
   }
+
+  Future<void> updateMenu() async {
+    // 이 부분에서 필요한 정보를 모두 모아 `MenuEditRequest`를 생성합니다.
+    // 이 예제에서는 'textController1', 'textController2', 'selectedCategory' 및 'optionList'를 사용합니다.
+    // 실제 앱에서는 사용자가 입력한 값을 사용해야 합니다.
+
+    Map<String, dynamic> requestData = {
+      'name': textController1.text,
+      'price': int.parse(textController2.text),
+      'category': selectedCategory!,
+      'optionsList': optionsList,
+      // 필요한 다른 필드들
+    };
+
+    // FormData 인스턴스 생성
+    FormData formData = new FormData.fromMap({
+      ...requestData,
+      if (selectedImage.isNotEmpty)
+        "file": await MultipartFile.fromFile(selectedImage, filename: selectedImageName), // 업로드할 파일
+    });
+
+    Dio dio = Dio(); // Dio 인스턴스 생성
+
+    try {
+      Response response = await dio.put("/menu/edit", data: formData);
+
+      if (response.statusCode == 200) {
+        // 성공적으로 메뉴가 수정되었습니다.
+        print("Menu updated successfully");
+      } else {
+        // 메뉴 수정에 실패했습니다.
+        print("Failed to update the menu");
+      }
+    } catch (e) {
+      print("An error occurred while updating the menu: $e");
+    }
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   // widget의 menuData에서 메뉴명과 가격을 가져와 초기값으로 설정
+  //   textController1.text = widget.menuData['text'];
+  //   textController2.text = widget.menuData['price'];
+  //
+  //   // 기존 옵션 데이터 가져와 초기값으로 설정
+  //   if (widget.menuData['options'] != null) {
+  //     for (var key in widget.menuData['options'].keys) {
+  //       String optionName = key;
+  //       String optionPrice = widget.menuData['options'][key];
+  //       _addItem(optionName, optionPrice);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +192,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           height: 3 * (deviceHeight / standardDeviceHeight),
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            // 이미지 변경 버튼을 눌렀을 때의 동작 추가
-                          },
+                          onPressed: _pickImage,
                           child: Text('이미지 변경'),
                         ),
                       ],
@@ -163,18 +225,18 @@ class _MenuEditPageState extends State<MenuEditPage> {
                             SizedBox(width: 20 * (deviceWidth / standardDeviceWidth)),
                             Container(
                               width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
-                              child: DropdownButton(
+                              child: DropdownButton<Category>(
                                 isExpanded: true, // 이 속성을 true로 설정
                                 value: selectedCategory,
-                                items: categories.map((String category) {
-                                  return DropdownMenuItem(
+                                items: Category.values.map((Category category) {
+                                  return DropdownMenuItem<Category>(
                                     value: category,
-                                    child: Text(category),
+                                    child: Text(category.toString().split('.').last), // Enum 값을 문자열로 변환
                                   );
                                 }).toList(),
-                                onChanged: (String? newValue) {
+                                onChanged: (Category? newValue) {
                                   setState(() {
-                                    selectedCategory = newValue;
+                                    selectedCategory = newValue; // newValue 값을 enum 형태로 저장
                                   });
                                 },
                               ),
@@ -284,7 +346,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            _addItem('옵션 명', '옵션 가격'); // + 버튼 클릭 시 항목 추가
+                            // _addItem('옵션 명', '옵션 가격'); // + 버튼 클릭 시 항목 추가
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Color(0xFFCDABA4)),
