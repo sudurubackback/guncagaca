@@ -13,19 +13,17 @@ public class AlertHistoryDto {
 	private Long id;
 	private String title;
 	private String body;
-	private String imageUrl;
-	private String productCode;
+
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createTime;
 
 	@Builder
-	public AlertHistoryDto(Long alertId, String title, String body, String imageUrl, String productCode, LocalDateTime time) {
+	public AlertHistoryDto(Long alertId, String title, String body, LocalDateTime time) {
 		this.id = alertId;
 		this.title = title;
 		this.body = body;
 		this.createTime = time;
-		this.imageUrl = imageUrl;
-		this.productCode = productCode;
+
 	}
 }
