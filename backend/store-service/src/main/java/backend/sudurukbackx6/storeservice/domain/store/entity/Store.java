@@ -71,4 +71,8 @@ public class Store {
         this.description = description;
         this.reviews = review;
     }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 }

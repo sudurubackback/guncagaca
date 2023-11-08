@@ -32,6 +32,29 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux' // WebFlux 사용
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j' // Hystrix는 지원 중단이므로 Resilience4j 사용
 
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	// com.sun.xml.bind
+	implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
+	implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
+	// javax.xml.bind
+	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// swagger
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+//	implementation 'org.springdoc:springdoc-openapi-webflux-core:1.6.9'
+	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.9'
+	// https://mvnrepository.com/artifact/io.github.classgraph/classgraph
+	implementation 'io.github.classgraph:classgraph:4.8.138'
+
+
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

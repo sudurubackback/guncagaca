@@ -1,5 +1,7 @@
 package backend.sudurukbackx6.ownerservice.domain.owner.service;
 
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -13,7 +15,7 @@ import java.io.IOException;
 public interface OwnerService {
 
     //1. 회원가입
-    void signUp(SignUpReqDto signUpReqDto) throws IOException;
+    void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException;
 
     //2. 이메일로 인증 코드 전송
     void sendAuthCode(String email) throws MessagingException;
@@ -24,8 +26,9 @@ public interface OwnerService {
     //4. 이메일 중복 확인
     boolean checkValidEmail(String email);
 
-    //5. 로그인
+    //5. 로그인 & 로그아웃
     SignInResDto signIn(SignInReqDto request);
+    void signOut(String header);
 
     //6. 비밀번호 초기화, 이메일로 초기화된 비밀번호 전송
     void resetPassword(String email) throws MessagingException;
@@ -43,4 +46,9 @@ public interface OwnerService {
     void unRegister(SignInReqDto signInReqDto);
 
     void deletedOwner(String email);
+
+    OwnerInfoResponse ownerInfo (String token);
+
+    Long ownerStoreId (ChangeOwnerStoreIdRequest request);
+//    void toggleValidStatus(String email);
 }

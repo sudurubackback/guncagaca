@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.store.service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,22 +9,22 @@ import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceCli
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
+import backend.sudurukbackx6.storeservice.domain.store.client.OwnerServiceClient;
 import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
+import backend.sudurukbackx6.storeservice.domain.store.client.dto.OwnerInfoResponse;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.request.StoreUpdateReqDto;
+import backend.sudurukbackx6.storeservice.global.s3.S3Uploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.repository.StoreRepository;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.LocateRequest;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.NeerStoreResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreMenuResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreRequest;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreReviewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -43,6 +44,13 @@ public class StoreServiceImpl implements StoreService {
     private final LikeRepository likeRepository;
     private final StoreGeocoding storeGeocoding;
     private final MemberServiceClient memberServiceClient;
+    private final S3Uploader s3Uploader;
+    private final OwnerServiceClient ownerServiceClient;
+
+
+    @Value("${cloud.aws.cloud.url}")
+    private String basicProfile;
+
 
     @Value("${ncp.clientId}")
     private String id;
@@ -52,9 +60,14 @@ public class StoreServiceImpl implements StoreService {
 
     // 카페 등록
     @Override
-    public void cafeSave(StoreRequest request) {
+    public void cafeSave(MultipartFile multipartFile, StoreRequest request, String token) throws IOException {
 
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
+
+        log.info("주소 : {}", request.getAddress());
 
         String latitude = null;
         String longitude = null;
@@ -74,14 +87,47 @@ public class StoreServiceImpl implements StoreService {
                 .longitude(Double.valueOf(longitude))
                 .address(request.getAddress())
                 .tel(request.getTel())
-                .img(request.getImg())
+                .img(upload)
                 .openTime(request.getOpenTime())
                 .closeTime(request.getCloseTime())
                 .description(request.getDescription())
                 .build();
 
-        storeRepository.save(store);
+        storeRepository.saveAndFlush(store);
+        ChangeOwnerStoreIdRequest build = ChangeOwnerStoreIdRequest.builder()
+                .email(ownerInfo.getEmail())
+                .storeId(store.getId())
+                .build();
+        ownerServiceClient.changeOwnersStoreId(build);
     }
+
+    @Override
+    public void cafeImgChage(MultipartFile multipartFile, String token) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        Long cafeId = ownerInfo.getStoreId();
+        Store store = storeRepository.findById(cafeId).orElseThrow();
+
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
+        store.setImg(upload);
+    }
+
+    @Override
+    public void updateCafeInfo(String token, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        Long cafeId = ownerInfo.getStoreId();
+
+        log.info("description : {}", storeUpdateReqDto.getDescription());
+        System.out.println(storeUpdateReqDto.getDescription());
+
+        if(multipartFile==null || multipartFile.isEmpty()) {
+            Store store = storeRepository.findById(cafeId).orElseThrow();
+            storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), store.getImg(), cafeId);
+            return;
+        }
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
+        storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
+    }
+
 
     // 주변 카페 리스트
     @Override
@@ -165,6 +211,11 @@ public class StoreServiceImpl implements StoreService {
         Store store = getCafe(cafeId);
 
         return new StoreResponse(store, isLiked);
+    }
+
+    @Override
+    public List<StoreReviewResponse> cafeReview(Long cafeId) {
+        return null;
     }
 
     // 리뷰 최신순

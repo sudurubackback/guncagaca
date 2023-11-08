@@ -2,6 +2,10 @@ package backend.sudurukbackx6.ownerservice.domain.owner.service;
 
 import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
+import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
+import backend.sudurukbackx6.ownerservice.domain.business.service.BusinessService;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -33,20 +37,24 @@ public class OwnerServiceImpl implements OwnerService {
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
     private final Encrypt encrypt;
+    private final BusinessService businessService;
 
     @Override
-    public void signUp(SignUpReqDto signUpReqDto) throws IOException {
+    public void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException {
         //해당 이메일이 먼저 존재하는지 확인
         Optional<Owners> exitOwner = ownersRepository.findByEmail(signUpReqDto.getEmail());
 
         if (exitOwner.isEmpty()) {
             //이미 가입된 회원이 없으면? 회원가입 진행한다.
-            Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel());
-            System.out.println("암호화 : "+encrypt.encrypt(signUpReqDto.getPassword()));
+            Business business= businessService.getBusinessById(signUpReqDto.getBusiness_id());
+            Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel(), business);
+            //그리고 메일을 전송한다
+            mailSenderService.sendInfoMail(signUpReqDto.getEmail());
             ownersRepository.save(owner);
         } else {
             throw new BadRequestException(ErrorCode.USER_EXISTS);
         }
+
     }
 
     @Override
@@ -98,6 +106,13 @@ public class OwnerServiceImpl implements OwnerService {
                 .build();
     }
 
+    @Override
+    public void signOut(String header) {
+        //로그아웃
+        String email = jwtProvider.extractEmail(header);
+        redisUtil.deleteRefreshToken(email);
+    }
+
 
     @Override
     public void resetPassword(String email) throws MessagingException {
@@ -122,8 +137,9 @@ public class OwnerServiceImpl implements OwnerService {
         //refresh token이 살아있는지 확인하고 accesstoken을 발급한다.
         String email = jwtProvider.extractEmail(header);
         String redisToken = redisUtil.getRefreshTokens(email);
-        if(redisToken==null || redisToken.isEmpty() || redisUtil.isMatchToken(email, header)){
-            new BadRequestException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
+        System.out.println("redisToken : "+redisToken);
+        if(redisToken==null || redisToken.isEmpty() || !redisUtil.isMatchToken(email, header)){
+            throw new BadRequestException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
         }
         //이제 검증 완료! 그럼 새로 acceestoken발급 시작!
         TokenDto accessToken = jwtProvider.createAccessToken(email);
@@ -164,4 +180,26 @@ public class OwnerServiceImpl implements OwnerService {
         ownersRepository.deleteByEmail(email);
     }
 
+    @Override
+    public OwnerInfoResponse ownerInfo (String token){
+        Owners owners = jwtProvider.extractUser(token);
+        return OwnerInfoResponse.builder()
+                .email(owners.getEmail())
+                .tel(owners.getTel())
+                .storeId(owners.getStoreId())
+                .build();
+    }
+
+    @Override
+    public Long ownerStoreId(ChangeOwnerStoreIdRequest request){
+        Owners owners = ownersRepository.findByEmail(request.getEmail()).orElseThrow();
+        owners.setStoreId(request.getStoreId());
+        return request.getStoreId();
+    }
+    /*@Override
+    public void toggleValidStatus(String email) {
+        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
+        owner.changeValidation();
+    }
+*/
 }
