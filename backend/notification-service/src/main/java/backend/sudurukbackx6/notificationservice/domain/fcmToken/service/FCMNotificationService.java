@@ -1,5 +1,9 @@
 package backend.sudurukbackx6.notificationservice.domain.fcmToken.service;
 
+import backend.sudurukbackx6.notificationservice.common.error.code.ErrorCode;
+import backend.sudurukbackx6.notificationservice.common.error.exception.BadRequestException;
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.MemberFeignClient;
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.dto.response.MemberResDto;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.repository.AlertHistoryRepository;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.FCMNotificationRequestDto;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +23,74 @@ import lombok.RequiredArgsConstructor;
 @Slf4j
 public class FCMNotificationService {
 
-//	private final FirebaseMessaging firebaseMessaging;
+	private final FirebaseMessaging firebaseMessaging;
 //	private final AlertHistoryRepository alertHistoryRepository;
+	private final MemberFeignClient memberFeignClient;
+
+	public void sendMemberFCM(FCMNotificationRequestDto requestDto, String token) throws FirebaseMessagingException {
+
+		MemberResDto firebaseToken = memberFeignClient.getFirebaseToken(token);
+		if(firebaseToken==null|| firebaseToken.getFirebase_token()==null){
+			throw new BadRequestException(ErrorCode.EMPTY_FIREBASE_TOKEN);
+		}
+
+		//이제 fcm코드로 바꾼다.
+
+		Notification notification = Notification.builder()
+				.setTitle(requestDto.getTitle())
+				.setBody(requestDto.getBody())
+				.setImage(requestDto.getImageUrl())
+				.build();
+
+		Message message = Message.builder()
+				.setToken(firebaseToken.getFirebase_token())
+				.setNotification(notification)
+				.putData("productCode", requestDto.getProductCode())
+				.build();
+
+		firebaseMessaging.send(message);
+
+//		Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(()
+//				-> new BusinessException(ErrorCode.NOT_EXISTS_USER_ID)
+//		);
+//
+//		if (member.getFirebaseToken() != null) {
+//			Notification notification = Notification.builder()
+//				.setTitle(requestDto.getTitle())
+//				.setBody(requestDto.getBody())
+//				.setImage(requestDto.getImageUrl())
+//				.build();
+//
+//			Message message = Message.builder()
+//				.setToken(member.getFirebaseToken())
+//				.setNotification(notification)
+//				.putData("productCode", requestDto.getProductCode())
+//				.build();
+//
+//			try {
+//				log.info("title {}", requestDto.getTitle());
+//				firebaseMessaging.send(message);
+//
+//				// 알림 내역 저장
+//				AlertHistory alertHistory = AlertHistory.builder()
+//					.title(requestDto.getTitle())
+//					.body(requestDto.getBody())
+//					.member(member)
+//					.imageUrl(requestDto.getImageUrl())
+//					.productCode(requestDto.getProductCode())
+//					.build();
+//				alertHistoryRepository.save(alertHistory);
+//
+//				return "send 성공";
+//
+//			} catch (FirebaseMessagingException e) {
+//				throw new RuntimeException(e);
+//			}
+//		}
+//		else {
+//			return "FCMToken 없습니다";
+//		}
+	}
 
 	public String sendNotification(FCMNotificationRequestDto requestDto) {
 

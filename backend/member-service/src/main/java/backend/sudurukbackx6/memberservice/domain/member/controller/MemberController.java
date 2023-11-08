@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/member")
@@ -48,14 +50,12 @@ public class MemberController {
     public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(memberService.getMemberInfo(token));
     }
-<<<<<<< HEAD
-=======
+
     // memberId 리스트로 받아서 리스트로 반환
     @PostMapping("/memberInfo/bulk")
     public List<MemberInfoResponse> getMemberInfoBulk(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds) {
         return memberService.getMemberInfoBulk(memberIds);
     }
->>>>>>> a10e6a8618bd1c59e526f84c3fdfd8ee17874d3f
 
     @GetMapping("/mypage/point")
     public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Authorization") String token,@RequestHeader("Email") String email) {
@@ -65,14 +65,18 @@ public class MemberController {
     @GetMapping("/mypage/point/{cafe_id}")
     public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Authorization") String token, @RequestHeader("Email") String email,@PathVariable Long cafe_id){
         return ResponseEntity.ok(memberService.pointStore(email,token, cafe_id));
-<<<<<<< HEAD
-=======
     }
 
     @GetMapping("/id")
     public ResponseEntity<Long> getId(@RequestParam String email) {
         return ResponseEntity.ok(memberService.getId(email));
->>>>>>> a10e6a8618bd1c59e526f84c3fdfd8ee17874d3f
+    }
+
+    @GetMapping("/firebaseToken")
+    public ResponseEntity<Map<String,String>> getFirebaseToken(@RequestHeader("Authorization") String token) {
+        Map<String, String> map = new HashMap<>();
+        map.put("firebase_token", memberService.getFirebaseToken(token));
+        return ResponseEntity.ok(map);
     }
 }
 

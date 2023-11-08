@@ -191,4 +191,9 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
         return member.getId();
     }
+
+    public String getFirebaseToken(String token) {
+        Member member = jwtProvider.extractUser(token);
+        return member.getFcmToken();
+    }
 }
