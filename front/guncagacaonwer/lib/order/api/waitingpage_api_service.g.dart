@@ -21,14 +21,10 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<OrderRequestResponse> requestOrder(
-    String email,
-    String orderId,
-  ) async {
+  Future<OrderRequestResponse> requestOrder(String orderId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Email': email};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<OrderRequestResponse>(Options(
@@ -84,11 +80,10 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<OwnerInfoResponse> getOwnerInfo(String token) async {
+  Future<OwnerInfoResponse> getOwnerInfo() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<OwnerInfoResponse>(Options(
@@ -112,14 +107,10 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<String> cancelOrder(
-    String email,
-    OrderCancelRequest request,
-  ) async {
+  Future<String> cancelOrder(OrderCancelRequest request) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Email': email};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _result = await _dio.fetch<String>(_setStreamType<String>(Options(

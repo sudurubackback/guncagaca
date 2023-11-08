@@ -5,26 +5,22 @@ class Order {
   final String id;
   final int memberId;
   final int storeId;
-  final String receiptId;
+  final int orderPrice;
   final String orderTime;  // 또는 DateTime orderTime;
-  final String status;
   final bool takeoutYn;
-  final bool reviewYn;
+  final String receiptId;
   final List<Menu> menus;
-  final int price;
   bool inProgress; // 추가된 프로퍼티
 
   Order({
     required this.id,
     required this.memberId,
     required this.storeId,
-    required this.receiptId,
+    required this.orderPrice,
     required this.orderTime,
-    required this.status,
     required this.takeoutYn,
-    required this.reviewYn,
+    required this.receiptId,
     required this.menus,
-    required this.price,
     this.inProgress = false,
   });
 
@@ -33,13 +29,11 @@ class Order {
       id: json['id'],
       memberId: json['memberId'],
       storeId: json['storeId'],
-      receiptId: json['receiptId'],
+      orderPrice: json['orderPrice'],
       orderTime: json['orderTime'],
-      status: json['status'],
       takeoutYn: json['takeoutYn'],
-      reviewYn: json['reviewYn'],
+      receiptId: json['receiptId'],
       menus: (json['menus'] as List).map((item) => Menu.fromJson(item)).toList(),
-      price: json['price'],
     );
   }
 }
