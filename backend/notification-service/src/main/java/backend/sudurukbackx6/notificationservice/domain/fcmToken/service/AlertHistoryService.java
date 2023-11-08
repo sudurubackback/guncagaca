@@ -6,6 +6,7 @@ import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.Ale
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.AlertHistory;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.repository.AlertHistoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class AlertHistoryService {
 	public List<AlertHistoryDto> getAlertHistory(String token) {
 		MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(token);
 		Long myId = memberInfo.getId();
-		List<AlertHistory> alertHistories = alertHistoryRepository.findAllByMemberId(myId);
+		List<AlertHistory> alertHistories = alertHistoryRepository.findAllByMemberIdOrderByCreateTimeDesc(myId);
 
 		List<AlertHistoryDto> alertHistoryDtos = new ArrayList<>();
 
@@ -39,19 +40,26 @@ public class AlertHistoryService {
 
 
 	}
-//
-//	// 알림 삭제
-//	public void deleteAlertHistory(Long alertId, Long memberId) {
-//		// 알림 기록 가져오기
-//		AlertHistory alertHistory = alertHistoryRepository.findById(alertId)
-//			.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXISTS_ALERT_HISTORY));
-//		// 본인 아닌경우
-//		if (!alertHistory.getMember().getId().equals(memberId)) {
-//			throw new BusinessException(ErrorCode.UNAUTHORIZED_MEMBER);
-//		}
-//		// 삭제
-//		alertHistoryRepository.delete(alertHistory);
-//	}
+
+// 알림 삭제
+public void deleteAlertHistory(String token, Long alertId) {
+	MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(token);
+	Long memberId = memberInfo.getId();
+
+	// 알림 기록 가져오기
+	AlertHistory alertHistory = alertHistoryRepository.findById(alertId)
+			.orElseThrow(() -> new RuntimeException("해당 알림 기록을 찾을 수 없습니다."));
+
+	// 본인 아닌경우
+	if (!alertHistory.getMemberId().equals(memberId)) {
+		throw new RuntimeException("해당 알림을 삭제할 권한이 없습니다.");
+	}
+
+	// 삭제
+	alertHistoryRepository.delete(alertHistory);
+}
+
+
 //
 //	// 알림 전체 삭제
 //	public void deleteAllAlertHistory(Long memberId) {

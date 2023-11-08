@@ -7,5 +7,5 @@ import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.AlertHis
 import java.util.List;
 
 public interface AlertHistoryRepository extends JpaRepository<AlertHistory, Long> {
-    List<AlertHistory> findAllByMemberId(Long memberId);
+    List<AlertHistory> findAllByMemberIdOrderByCreateTimeDesc(Long memberId);
 }

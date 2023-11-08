@@ -29,11 +29,11 @@ public class AlertHistoryController {
 //	}
 //
 	// 알림 단일 삭제
-//	@DeleteMapping("/history/{alertId}")
-//	public ResponseEntity<String> deleteAlertHistory(@MemberInfo MembersInfo membersInfo, @PathVariable Long alertId) {
-//		alertHistoryService.deleteAlertHistory(alertId, membersInfo.getId());
-//		return ResponseEntity.ok(String.format("%d번 알림 삭제", alertId));
-//	}
+	@DeleteMapping("/history/{alertId}")
+	public ResponseEntity<String> deleteAlertHistory(@RequestHeader("Authorization") String token, @PathVariable Long alertId) {
+		alertHistoryService.deleteAlertHistory(token, alertId);
+		return ResponseEntity.ok(String.format("%d번 알림 삭제", alertId));
+	}
 //
 //	// 알림 전체 삭제
 //	@DeleteMapping("/history/all")
