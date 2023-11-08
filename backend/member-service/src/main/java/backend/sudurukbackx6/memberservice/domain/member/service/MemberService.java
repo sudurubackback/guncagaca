@@ -45,6 +45,9 @@ public class MemberService {
                     .fcmToken(signRequestDto.getFcmToken())
                     .build();
             memberRepository.save(member);
+        }else{
+            Member member = optionalMember.get();
+            member.setFcmToken(signRequestDto.getFcmToken());
         }
 
         TokenDto accessToken = jwtProvider.createAccessToken(signRequestDto.getNickname(), signRequestDto.getEmail());

@@ -37,6 +37,10 @@ public class Member {
         this.fcmToken = fcmToken;
     }
 
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
 
     /**
     * 비즈니스 로직
