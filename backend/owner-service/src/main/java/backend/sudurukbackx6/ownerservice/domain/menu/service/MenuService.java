@@ -96,6 +96,7 @@ public class MenuService {
 
 	public void deleteMenu(String id) {
 		MenuEntity menuEntity = menuRepository.findById(id).orElseThrow();
+		removeOriginFile(menuEntity);
 		menuRepository.delete(menuEntity);
 	}
 

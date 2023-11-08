@@ -1,7 +1,7 @@
 package backend.sudurukbackx6.ownerservice.domain.business.entity;
 
 import backend.sudurukbackx6.ownerservice.common.entity.TimeEntity;
-import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorVailidateReqDto;
+import backend.sudurukbackx6.ownerservice.domain.business.dto.request.VendorValidateReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +24,14 @@ public class Business extends TimeEntity {
     @Column(name = "business_Id")
     private Long businessId;
 
-    @OneToOne
-    @JoinColumn(name = "owner_id")
-    private Owners owner;
+    /*    @OneToOne
+        @JoinColumn(name = "owner_id")
+        private Owners owner;*/
+/*    @OneToOne(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Owners owner;*/
+    @OneToOne(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Owners owners;
+
 
     @Column(name = "business_number")
     private String businessNum;
@@ -40,16 +45,20 @@ public class Business extends TimeEntity {
     @Column(name = "owner_name")
     private String name;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)", name = "business_name")
+    private String businessName;    //가게 이름
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)")
+    private String address; //가게 주소
+
     //builer생성
-    public Business(Owners owner, VendorVailidateReqDto dto) {
-        this.owner = owner;
+    public Business(VendorValidateReqDto dto) {
         this.businessNum = dto.getBusiness_number();
         this.accountNum = dto.getAccount_number();
-//        this.openDate = LocalDate.parse(dto.getOpen_date());
-
-        // 'yyyyMMdd' 포맷의 문자열을 LocalDate로 변환
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         this.openDate = LocalDate.parse(dto.getOpen_date(), formatter);
         this.name = dto.getOwner_name();
+        this.businessName = dto.getBusiness_name();
+        this.address = dto.getAddress();
     }
 }

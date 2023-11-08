@@ -10,8 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequestDto {
 
-    private Long memberId;
-
     private String receiptId;
 
     private Long storeId;
@@ -19,6 +17,10 @@ public class OrderRequestDto {
     private boolean takeoutYn;
 
     private int totalOrderPrice;
+
+    private int eta;
+
+    private String payMethod;
 
     private List<Menu> menus;
 

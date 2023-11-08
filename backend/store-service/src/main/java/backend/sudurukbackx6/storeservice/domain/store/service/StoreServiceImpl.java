@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.storeservice.domain.store.service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,22 +9,22 @@ import backend.sudurukbackx6.storeservice.domain.reviews.client.MemberServiceCli
 import backend.sudurukbackx6.storeservice.domain.reviews.client.dto.MemberInfoResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.repository.ReviewRepository;
+import backend.sudurukbackx6.storeservice.domain.store.client.OwnerServiceClient;
 import backend.sudurukbackx6.storeservice.domain.store.client.StoreGeocoding;
 import backend.sudurukbackx6.storeservice.domain.store.client.dto.GeocodingDto;
+import backend.sudurukbackx6.storeservice.domain.store.client.dto.OwnerInfoResponse;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
+import backend.sudurukbackx6.storeservice.domain.store.service.dto.request.StoreUpdateReqDto;
+import backend.sudurukbackx6.storeservice.global.s3.S3Uploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
 import backend.sudurukbackx6.storeservice.domain.store.repository.StoreRepository;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.LocateRequest;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.NeerStoreResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreMenuResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreRequest;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreResponse;
-import backend.sudurukbackx6.storeservice.domain.store.service.dto.StoreReviewResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -43,6 +44,13 @@ public class StoreServiceImpl implements StoreService {
     private final LikeRepository likeRepository;
     private final StoreGeocoding storeGeocoding;
     private final MemberServiceClient memberServiceClient;
+    private final S3Uploader s3Uploader;
+    private final OwnerServiceClient ownerServiceClient;
+
+
+    @Value("${cloud.aws.cloud.url}")
+    private String basicProfile;
+
 
     @Value("${ncp.clientId}")
     private String id;
@@ -52,9 +60,14 @@ public class StoreServiceImpl implements StoreService {
 
     // 카페 등록
     @Override
-    public void cafeSave(StoreRequest request) {
+    public void cafeSave(MultipartFile multipartFile, StoreRequest request, String token) throws IOException {
 
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
+
+        log.info("주소 : {}", request.getAddress());
 
         String latitude = null;
         String longitude = null;
@@ -62,8 +75,8 @@ public class StoreServiceImpl implements StoreService {
         // 죄표 추출
         if (!response.getAddresses().isEmpty()) {
             GeocodingDto.Response.Address firstAddress = response.getAddresses().get(0);
-            latitude = firstAddress.getX();
-            longitude = firstAddress.getY();
+            longitude = firstAddress.getX();
+            latitude = firstAddress.getY();
         } // TODO : 좌표 없을 때 예외 처리
         log.info("위도 : {}", latitude);
         log.info("경도 : {}", longitude);
@@ -74,16 +87,51 @@ public class StoreServiceImpl implements StoreService {
                 .longitude(Double.valueOf(longitude))
                 .address(request.getAddress())
                 .tel(request.getTel())
-                .img(request.getImg())
+                .img(upload)
+                .openTime(request.getOpenTime())
+                .closeTime(request.getCloseTime())
                 .description(request.getDescription())
                 .build();
 
-        storeRepository.save(store);
+        storeRepository.saveAndFlush(store);
+        ChangeOwnerStoreIdRequest build = ChangeOwnerStoreIdRequest.builder()
+                .email(ownerInfo.getEmail())
+                .storeId(store.getId())
+                .build();
+        ownerServiceClient.changeOwnersStoreId(build);
     }
+
+    @Override
+    public void cafeImgChage(MultipartFile multipartFile, String token) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        Long cafeId = ownerInfo.getStoreId();
+        Store store = storeRepository.findById(cafeId).orElseThrow();
+
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
+        store.setImg(upload);
+    }
+
+    @Override
+    public void updateCafeInfo(String token, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        Long cafeId = ownerInfo.getStoreId();
+
+        log.info("description : {}", storeUpdateReqDto.getDescription());
+        System.out.println(storeUpdateReqDto.getDescription());
+
+        if(multipartFile==null || multipartFile.isEmpty()) {
+            Store store = storeRepository.findById(cafeId).orElseThrow();
+            storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), store.getImg(), cafeId);
+            return;
+        }
+        String upload = s3Uploader.upload(multipartFile, "StoreImages");
+        storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
+    }
+
 
     // 주변 카페 리스트
     @Override
-    public List<NeerStoreResponse> cafeList(LocateRequest request) {
+    public List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request) {
         List<Store> allStores = storeRepository.findAll();
         List<NeerStoreResponse> nearCafes = new ArrayList<>();
 
@@ -93,19 +141,14 @@ public class StoreServiceImpl implements StoreService {
             double c = getLocate(request, store);
             double distance = EARTH_RADIUS * c;
 
+            // 찜 여부
+            boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, store.getId());
 
             if(distance > 0) {  // If distance is less than or equal to 1.5km
-                NeerStoreResponse cafe = NeerStoreResponse.builder()
-                        .storeId(store.getId())
-                    .cafeName(store.getName())
-                    .latitude(store.getLatitude())
-                    .longitude(store.getLongitude())
-                    .starTotal(store.getStarPoint())
-                    .reviewCount(store.getReview().size())
-                    .img(store.getImg())
-                    .distance(distance)
-                        .address(store.getAddress())
-                    .build();
+                StoreResponse storeResponse = new StoreResponse(store, isLiked);
+
+                NeerStoreResponse cafe = new NeerStoreResponse(store.getLatitude(), store.getLongitude(),
+                        distance, storeResponse);
 
                 nearCafes.add(cafe);
             }
@@ -141,37 +184,23 @@ public class StoreServiceImpl implements StoreService {
         boolean isLiked = likeRepository.existsByMemberIdAndStoreId(memberId, cafeId);
         Store store = getCafe(cafeId);
 
-        return StoreResponse.builder()
-                .storeId(cafeId)
-                .cafeName(store.getName())
-                .starPoint(store.getStarPoint())
-                .reviewCount(store.getReview().size())
-                .img(store.getImg())
-                .isLiked(isLiked)
-                .description(store.getDescription())
-                .build();
+        return new StoreResponse(store, isLiked);
     }
 
-//    @Override
-//    public List<StoreMenuResponse> cafeMenu(String token, Long cafeId) {
-//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
-//        return null;
-//    }
-//
-//    @Override
-//    public StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex) {
-//        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
-//        return null;
-//    }
+    @Override
+    public List<StoreReviewResponse> cafeReview(Long cafeId) {
+        return null;
+    }
 
     // 리뷰 최신순
     @Override
-    public List<StoreReviewResponse> cafeReview(Long cafeId) {
+    public List<StoreReviewResponse> cafeReview(String token, Long cafeId) {
 
         List<Review> reviewList = reviewRepository.findByStoreIdOrderByIdDesc(cafeId);
         // 리뷰의 멤버Id 목록
-        List<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toList());
-        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(memberIds);
+        Set<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toSet());
+        List<Long> memberIdsList = new ArrayList<>(memberIds);
+        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(token, memberIdsList);
 
         // Id : 닉네임
         Map<Long, String> memberIdToNicknameMap = memberInfoList.stream()
@@ -212,7 +241,5 @@ public class StoreServiceImpl implements StoreService {
     public Store getCafe(Long cafeId) {
         return storeRepository.findById(cafeId).orElseThrow();
     }
-
-
 
 }

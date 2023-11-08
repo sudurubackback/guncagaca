@@ -6,18 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class NeerStoreResponse {
 
-    private Long storeId;
-    private String cafeName;
+    private Double distance;
     private Double latitude;
     private Double longitude;
-    private Double starTotal;
-    private int reviewCount;
-    private String img;
-    private Double distance;
-    private String address;
+    private StoreResponse store;
+
+    public NeerStoreResponse(Double latitude, Double longitude, Double distance, StoreResponse store) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.distance = distance;
+        this.store = store;
+    }
 }

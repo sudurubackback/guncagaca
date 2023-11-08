@@ -1,6 +1,9 @@
 package backend.sudurukbackx6.ownerservice.domain.owner.controller;
 
 import backend.sudurukbackx6.ownerservice.common.dto.BaseResponseBody;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.GetTodaySellingResponse;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
@@ -15,8 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.ws.rs.Path;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,10 +32,10 @@ public class OwnerController {
 
     private final OwnerService ownerService;
 
-    @Operation(summary = "회원가입", description = "email, password, tel을 활용해서 회원가입 진행 \n\n")
-    //무슨 인자가 필요한지만 설명
+    @Operation(summary = "회원가입", description = "email, password, tel, business_id을 활용해서 회원가입 진행 \n" +
+            "/cert 을 한 후에 진행하도록 한다, 해당 api로 반환된 business_id 값을 넣어준다."+"\n")
     @PostMapping("/signup")
-    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody SignUpReqDto signUpReqDto) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody SignUpReqDto signUpReqDto) throws IOException, MessagingException {
         ownerService.signUp(signUpReqDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(200, "회원가입 성공"));
     }
@@ -109,5 +114,13 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "accesstoken갱신 성공", newAccessToken));
     }
 
+    @GetMapping("/ownerInfo")
+    public ResponseEntity<OwnerInfoResponse> getOwnerInfo(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(ownerService.ownerInfo(token));
+    }
 
+    @PutMapping("/ownersStore")
+    public Long changeOwnersStoreId(@RequestBody ChangeOwnerStoreIdRequest request) {
+        return ownerService.ownerStoreId(request);
+    }
 }

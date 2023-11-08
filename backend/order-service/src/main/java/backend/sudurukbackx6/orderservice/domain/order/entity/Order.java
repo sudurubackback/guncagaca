@@ -5,10 +5,12 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Entity
 @Builder
 @Getter
 @Setter
@@ -38,7 +40,15 @@ public class Order {
 
     private boolean reviewYn;
 
+    private int eta;
+
+    private String payMethod;
+
     private List<Menu> menus;
 
     private int price;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

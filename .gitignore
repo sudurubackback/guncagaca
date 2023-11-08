@@ -1,9 +1,8 @@
+<<<<<<< HEAD
 HELP.md
 .gradle
-<<<<<<< HEAD
 .yml
-=======
->>>>>>> origin/backend-store
+
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -39,20 +38,10 @@ out/
 
 ### VS Code ###
 .vscode/
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> a4b096fc37ba1b053fa30e680eebe8b1d5182203
-=======
 front/
 frontend/
-=======
->>>>>>> 0c27befbc467a298c67a5be11d6276c56c7e5785
+
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,flutter,dart,xcode
 
@@ -296,7 +285,6 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-<<<<<<< HEAD
 ### XcodeInjection ###
 # Code Injection
 #
@@ -306,12 +294,6 @@ fabric.properties
 iOSInjectionProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
-<<<<<<< HEAD
-=======
-front/
-frontend/
->>>>>>> dd8c08da04cb070c828b4169b2892b83d925862e
-=======
 
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,xcode,dart
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,flutter,xcode,dart
@@ -346,9 +328,6 @@ doc/api/
 .flutter-plugins-dependencies
 
 ### Dart Patch ###
-# dotenv environment variables file
-.env
-
 ### Flutter ###
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -361,45 +340,6 @@ lib/generated_plugin_registrant.dart
 # Regenerating the pubspec.lock file lets you test your package against the latest compatible versions of its dependencies.
 # See https://dart.dev/guides/libraries/private-files#pubspeclock
 #pubspec.lock
-
-# Android related
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/key.properties
-**/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
-
-# iOS/XCode related
-**/ios/**/*.mode1v3
-**/ios/**/*.mode2v3
-**/ios/**/*.moved-aside
-**/ios/**/*.pbxuser
-**/ios/**/*.perspectivev3
-**/ios/**/*sync/
-**/ios/**/.sconsign.dblite
-**/ios/**/.tags*
-**/ios/**/.vagrant/
-**/ios/**/DerivedData/
-**/ios/**/Icon?
-**/ios/**/Pods/
-**/ios/**/.symlinks/
-**/ios/**/profile
-**/ios/**/xcuserdata
-**/ios/.generated/
-**/ios/Flutter/.last_build_id
-**/ios/Flutter/App.framework
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Flutter.podspec
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/app.flx
-**/ios/Flutter/app.zip
-**/ios/Flutter/flutter_assets/
-**/ios/Flutter/flutter_export_environment.sh
-**/ios/ServiceDefinitions.json
-**/ios/Runner/GeneratedPluginRegistrant.*
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
@@ -560,8 +500,49 @@ Front/
 Frontend/
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
->>>>>>> origin/backend-store
->>>>>>> a4b096fc37ba1b053fa30e680eebe8b1d5182203
-=======
->>>>>>> f8498daa15bcd18ee612b2b3bba6eadfe4977eb2
->>>>>>> 0c27befbc467a298c67a5be11d6276c56c7e5785
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+*.xml
+*.class
+
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.env
+.pub-cache/
+.pub/
+.env
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+

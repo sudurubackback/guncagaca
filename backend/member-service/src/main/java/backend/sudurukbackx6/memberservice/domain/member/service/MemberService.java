@@ -1,6 +1,5 @@
 package backend.sudurukbackx6.memberservice.domain.member.service;
 
-import backend.sudurukbackx6.memberservice.domain.member.dto.MypageResponseDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.MemberInfoResponse;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignRequestDto;
 import backend.sudurukbackx6.memberservice.domain.member.dto.SignResponseDto;
@@ -43,6 +42,7 @@ public class MemberService {
             Member member = Member.builder()
                     .email(signRequestDto.getEmail())
                     .nickname(signRequestDto.getNickname())
+                    .fcmToken(signRequestDto.getFcmToken())
                     .build();
             memberRepository.save(member);
         }
@@ -104,8 +104,23 @@ public class MemberService {
                 .build();
     }
 
+    public List<MemberInfoResponse> getMemberInfoBulk(List<Long> memberIds){
 
-    public List<MyPointsResponse> myPoint(String email) {
+        List<Member> members = memberRepository.findByIdIn(memberIds);
+
+        List<MemberInfoResponse> memberInfoResponses = members.stream().map(member ->
+                MemberInfoResponse.builder()
+                        .id(member.getId())
+                        .email(member.getEmail())
+                        .nickname(member.getNickname())
+                        .build()
+        ).collect(Collectors.toList());
+
+        return memberInfoResponses;
+    }
+
+
+    public List<MyPointsResponse> myPoint(String email, String token) {
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
@@ -120,8 +135,11 @@ public class MemberService {
         List<MyPointsResponse> myPointsResponses = new ArrayList<>();
 
         for (Long cafeId : cafeIds) {
-            StoreResponse storeInfo = storeFeignClient.cafeDetail(cafeId);
-            String name = storeInfo.getName();
+            StoreResponse storeInfo = storeFeignClient.cafeDetail(token, cafeId);
+
+            log.info(storeInfo.toString());
+            String name = storeInfo.getCafeName();
+
             String img = storeInfo.getImg();
 
             List<Point> cafePoints = pointList.stream()
@@ -145,7 +163,7 @@ public class MemberService {
         return myPointsResponses;
     }
 
-    public PointStoreResponse pointStore(String email, Long cafeId) {
+    public PointStoreResponse pointStore(String email,String token, Long cafeId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
 
@@ -166,5 +184,16 @@ public class MemberService {
         } else {
             throw new IllegalArgumentException("해당 멤버의 카페 포인트 정보가 없습니다.");
         }
+    }
+
+    public Long getId(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
+        return member.getId();
+    }
+
+    public String getFirebaseToken(String token) {
+        Member member = jwtProvider.extractUser(token);
+        return member.getFcmToken();
     }
 }

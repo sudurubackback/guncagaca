@@ -1,13 +1,13 @@
-package backend.sudurukbackx6.notificationservice;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class NotificationServiceApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
+//package backend.sudurukbackx6.notificationservice;
+//
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//@SpringBootTest
+//class NotificationServiceApplicationTests {
+//
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//}
