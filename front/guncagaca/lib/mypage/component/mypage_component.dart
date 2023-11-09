@@ -318,9 +318,34 @@ class _MypageComponentState extends State<MypageComponent> {
               ),
             ),
           ),
-
-
           PointList(mainViewModel: widget.mainViewModel,),
+
+          Container(
+            padding: const EdgeInsets.only(bottom: 30.0,top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildSquareButton(
+                    context,
+                    '신고',
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: widget.mainViewModel,nickName: myData['nickname'],)),
+                      );
+                    }
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                _buildSquareButton(
+                    context,
+                    '회원탈퇴',
+                        () {
+                      mypageController.showDialogLogOut(context);
+                    }
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
