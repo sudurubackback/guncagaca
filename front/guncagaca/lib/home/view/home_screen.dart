@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         print(data);
         setState(() {
           storeData = data.map((item) => Store.fromMap(item)).toList();
-          createMarkersFromStores();
+          createMarkersFromStores(storeData);
         });
       }
     } catch (e) {
@@ -114,15 +114,29 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   Future<void> refreshContent() async {
     await fetchCafes();
+    filterMarkers();
   }
 
-  void createMarkersFromStores() {
-    if (storeData.isEmpty) {
+  void filterMarkers() {
+    if (searchKeyword == null || searchKeyword!.isEmpty) {
+      // 검색어가 없는 경우 모든 상점을 표시합니다.
+      createMarkersFromStores(storeData);
+    } else {
+      // 검색어가 있는 경우 해당하는 상점만 필터링합니다.
+      List<Store> filteredStores = storeData.where((store) {
+        return store.storeDetail.cafeName.toLowerCase().contains(searchKeyword!);
+      }).toList();
+      createMarkersFromStores(filteredStores);
+    }
+  }
+
+  void createMarkersFromStores(List<Store> stores) {
+    if (stores.isEmpty) {
       return;
     }
     markers.clear();
 
-    for (Store store in storeData) {
+    for (Store store in stores) {
       final marker;
       // 찜 가게인 경우
       if (store.storeDetail.isLiked) {
@@ -161,6 +175,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     }
 
     if (_controller != null) {
+      // 기존마커 제거
+      _controller!.clearOverlays();
+
       _controller!.addOverlayAll(markers);
       print("createMarkersFromStores: Markers created and added successfully");
     } else {
@@ -260,6 +277,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   onChanged: (value) {
                     setState(() {
                       searchKeyword = value;
+                      filterMarkers();
                     });
                   },
                   decoration: const InputDecoration(
@@ -283,7 +301,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       print("_controller is null");
                       return;
                     }
-
                     _controller = controller;
                     await _controller?.setLocationTrackingMode(NLocationTrackingMode.follow);
                     print("onMapReady: Controller initialized successfully");
