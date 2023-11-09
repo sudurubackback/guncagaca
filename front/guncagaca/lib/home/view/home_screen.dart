@@ -120,26 +120,44 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     if (storeData.isEmpty) {
       return;
     }
-
     markers.clear();
 
     for (Store store in storeData) {
-      final marker = NMarker(
-        id: store.storeDetail.storeId.toString(),
-        position: NLatLng(store.latitude, store.longitude),
-        caption: NOverlayCaption(text: store.storeDetail.cafeName),
-      );
-
-      // 마커 터치시 이동하고 다이얼로그 창 실행
-      marker.setOnTapListener((overlay) {
-        final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: marker.position, zoom: 15);
-        cameraUpdate.setAnimation(animation: NCameraAnimation.easing, duration: Duration(seconds: 1));
-        _controller?.updateCamera(cameraUpdate).then((_) {
-          _showStoreInfoDialog(store);
+      final marker;
+      // 찜 가게인 경우
+      if (store.storeDetail.isLiked) {
+        marker = NMarker(
+          id: store.storeDetail.storeId.toString(),
+          position: NLatLng(store.latitude, store.longitude),
+          caption: NOverlayCaption(text: store.storeDetail.cafeName),
+          icon: NOverlayImage.fromAssetImage("assets/image/free-icon-heart.png"),
+          size: Size.fromRadius(17.0)
+        );
+        // 마커 터치시 이동하고 다이얼로그 창 실행
+        marker.setOnTapListener((overlay) {
+          final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: marker.position, zoom: 15);
+          cameraUpdate.setAnimation(animation: NCameraAnimation.easing, duration: Duration(seconds: 1));
+          _controller?.updateCamera(cameraUpdate).then((_) {
+            _showStoreInfoDialog(store);
+          });
         });
-      });
-
-      markers.add(marker);
+        markers.add(marker);
+      } else {
+        marker = NMarker(
+          id: store.storeDetail.storeId.toString(),
+          position: NLatLng(store.latitude, store.longitude),
+          caption: NOverlayCaption(text: store.storeDetail.cafeName),
+            size: Size.fromRadius(20.0)
+        );
+        marker.setOnTapListener((overlay) {
+          final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: marker.position, zoom: 15);
+          cameraUpdate.setAnimation(animation: NCameraAnimation.easing, duration: Duration(seconds: 1));
+          _controller?.updateCamera(cameraUpdate).then((_) {
+            _showStoreInfoDialog(store);
+          });
+        });
+        markers.add(marker);
+      }
     }
 
     if (_controller != null) {
@@ -150,6 +168,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     }
   }
 
+        // 마커 터치시 이동하고 다이얼로그 창 실행
   void _showStoreInfoDialog(Store store) {
     showDialog(
       context: context,
