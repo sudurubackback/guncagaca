@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,20 +15,20 @@ import '../../kakao/main_view_model.dart';
 import '../component/store_card_list.dart';
 import '../../store/models/store.dart';
 
-
 class HomeScreen extends StatefulWidget {
   final MainViewModel mainViewModel;
-  const HomeScreen({required this.mainViewModel,
-    Key? key}) : super(key: key);
+  const HomeScreen({
+    required this.mainViewModel,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
-
   TextEditingController searchController = TextEditingController();
-  String? searchKeyword; // 검색어를 저장하기 위한 변수 추가
+  String? searchKeyword;
 
   @override
   bool get wantKeepAlive => true;
@@ -45,29 +44,26 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
-    dotenv.load(fileName: '.env');  // .env 파일 로드
+    dotenv.load(fileName: '.env');
     _permission();
     _initCurrentLocationAndFetchCafes();
-
   }
 
-  // 위치 권한 받기
   void _permission() async {
     var requestStatus = await Permission.location.request();
     var status = await Permission.location.status;
     if (requestStatus.isPermanentlyDenied || status.isPermanentlyDenied) {
-      null;
+      return; // return 추가
     }
   }
 
-  List<Store> storeData = []; // 카페 정보
-  Set<NAddableOverlay> markers = {}; // 마커 정보
+  List<Store> storeData = [];
+  Set<NAddableOverlay> markers = {};
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
   final LocationService locationService = LocationService();
 
-  // 위치 정보를 초기화하고 카페 정보를 가져오는 함수
   Future<void> _initCurrentLocationAndFetchCafes() async {
     currentLocation = await locationService.getCurrentPosition();
 
@@ -82,32 +78,37 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     });
   }
 
-  // 주변 카페 호출
   Future<void> fetchCafes() async {
     if (currentLocation == null) return;
-    print(currentLocation);
 
     final String apiUrl = "$baseUrl/api/store/list";
-    final response = await dio.get(
+    try {
+      final response = await dio.get(
         apiUrl,
         options: Options(
-            headers: {
-              'Authorization': "Bearer $token",
-            }
+          headers: {
+            'Authorization': "Bearer $token",
+          },
         ),
         queryParameters: {
           'lat': currentLocation!.latitude,
-          'lon': currentLocation!.longitude
-        }
-    );
+          'lon': currentLocation!.longitude,
+        },
+      );
 
-    if (response.statusCode == 200) {
-      List<dynamic> data = response.data;
-      print(data);
-      setState(() {
-        storeData = data.map((item) => Store.fromMap(item)).toList();
-        createMarkersFromStores();
-      });
+      print("API 응답: $response");
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        print("마커 200");
+        print(data);
+        setState(() {
+          storeData = data.map((item) => Store.fromMap(item)).toList();
+          createMarkersFromStores();
+        });
+      }
+    } catch (e) {
+      print("API 호출 중 오류 발생: $e");
     }
   }
 
@@ -115,27 +116,29 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     await fetchCafes();
   }
 
-  // 마커 찍기
   void createMarkersFromStores() {
+    if (storeData.isEmpty) {
+      return;
+    }
+
     markers.clear();
+
     for (Store store in storeData) {
-      // final overlay = NOverlayMakerUtil.makeOverlay(
-      //     type: NOverlayType.marker,
-      //     cameraPosition: NCameraPosition(target: NLatLng(store.latitude, store.longitude), zoom: 15),
-      //     id: store.storeDetail.storeId.toString());
       final marker = NMarker(
         id: store.storeDetail.storeId.toString(),
         position: NLatLng(store.latitude, store.longitude),
-        // subCaption: NOverlayCaption(text: store.storeDetail.cafeName),
-        // icon: NOverlayImage('assets/image/free-icon-heart.png', file),
       );
       markers.add(marker);
     }
-    print(markers);
+
+    if (_controller != null) {
+      _controller!.addOverlayAll(markers);
+      print("createMarkersFromStores: Markers created and added successfully");
+    } else {
+      print("_controller is null, unable to add markers");
+    }
   }
 
-
-  // 가게 정보 다이얼로그
   void _showStoreInfoDialog(Store store) {
     showDialog(
       context: context,
@@ -144,8 +147,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           title: Row(
             children: <Widget>[
               Expanded(child: Text(store.storeDetail.cafeName, style: TextStyle(fontWeight: FontWeight.bold))),
-              Icon(store.storeDetail.isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: store.storeDetail.isLiked ? Colors.red : Colors.grey)
+              Icon(
+                store.storeDetail.isLiked ? Icons.favorite : Icons.favorite_border,
+                color: store.storeDetail.isLiked ? Colors.red : Colors.grey,
+              ),
             ],
           ),
           content: SingleChildScrollView(
@@ -161,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   children: [
                     Text('평점: ${store.storeDetail.starTotal.toString()}'),
                     SizedBox(width: 20),
-                    Text('리뷰 수: ${store.storeDetail.reviewCount}')
+                    Text('리뷰 수: ${store.storeDetail.reviewCount}'),
                   ],
                 ),
                 SizedBox(height: 5),
@@ -171,14 +176,14 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     SizedBox(width: 5),
                     Flexible(child: Text('${store.storeDetail.openTime}')),
                     Text(' - '),
-                    Flexible(child: Text('${store.storeDetail.closeTime}'))
+                    Flexible(child: Text('${store.storeDetail.closeTime}')),
                   ],
                 ),
                 SizedBox(height: 5),
-                Text(store.storeDetail.isOpen
-                    ? '영업 중'
-                    : '영업 종료',
-                    style: TextStyle(color: store.storeDetail.isOpen ? Colors.green : Colors.red)),
+                Text(
+                  store.storeDetail.isOpen ? '영업 중' : '영업 종료',
+                  style: TextStyle(color: store.storeDetail.isOpen ? Colors.green : Colors.red),
+                ),
               ],
             ),
           ),
@@ -195,13 +200,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
-        // 화면 어디를 탭하더라도 포커스를 해제
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
@@ -224,10 +226,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   ],
                 ),
                 child: TextField(
-                  controller: searchController, // 검색어를 입력 받을 컨트롤러
+                  controller: searchController,
                   onChanged: (value) {
                     setState(() {
-                      // StoreCardList에 검색어를 전달하여 필터링
                       searchKeyword = value;
                     });
                   },
@@ -237,23 +238,33 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     icon: Icon(Icons.search),
                   ),
                 ),
-
               ),
               Expanded(
                 flex: 1,
                 child: loading
-                    ? Center(child: CircularProgressIndicator())  // 로딩 중일 때 로딩 인디케이터 표시
+                    ? Center(child: CircularProgressIndicator())
                     : NaverMap(
                   options: NaverMapViewOptions(
                     locationButtonEnable: true,
                     initialCameraPosition: NCameraPosition(target: nLatLng, zoom: 15),
                   ),
                   onMapReady: (controller) async {
+                    if (controller == null) {
+                      print("_controller is null");
+                      return;
+                    }
+
                     _controller = controller;
                     await _controller?.setLocationTrackingMode(NLocationTrackingMode.follow);
-                    await _controller?.addOverlayAll(markers);
+                    print("onMapReady: Controller initialized successfully");
 
-                  }
+                    if(markers.isNotEmpty){
+                      await _controller?.addOverlayAll(markers);
+                      print("onMapReady: Markers added successfully");
+                    } else {
+                      print("onMapReady: No markers to add");
+                    }
+                  },
                 ),
               ),
               Expanded(
@@ -264,15 +275,15 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     child: StoreCardList(
                       stores: storeData,
                       mainViewModel: widget.mainViewModel,
-                      searchKeyword: searchKeyword, // 검색어를 전달
+                      searchKeyword: searchKeyword,
                     ),
                   ),
                 ),
               ),
             ],
-          )
+          ),
         ),
-      )
+      ),
     );
   }
 }
