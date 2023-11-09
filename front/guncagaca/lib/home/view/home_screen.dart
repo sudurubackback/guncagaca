@@ -127,7 +127,18 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       final marker = NMarker(
         id: store.storeDetail.storeId.toString(),
         position: NLatLng(store.latitude, store.longitude),
+        caption: NOverlayCaption(text: store.storeDetail.cafeName),
       );
+
+      // 마커 터치시 이동하고 다이얼로그 창 실행
+      marker.setOnTapListener((overlay) {
+        final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: marker.position, zoom: 15);
+        cameraUpdate.setAnimation(animation: NCameraAnimation.easing, duration: Duration(seconds: 1));
+        _controller?.updateCamera(cameraUpdate).then((_) {
+          _showStoreInfoDialog(store);
+        });
+      });
+
       markers.add(marker);
     }
 
@@ -164,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 SizedBox(height: 5),
                 Row(
                   children: [
-                    Text('평점: ${store.storeDetail.starTotal.toString()}'),
+                    Text('평점: ${store.storeDetail.starTotal.toStringAsFixed(2)}'),
                     SizedBox(width: 20),
                     Text('리뷰 수: ${store.storeDetail.reviewCount}'),
                   ],
