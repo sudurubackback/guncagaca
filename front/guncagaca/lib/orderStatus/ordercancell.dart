@@ -1,9 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:guncagaca/login/loginpage.dart';
 
 import '../kakao/main_view_model.dart';
 import 'order_page.dart';

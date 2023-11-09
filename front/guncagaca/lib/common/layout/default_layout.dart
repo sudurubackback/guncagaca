@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:guncagaca/notification/models/noti_widget.dart';
 
 import '../../cart/models/cart_widget.dart';

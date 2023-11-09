@@ -1,18 +1,12 @@
-import 'dart:ffi';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'dart:convert';
 
-import 'package:guncagaca/common/const/colors.dart';
-import 'package:guncagaca/review_create/reviewcreate_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/utils/dio_client.dart';
-import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
-import '../../orderdetail/view/orderdetail_screen.dart';
 
 class OrderStoreList extends StatefulWidget {
   final MainViewModel mainViewModel;
@@ -95,7 +89,7 @@ class _OrderStoreListState extends State<OrderStoreList> {
 
   @override
   Widget build(BuildContext context) {
-    return storeOrders.isEmpty || storeOrders.length == 0
+    return storeOrders.isEmpty || storeOrders.isEmpty
         ? Center(
           child: Column(
             children: [

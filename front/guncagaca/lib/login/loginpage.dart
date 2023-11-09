@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,9 +7,7 @@ import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
 import 'package:guncagaca/kakao/kakao_login.dart';
 import 'package:guncagaca/kakao/main_view_model.dart';
-import 'package:guncagaca/kakao/social_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 import '../common/utils/dio_client.dart';
 

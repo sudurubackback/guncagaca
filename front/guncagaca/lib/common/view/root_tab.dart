@@ -2,7 +2,6 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:guncagaca/home/view/home_screen.dart';
-import 'package:provider/provider.dart';
 
 import 'package:guncagaca/order/view/order_view.dart';
 

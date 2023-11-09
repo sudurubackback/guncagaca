@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guncagaca/store/models/store_detail.dart';
 
-import '../models/store.dart';
 
 class IntroTabWidget extends StatelessWidget {
   final StoreDetail? storeDetail;

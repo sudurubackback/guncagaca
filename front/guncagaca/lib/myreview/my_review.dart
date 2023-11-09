@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 
 class MyReview {
   final int reviewId;

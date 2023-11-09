@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:guncagaca/cart/view/cart_screen.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

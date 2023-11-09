@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 import 'package:guncagaca/store/models/store_detail.dart';
 
 class Store {

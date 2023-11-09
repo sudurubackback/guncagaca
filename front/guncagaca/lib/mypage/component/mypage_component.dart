@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
 import '../../orderStatus/order_page.dart';
 import '../../point/component/point_list.dart';
-import '../../point/view/point_screen.dart';
 
 import '../../common/utils/dio_client.dart';
 import '../controller/mypage_controller.dart';

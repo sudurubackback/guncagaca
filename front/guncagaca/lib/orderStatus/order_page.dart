@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:guncagaca/order/component/order_list.dart';
 
 import '../kakao/main_view_model.dart';
-import '../menu/menu_detail.dart';
 
 
 class OrderPage extends StatelessWidget {

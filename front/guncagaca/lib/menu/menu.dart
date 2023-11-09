@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'menu_option.dart';
 
 class Menu {

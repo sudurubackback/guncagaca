@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:guncagaca/order/models/order_option.dart';
 
-import '../../menu/menu.dart';
-import '../../menu/option.dart';
 
 // 장바구니 담길 메뉴
 class OrderMenu {

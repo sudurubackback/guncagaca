@@ -1,9 +1,7 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/order/models/order_option.dart';
 
@@ -149,7 +147,6 @@ class _DetailState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final CartController controller = Get.find<CartController>();
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: BACK_COLOR,
@@ -256,6 +253,7 @@ class _DetailState extends State<DetailPage> {
       )
     );
   }
+
   Widget _buildBottomBar() {
     final CartController controller = Get.find<CartController>();
 

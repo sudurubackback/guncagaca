@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
-import 'package:guncagaca/home/component/overlay_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../common/const/colors.dart';
@@ -297,10 +295,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     initialCameraPosition: NCameraPosition(target: nLatLng, zoom: 15),
                   ),
                   onMapReady: (controller) async {
-                    if (controller == null) {
-                      print("_controller is null");
-                      return;
-                    }
                     _controller = controller;
                     await _controller?.setLocationTrackingMode(NLocationTrackingMode.follow);
                     print("onMapReady: Controller initialized successfully");

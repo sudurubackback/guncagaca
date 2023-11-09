@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/order/component/order_list.dart';
 
 import '../../kakao/main_view_model.dart';

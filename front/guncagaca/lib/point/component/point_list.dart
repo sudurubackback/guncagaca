@@ -82,7 +82,7 @@ class _PointListState extends State<PointList> {
 
   @override
   Widget build(BuildContext context) {
-    return dummyPoints == null || dummyPoints.isEmpty
+    return dummyPoints.isEmpty
         ? Container(
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
       child: Center(

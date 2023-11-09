@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/menu/menu_detail.dart';
 import 'package:guncagaca/menu/menu_card.dart';
 import '../../common/const/colors.dart';
