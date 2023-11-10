@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
 import 'package:guncagaca/kakao/kakao_login.dart';
@@ -75,13 +76,10 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('accessToken', tokens['accessToken']);
         prefs.setString('refreshToken', tokens['refreshToken']);
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DefaultLayout(
-            child: RootTab(mainViewModel: mainViewModel,),
-            mainViewModel: mainViewModel,
-          )),
-        );
+        Get.to(() => DefaultLayout(
+          child: RootTab(mainViewModel: mainViewModel,),
+          mainViewModel: mainViewModel,
+        ));
       } else {
         print('토큰 얻기 실패');
         Navigator.push(

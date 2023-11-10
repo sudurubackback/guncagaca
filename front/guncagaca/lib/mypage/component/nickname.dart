@@ -6,11 +6,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagaca/common/view/custom_appbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../common/layout/default_layout.dart';
-import '../common/utils/dio_client.dart';
-import '../common/utils/oauth_token_manager.dart';
-import '../common/view/root_tab.dart';
-import '../kakao/main_view_model.dart';
+import '../../common/layout/default_layout.dart';
+import '../../common/utils/dio_client.dart';
+import '../../common/utils/oauth_token_manager.dart';
+import '../../common/view/root_tab.dart';
+import '../../kakao/main_view_model.dart';
 
 
 

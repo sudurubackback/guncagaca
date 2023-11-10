@@ -22,13 +22,10 @@ class StoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {// 영업중이라면 상세 화면으로 이동
-        Get.to(() =>
-          DefaultLayout(
-            title: store.storeDetail.cafeName,
-            mainViewModel: mainViewModel,
-            child: StoreDetailScreen(storeId: store.storeDetail.storeId, mainViewModel: mainViewModel),
-          )
-        );
+        Get.to(() => StoreDetailScreen(
+          mainViewModel: mainViewModel,
+          storeId: store.storeDetail.storeId,
+        ));
       },
       child: Row(
         children: [

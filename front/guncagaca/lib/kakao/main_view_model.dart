@@ -1,4 +1,7 @@
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:guncagaca/common/view/root_tab.dart';
 import 'package:guncagaca/kakao/social_login.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,8 +10,20 @@ class MainViewModel {
   final SocialLogin _socialLogin;
   bool isLogined = false;
   User? user;
+  RxString currentTitle = '근카가'.obs;
+  late Rx<Widget> currentScreen;
 
-  MainViewModel(this._socialLogin);
+  MainViewModel(this._socialLogin) {
+    currentScreen = Rx<Widget>(RootTab(mainViewModel: this));
+  }
+
+  void updateTitle(String newTitle) {
+    currentTitle.value = newTitle;
+  }
+
+  void updateScreen(Widget newScreen) {
+    currentScreen.value = newScreen;
+  }
 
   Future login() async {
     isLogined = await _socialLogin.login();

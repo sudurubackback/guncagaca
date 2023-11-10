@@ -67,12 +67,17 @@ class PaymentService{
         Get.back();
         Get.back();
       },
-      onClose: () {
+      onClose: () async {
         print('------- onClose');
         if (!isPaymentDone) {
           Bootpay().dismiss(context);
-          // Get.back();
-        } //명시적으로 부트페이 뷰 종료 호출
+           //명시적으로 부트페이 뷰 종료 호출
+        } else {
+          Get.offAll(() => DefaultLayout(
+            child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),
+            mainViewModel: mainViewModel,
+          ));
+        }
       },
       onIssued: (String data) {
         print('------- onIssued: $data');
@@ -118,9 +123,6 @@ class PaymentService{
         // 주문 완료되면 카트를 비우기
         CartController cartController = Get.find<CartController>();
         cartController.cartItems.clear();
-
-        // OrderView()로 이동
-        Get.off(() => DefaultLayout(child: RootTab(initialIndex: 0, mainViewModel: mainViewModel,),mainViewModel: mainViewModel,));
       },
     );
   }

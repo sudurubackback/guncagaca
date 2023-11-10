@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:guncagaca/common/const/colors.dart';
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 import 'package:guncagaca/store/component/intro_tab.dart';
 import 'package:guncagaca/store/component/menu_tab.dart';
 import 'package:guncagaca/store/component/review_tab.dart';
@@ -16,7 +17,6 @@ import '../models/store_detail.dart';
 
 
 class StoreDetailScreen extends StatefulWidget {
-
   final int storeId;
   final MainViewModel mainViewModel;
 
@@ -64,6 +64,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
       print(response.data);
       isLiked = response.data['liked'];
       isOpen = response.data['open'];
+      widget.mainViewModel.updateTitle(response.data['cafeName']);
       return StoreDetail.fromMap(response.data);
     } else {
       throw Exception("Failed to fetch store detail.");
@@ -111,6 +112,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
           return Hero(
               tag: "store",
               child: Scaffold(
+                appBar: CustomAppBar(title: storeDetail!.cafeName, mainViewModel: widget.mainViewModel,),
                 body: ListView(
                   children: [
                     Stack(

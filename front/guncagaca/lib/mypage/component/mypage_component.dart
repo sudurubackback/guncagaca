@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/jjim/view/jjim_screen.dart';
-import 'package:guncagaca/mypage/nickname.dart';
+import 'package:guncagaca/mypage/component/nickname.dart';
 import 'package:guncagaca/myreview/view/review_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 import 'package:guncagaca/notification/models/noti_widget.dart';
 
 import '../../cart/models/cart_widget.dart';
 import '../../kakao/main_view_model.dart';
 
 
-class DefaultLayout extends StatelessWidget {
+class DefaultLayout extends StatefulWidget {
   final Color? backgroundColor;
   final Widget child;
   final String? title;
@@ -22,48 +24,18 @@ class DefaultLayout extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _DefaultLayoutState createState() => _DefaultLayoutState();
+}
+
+class _DefaultLayoutState extends State<DefaultLayout> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor ?? Colors.white,
-      appBar: renderAppBar(context),
-      body: child,
-      bottomNavigationBar: bottomNavigationBar,
-    );
-  }
-
-  AppBar? renderAppBar(BuildContext context) {
-    if (title == null) {
-      return null;
-    } else {
-
-      return AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: MediaQuery.of(context).size.width * 0.1,),
-            Flexible(
-                child: Center(
-                  child: Text(
-                    title!,
-                    style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.black,
-                    ),
-                  ),
-                ),
-            ),
-            Row(
-              children: [
-                CartIconWidget(mainViewModel: mainViewModel,),
-                NotiIconWidget(mainViewModel: mainViewModel,),
-              ],
-            ),
-          ],
-        ),
-        foregroundColor: Colors.black,
-      );
-    }
+          backgroundColor: widget.backgroundColor ?? Colors.white,
+          appBar: widget.title != null ? CustomAppBar(
+              title: widget.title!, mainViewModel: widget.mainViewModel) : null,
+          body: widget.child,
+          bottomNavigationBar: widget.bottomNavigationBar,
+        );
   }
 }

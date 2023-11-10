@@ -14,7 +14,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     Timer(Duration(seconds: 3),() {
-      Get.to(LoginPage());
+      Get.to(() => LoginPage());
     });
     // TODO: implement initState
     super.initState();
