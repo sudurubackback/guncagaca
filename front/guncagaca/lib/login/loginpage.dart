@@ -48,12 +48,10 @@ class _LoginPageState extends State<LoginPage> {
       // 예: 서버로 토큰을 보내 인증 수행
       // 인증이 성공하면 홈 화면으로 이동
       // 실패하면 로그인 화면으로 유지
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DefaultLayout(
+      Get.to(() => DefaultLayout(
             child: RootTab(mainViewModel: mainViewModel,),
             mainViewModel: mainViewModel,
-        )),
+        )
       );
     }
   }
@@ -70,7 +68,6 @@ class _LoginPageState extends State<LoginPage> {
         // 토큰들을 얻었을 경우, 저장하고 다음 화면으로 이동
         // tokens['access'] 및 tokens['refresh']를 SharedPreference에 저장
         // 저장 후 홈 화면으로 이동
-
         print('Access Token: ${tokens['accessToken']}');
         print('Refresh Token: ${tokens['refreshToken']}');
         prefs.setString('accessToken', tokens['accessToken']);

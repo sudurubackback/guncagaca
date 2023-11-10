@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/custom_appbar.dart';
-import 'package:guncagaca/common/view/custom_appbar.dart';
 import 'package:intl/intl.dart';
 
-import '../../common/layout/default_layout.dart';
 import '../../kakao/main_view_model.dart';
 import '../../store/view/store_detail_screen.dart';
 import '../component/orderdetail_list.dart';
@@ -14,7 +12,6 @@ import '../component/orderdetail_list.dart';
 class OrderDetailScreen extends StatefulWidget {
   final Map<String, dynamic> orderHistory;
   final MainViewModel mainViewModel;
-
 
   OrderDetailScreen({required this.orderHistory, required this.mainViewModel});
 

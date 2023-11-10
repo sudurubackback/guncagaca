@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:guncagaca/common/const/colors.dart';
-import 'package:guncagaca/common/layout/default_layout.dart';
 
 import '../../kakao/main_view_model.dart';
 import '../../store/view/store_detail_screen.dart';

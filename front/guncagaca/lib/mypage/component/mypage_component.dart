@@ -49,12 +49,11 @@ class _MypageComponentState extends State<MypageComponent> {
 
   Future<void> loadMyDataFromAPI() async {
     String? email = await getEmailFromPreferences();
-
     print(email);
     if (email != null) {
       try {
         Response response = await dio.get(
-          "http://k9d102.p.ssafy.io:8081/api/member/mypage",
+          "$baseUrl/api/member/mypage",
           options: Options(
             headers: {
               'Authorization': 'Bearer $token',
@@ -133,8 +132,8 @@ class _MypageComponentState extends State<MypageComponent> {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              '${myData['nickname'] ?? "회원"} 님 안녕하세요',
-                              style: TextStyle(fontSize: 25.0),
+                              '${myData['nickname'] ?? "회원"} 님 안녕하세요 !',
+                              style: TextStyle(fontSize: 22.0),
                               textAlign: TextAlign.left,
                               maxLines: 1,
                             ),
@@ -182,9 +181,7 @@ class _MypageComponentState extends State<MypageComponent> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)),
+                              Get.to(() => ReviewScreen(mainViewModel: widget.mainViewModel,)
                               );
                             },
                             child: Image.asset(
@@ -195,9 +192,7 @@ class _MypageComponentState extends State<MypageComponent> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)),
+                              Get.to(() => ReviewScreen(mainViewModel: widget.mainViewModel,)
                               );
                             },
                             child: const Text(
@@ -212,9 +207,7 @@ class _MypageComponentState extends State<MypageComponent> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)),
+                              Get.to(() => JjimScreen(mainViewModel: widget.mainViewModel,)
                               );
                             },
                             child: Image.asset(
@@ -225,9 +218,7 @@ class _MypageComponentState extends State<MypageComponent> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)),
+                              Get.to(() => JjimScreen(mainViewModel: widget.mainViewModel,)
                               );
                             },
                             child: const Text(
@@ -253,9 +244,7 @@ class _MypageComponentState extends State<MypageComponent> {
                     context,
                     '닉네임 변경',
                         () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: widget.mainViewModel,nickName: myData['nickname'],)),
+                      Get.to(() => NicknamePage(mainViewModel: widget.mainViewModel, nickName: myData['nickname'],)
                       );
                     }
                 ),
@@ -271,7 +260,6 @@ class _MypageComponentState extends State<MypageComponent> {
             ),
           ),
 
-
           Container(
             width: MediaQuery.of(context).size.width * 0.95,
             height: MediaQuery.of(context).size.height * 0.08,
@@ -284,30 +272,20 @@ class _MypageComponentState extends State<MypageComponent> {
               ),
               // borderRadius: BorderRadius.circular(20.0),
             ),
-            child: InkWell(
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => PointScreen(mainViewModel: widget.mainViewModel,)), // PasswordChangePage로 이동
-                // );
-              },
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '포인트',
-                      style: TextStyle(fontSize: 20,),
-                    ),
-                    Image.asset(
-                      'assets/image/point.png',
-                      width: 40.0,
-                      height: 40.0,
-                    ),
-                  ],
-                ),
-
-
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '포인트',
+                    style: TextStyle(fontSize: 20,),
+                  ),
+                  Image.asset(
+                    'assets/image/point.png',
+                    width: 40.0,
+                    height: 40.0,
+                  ),
+                ],
               ),
             ),
           ),
@@ -322,9 +300,8 @@ class _MypageComponentState extends State<MypageComponent> {
                     context,
                     '신고',
                         () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NicknamePage(mainViewModel: widget.mainViewModel,nickName: myData['nickname'],)),
+                      Get.to(() => NicknamePage(
+                        mainViewModel: widget.mainViewModel, nickName: myData['nickname'],)
                       );
                     }
                 ),

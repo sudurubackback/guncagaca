@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:guncagaca/common/const/colors.dart';
 
 import '../kakao/main_view_model.dart';
-import 'order_page.dart';
+import '../order/view/order_view.dart';
 
 class OrderCancellPage extends StatefulWidget {
   final MainViewModel mainViewModel;
@@ -88,17 +90,15 @@ class _OrderCancellPageState extends State<OrderCancellPage> {
               padding: EdgeInsets.only(left: 30.0, right: 50.0),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color(0xff9B5748),
+                  color: PRIMARY_COLOR,
                   width: 2.0,
                 ),
-                color: Color(0xff9B5748),
+                color: PRIMARY_COLOR,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
+                  Get.to(() => OrderView(mainViewModel: widget.mainViewModel,)
                   );
                 },
                 child: const Center(

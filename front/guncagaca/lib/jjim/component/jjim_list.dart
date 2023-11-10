@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
+import 'package:guncagaca/common/const/colors.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../common/layout/default_layout.dart';
 import '../../common/utils/dio_client.dart';
 import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
@@ -37,11 +38,10 @@ class _JjimListState extends State<JjimList> {
   Future<void> loadJjims() async {
 
     if (token != null) {
-      print(token);
-      print("통신");
+      print("통신 $token");
 
       try {
-        Response response = await dio.get(
+        final response = await dio.get(
           "$baseUrl/api/store/mypage/like-store",
           options: Options(
             headers: {
@@ -89,16 +89,8 @@ class _JjimListState extends State<JjimList> {
   }
 
   void _goToStoreDetail(String cafeName, int id) {
-    print(id);
-    print("스토어아이디");
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => DefaultLayout(
-          title: cafeName,
-          child: StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,) ,
-          mainViewModel: widget.mainViewModel,
-        ),
-      ),
+    print("스토어아이디 $id");
+    Get.to(() => StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,),
     );
   }
 

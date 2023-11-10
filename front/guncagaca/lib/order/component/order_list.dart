@@ -177,13 +177,9 @@ class _OrderListState extends State<OrderList> {
                         // 주문 정보
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OrderDetailScreen(
+                            Get.to(() => OrderDetailScreen(
                                   orderHistory: storeOrders[index],
                                   mainViewModel: widget.mainViewModel,),
-                              ),
                             );
                           },
                           child: Column(
@@ -290,13 +286,11 @@ class _OrderListState extends State<OrderList> {
                                     ),
                                   ),
                                   onPressed: () async {
-                                    var result = await Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) => ReviewCreatePage(
+                                    var result = await Get.to(() => ReviewCreatePage(
                                         cafeName: storeOrders[index]['store']['cafeName'],
                                         storeId: storeOrders[index]['store']['storeId'],
                                         orderId: storeOrders[index]['id'],
                                       )
-                                      ),
                                     );
                                     if (result == 'true') {
                                       loadOrders();
@@ -312,13 +306,9 @@ class _OrderListState extends State<OrderList> {
                     ],
                   ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OrderDetailScreen(
+                  Get.to(() =>  OrderDetailScreen(
                         orderHistory: storeOrders[index],
                         mainViewModel: widget.mainViewModel,),
-                    ),
                   );
             },
           ),

@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../common/const/colors.dart';
 import '../kakao/main_view_model.dart';
-import 'order_page.dart';
+import '../order/view/order_view.dart';
 
 class OrderWaitPage extends StatefulWidget {
   final MainViewModel mainViewModel;
@@ -90,16 +91,15 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
               padding: EdgeInsets.only(left: 30.0, right: 50.0),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color(0xff9B5748),
+                  color: PRIMARY_COLOR,
                   width: 2.0,
                 ),
-                color: Color(0xff9B5748),
+                color: PRIMARY_COLOR,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: InkWell(
                 onTap: () {
-                  Get.to(() =>
-                      OrderPage(mainViewModel: widget.mainViewModel,) // OrderPage로 이동
+                  Get.to(() => OrderView(mainViewModel: widget.mainViewModel,) // OrderPage로 이동
                   );
                 },
                 child: const Center(
