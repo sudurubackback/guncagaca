@@ -24,25 +24,37 @@ public class Owners extends TimeEntity {
     @JoinColumn(name = "business_Id")
     private Business business;
 
-
     private String password;
+
     private String email;
+
     private String tel;
+
     private Long storeId;
+
     private boolean validation = false;
+
+    private String ip;
+
+    private String ddns;
+
+    private String port;
 
     public void changeValidation() {
         validation = !validation;
     }
 
     @Builder
-    public Owners(Long ownerId, Business business, String password, String email, String tel, Long storeId) {
+    public Owners(Long ownerId, Business business, String password, String email, String tel, Long storeId, String ip, String ddns, String port) {
         this.ownerId = ownerId;
         this.business = business;
         this.password = password;
         this.email = email;
         this.tel = tel;
         this.storeId = storeId;
+        this.ip = ip;
+        this.ddns = ddns;
+        this.port = port;
     }
 
     @Builder
