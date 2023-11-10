@@ -1,0 +1,128 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: Gateway Server # 여기서 명시한 이름이 유레카 서버에 Service ID로 등록된다.
+
+  cloud:
+    circuitbreaker: # 서킷 브레이커 사용하여 장애 대응
+      resilience4j:
+        enabled: true
+    gateway:
+      globalcors:
+        cors-configurations:
+          "[/**]":
+            allowedOrigins:
+              - "http://localhost:3000"
+              - "https://localhost:3000"
+              - "http://127.0.0.1:8080"
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
+      httpclient:
+        connect-timeout: 3000
+        response-timeout: 3s
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+        - name: GlobalFilter #Global Filter로 지정된 java 파일 이름
+          args:
+            baseMessage: Spring Cloud Gateway Global Filter
+            preLogger: true
+            postLogger: true
+      routes: # filter 설정- id: Member Domain Server
+        - id: owner-service
+          uri: http://localhost:8080
+          predicates: # 조건절
+            - Path=/api/ceo/menu/**
+            - Method=POST
+          filters:
+            - AuthorizationHeaderFilter
+
+        - id: owner-service
+          uri: http://localhost:8080
+          predicates: # 조건절
+            - Path=/api/ceo/signin
+            - Method=POST
+
+        - id: owner-service
+          uri: http://localhost:8080
+          predicates: # 조건절
+            - Path=/owner-service/v3/api-docs
+
+        - id: store-service
+          uri: http://localhost:8081
+          predicates: # 조건절
+            - Path=/api/store/save
+            - Method=POST
+
+        - id: store-service
+          uri: http://localhost:8081
+          predicates: # 조건절
+            - Path=/api/store/**
+
+        - id: store-service
+          uri: http://localhost:8081
+          predicates: # 조건절
+            - Path=/store-service/v3/api-docs # 권한 검증을 진행하지 않는다.
+
+  springdoc:
+    enable-native-support: true
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+      path: /swagger-ui.html
+      config-url: /v3/api-docs/swagger-config
+      urls:
+        - url: /v3/api-docs
+          name: API Gateway Service
+          primaryName: API Gateway Service
+        - url: /owner-service/v3/api-docs
+          name: Owner
+          primaryName: Owner Service
+        - url: /store-service/v3/api-docs
+          name: Store
+          primaryName: Store Service
+
+  redis:
+    host: k9d102a.p.ssafy.io
+    port: 6379
+  session:
+    timeout: 600
+    store-type: redis
+    redis:
+      namespace: spring:session
+      flush-mode: on-save
+
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true # Actuator를 통해 Circuit Breaker 상태를 확인하기 위해 설정
+        minimumNumberOfCalls: 5 # Circuit Breaker가 error 비율 및 slow call 비율을 계산하기 전에 요구되는 최소한의 요청 수
+        failureRateThreshold: 50 # Error 비율(퍼센트)로 해당 값 이상으로 에러 발생시 서킷이 Open 된다.
+        waitDurationInOpenState: 10s # 서킷의 상태가 Open에서 Half-open으로 변경되기 전에 Circuit Breaker가 기다리는 시간
+    instances:
+      testCircuitBreaker:
+        baseConfig: default
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      slow-details: always # Actuator에서 자세한 정보들을 확인하기 위해 설정
+  health:
+    circuitbreakers:
+      enabled: true # Actuator를 통해 Circuit Breaker 상태를 확인하기 위해 설정
