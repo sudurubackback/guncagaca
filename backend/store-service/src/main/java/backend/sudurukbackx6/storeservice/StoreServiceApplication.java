@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 				org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration.class
 		}
 )
+@EnableDiscoveryClient
 @EnableFeignClients
 public class StoreServiceApplication {
 
