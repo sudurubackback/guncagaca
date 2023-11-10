@@ -19,4 +19,7 @@ public class LikeResponse {
     private String img;
     private boolean isLiked;
     private String description;
+    private String address;
+    private Double latitude;
+    private Double longitude;
 }

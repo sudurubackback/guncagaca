@@ -2,12 +2,7 @@ package backend.sudurukbackx6.storeservice.domain.store.entity;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
@@ -53,8 +48,8 @@ public class Store {
 
     private String closeTime;
 
-    @OneToMany(mappedBy = "store")
-    private List<Review> review;
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     @OneToMany(mappedBy = "store")
     private List<Likey> likeys;
@@ -74,7 +69,7 @@ public class Store {
         this.closeTime = closeTime;
         this.starPoint = 0.0;
         this.description = description;
-        this.review = review;
+        this.reviews = review;
     }
 
     public void setImg(String img) {
