@@ -43,7 +43,7 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = OrderRequestResponse.fromJson(_result.data!.map((key, value) => MapEntry(key, value.toString())));
+    final value = OrderRequestResponse.fromJson(_result.data!);
     return value;
   }
 
