@@ -71,9 +71,12 @@ public class LikeServiceImpl implements LikeService{
                             .storeId(likey.getStore().getId())
                             .cafeName(likey.getStore().getName())
                             .starPoint(likey.getStore().getStarPoint())
-                            .reviewCount(likey.getStore().getReview().size())
+                            .reviewCount(likey.getStore().getReviews().size())
                             .img(likey.getStore().getImg())
                             .description(likey.getStore().getDescription())
+                            .address(likey.getStore().getAddress())
+                            .latitude(likey.getStore().getLatitude())
+                            .longitude(likey.getStore().getLongitude())
                             .build();
                 })
                 .collect(Collectors.toList());

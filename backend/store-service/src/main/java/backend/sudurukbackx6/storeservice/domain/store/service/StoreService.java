@@ -19,7 +19,7 @@ public interface StoreService {
 
     void cafeSave(MultipartFile multipartFile,StoreRequest request, String token) throws IOException;
     List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request);
-
+    List<NeerStoreResponse> searchCafe(Long memberId, String keyword, LocateRequest request);
     StoreResponse cafeDetail(Long memberId, Long cafeId);
     List<StoreReviewResponse> cafeReview(Long cafeId);
 //    List<StoreMenuResponse> cafeMenu(String token, Long cafeId);
