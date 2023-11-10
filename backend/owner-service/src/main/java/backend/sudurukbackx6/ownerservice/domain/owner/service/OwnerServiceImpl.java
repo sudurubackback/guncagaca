@@ -2,7 +2,7 @@ package backend.sudurukbackx6.ownerservice.domain.owner.service;
 
 import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
-import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
 import backend.sudurukbackx6.ownerservice.domain.business.service.BusinessService;
@@ -40,45 +40,6 @@ public class OwnerServiceImpl implements OwnerService {
     private final BusinessService businessService;
 
     @Override
-    public void signUp(SignUpReqDto signUpReqDto) throws IOException, MessagingException {
-        //해당 이메일이 먼저 존재하는지 확인
-        Optional<Owners> exitOwner = ownersRepository.findByEmail(signUpReqDto.getEmail());
-
-        if (exitOwner.isEmpty()) {
-            //이미 가입된 회원이 없으면? 회원가입 진행한다.
-            Business business= businessService.getBusinessById(signUpReqDto.getBusiness_id());
-            Owners owner = new Owners(signUpReqDto.getEmail(), encrypt.encrypt(signUpReqDto.getPassword()), signUpReqDto.getTel(), business);
-            //그리고 메일을 전송한다
-            mailSenderService.sendInfoMail(signUpReqDto.getEmail());
-            ownersRepository.save(owner);
-        } else {
-            throw new BadRequestException(ErrorCode.USER_EXISTS);
-        }
-
-    }
-
-    @Override
-    public void sendAuthCode(String email) throws MessagingException {
-        //이메일로 인증 코드 전송
-        mailSenderService.sendCode(email);
-    }
-
-    @Override
-    public boolean checkAuthCode(String email, String code) {
-        return mailSenderService.checkCode(email, code);
-    }
-
-    @Override
-    public boolean checkValidEmail(String email) {
-        Optional<Owners> exitOwner = ownersRepository.findByEmail(email);
-
-        if(exitOwner.isPresent()) return false;
-
-        //존재 한다면 이메일 양식이 맞는지 확인
-        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
-    }
-
-    @Override
     public SignInResDto signIn(SignInReqDto request) {
         //로그인
         Optional<Owners> optionalOwners = ownersRepository.findByEmail(request.getEmail());
@@ -113,25 +74,6 @@ public class OwnerServiceImpl implements OwnerService {
         redisUtil.deleteRefreshToken(email);
     }
 
-
-    @Override
-    public void resetPassword(String email) throws MessagingException {
-        Optional<Owners> ownerOptional = ownersRepository.findByEmail(email);
-        Owners owner = ownerOptional.orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
-        String newPassword = mailSenderService.sendPassword(email);
-        owner.changePassword(encrypt.encrypt(newPassword));
-    }
-
-    @Override
-    public void changePassword(String token, UpdatePwReqDto updatePwReqDto) {
-        Owners owner = jwtProvider.extractUser(token);
-        if(!encrypt.isMatch(updatePwReqDto.getPassword(),owner.getPassword())){
-            throw new BadRequestException(ErrorCode.USER_NOT_MATCH);
-        }
-
-        owner.changePassword(encrypt.encrypt(updatePwReqDto.getNewpassword()));
-    }
-
     @Override
     public SignInResDto refreshAccessToken(String header) {
         //refresh token이 살아있는지 확인하고 accesstoken을 발급한다.
@@ -154,31 +96,10 @@ public class OwnerServiceImpl implements OwnerService {
                 .build();
     }
 
-
-    @Override
-    public Owners findByEmail(String email) {
-        return ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
-    }
-
-    @Override
-    public Owners findByToken(String requestHeader) {
-        return jwtProvider.extractUser(requestHeader);
-    }
-
-    @Override
-    public void unRegister(SignInReqDto signInReqDto) {
-        Owners owner = ownersRepository.findByEmail(signInReqDto.getEmail()).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
-        if(!encrypt.isMatch(signInReqDto.getPassword(),owner.getPassword())){
-            ownersRepository.deleteByEmail(owner.getEmail());
-        } else {
-            throw new BadRequestException(ErrorCode.USER_NOT_MATCH);
-        }
-    }
-
-    @Override
-    public void deletedOwner(String email) {
-        ownersRepository.deleteByEmail(email);
-    }
+//    @Override
+//    public Owners findByEmail(String email) {
+//        return ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
+//    }
 
     @Override
     public OwnerInfoResponse ownerInfo (String token){
@@ -191,7 +112,7 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public Long ownerStoreId(ChangeOwnerStoreIdRequest request){
+    public Long ownerStoreId(SetStoreIdFromOwnerRequest request){
         Owners owners = ownersRepository.findByEmail(request.getEmail()).orElseThrow();
         owners.setStoreId(request.getStoreId());
         return request.getStoreId();
