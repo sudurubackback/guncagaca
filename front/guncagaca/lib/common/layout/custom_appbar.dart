@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Text(
                 title,
                 style: TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 23.0,
                   color: Colors.black,
                 ),
               ),
@@ -39,9 +39,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       foregroundColor: Colors.black,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(10.0),
+          // child: SizedBox(height: 10),
+          child: Container(
+            color: Color(0xff9B5748),
+            height: 2.0,
+          ),
+        )
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight+15);
 }

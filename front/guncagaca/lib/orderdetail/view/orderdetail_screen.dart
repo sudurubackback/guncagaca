@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:guncagaca/common/const/colors.dart';
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 import 'package:guncagaca/common/view/custom_appbar.dart';
 import 'package:intl/intl.dart';
 
@@ -65,10 +67,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-        child: CustomAppbar(title: '주문내역', imagePath: null,)
-        ),
+      appBar: CustomAppBar(title: "주문내역", mainViewModel: widget.mainViewModel,),
         body:SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,13 +164,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => DefaultLayout(
-                          title: widget.orderHistory['store']['cafeName'],
-                          child: StoreDetailScreen(storeId: widget.orderHistory['store']['storeId'], mainViewModel: widget.mainViewModel,) ,
-                      mainViewModel: widget.mainViewModel,),
-                    ),
+                  Get.to(() =>
+                      StoreDetailScreen(storeId: widget.orderHistory['store']['storeId'], mainViewModel: widget.mainViewModel,) ,
                   );
                 },
                 child: Text("가게 상세 정보 보기"),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:guncagaca/common/utils/dio_client.dart';
@@ -43,7 +44,7 @@ class _PointListState extends State<PointList> {
 
     if (email != null) {
       try {
-        Response response = await dio.get(
+        final response = await dio.get(
           "$baseUrl/api/member/mypage/point",
           options: Options(
             headers: {
@@ -68,16 +69,8 @@ class _PointListState extends State<PointList> {
   }
 
   void _goToStoreDetail(String cafeName, int id) {
-    print(id);
-    print("스토어아이디");
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => DefaultLayout(
-          title: cafeName,
-          child: StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,) ,
-          mainViewModel: widget.mainViewModel,),
-      ),
-    );
+    Get.to(() => StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,)
+      );
   }
 
   @override

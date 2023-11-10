@@ -93,46 +93,17 @@ class _MypageComponentState extends State<MypageComponent> {
           Container(
             color: Colors.white,
             padding: const EdgeInsets.only(
-              top: 10.0,
+              // top: 10.0,
               left: 40.0,
               right: 40.0,
-              bottom: 20.0,
+              bottom: 2.0,
             ),
-            child:
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Align(
-
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        '${myData['nickname'] ?? "회원"} 님 안녕하세요',
-                        style: TextStyle(fontSize: 25.0),
-                        textAlign: TextAlign.left,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
-                ),
-                Image.asset(
-                  'assets/image/coffeebean.png',
-                  width: 40,
-                  height: 40,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            color: Color(0xff9B5748),
-            height: 2.0,
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.25,
             margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 20.0),
-            padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 10.0),
+            padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 20.0),
             decoration: BoxDecoration(
               color: Color(0xffF8E9D7),
               border: Border.all(
@@ -150,104 +121,131 @@ class _MypageComponentState extends State<MypageComponent> {
               ],
             ),
             child: Center(
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
-                          );
-                        },
-                        child: Image.asset(
-                          'assets/image/order.png',
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          height: MediaQuery.of(context).size.height * 0.1,
+                      Expanded(
+                        child: Align(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              '${myData['nickname'] ?? "회원"} 님 안녕하세요',
+                              style: TextStyle(fontSize: 25.0),
+                              textAlign: TextAlign.left,
+                              maxLines: 1,
+                            ),
+                          ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
-                          );
-                        },
-                        child: const Text(
-                          '주문내역',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
+                      Image.asset(
+                        'assets/image/coffeebean.png',
+                        width: 40,
+                        height: 40,
                       ),
                     ],
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)),
-                          );
-                        },
-                        child: Image.asset(
-                          'assets/image/review.png',
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          height: MediaQuery.of(context).size.height * 0.1,
-                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
+                              );
+                            },
+                            child: Image.asset(
+                              'assets/image/order.png',
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              height: MediaQuery.of(context).size.height * 0.1,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
+                              );
+                            },
+                            child: const Text(
+                              '주문내역',
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                          ),
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)),
-                          );
-                        },
-                        child: const Text(
-                          '리뷰',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)),
+                              );
+                            },
+                            child: Image.asset(
+                              'assets/image/review.png',
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              height: MediaQuery.of(context).size.height * 0.1,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ReviewScreen(mainViewModel: widget.mainViewModel,)),
+                              );
+                            },
+                            child: const Text(
+                              '리뷰',
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)),
-                          );
-                        },
-                        child: Image.asset(
-                          'assets/image/jjim.png',
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          height: MediaQuery.of(context).size.height * 0.1,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)),
-                          );
-                        },
-                        child: const Text(
-                          '찜',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)),
+                              );
+                            },
+                            child: Image.asset(
+                              'assets/image/jjim.png',
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              height: MediaQuery.of(context).size.height * 0.1,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => JjimScreen(mainViewModel: widget.mainViewModel,)),
+                              );
+                            },
+                            child: const Text(
+                              '찜',
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
-              ),
+              )
             ),
           ),
-
           // 버튼 두 개
           Container(
             padding: const EdgeInsets.only(bottom: 30.0,top: 10.0),

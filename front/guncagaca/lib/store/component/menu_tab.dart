@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:guncagaca/menu/menu_detail.dart';
 import 'package:guncagaca/menu/menu_card.dart';
 import '../../common/const/colors.dart';
@@ -78,15 +79,12 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
                 return InkWell(
                   onTap: () {
                     if (widget.isOpen) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => DefaultLayout(
+                      Get.to(() => DefaultLayout(
                             title: widget.storeName,
                             mainViewModel: widget.mainViewModel,
                             child: DetailPage(menu: menu, storeName: widget.storeName,),
-                          ),
-                        ),
-                      );
+                            ),
+                        );
                     } else {
                       showDialog(
                         context: context,

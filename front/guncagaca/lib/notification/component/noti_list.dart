@@ -25,9 +25,8 @@ class _NotiListState extends State<NotiList> {
   String baseUrl = dotenv.env['BASE_URL']!;
   Dio dio = DioClient.getInstance();
 
-
   Future<void> MyAlertListFromAPI() async {
-    final String apiUrl = "http://k9d102.p.ssafy.io:8082/api/alert/history";
+    final String apiUrl = "$baseUrl/api/alert/history";
 
     final response = await dio.get(
         apiUrl,
@@ -36,9 +35,8 @@ class _NotiListState extends State<NotiList> {
               'Authorization': "Bearer $token",
             }
         ),
-
     );
-    print(response.data);
+    print("response ${response.data}");
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       notifications = List<Map<String, dynamic>>.from(jsonData);
@@ -50,7 +48,7 @@ class _NotiListState extends State<NotiList> {
   }
 
   Future<void> DeleteAlertFromAPI(int alertId) async {
-    final String apiUrl = "http://k9d102.p.ssafy.io:8082/api/alert/history/$alertId";
+    final String apiUrl = "$baseUrl/api/alert/history/$alertId";
 
     final response = await dio.delete(
       apiUrl,

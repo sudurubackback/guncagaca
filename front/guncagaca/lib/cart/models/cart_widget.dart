@@ -21,14 +21,7 @@ class CartIconWidget extends StatelessWidget {
           icon: Icon(Icons.shopping_cart, color: PRIMARY_COLOR, size: 28.0),
           onPressed: () {
             FocusScope.of(context).unfocus();
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                   CartScreen(mainViewModel: mainViewModel,),
-              ),
-            );
+            Get.to(() => CartScreen(mainViewModel: mainViewModel));
           },
         ),
         Obx(() {
