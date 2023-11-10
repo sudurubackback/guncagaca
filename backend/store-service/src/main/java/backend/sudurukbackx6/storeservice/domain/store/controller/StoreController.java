@@ -68,6 +68,21 @@ public class StoreController {
         return storeService.cafeList(memberInfo.getId(), request);
     }
 
+    // 카페 검색
+    @GetMapping("/search")
+    @Operation(summary = "카페 검색", description = "카페 이름으로 검색", tags = { "Store Controller" })
+    public List<NeerStoreResponse> searchCafe(@RequestHeader("Authorization") String token,
+                                              @RequestParam("search") String keyword,
+                                              @RequestParam("lat") Double latitude, @RequestParam("lon") Double longitude) {
+        LocateRequest request = new LocateRequest();
+        request.setLatitude(latitude);
+        request.setLongitude(longitude);
+
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        return storeService.searchCafe(memberInfo.getId(), keyword, request);
+    }
+
+
     // 카페 상세(소개)
     @GetMapping("/{cafeId}")
     @Operation(summary = "카페 정보 조회", description = "찜 여부 포함, 위도 경도 x 카페 정보 조회", tags = { "Store Controller" })
@@ -91,7 +106,6 @@ public class StoreController {
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
 
         return likeService.toggleLike(memberInfo.getId(), cafeId);
-
     }
 
     
