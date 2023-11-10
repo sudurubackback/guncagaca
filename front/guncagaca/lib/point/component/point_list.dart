@@ -43,27 +43,22 @@ class _PointListState extends State<PointList> {
     String? email = await getEmailFromPreferences();
 
     if (email != null) {
-      try {
-        final response = await dio.get(
-          "$baseUrl/api/member/mypage/point",
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Email': email,
-            },
-          ),
-        );
+      final response = await dio.get(
+        "$baseUrl/api/member/mypage/point",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Email': email,
+          },
+        ),
+      );
 
-        if (response.statusCode == 200) {
-          List<dynamic> jsonData = response.data;
-          dummyPoints = List<Map<String, dynamic>>.from(jsonData);
-          print(dummyPoints);
-          setState(() {});
-        } else {
-          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
-        }
-      } catch (e) {
-        print('에러: $e');
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = response.data;
+        dummyPoints = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {});
+      } else {
+        print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
       }
     }
   }

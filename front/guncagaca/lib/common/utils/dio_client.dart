@@ -32,7 +32,6 @@ class DioClient {
               final newToken = await _refreshToken();
               if (newToken != null) {
                 // 토큰을 성공적으로 갱신했을 때의 로직
-                print("재발급");
                 TokenManager().setToken(newToken); // 갱신된 토큰 저장
 
                 // 원래의 요청을 다시 실행
@@ -44,17 +43,6 @@ class DioClient {
               print("Failed to refresh token: $error");
               // 토큰 갱신 실패
             }
-
-            // _refreshToken().then((newToken) {
-            //   if (newToken != null) {
-            //     // 토큰을 성공적으로 갱신했을 때의 로직
-            //     print("재발급");
-            //     TokenManager().setToken(newToken);  // 갱신된 토큰 저장
-            //   }
-            // }).catchError((error) {
-            //   print("Failed to refresh token: $error");
-            //   // 토큰 갱신 실패
-            // };
           }
           return handler.next(e);
         },
@@ -81,9 +69,6 @@ class DioClient {
 
     // 토큰 갱신 API 호출 로직
     try {
-      print("토큰 갱신");
-      print(email);
-      print("$baseUrl/api/member/refresh");
       final response = await _dio.post('$baseUrl/api/member/refresh',
         options: Options(
           headers: {

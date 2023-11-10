@@ -36,38 +36,28 @@ class _OrderStoreListState extends State<OrderStoreList> {
 
   Future<void> loadOrdersFromAPI() async {
     String? email = await getEmailFromPreferences();
-    print('storeId' + widget.storeId.toString());
-    print(email);
+
     if (email != null) {
-      try {
-        // 주문 내역 가져오기
-        final String apiUrl = 'http://k9d102.p.ssafy.io:8083/api/order/member/${widget.storeId}';
-        print(apiUrl);
-        var orderResponse = await dio.get(
-            apiUrl,
-            options: Options(
-                headers: {
-                  'Email': email,
-                }
-            ),
-            queryParameters: {
-              'storeId': widget.storeId
-            }
-        );
-        print("주문목록");
-        print(orderResponse.data);
-        print(orderResponse.data.runtimeType);
-        if (orderResponse.statusCode == 200) {
-          print("여기 들어옴");
-          List<dynamic> jsonData = orderResponse.data;
-          storeOrders = List<Map<String, dynamic>>.from(jsonData);
-          print(storeOrders);
-          setState(() {});
-        } else {
-          print('데이터 로드 실패, 상태 코드: ${orderResponse.statusCode}');
-        }
-      } catch (e) {
-        print('에러: $e');
+      // 주문 내역 가져오기
+      final String apiUrl = 'http://k9d102.p.ssafy.io:8083/api/order/member/${widget.storeId}';
+      var orderResponse = await dio.get(
+          apiUrl,
+          options: Options(
+              headers: {
+                'Email': email,
+              }
+          ),
+          queryParameters: {
+            'storeId': widget.storeId
+          }
+      );
+
+      if (orderResponse.statusCode == 200) {
+        List<dynamic> jsonData = orderResponse.data;
+        storeOrders = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {});
+      } else {
+        print('데이터 로드 실패, 상태 코드: ${orderResponse.statusCode}');
       }
     }
   }

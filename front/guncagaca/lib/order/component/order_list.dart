@@ -35,53 +35,49 @@ class _OrderListState extends State<OrderList> {
   Dio dio = DioClient.getInstance();
 
   Future<void> loadOrders() async {
-    try {
-      // 주문 내역 가져오기
-      final String apiUrl = '$baseUrl/api/order/member';
-      var orderResponse = await dio.get(
-          apiUrl,
-          options: Options(
-              headers: {
-                'Authorization': "Bearer $token",
-              }
-          )
-      );
-      if (orderResponse.statusCode == 200) {
-        List<dynamic> orders = orderResponse.data;
+    // 주문 내역 가져오기
+    final String apiUrl = '$baseUrl/api/order/member';
+    var orderResponse = await dio.get(
+        apiUrl,
+        options: Options(
+            headers: {
+              'Authorization': "Bearer $token",
+            }
+        )
+    );
+    if (orderResponse.statusCode == 200) {
+      List<dynamic> orders = orderResponse.data;
 
-        var storeRequests = <Future>[];
-        for (var order in orders) {
-          int storeId = order['storeId'];
-          storeRequests.add(dio.get('$baseUrl/api/store/$storeId',
-              options: Options(
-                  headers: {
-                    'Authorization': "Bearer $token",
-                  }
-              )));
-        }
-
-        var storeResponses = await Future.wait(storeRequests);
-
-        for (var i = 0; i < orders.length; i++) {
-          var storeResponse = storeResponses[i];
-          if (storeResponse.statusCode == 200) {
-            orders[i]['store'] = storeResponse.data;
-          } else {
-            print('Store data could not be fetched for order ${orders[i]['id']}');
-          }
-        }
-
-        setState(() {
-          storeOrders = orders.cast<Map<String, dynamic>>();
-          loading = false;
-          print("최종 : $storeOrders");
-        });
-
-      } else {
-        print('Order data could not be fetched');
+      var storeRequests = <Future>[];
+      for (var order in orders) {
+        int storeId = order['storeId'];
+        storeRequests.add(dio.get('$baseUrl/api/store/$storeId',
+            options: Options(
+                headers: {
+                  'Authorization': "Bearer $token",
+                }
+            )
+        ));
       }
-    } catch (e) {
-      print('Error fetching data: $e');
+
+      var storeResponses = await Future.wait(storeRequests);
+
+      for (var i = 0; i < orders.length; i++) {
+        var storeResponse = storeResponses[i];
+        if (storeResponse.statusCode == 200) {
+          orders[i]['store'] = storeResponse.data;
+        } else {
+          print('Store data could not be fetched for order ${orders[i]['id']}');
+        }
+      }
+
+      setState(() {
+        storeOrders = orders.cast<Map<String, dynamic>>();
+        loading = false;
+      });
+
+    } else {
+      print('Order data could not be fetched');
     }
   }
 

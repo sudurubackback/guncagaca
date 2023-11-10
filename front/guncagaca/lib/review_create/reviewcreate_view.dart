@@ -46,7 +46,6 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
         )
     );
 
-    print(reviewResponse.data);
     if (reviewResponse.statusCode == 200) {
       print('리뷰 작성 성공 : ${reviewResponse.data}');
     } else {
@@ -158,7 +157,6 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
               child: InkWell(
                 onTap: () async{
                   await _submitReview();
-                  print("리뷰 작성 완료");
                   Navigator.pop(context, 'true');
                 },
                 child: const Center(

@@ -302,7 +302,6 @@ class _DetailState extends State<DetailPage> {
               _showCustomDialog(newOrder);
             } else {
               controller.addToCart(newOrder);
-              print(newOrder);
               Navigator.pop(context);
             }
           },

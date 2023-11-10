@@ -40,7 +40,6 @@ class CartFooter extends StatelessWidget {
                   }).toList(),
                   onChanged: (value) {
                     cartController.setSelectedTime(value!);
-                    print(cartController.selectedTime.value);
                   },
                 )),
               ),

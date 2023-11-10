@@ -42,12 +42,10 @@ class CartController extends GetxController {
   }
 
   void increaseQuantity(OrderMenu order) {
-    print('개수 추가');
     order.quantity.value++;
   }
 
   void decreaseQuantity(OrderMenu order) {
-    print('개수 감소');
     if (order.quantity.value > 1) {
       order.quantity.value--;
     } else {

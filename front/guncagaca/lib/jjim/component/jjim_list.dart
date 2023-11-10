@@ -38,31 +38,22 @@ class _JjimListState extends State<JjimList> {
   Future<void> loadJjims() async {
 
     if (token != null) {
-      print("통신 $token");
+      final response = await dio.get(
+        "$baseUrl/api/store/mypage/like-store",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
 
-      try {
-        final response = await dio.get(
-          "$baseUrl/api/store/mypage/like-store",
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-            },
-          ),
-        );
-
-        if (response.statusCode == 200) {
-          List<dynamic> jsonData = response.data;
-          dummyJjims = List<Map<String, dynamic>>.from(jsonData);
-          print(dummyJjims);
-          setState(() {});
-        } else {
-          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
-        }
-      } catch (e) {
-        print('에러: $e');
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = response.data;
+        dummyJjims = List<Map<String, dynamic>>.from(jsonData);
+        setState(() {});
+      } else {
+        print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
       }
-    } else {
-      print(token);
     }
   }
 
@@ -79,7 +70,6 @@ class _JjimListState extends State<JjimList> {
     );
 
     if (response.statusCode == 200) {
-      print(response.data);
       setState(() {
         isLiked = response.data['liked'];
       });
@@ -89,7 +79,6 @@ class _JjimListState extends State<JjimList> {
   }
 
   void _goToStoreDetail(String cafeName, int id) {
-    print("스토어아이디 $id");
     Get.to(() => StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,),
     );
   }
@@ -153,7 +142,6 @@ class _JjimListState extends State<JjimList> {
                           setState(() {
                             dummyJjims.removeWhere((jjim) => jjim['storeId'] == storeId);
                           });
-                          print("찜 해제");
                           Navigator.of(context).pop();
 
                         },
@@ -195,7 +183,7 @@ class _JjimListState extends State<JjimList> {
       itemBuilder: (BuildContext context, int index) {
         isLiked = dummyJjims[index]['liked'];
         int id = dummyJjims[index]['id'];
-        print('id : ' + id.toString());
+
         return Container(
           margin: EdgeInsets.only(top: 15, left: 10, right: 10),
           decoration: BoxDecoration(

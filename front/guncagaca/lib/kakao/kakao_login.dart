@@ -17,12 +17,10 @@ class KakaoLogin implements SocialLogin {
       } else {
         print("no installed");
         try {
-          print(await KakaoSdk.origin);
           await UserApi.instance.loginWithKakaoAccount();
           return true;
         } catch (e) {
-          print("login with kakao Account fail");
-          print(e);
+          print("login with kakao Account fail $e");
           return false;
         }
 

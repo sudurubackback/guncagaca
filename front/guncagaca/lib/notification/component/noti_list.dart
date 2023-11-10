@@ -36,11 +36,10 @@ class _NotiListState extends State<NotiList> {
             }
         ),
     );
-    print("response ${response.data}");
+
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       notifications = List<Map<String, dynamic>>.from(jsonData);
-      print(notifications);
       setState(() {});
     } else {
       throw Exception("Failed to fetch menus.");
@@ -64,7 +63,6 @@ class _NotiListState extends State<NotiList> {
     );
 
     if (response.statusCode == 200) {
-      print("삭제 성공");
       setState(() {
         MyAlertListFromAPI();
       });
@@ -76,7 +74,6 @@ class _NotiListState extends State<NotiList> {
 
   @override
   Widget build(BuildContext context) {
-    print('All points: ${notifications}');
 
     return notifications.isEmpty
         ? Center(

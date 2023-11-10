@@ -43,7 +43,6 @@ class _ReviewTabWidgetState extends State<ReviewTabWidget> {
             }
         )
     );
-    print(response.data);
     if (response.statusCode == 200) {
       List<dynamic> jsonData = response.data;
       return jsonData.map((json) => Review.fromMap(json)).toList();

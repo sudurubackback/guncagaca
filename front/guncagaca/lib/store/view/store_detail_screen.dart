@@ -61,7 +61,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     );
 
     if (response.statusCode == 200) {
-      print(response.data);
       isLiked = response.data['liked'];
       isOpen = response.data['open'];
       widget.mainViewModel.updateTitle(response.data['cafeName']);
@@ -86,7 +85,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     );
 
     if (response.statusCode == 200) {
-      print(response.data);
       setState(() {
         isLiked = response.data['liked'];
       });

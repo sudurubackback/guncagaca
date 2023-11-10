@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
-import '../../order/view/order_view.dart';
 import '../../point/component/point_list.dart';
 
 import '../../common/utils/dio_client.dart';
@@ -49,28 +48,23 @@ class _MypageComponentState extends State<MypageComponent> {
 
   Future<void> loadMyDataFromAPI() async {
     String? email = await getEmailFromPreferences();
-    print(email);
+
     if (email != null) {
-      try {
-        Response response = await dio.get(
-          "$baseUrl/api/member/mypage",
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Email': email,
-            },
-          ),
-        );
-        if (response.statusCode == 200) {
-          setState(() {
-            myData = response.data;
-          });
-          print(myData);
-        } else {
-          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
-        }
-      } catch (e) {
-        print('에러: $e');
+      Response response = await dio.get(
+        "$baseUrl/api/member/mypage",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Email': email,
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          myData = response.data;
+        });
+      } else {
+        print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
       }
     } else {
       print('이메일이 없습니다.');

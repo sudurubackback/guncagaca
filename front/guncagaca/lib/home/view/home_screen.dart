@@ -80,33 +80,26 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     if (currentLocation == null) return;
 
     final String apiUrl = "$baseUrl/api/store/list";
-    try {
-      final response = await dio.get(
-        apiUrl,
-        options: Options(
-          headers: {
-            'Authorization': "Bearer $token",
-          },
-        ),
-        queryParameters: {
-          'lat': currentLocation!.latitude,
-          'lon': currentLocation!.longitude,
+    final response = await dio.get(
+      apiUrl,
+      options: Options(
+        headers: {
+          'Authorization': "Bearer $token",
         },
-      );
+      ),
+      queryParameters: {
+        'lat': currentLocation!.latitude,
+        'lon': currentLocation!.longitude,
+      },
+    );
 
-      print("API 응답: $response");
+    if (response.statusCode == 200) {
+      List<dynamic> data = response.data;
 
-      if (response.statusCode == 200) {
-        List<dynamic> data = response.data;
-        print("마커 200");
-        print(data);
-        setState(() {
-          storeData = data.map((item) => Store.fromMap(item)).toList();
-          createMarkersFromStores(storeData);
-        });
-      }
-    } catch (e) {
-      print("API 호출 중 오류 발생: $e");
+      setState(() {
+        storeData = data.map((item) => Store.fromMap(item)).toList();
+        createMarkersFromStores(storeData);
+      });
     }
   }
 
@@ -175,7 +168,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     if (_controller != null) {
       // 기존마커 제거
       _controller!.clearOverlays();
-
       _controller!.addOverlayAll(markers);
       print("createMarkersFromStores: Markers created and added successfully");
     } else {
@@ -299,13 +291,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   onMapReady: (controller) async {
                     _controller = controller;
                     await _controller?.setLocationTrackingMode(NLocationTrackingMode.follow);
-                    print("onMapReady: Controller initialized successfully");
 
                     if(markers.isNotEmpty){
                       await _controller?.addOverlayAll(markers);
-                      print("onMapReady: Markers added successfully");
-                    } else {
-                      print("onMapReady: No markers to add");
                     }
                   },
                 ),

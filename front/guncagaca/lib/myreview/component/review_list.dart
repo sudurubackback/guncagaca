@@ -32,37 +32,26 @@ class _ReviewListState extends State<ReviewList> {
   Dio dio = DioClient.getInstance();
 
   Future<void> loadReviews() async {
+    final response = await dio.get(
+      "$baseUrl/api/store/mypage/reviews",
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
 
-    print(token);
-    print("통신");
-
-    try {
-      final response = await dio.get(
-        "$baseUrl/api/store/mypage/reviews",
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        List<dynamic> data = response.data;
-        print(data);
-        print("제대로 옴");
-        setState(() {
-          myReviews = data.map((item) => MyReview.fromMap(item)).toList();
-        });
-      } else {
-        print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('에러: $e');
+    if (response.statusCode == 200) {
+      List<dynamic> data = response.data;
+      setState(() {
+        myReviews = data.map((item) => MyReview.fromMap(item)).toList();
+      });
+    } else {
+      print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
     }
   }
 
   void _goToStoreDetail(String cafeName, int id) {
-    print("스토어아이디 $id");
     Get.to(() => StoreDetailScreen(storeId: id, mainViewModel: widget.mainViewModel,)
     );
   }
