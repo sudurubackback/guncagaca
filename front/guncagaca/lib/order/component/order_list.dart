@@ -21,6 +21,7 @@ class OrderList extends StatefulWidget {
 
 class _OrderListState extends State<OrderList> {
   List<Map<String, dynamic>> storeOrders = [];
+  bool loading = true;
   final token = TokenManager().token;
 
   @override
@@ -71,6 +72,7 @@ class _OrderListState extends State<OrderList> {
 
         setState(() {
           storeOrders = orders.cast<Map<String, dynamic>>();
+          loading = false;
           print("최종 : $storeOrders");
         });
 
@@ -104,7 +106,9 @@ class _OrderListState extends State<OrderList> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: _refreshData,
-      child: storeOrders.isEmpty
+      child: loading
+          ? Center(child: CircularProgressIndicator())
+          :storeOrders.isEmpty
         ? Center(
           child: Text(
            "주문내역이 없습니다.",

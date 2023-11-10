@@ -78,7 +78,6 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-
           OrderView(mainViewModel: widget.mainViewModel,),
           HomeScreen(mainViewModel: widget.mainViewModel,),
           MypageComponent(mainViewModel: widget.mainViewModel,),

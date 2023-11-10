@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../kakao/main_view_model.dart';
 import 'order_page.dart';
@@ -97,9 +98,8 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
               ),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)), // OrderPage로 이동
+                  Get.to(() =>
+                      OrderPage(mainViewModel: widget.mainViewModel,) // OrderPage로 이동
                   );
                 },
                 child: const Center(

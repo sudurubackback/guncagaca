@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/jjim/view/jjim_screen.dart';
 import 'package:guncagaca/mypage/component/nickname.dart';
@@ -155,9 +156,7 @@ class _MypageComponentState extends State<MypageComponent> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
+                              Get.to(() => OrderPage(mainViewModel: widget.mainViewModel,)
                               );
                             },
                             child: Image.asset(
@@ -168,9 +167,7 @@ class _MypageComponentState extends State<MypageComponent> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => OrderPage(mainViewModel: widget.mainViewModel,)),
+                              Get.to(() => OrderPage(mainViewModel: widget.mainViewModel,)
                               );
                             },
                             child: const Text(
