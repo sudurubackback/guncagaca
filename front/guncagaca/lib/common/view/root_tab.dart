@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:flutter/material.dart';
@@ -21,35 +22,41 @@ class RootTab extends StatefulWidget {
 class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   late TabController controller;
 
-  int current_index = 1;
+  int currentIndex = 1;
   final List<String> tabTitles = ['주문내역', '근카 ? 가카 !', '마이페이지'];
 
   @override
   void initState() {
     super.initState();
-    current_index = widget.initialIndex;
+    currentIndex = widget.initialIndex;
     controller = TabController(initialIndex: widget.initialIndex, length: 3, vsync: this);
     controller.addListener((tabListener));
+
+    ever(widget.mainViewModel.tabIndex, (int newIndex) {
+      if (newIndex != currentIndex) {
+        controller.animateTo(newIndex);
+      }
+    });
   }
+
   @override
   void dispose() {
     controller.removeListener(tabListener);
-
     super.dispose();
   }
 
   void tabListener() {
     setState(() {
-      current_index = controller.index;
+      currentIndex = controller.index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title : tabTitles[current_index],
+      title : tabTitles[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: current_index,
+        currentIndex: currentIndex,
         onTap:(int index) {
           FocusScope.of(context).unfocus();
 

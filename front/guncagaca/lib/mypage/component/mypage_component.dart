@@ -149,8 +149,7 @@ class _MypageComponentState extends State<MypageComponent> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Get.to(() => OrderPage(mainViewModel: widget.mainViewModel,)
-                              );
+                              widget.mainViewModel.changeTabIndex(0);
                             },
                             child: Image.asset(
                               'assets/image/order.png',
@@ -160,8 +159,7 @@ class _MypageComponentState extends State<MypageComponent> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Get.to(() => OrderPage(mainViewModel: widget.mainViewModel,)
-                              );
+                              widget.mainViewModel.changeTabIndex(0);
                             },
                             child: const Text(
                               '주문내역',
