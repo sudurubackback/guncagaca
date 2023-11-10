@@ -18,12 +18,8 @@ public class SwaggerConfig {
     @Bean
     public List<GroupedOpenApi> apis() {
         List<GroupedOpenApi> apis = new ArrayList<>();
-        apis.add(createGroupedOpenApi("회원", "/api/member/**"));
         apis.add(createGroupedOpenApi("사장님", "/api/owner/**"));
         apis.add(createGroupedOpenApi("가게", "/api/store/**"));
-        apis.add(createGroupedOpenApi("알림", "/api/notification/**"));
-        apis.add(createGroupedOpenApi("주문", "/api/order/**"));
-        apis.add(createGroupedOpenApi("결제", "/api/pay/**"));
 
         return apis;
     }
@@ -38,7 +34,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("http://k9d102.p.ssaty.io:8000"))
+                .addServersItem(new Server().url("http://localhost:8000"))
 //                .components(new Components().addSecuritySchemes("Bearer",
 //                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
 //                .addSecurityItem(new SecurityRequirement().addList("Bearer"))
