@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:guncagaca/common/view/custom_appbar.dart';
+import 'package:guncagaca/common/const/colors.dart';
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 import '../../kakao/main_view_model.dart';
 import '../component/jjim_list.dart';
 
@@ -15,15 +16,12 @@ class JjimScreen extends StatelessWidget {
 
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xfff8e9d7),
+      statusBarColor: BACK_COLOR,
       statusBarIconBrightness: Brightness.dark,
     ));
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-        child: CustomAppbar(title: '찜', imagePath: 'assets/image/jjim.png',)
-      ),
+      appBar: CustomAppBar(title: '찜', mainViewModel: mainViewModel,),
       body: Column(
         children: [
           Expanded(

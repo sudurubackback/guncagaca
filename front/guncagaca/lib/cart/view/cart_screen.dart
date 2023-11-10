@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:guncagaca/common/view/custom_appbar.dart';
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 
 import '../../kakao/main_view_model.dart';
 import '../component/cart_footer.dart';
@@ -17,10 +17,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-            child: CustomAppbar(title: '장바구니', imagePath: null,)
-          ),
+          appBar: CustomAppBar(title: '장바구니', mainViewModel: mainViewModel),
       body: SafeArea(
         child: Column(
           children: [

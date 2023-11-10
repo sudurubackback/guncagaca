@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:guncagaca/common/view/custom_appbar.dart';
+import 'package:get/get.dart' hide Response;
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../common/layout/default_layout.dart';
-import '../../common/utils/dio_client.dart';
-import '../../common/utils/oauth_token_manager.dart';
-import '../../common/view/root_tab.dart';
-import '../../kakao/main_view_model.dart';
+import '../../../common/const/colors.dart';
+import '../../../common/layout/default_layout.dart';
+import '../../../common/utils/dio_client.dart';
+import '../../../common/utils/oauth_token_manager.dart';
+import '../../../common/view/root_tab.dart';
+import '../../../kakao/main_view_model.dart';
 
 
 
@@ -90,7 +92,7 @@ class _NicknameState extends State<NicknamePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xfff8e9d7),
+      statusBarColor: BACK_COLOR,
       statusBarIconBrightness: Brightness.dark,
     ));
 
@@ -99,15 +101,12 @@ class _NicknameState extends State<NicknamePage> {
         FocusScope.of(context).unfocus();
       },
       child : Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-            child: CustomAppbar(title: '닉네임 변경', imagePath: null,)
-        ),
+        appBar: CustomAppBar(title: '닉네임 변경', mainViewModel: widget.mainViewModel,),
         body:SingleChildScrollView(
           child: Column(
             children: [
               Container(
-                color: Color(0xff9B5748),
+                color: PRIMARY_COLOR,
                 height: 0.0,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
@@ -117,7 +116,7 @@ class _NicknameState extends State<NicknamePage> {
                 padding: EdgeInsets.only(left: 30.0, right: 20.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Color(0xff9B5748),
+                    color: PRIMARY_COLOR,
                     width: 2.0,
                   ),
                   borderRadius: BorderRadius.circular(20.0),
@@ -128,23 +127,36 @@ class _NicknameState extends State<NicknamePage> {
                     children: [
                       Expanded(
                         child: TextField(
+                          maxLength: 8,
+                          textAlignVertical: TextAlignVertical.top,
                           onChanged: (value) {
                             setState(() {
                               changeNickname = value;
                             });
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               border: InputBorder.none,
-                              hintText: '새로운 닉네임을 입력하세요'
+                              hintText: '새로운 닉네임을 입력하세요',
+                            contentPadding: EdgeInsets.only(left: 10.0, right: 10.0), // 텍스트 필드 내부의 패딩을 조정합니다.
+                            counter: Offstage(),
                           ),
+                          textInputAction: TextInputAction.done,
+                          buildCounter: (BuildContext context, { int? currentLength, bool? isFocused, int? maxLength }) {
+                            return Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Text(
+                                '${currentLength ?? 0}/${maxLength ?? 8}', // 현재 글자 수 / 최대 글자 수.
+                                style: TextStyle(color: PRIMARY_COLOR),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-
-
               Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.08,
@@ -152,22 +164,20 @@ class _NicknameState extends State<NicknamePage> {
                 padding: EdgeInsets.only(left: 30.0, right: 50.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Color(0xff9B5748),
+                    color: PRIMARY_COLOR,
                     width: 2.0,
                   ),
-                  color: Color(0xff9B5748),
+                  color: PRIMARY_COLOR,
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: InkWell(
                   onTap: () async{
                     await changeNicknameFromAPI();
                     print("닉네임 변경 완료");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DefaultLayout(
+                    Get.to(() => DefaultLayout(
                         child: RootTab(mainViewModel: widget.mainViewModel, initialIndex: 2,),
                         mainViewModel: widget.mainViewModel,
-                      )),
+                      )
                     );
                   },
                   child: const Center(

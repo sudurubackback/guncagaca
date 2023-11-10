@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:guncagaca/common/view/custom_appbar.dart';
+import 'package:guncagaca/common/const/colors.dart';
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 import '../../kakao/main_view_model.dart';
 import '../component/review_list.dart';
 
@@ -16,15 +17,12 @@ class ReviewScreen extends StatelessWidget {
 
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xfff8e9d7),
+      statusBarColor: BACK_COLOR,
       statusBarIconBrightness: Brightness.dark,
     ));
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-        child: CustomAppbar(title: '나의 리뷰', imagePath: null,)
-      ),
+      appBar: CustomAppBar(title: '나의 리뷰', mainViewModel: mainViewModel),
       body: Column(
         children: [
           Expanded(
