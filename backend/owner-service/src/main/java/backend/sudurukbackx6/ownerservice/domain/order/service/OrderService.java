@@ -1,11 +1,15 @@
 package backend.sudurukbackx6.ownerservice.domain.order.service;
 
+import backend.sudurukbackx6.ownerservice.common.client.MemberServiceClient;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.Status;
 import backend.sudurukbackx6.ownerservice.domain.order.entity.Order;
 import backend.sudurukbackx6.ownerservice.domain.order.repository.OrderRepository;
 import backend.sudurukbackx6.ownerservice.domain.order.dto.*;
+import kr.co.bootpay.Bootpay;
+import kr.co.bootpay.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
@@ -22,6 +26,14 @@ import java.util.Objects;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+
+    private final MemberServiceClient memberServiceClient;
+
+    @Value("${bootpay.clientId}")
+    private String CLIENT_ID;
+
+    @Value("${bootpay.secretKey}")
+    private String PRIVATE_KEY;
 
     public Order getOrder(String orderId) {
         return orderRepository.findById(orderId)

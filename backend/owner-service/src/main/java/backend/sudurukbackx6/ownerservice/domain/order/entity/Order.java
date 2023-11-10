@@ -5,12 +5,10 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Builder
 @Getter
 @Setter
