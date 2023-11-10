@@ -80,5 +80,8 @@ public class MemberController {
         map.put("firebase_token", memberService.getFirebaseToken(token));
         return ResponseEntity.ok(map);
     }
+
+    // 주문 등록
+
 }
 

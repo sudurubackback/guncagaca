@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangeOwnerStoreIdRequest {
+public class SetStoreIdFromOwnerRequest {
 
     private String email;
     private Long storeId;
