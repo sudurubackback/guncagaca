@@ -13,40 +13,6 @@ class MenuAllPage extends StatefulWidget {
 class _MenuAllPageState extends State<MenuAllPage> {
   int selectedButtonIndex = 0;
 
-  List<Map<String, dynamic>> menulists = [
-    {
-      'text': '아메리카노',
-      'image': 'assets/americano.jpg',
-      'category': '커피',
-      'options': {
-        '샷추가': '500',
-        '얼음추가': '0',
-        '시럽추가': '0',
-      },
-      'price': '4,500원',
-    },
-    {
-      'text': '카페라떼',
-      'image': 'assets/cafelatte.jpg',
-      'category': '커피',
-      'options': {
-        '샷추가': '500',
-        '시럽추가': '0',
-      },
-      'price': '5,000원',
-    },
-    {
-      'text': '초코칩 프라푸치노',
-      'image': 'assets/chocochipfrappuccino.jpg',
-      'category': '논커피',
-      'options': {
-        '얼음추가': '0',
-        '휘핑크림추가': '500',
-      },
-      'price': '6,000원',
-    },
-  ];
-
   // void _editMenuItem(Map<String, dynamic> menuItem) {
   //   Navigator.of(context).push(
   //     MaterialPageRoute(
@@ -73,14 +39,15 @@ class _MenuAllPageState extends State<MenuAllPage> {
   void initState() {
     super.initState();
 
-    setupApiService();
-    _fetchMenus();
+    setupApiService().then((_) {
+      _fetchMenus();
+    });
   }
 
   void _fetchMenus() async {
     final ownerResponse = await apiService.getOwnerInfo();
     int storeId = ownerResponse.store_id;
-    categorizedMenus = await apiService.getMenues(storeId.toString()) ?? {};
+    categorizedMenus = await apiService.getMenues(storeId.toString());
     setState(() {});
   }
 

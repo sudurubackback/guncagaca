@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'menuresponsemodel.g.dart';
+
+
 @JsonSerializable()
 class MenuEntity {
   String id;

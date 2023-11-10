@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:guncagacaonwer/basic/screen/passwordchangepage.dart';
 
 class TextInfo {
   final String text;
@@ -78,38 +77,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   ),
                 );
               }).toList(),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  top: 15 * (deviceWidth / standardDeviceWidth),
-                  right: 30 * (deviceHeight / standardDeviceHeight)), // 오른쪽에 마진을 줍니다
-              alignment: Alignment.centerRight, // 오른쪽 정렬
-              child: ElevatedButton(
-                onPressed: () {
-                  // 비밀번호 변경 화면으로 이동
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        // 비밀번호 변경 화면의 위젯을 반환
-                        return PasswordChangePage(); // PasswordChangeScreen은 실제로 비밀번호 변경 화면을 구현한 위젯 클래스입니다.
-                      },
-                    ),
-                  );
-                },
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(
-                      80 * (deviceWidth / standardDeviceWidth),
-                      30 * (deviceHeight / standardDeviceHeight))),
-                  backgroundColor: MaterialStateProperty.all(Color(0xFFD9D9D9)),
-                ),
-                child: Text(
-                  '비밀번호 변경',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12 * (deviceWidth / standardDeviceWidth),
-                  ),
-                ),
-              ),
             ),
           ],
         ),

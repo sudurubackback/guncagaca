@@ -30,8 +30,9 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   void initState() {
     super.initState();
 
-    setupApiService();
-    fetchOrders();
+    setupApiService().then((_) {
+      fetchOrders();
+    });
   }
 
   // 주문 접수 리스트 (get)
@@ -39,6 +40,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
       int storeId = ownerResponse.store_id;
+      print(storeId);
       List<Order> orderList = await apiService.getWaitingList(storeId, "1");
       setState(() {
         orders = orderList;

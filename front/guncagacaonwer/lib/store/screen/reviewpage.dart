@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/store/api/review_api_service.dart';
 import 'package:guncagacaonwer/store/models/reviewmodel.dart';
 
@@ -13,24 +14,33 @@ class _ReviewPageState extends State<ReviewPage> {
   List<ReviewResponse> reviewData = [];
 
   late ApiService apiService;
+  static final storage = FlutterSecureStorage();
+
+  Future<void> setupApiService() async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    Dio dio = Dio();
+    dio.interceptors.add(AuthInterceptor(accessToken));
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+    apiService = ApiService(dio);
+  }
 
   @override
   void initState() {
     super.initState();
 
-    Dio dio = Dio();
-    dio.interceptors.add(LogInterceptor(responseBody: true, responseHeader: true));
-    apiService = ApiService(dio);
+    setupApiService().then((_) {
+      fetchReviews();
+    });
   }
 
   void fetchReviews() async {
     try {
-      final token = "";
-      final ownerResponse = await apiService.getOwnerInfo(token);
+      final ownerResponse = await apiService.getOwnerInfo();
       final cafeId = ownerResponse.store_id;
+      print(cafeId);
 
       if (cafeId != null) {
-        final response = await apiService.getReview(token, cafeId);
+        final response = await apiService.getReview(cafeId);
         if (response.isNotEmpty) {
           setState(() {
             reviewData = response;

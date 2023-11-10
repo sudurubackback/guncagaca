@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'menuregistermodel.g.dart';
+
 @JsonSerializable()
 class MenuRegisterRequest {
   final int cafeId;

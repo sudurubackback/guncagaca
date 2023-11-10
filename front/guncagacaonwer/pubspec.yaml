@@ -46,6 +46,7 @@ dependencies:
   dio: ^5.3.3
   http: ^0.13.5
   json_annotation: ^4.8.1
+  webview_flutter: ^4.4.2
 
 dev_dependencies:
   flutter_test:

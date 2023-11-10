@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'ordercancelmodel.g.dart';
+
 @JsonSerializable()
 class OrderCancelRequest {
   final String reason;
