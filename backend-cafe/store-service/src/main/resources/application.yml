@@ -1,0 +1,57 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: store-service
+  datasource:
+    url: jdbc:mysql://k9d102a.p.ssafy.io:3308/store_db?serverTimezone=UTC&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ENC(8jiqggGX01/O42mRkKrUZg==)
+    password: ENC(plIEZt17Ks31RnTslRYz3bh+6yrmbtfk)
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  kafka:
+    bootstrap-servers: k9d102.p.ssafy.io:9092, k9d102.p.ssafy.io:9093, k9d102.p.ssafy.io:9094
+
+ncp:
+  clientId: ENC(NgnUt9Wqu1auh5AQqgdhawGdVjfpYibe)
+  secret: ENC(r407LRFCopQ1LIQJsaLZjWY9AToAVh+hpSJoHfarjd2up+hXKxIc27jMYOFRmJU7Ughvwo0KTug=)
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(lsI4nByDVH0A+nAZC/JdAh/fOeoza/XNPGFfZKpLl5w=)
+      secret-key: ENC(4wBvkLiET5qrIQcr3YT3b/SRtMabgryune7AR/CR+4aSK53ppzkyemvkdA1gqsDd784z7NYsrVk=)
+    s3:
+      bucket: appaanjanda
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    cloud:
+      url: ENC(Itvh2FVBeag/8sFoMuhebNG8Fh+5VYoFX5uGpOgqeUlKv9QOjargS5m0uyhb6W79)
+
+
+#springdoc:
+#  api-docs:
+#    path: /store-service/v3/api-docs
+#  swagger-ui:
+#    path: /store-service/swagger-ui.html
+#
+openapi:
+  service:
+    title: 근카가카 - 가게 서비스 #title that you will want to display in the swagger ui
+    version: 1.0.1
+    # API Gateway 포트
+    url: http://k9d102.p.ssafy.io:8000
