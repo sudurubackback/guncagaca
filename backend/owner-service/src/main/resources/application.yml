@@ -1,20 +1,93 @@
-spring:
-  application:
-    name: owner
-  profiles:
-    active: dev
-  config:
-    import: optional:configserver:http://k9d102.p.ssafy.io:8888 #config 설정
-
 server:
   port: 8086
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(/ZsMZB6ylqaFe0lVHvLxPzmY54r0TfTAZlNmgRJV0/I=)
+      secret-key: ENC(25CdF/ymWddUStEpCO1E2tNxTd1NnZo5qzG8f9ZGghYmXAgV46ajPeKUBpiglB/OOC8QZ16g3Jc=)
+    s3:
+      bucket: appaanjanda
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    cloud:
+      url: ENC(XyxyWSFdM35Z2Oqyrk672wyoyDhcElTnwsMApgWopH66B4yfS79NK7dLeUZXWWJ5)
+
+spring:
+  application:
+    name: owner-service
+  data:
+    mongodb:
+      uri: mongodb://root:d102d102@k9d102a.p.ssafy.io:27017/menu_db?authSource=admin&authMechanism=SCRAM-SHA-1
+  datasource:
+    url: jdbc:mysql://k9d102a.p.ssafy.io:3307/owner_db?serverTimezone=UTC&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ENC(8jiqggGX01/O42mRkKrUZg==)
+    password: ENC(plIEZt17Ks31RnTslRYz3bh+6yrmbtfk)
+
+  # SMTP설정
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(/7+vQb2h8FOnWeKII6+yM7ElwS0SkWIiMhKWmKx69NE=)
+    password: ENC(QgNUBRswo4YYSwDgiuYJPsivqdPJuiYN3y87nimMKi0=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+  # Redis 설정
+  redis:
+    host: k9d102a.p.ssafy.io
+    port: 6379
+  session:
+    timeout: 600
+    store-type: redis
+    redis:
+      namespace: spring:session
+      flush-mode: on-save
+
+  jpa:
+    # JPA가 수행하는 SQL을 볼 수 있다.
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    # 콘솔 확인 을 위한 always
+  output:
+    ansi:
+      enabled: always
+  # 파라미터 확인을 위한 trace
+
+jwt:
+  header: Authorization
+  issuer: thisiseunjin
+  secret: ENC(7o8rE130QfnirnyXwskepSXUh2zXrrSNwjclyVmZzQvainIjXT02kL731thuqBbnWwoZ74Y2XqvCBWUnUK7aYunTWgikLTfxq4Pgnt5FaJeoRP4WwYGKT76IlmDu0DbgxSa1hLxt1E64Tc+6gz6G0g==)
+vendor:
+  vaildURL: http://api.odcloud.kr/api/nts-businessman/v1/validate
+  serviceKey: ENC(KOaAqYhw0NyVnSfs2smmTU2bsIf86GLM2msnNopFR7X3aYA9XN/sQyMgW5AmuDc1wNcujKZWJgJmMx03W1a5kxaDiflkuOrQsFXhMVJmR4e23eIGH2z7OS/61aFdH82Oz6PpDbjyfRO6coOZAlexVA==)
 
 logging:
   level:
     org.hibernate.type: trace
+
+bootpay:
+  clientId: ENC(n3iVXiqMs2mEDPp2alXPyM61ihAj4f1v6o9uY7vDu80NzuHyLHiN4g==)
+  secretKey: ENC(bZESy6WdhEuRR6coNwzw/7eyX3DYskZbRE+/KCuzzaOnm+QDkGUnW+HweCg2aMAO0PctzAaGoOo=)
+
+#springdoc:
+#  api-docs:
+#    path: /owner-service/v3/api-docs
+#  swagger-ui:
+#    path: /owner-service/swagger-ui.html
+#
+openapi:
+  service:
+    title: 근카가카 - 사장님 서비스 #title that you will want to display in the swagger ui
+    version: 1.0.0
+    # API Gateway 포트
+    url: http://k9d102.p.ssafy.io:8000
