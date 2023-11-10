@@ -13,7 +13,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 				org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration.class
 		}
 )
-@EnableDiscoveryClient
 @EnableFeignClients
 public class OwnerServiceApplication {
 
