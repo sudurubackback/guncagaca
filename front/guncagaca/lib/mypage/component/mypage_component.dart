@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
-import '../../orderStatus/order_page.dart';
+import '../../order/view/order_view.dart';
 import '../../point/component/point_list.dart';
 
 import '../../common/utils/dio_client.dart';
@@ -61,22 +61,16 @@ class _MypageComponentState extends State<MypageComponent> {
             },
           ),
         );
-
         if (response.statusCode == 200) {
-
-          print("내정보: ${response.data}");
-
           setState(() {
             myData = response.data;
           });
-
           print(myData);
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
         }
       } catch (e) {
         print('에러: $e');
-
       }
     } else {
       print('이메일이 없습니다.');
@@ -105,9 +99,9 @@ class _MypageComponentState extends State<MypageComponent> {
             margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 20.0),
             padding: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 20.0),
             decoration: BoxDecoration(
-              color: Color(0xffF8E9D7),
+              color: BACK_COLOR,
               border: Border.all(
-                color: Color(0xff9B5748),
+                color: PRIMARY_COLOR,
                 width: 2.0,
               ),
               borderRadius: BorderRadius.circular(20.0),
@@ -330,7 +324,7 @@ class _MypageComponentState extends State<MypageComponent> {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
-            color: Color(0xff9B5748),
+            color: PRIMARY_COLOR,
             width: 2.0,
           ),
           borderRadius: BorderRadius.circular(10.0),

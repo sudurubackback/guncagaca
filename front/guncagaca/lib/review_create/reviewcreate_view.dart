@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../common/const/colors.dart';
 import '../common/utils/dio_client.dart';
 import '../common/utils/oauth_token_manager.dart';
 import 'reviewcreate_component.dart';
@@ -56,7 +57,7 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
   @override
   Widget build(BuildContext context){
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xfff8e9d7),
+      statusBarColor: BACK_COLOR,
       statusBarIconBrightness: Brightness.dark,
     ));
 
@@ -117,7 +118,7 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(2.0),
               child: Container(
-                color: Color(0xff9B5748),
+                color: PRIMARY_COLOR,
                 height: 2.0,
               ),
             ),
@@ -148,10 +149,10 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
               padding: EdgeInsets.only(left: 30.0, right: 50.0),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color(0xff9B5748),
+                  color: PRIMARY_COLOR,
                   width: 2.0,
                 ),
-                color: Color(0xff9B5748),
+                color: PRIMARY_COLOR,
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: InkWell(

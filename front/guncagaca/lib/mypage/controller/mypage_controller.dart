@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/const/colors.dart';
 import '../../kakao/main_view_model.dart';
 import '../../login/loginpage.dart';
 
@@ -62,7 +63,7 @@ class MypageController {
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
+                    backgroundColor: PRIMARY_COLOR,
                   ),
                   child: Text('확인', style: TextStyle(color: Color(0xffffffff))),
                   onPressed: () async{
@@ -80,7 +81,7 @@ class MypageController {
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
+                    backgroundColor: PRIMARY_COLOR,
                   ),
                   child: Text('취소', style: TextStyle(color: Color(0xffffffff))),
                   onPressed: () {

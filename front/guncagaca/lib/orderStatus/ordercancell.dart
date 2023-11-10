@@ -52,7 +52,7 @@ class _OrderCancellPageState extends State<OrderCancellPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xfff8e9d7),
+        backgroundColor: BACK_COLOR,
         leading: Padding(
           padding: EdgeInsets.only(top: 20.0),
           child: IconButton(
@@ -67,7 +67,7 @@ class _OrderCancellPageState extends State<OrderCancellPage> {
         elevation: 0,
       ),
       body: Container(
-        color: Color(0xfff8e9d7),
+        color: BACK_COLOR,
         child: Center(
           child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

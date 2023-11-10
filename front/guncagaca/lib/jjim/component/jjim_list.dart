@@ -145,7 +145,7 @@ class _JjimListState extends State<JjimList> {
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
+                    backgroundColor: PRIMARY_COLOR,
                   ),
                   child: Text('확인', style: TextStyle(color: Color(0xffffffff))),
                         onPressed: () async {
@@ -164,7 +164,7 @@ class _JjimListState extends State<JjimList> {
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: Color(0xff9B5748),
+                    backgroundColor: PRIMARY_COLOR,
                   ),
                   child: Text('취소', style: TextStyle(color: Color(0xffffffff))),
                   onPressed: () {
@@ -200,7 +200,7 @@ class _JjimListState extends State<JjimList> {
           margin: EdgeInsets.only(top: 15, left: 10, right: 10),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xff9B5748),
+              color: PRIMARY_COLOR,
               width: 1.0,
             ),
             borderRadius: BorderRadius.circular(20.0),

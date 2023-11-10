@@ -53,7 +53,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xfff8e9d7),
+        backgroundColor: BACK_COLOR,
         leading: Padding(
           padding: EdgeInsets.only(top: 20.0), // 아이콘을 아래로 이동
           child: IconButton(
@@ -68,7 +68,7 @@ class _OrderWaitPageState extends State<OrderWaitPage> {
         elevation: 0, // 밑 줄 제거
       ),
       body: Container(
-        color: Color(0xfff8e9d7),
+        color: BACK_COLOR,
         child: Center(
           child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

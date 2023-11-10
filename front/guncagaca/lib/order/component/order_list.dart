@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 
 import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/review_create/reviewcreate_view.dart';
@@ -126,7 +127,7 @@ class _OrderListState extends State<OrderList> {
             margin: EdgeInsets.only(top: 15, left: 10, right: 10),
             decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xff9B5748),
+              color: PRIMARY_COLOR,
               width: 1.0,
               ),
             borderRadius: BorderRadius.circular(20.0),

@@ -87,7 +87,7 @@ class _ReviewListState extends State<ReviewList> {
           margin: EdgeInsets.only(top: 15, left: 10, right: 10),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xff9B5748),
+              color: PRIMARY_COLOR,
               width: 1.0,
             ),
             borderRadius: BorderRadius.circular(20.0),
@@ -139,8 +139,8 @@ class _ReviewListState extends State<ReviewList> {
                       child: Container(
                         padding: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          color: Color(0xffF8E9D7),
-                          border: Border.all(color: Color(0xff9B5748), width: 2.0),
+                          color: BACK_COLOR,
+                          border: Border.all(color: PRIMARY_COLOR, width: 2.0),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Row(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../common/const/colors.dart';
+
 class ReviewInputComponent extends StatelessWidget {
   final double rating;
   final ValueChanged<double> onRatingUpdate;
@@ -49,7 +51,7 @@ class ReviewInputComponent extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 40.0),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xff9B5748),
+              color: PRIMARY_COLOR,
               width: 2.0,
             ),
             borderRadius: BorderRadius.circular(20.0),

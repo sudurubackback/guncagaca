@@ -7,7 +7,7 @@ import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:guncagaca/common/utils/dio_client.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import '../../common/layout/default_layout.dart';
+import '../../common/const/colors.dart';
 import '../../common/utils/oauth_token_manager.dart';
 import '../../mypage/component/order_store_list.dart';
 import '../../store/view/store_detail_screen.dart';
@@ -94,7 +94,7 @@ class _PointListState extends State<PointList> {
           decoration: BoxDecoration(
 
             border: Border.all(
-              color: Color(0xff9B5748),
+              color: PRIMARY_COLOR,
               width: 2.0,
             ),
             borderRadius: BorderRadius.circular(20.0),

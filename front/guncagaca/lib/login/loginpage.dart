@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:guncagaca/common/const/colors.dart';
 import 'package:guncagaca/common/layout/default_layout.dart';
 import 'package:guncagaca/common/view/root_tab.dart';
 import 'package:guncagaca/kakao/kakao_login.dart';
@@ -170,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
           return false;
         },
         child: Container(
-          color: Color(0xfff8e9d7),
+          color: BACK_COLOR,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

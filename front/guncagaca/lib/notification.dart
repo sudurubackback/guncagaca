@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guncagaca/common/const/colors.dart';
 
 
 class NotificationPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class _NotificationState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color(0xfff8e9d7),
+      statusBarColor: BACK_COLOR,
       statusBarIconBrightness: Brightness.dark,
     ));
 
@@ -65,7 +66,7 @@ class _NotificationState extends State<NotificationPage> {
         child: Column(
           children: [
             Container(
-              color: Color(0xff9B5748),
+              color: PRIMARY_COLOR,
               height: 2.0,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.05),

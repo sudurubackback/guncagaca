@@ -3,6 +3,8 @@ import 'package:guncagaca/cart/models/cart_widget.dart';
 import 'package:guncagaca/notification/models/noti_widget.dart';
 import 'package:guncagaca/kakao/main_view_model.dart';
 
+import '../const/colors.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final MainViewModel mainViewModel;
@@ -43,7 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           preferredSize: Size.fromHeight(10.0),
           // child: SizedBox(height: 10),
           child: Container(
-            color: Color(0xff9B5748),
+            color: PRIMARY_COLOR,
             height: 2.0,
           ),
         )
