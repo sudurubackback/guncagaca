@@ -52,10 +52,10 @@ public class Business extends TimeEntity {
 
     private String port;
 
-    private Long ddns;
+    private String ddns;
 
     //builer생성
-    public Business(BusinessValidReqDto dto) {
+    public Business(BusinessValidReqDto dto, String uploadURL) {
         this.businessNum = dto.getBusiness_number();
         this.accountNum = dto.getAccount_number();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -63,8 +63,7 @@ public class Business extends TimeEntity {
         this.name = dto.getOwner_name();
         this.businessName = dto.getBusiness_name();
         this.address = dto.getAddress();
-        this.ip = dto.getIp();
-        this.port = dto.getPort();
-        this.ddns = dto.getDdns();
+        this.img = uploadURL;
     }
+
 }
