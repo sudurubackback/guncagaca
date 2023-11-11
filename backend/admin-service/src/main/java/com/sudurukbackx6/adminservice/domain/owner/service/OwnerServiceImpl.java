@@ -86,6 +86,16 @@ public class OwnerServiceImpl implements OwnerService {
         ownersRepository.deleteByEmail(email);
     }
 
+    @Override
+    public boolean checkValidEmail(String email) {
+        Optional<Owners> exitOwner = ownersRepository.findByEmail(email);
+
+        if(exitOwner.isPresent()) return false;
+
+        //존재 한다면 이메일 양식이 맞는지 확인
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
+    }
+
 
 
 }

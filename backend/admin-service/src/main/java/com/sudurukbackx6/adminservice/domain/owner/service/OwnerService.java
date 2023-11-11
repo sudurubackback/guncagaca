@@ -24,4 +24,7 @@ public interface OwnerService {
     //4. 회원탈퇴
     void signOut(String header);
 
+    // 이메일 중복 확인
+    boolean checkValidEmail(String email);
+
 }
