@@ -2,6 +2,7 @@ package com.sudurukbackx6.adminservice.domain.owner.controller;
 
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
 import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.service.OwnerService;
@@ -85,4 +86,12 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseBody<>(400, "인증 코드 불일치"));
 
     }
+
+    // ip, ddns 등록
+    @PostMapping("/network")
+    public ResponseEntity<? extends BaseResponseBody> setNetwork(@RequestHeader("Email") String email, @RequestBody NetworkReqDto networkReqDto) {
+        ownerService.setNetwork(email, networkReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "네트워크 설정 완료"));
+    }
+
 }
