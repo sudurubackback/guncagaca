@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/login/api/siginin_api_service.dart';
 import 'package:guncagacaonwer/store/screen/storepage.dart';
-import 'package:guncagacaonwer/basic/screen/passwordrecoverypage.dart';
-import 'package:guncagacaonwer/basic/screen/signpage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -203,43 +201,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(height: 7 * (deviceHeight / standardDeviceHeight)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          // 회원가입 링크를 눌렀을 때의 동작
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => SignPage(),
-                              )
-                          );
-                        },
-                        child: Text(
-                          '회원가입',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 240), // 간격 조정
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => PasswordRecoveryPage(),
-                              )
-                          );
-                        },
-                        child: Text(
-                          '비밀번호 찾기',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ],

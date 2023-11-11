@@ -3,15 +3,15 @@ import 'package:json_annotation/json_annotation.dart';
 class OwnerInfoResponse {
   final String email;
   final String tel;
-  final int store_id;
+  final int storeId;
 
-  OwnerInfoResponse(this.email, this.tel, this.store_id);
+  OwnerInfoResponse(this.email, this.tel, this.storeId);
 
   factory OwnerInfoResponse.fromJson(Map<String, dynamic> json) {
     return OwnerInfoResponse(
       json['email'] as String,
       json['tel'] as String,
-      json['store_id'] as int,
+      json['storeId'] as int,
     );
   }
 }

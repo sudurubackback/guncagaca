@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/store/api/review_api_service.dart';
 import 'package:guncagacaonwer/store/models/reviewmodel.dart';
 
@@ -13,24 +14,32 @@ class _ReviewPageState extends State<ReviewPage> {
   List<ReviewResponse> reviewData = [];
 
   late ApiService apiService;
+  static final storage = FlutterSecureStorage();
+
+  Future<void> setupApiService() async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    Dio dio = Dio();
+    dio.interceptors.add(AuthInterceptor(accessToken));
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+    apiService = ApiService(dio);
+  }
 
   @override
   void initState() {
     super.initState();
 
-    Dio dio = Dio();
-    dio.interceptors.add(LogInterceptor(responseBody: true, responseHeader: true));
-    apiService = ApiService(dio);
+    setupApiService().then((_) {
+      fetchReviews();
+    });
   }
 
   void fetchReviews() async {
     try {
-      final token = "";
-      final ownerResponse = await apiService.getOwnerInfo(token);
-      final cafeId = ownerResponse.store_id;
+      final ownerResponse = await apiService.getOwnerInfo();
+      final cafeId = ownerResponse.storeId;
 
       if (cafeId != null) {
-        final response = await apiService.getReview(token, cafeId);
+        final response = await apiService.getReview(cafeId);
         if (response.isNotEmpty) {
           setState(() {
             reviewData = response;
@@ -108,14 +117,10 @@ class _ReviewPageState extends State<ReviewPage> {
                             ],
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 16 * (deviceWidth / standardDeviceWidth)), // 왼쪽 마진 설정
-                          child: Text(
-                            '리뷰 내용: ${review.content}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 10 * (deviceWidth / standardDeviceWidth),
-                            ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 16 * (deviceWidth / standardDeviceWidth)), // 왼쪽 마진 설정
+                            child: ReviewContent(content: '리뷰 내용: ${review.content}'),  // ReviewContent 위젯 사용
                           ),
                         ),
                       ],
@@ -127,6 +132,48 @@ class _ReviewPageState extends State<ReviewPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ReviewContent extends StatefulWidget {
+  final String content;
+
+  ReviewContent({required this.content});
+
+  @override
+  _ReviewContentState createState() => _ReviewContentState();
+}
+
+class _ReviewContentState extends State<ReviewContent> {
+  bool showFullText = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        showFullText
+          ? Container(
+            child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Text(widget.content),
+            ),
+          )
+          : Text(
+            widget.content,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+          ),
+        TextButton(
+          child: Text(showFullText ? '간략히 보기' : '더 보기'),
+          onPressed: () {
+            setState(() {
+              showFullText = !showFullText;
+            });
+          },
+        ),
+      ],
     );
   }
 }

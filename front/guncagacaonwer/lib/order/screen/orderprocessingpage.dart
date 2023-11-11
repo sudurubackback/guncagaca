@@ -42,7 +42,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
   Future<void> fetchOrders() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-      int storeId = ownerResponse.store_id;
+      int storeId = ownerResponse.storeId;
       List<Order> orderList = await apiService.getProcessingList(storeId, "2");
       setState(() {
         orders = orderList;

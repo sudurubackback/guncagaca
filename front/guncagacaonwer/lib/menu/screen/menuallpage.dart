@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/menu/api/menuallpage_api_service.dart';
 import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart';
 import 'package:guncagacaonwer/menu/screen/menueditpage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MenuAllPage extends StatefulWidget {
   @override
@@ -73,14 +74,15 @@ class _MenuAllPageState extends State<MenuAllPage> {
   void initState() {
     super.initState();
 
-    setupApiService();
-    _fetchMenus();
+    setupApiService().then((_) {
+      _fetchMenus();
+    });
   }
 
   void _fetchMenus() async {
     final ownerResponse = await apiService.getOwnerInfo();
-    int storeId = ownerResponse.store_id;
-    categorizedMenus = await apiService.getMenues(storeId.toString()) ?? {};
+    int storeId = ownerResponse.storeId;
+    categorizedMenus = await apiService.getMenues(storeId.toString());
     setState(() {});
   }
 
@@ -97,8 +99,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
-    final standardDeviceWidth = 500;
-    final standardDeviceHeight = 350;
+    final standardDeviceWidth = 510;
+    final standardDeviceHeight = 330;
 
     return ListView.builder(
       itemCount: categorizedMenus.length,
@@ -130,14 +132,11 @@ class _MenuAllPageState extends State<MenuAllPage> {
               physics: NeverScrollableScrollPhysics(), // ListView 안의 GridView 스크롤 방지
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4, // 4개씩 표시
+                childAspectRatio: (deviceWidth / standardDeviceWidth) / (deviceHeight / standardDeviceHeight),
               ),
               itemCount: menus.length, // 메뉴 목록의 길이에 따라 박스 수 조정
               itemBuilder: (BuildContext context, int menuIndex) {
                 MenuEntity menu = menus[menuIndex]; // 해당 인덱스의 메뉴 정보 가져오기
-                // 이후 메뉴 표시 코드...
-                // String menuText = menu['text'];
-                // String imagePath = menu['image'];
-
                 return Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10, left: 12, right: 12),
                   decoration: BoxDecoration(
@@ -152,35 +151,37 @@ class _MenuAllPageState extends State<MenuAllPage> {
                   child: Column(
                     children: [
                       // 이미지
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     // changeMenuStatus(menuId);
-                      //   },
-                      //   child: Stack(
-                      //     children: [
-                      //       // Image.asset(
-                      //       //   // imagePath, // 이미지 파일 경로
-                      //       //   // width: 90 * (deviceWidth / standardDeviceWidth),
-                      //       //   // height: 80 * (deviceHeight / standardDeviceHeight),
-                      //       //   // fit: BoxFit.cover,
-                      //       //   // color: menuStatus == 'SOLD_OUT' ? Color.fromRGBO(0, 0, 0, 0.4) : null,
-                      //       // ),
-                      //       // if (menuStatus == 'SOLD_OUT')
-                      //       //   Center(
-                      //       //     child: Text(
-                      //       //       'SOLD OUT',
-                      //       //       style: TextStyle(color: Colors.red, fontSize: 30),
-                      //       //     ),
-                      //       //   ),
-                      //     ],
-                      //   ),
-                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          // changeMenuStatus(menuId);
+                        },
+                        child: Stack(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: menu.img, // 이미지 파일 경로
+                              placeholder: (context, url) => CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                              width: 90 * (deviceWidth / standardDeviceWidth),
+                              height: 70 * (deviceHeight / standardDeviceHeight),
+                              fit: BoxFit.cover,
+                              color: menu.status == 'SOLD_OUT' ? Color.fromRGBO(0, 0, 0, 0.4) : null,
+                            ),
+                            if (menu.status == 'SOLD_OUT')
+                              Center(
+                                child: Text(
+                                  'SOLD OUT',
+                                  style: TextStyle(color: Colors.red, fontSize: 30),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                       // 텍스트 중앙에 위치
                       SizedBox(
                         height: 3 * (deviceHeight / standardDeviceHeight),
                       ),
                       Text(
-                        "menuText", // 박스에 할당된 텍스트 출력
+                        menu.name, // 박스에 할당된 텍스트 출력
                         textAlign: TextAlign.center, // 텍스트 중앙 정렬
                       ),
                       SizedBox(

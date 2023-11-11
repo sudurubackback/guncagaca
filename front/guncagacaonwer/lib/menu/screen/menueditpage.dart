@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/menu/models/menuregistermodel.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:dio/dio.dart';
 
@@ -16,7 +17,7 @@ class MenuEditPage extends StatefulWidget {
 
 class _MenuEditPageState extends State<MenuEditPage> {
 
-  TextEditingController textController1 = TextEditingController();
+  TextEditingController menunameController = TextEditingController();
   TextEditingController textController2 = TextEditingController();
 
   String selectedImage = ""; // 선택된 이미지의 파일 경로
@@ -86,24 +87,30 @@ class _MenuEditPageState extends State<MenuEditPage> {
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png', 'jpeg'], // 필요한 이미지 파일 확장자를 추가하세요.
+    );
 
-    if (pickedFile != null) {
+    if (result != null) {
+      PlatformFile file = result.files.first;
+
       setState(() {
-        selectedImage = pickedFile.path; // 선택한 이미지의 파일 경로를 저장
-        selectedImageName = path.basename(pickedFile.path);
+        selectedImage = file.path!; // 선택한 이미지의 파일 경로를 저장
+        selectedImageName = file.name;
       });
+    } else {
+      // 사용자가 취소를 누를 경우 처리
     }
   }
 
   Future<void> updateMenu() async {
     // 이 부분에서 필요한 정보를 모두 모아 `MenuEditRequest`를 생성합니다.
-    // 이 예제에서는 'textController1', 'textController2', 'selectedCategory' 및 'optionList'를 사용합니다.
+    // 이 예제에서는 'menunameController', 'textController2', 'selectedCategory' 및 'optionList'를 사용합니다.
     // 실제 앱에서는 사용자가 입력한 값을 사용해야 합니다.
 
     Map<String, dynamic> requestData = {
-      'name': textController1.text,
+      'name': menunameController.text,
       'price': int.parse(textController2.text),
       'category': selectedCategory!,
       'optionsList': optionsList,
@@ -139,7 +146,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
   //   super.initState();
   //
   //   // widget의 menuData에서 메뉴명과 가격을 가져와 초기값으로 설정
-  //   textController1.text = widget.menuData['text'];
+  //   menunameController.text = widget.menuData['text'];
   //   textController2.text = widget.menuData['price'];
   //
   //   // 기존 옵션 데이터 가져와 초기값으로 설정
@@ -269,7 +276,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                               ),
                               width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
                               child: TextField(
-                                controller: textController1,
+                                controller: menunameController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none, // 내부 테두리 제거
                                 ),

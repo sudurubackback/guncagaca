@@ -40,7 +40,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
   Future<void> fetchOrders() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-      int storeId = ownerResponse.store_id;
+      int storeId = ownerResponse.storeId;
       String endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       String startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 

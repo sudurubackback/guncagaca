@@ -127,7 +127,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
     Dio dio = Dio(); // Dio 인스턴스 생성
     Response response = await dio.get("/api/ceo/ownerInfo"); // GET 요청 수행
     OwnerInfoResponse ownerInfo = OwnerInfoResponse.fromJson(response.data); // 응답 데이터를 OwnerInfoResponse 인스턴스로 변환
-    int storeId = ownerInfo.store_id;
+    int storeId = ownerInfo.storeId;
 
     // 사용자로부터 입력 받은 데이터를 MenuRegisterRequest 인스턴스로 변환
     MenuRegisterRequest request = MenuRegisterRequest(
