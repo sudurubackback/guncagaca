@@ -10,7 +10,6 @@ import java.util.HashMap;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
 public class GetTodaySellingResponse {
 
     private HashMap<Integer, Integer> todaySelling = new HashMap<>();
