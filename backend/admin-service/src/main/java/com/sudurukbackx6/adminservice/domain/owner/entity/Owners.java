@@ -38,6 +38,13 @@ public class Owners extends TimeEntity {
 
     private boolean validation = false;
 
+    // ip, 포트번호, ddns
+    private String ip;
+
+    private String port;
+
+    private String ddns;
+
     public void changeValidation() {
         validation = !validation;
     }

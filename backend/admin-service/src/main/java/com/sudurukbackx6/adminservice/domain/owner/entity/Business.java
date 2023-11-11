@@ -47,13 +47,6 @@ public class Business extends TimeEntity {
     @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String img; //사업자등록증 사진 s3 업로드
 
-    // ip, 포트번호, ddns
-    private String ip;
-
-    private String port;
-
-    private String ddns;
-
     //builer생성
     public Business(BusinessValidReqDto dto, String uploadURL) {
         this.businessNum = dto.getBusiness_number();

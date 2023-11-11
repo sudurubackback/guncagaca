@@ -2,6 +2,7 @@ package com.sudurukbackx6.adminservice.domain.store.controller;
 
 
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
+import com.sudurukbackx6.adminservice.domain.store.service.StoreService;
 import com.sudurukbackx6.adminservice.domain.store.service.StoreServiceImpl;
 import com.sudurukbackx6.adminservice.domain.store.service.dto.StoreRequest;
 import com.sudurukbackx6.adminservice.domain.store.service.dto.request.StoreUpdateReqDto;
@@ -22,9 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StoreController {
 
-    private final StoreServiceImpl storeService;
-
-
+    private final StoreService storeService;
 
     // 카페 등록 //admin
     @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
