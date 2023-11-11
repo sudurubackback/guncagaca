@@ -6,8 +6,8 @@ import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.UpdatePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignInResDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
-import org.springframework.messaging.MessagingException;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 
 public interface OwnerService {
@@ -26,5 +26,8 @@ public interface OwnerService {
 
     // 이메일 중복 확인
     boolean checkValidEmail(String email);
+
+    // 이메일 인증 코드 전송
+    void sendAuthCode(String email) throws MessagingException;
 
 }
