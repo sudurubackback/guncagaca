@@ -1,8 +1,8 @@
 package com.sudurukbackx6.adminservice.mail.service;
 
-import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
-import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
-import backend.sudurukbackx6.ownerservice.redis.util.RedisUtil;
+import com.sudurukbackx6.adminservice.common.code.ErrorCode;
+import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
+import com.sudurukbackx6.adminservice.redis.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
