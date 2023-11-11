@@ -2,6 +2,7 @@ package com.sudurukbackx6.adminservice.domain.owner.entity;
 
 import com.sudurukbackx6.adminservice.common.entity.TimeEntity;
 import com.sudurukbackx6.adminservice.domain.admin.entity.Admin;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.store.entity.Store;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -70,6 +71,12 @@ public class Owners extends TimeEntity {
 
     public void changePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void changeNetwork(String ip, String ddns, String port) {
+        this.ip = ip;
+        this.ddns = ddns;
+        this.port = port;
     }
 
 

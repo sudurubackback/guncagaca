@@ -3,6 +3,7 @@ package com.sudurukbackx6.adminservice.domain.owner.service;
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
@@ -109,6 +110,12 @@ public class OwnerServiceImpl implements OwnerService {
         return mailSenderService.checkCode(email, code);
     }
 
+    @Override
+    public void setNetwork(String email, NetworkReqDto networkReqDto) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
 
-
+        // 네트워크 설정
+        owner.changeNetwork(networkReqDto.getIp(), networkReqDto.getDdns(), "8000");
+    }
 }
