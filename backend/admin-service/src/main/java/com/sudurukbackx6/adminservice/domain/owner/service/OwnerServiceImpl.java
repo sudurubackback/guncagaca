@@ -3,6 +3,7 @@ package com.sudurukbackx6.adminservice.domain.owner.service;
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
@@ -11,14 +12,15 @@ import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
 import com.sudurukbackx6.adminservice.domain.owner.repository.OwnersRepository;
 import com.sudurukbackx6.adminservice.jwt.JwtProvider;
 import com.sudurukbackx6.adminservice.jwt.TokenDto;
+import com.sudurukbackx6.adminservice.mail.service.MailSenderService;
 import com.sudurukbackx6.adminservice.redis.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.MessagingException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -33,6 +35,7 @@ public class OwnerServiceImpl implements OwnerService {
     private final RedisUtil redisUtil;
     private final BusinessService businessService;
     private final PasswordEncoder passwordEncoder;
+    private final MailSenderService mailSenderService;
 
 
     @Override
@@ -86,6 +89,33 @@ public class OwnerServiceImpl implements OwnerService {
         ownersRepository.deleteByEmail(email);
     }
 
+    @Override
+    public boolean checkValidEmail(String email) {
+        Optional<Owners> exitOwner = ownersRepository.findByEmail(email);
 
+        if(exitOwner.isPresent()) return false;
 
+        //존재 한다면 이메일 양식이 맞는지 확인
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
+    }
+
+    @Override
+    public void sendAuthCode(String email) throws MessagingException {
+        //이메일로 인증 코드 전송
+        mailSenderService.sendCode(email);
+    }
+
+    @Override
+    public boolean checkAuthCode(String email, String code) {
+        return mailSenderService.checkCode(email, code);
+    }
+
+    @Override
+    public void setNetwork(String email, NetworkReqDto networkReqDto) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        // 네트워크 설정
+        owner.changeNetwork(networkReqDto.getIp(), networkReqDto.getDdns(), "8000");
+    }
 }

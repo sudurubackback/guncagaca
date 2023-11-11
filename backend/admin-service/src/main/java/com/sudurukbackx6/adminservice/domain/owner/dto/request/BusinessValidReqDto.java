@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BusinessValidReqDto {
 
-
     //api에서 사용 하지는 않지만 필요한 정보
     private String business_name; //가게 이름
     private String address; //가게 주소
@@ -22,7 +21,4 @@ public class BusinessValidReqDto {
     private String owner_name;
     private String open_date;
     private String account_number;  //계좌번호
-    private String ip;
-    private String port;
-    private Long ddns;
 }
