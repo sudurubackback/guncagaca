@@ -65,4 +65,12 @@ public class OwnerController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseBody<>(400, "유효 하지 않은 이메일"));
     }
+
+    // 이메일 인증코드 전송
+    @PostMapping("/code")
+    public ResponseEntity<? extends BaseResponseBody> sendCode(@RequestBody Map<String, String> map) throws IOException, InterruptedException, MessagingException {
+        String email = map.get("email");
+        ownerService.sendAuthCode(email);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "인증 코드 전송 성공"));
+    }
 }
