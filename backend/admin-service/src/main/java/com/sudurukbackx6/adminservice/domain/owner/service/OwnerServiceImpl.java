@@ -104,6 +104,11 @@ public class OwnerServiceImpl implements OwnerService {
         mailSenderService.sendCode(email);
     }
 
+    @Override
+    public boolean checkAuthCode(String email, String code) {
+        return mailSenderService.checkCode(email, code);
+    }
+
 
 
 }

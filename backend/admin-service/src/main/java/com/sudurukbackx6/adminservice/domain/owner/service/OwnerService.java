@@ -30,4 +30,7 @@ public interface OwnerService {
     // 이메일 인증 코드 전송
     void sendAuthCode(String email) throws MessagingException;
 
+    // 이메일 인증 코드 확인
+    boolean checkAuthCode(String email, String code);
+
 }
