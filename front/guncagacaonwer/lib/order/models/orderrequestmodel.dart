@@ -6,7 +6,7 @@ class OrderRequestResponse {
 
   OrderRequestResponse(this.message);
 
-  factory OrderRequestResponse.fromJson(Map<String, String> json) {
+  factory OrderRequestResponse.fromJson(Map<String, dynamic> json) {
     return OrderRequestResponse(
       json['message'] as String
     );

@@ -38,7 +38,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   Future<void> fetchOrders() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-      int storeId = ownerResponse.store_id;
+      int storeId = ownerResponse.storeId;
       List<Order> orderList = await apiService.getWaitingList(storeId, "1");
       setState(() {
         orders = orderList;

@@ -74,7 +74,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
   Future<void> fetchOrders(String startDate, String endDate) async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-      int storeId = ownerResponse.store_id;
+      int storeId = ownerResponse.storeId;
 
       List<StoreOrderResponse> orderList = await apiService.getStoreOrdersForDaterRange(storeId, startDate, endDate);
       setState(() {
