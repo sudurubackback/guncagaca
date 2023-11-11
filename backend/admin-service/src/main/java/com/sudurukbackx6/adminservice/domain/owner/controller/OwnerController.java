@@ -73,4 +73,16 @@ public class OwnerController {
         ownerService.sendAuthCode(email);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "인증 코드 전송 성공"));
     }
+
+    // 이메일 인증코드 확인
+    @PostMapping("/checkcode")
+    public ResponseEntity<? extends BaseResponseBody> checkCode(@RequestBody Map<String, String> map) throws IOException, InterruptedException, MessagingException {
+        String email = map.get("email");
+        String code = map.get("code");
+        if (ownerService.checkAuthCode(email, code)) {
+            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "인증 코드 일치"));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseBody<>(400, "인증 코드 불일치"));
+
+    }
 }
