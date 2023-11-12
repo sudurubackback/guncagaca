@@ -8,7 +8,7 @@ part of 'menuregistermodel.dart';
 
 MenuRegisterRequest _$MenuRegisterRequestFromJson(Map<String, dynamic> json) =>
     MenuRegisterRequest(
-      cafeId: json['cafeId'] as int,
+      id: json['id'] as int,
       name: json['name'] as String,
       price: json['price'] as int,
       description: json['description'] as String,
@@ -22,7 +22,7 @@ MenuRegisterRequest _$MenuRegisterRequestFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MenuRegisterRequestToJson(
         MenuRegisterRequest instance) =>
     <String, dynamic>{
-      'cafeId': instance.cafeId,
+      'id': instance.id,
       'name': instance.name,
       'price': instance.price,
       'description': instance.description,

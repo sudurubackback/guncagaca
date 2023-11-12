@@ -14,16 +14,6 @@ class MenuAllPage extends StatefulWidget {
 class _MenuAllPageState extends State<MenuAllPage> {
   int selectedButtonIndex = 0;
 
-  // void _editMenuItem(Map<String, dynamic> menuItem) {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (BuildContext context) {
-  //         return EditMenuItemPage(initialData: menuItem);
-  //       },
-  //     ),
-  //   );
-  // }
-
   late ApiService apiService;
   static final storage = FlutterSecureStorage();
 
@@ -47,9 +37,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
 
   void _fetchMenus() async {
     final ownerResponse = await apiService.getOwnerInfo();
-
     int storeId = ownerResponse.storeId;
-
     categorizedMenus = await apiService.getMenues(storeId.toString());
     setState(() {});
   }
@@ -162,14 +150,14 @@ class _MenuAllPageState extends State<MenuAllPage> {
                           // 첫 번째 버튼
                           ElevatedButton(
                             onPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) {
-                              //       return MenuEditPage(menuData: menu.id); // MenuEditPage는 메뉴 수정 페이지의 위젯입니다.
-                              //     },
-                              //   ),
-                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return MenuEditPage(menuInfo: menu); // MenuEditPage는 메뉴 수정 페이지의 위젯입니다.
+                                  },
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Color(0xFF038527),
