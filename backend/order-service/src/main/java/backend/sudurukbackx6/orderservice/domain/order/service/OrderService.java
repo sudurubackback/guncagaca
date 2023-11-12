@@ -1,15 +1,14 @@
 package backend.sudurukbackx6.orderservice.domain.order.service;
 
 import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
+import backend.sudurukbackx6.orderservice.config.KafkaEventService;
+import backend.sudurukbackx6.orderservice.domain.order.dto.*;
 import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
-import backend.sudurukbackx6.orderservice.domain.order.dto.OrderCancelRequestDto;
-import backend.sudurukbackx6.orderservice.domain.order.dto.OrderRequestDto;
-import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
 import backend.sudurukbackx6.orderservice.client.OwnerServiceClient;
-import backend.sudurukbackx6.orderservice.domain.order.dto.StoreOrderResponse;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Status;
 import backend.sudurukbackx6.orderservice.domain.order.repository.OrderRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.co.bootpay.Bootpay;
 import kr.co.bootpay.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +35,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberServiceClient memberServiceClient;
+    private final KafkaEventService kafkaEventService;
 
     @Value("${bootpay.clientId}")
     private String CLIENT_ID;
@@ -121,14 +121,18 @@ public class OrderService {
 
     // 주문 취소
     @Transactional
-    public boolean cancelOrder(String email, OrderCancelRequestDto orderCancelRequestDto) {
+    public boolean cancelOrder(String email, OrderCancelRequestDto orderCancelRequestDto) throws JsonProcessingException {
 
         // 결제 취소부터
         if (cancelPay(email, orderCancelRequestDto.getReceiptId(), orderCancelRequestDto.getReason())) {
             // 주문 내역 취소로 업데이트
             Order order = getOrder(orderCancelRequestDto.getOrderId());
+            Long memberId = order.getMemberId();
             order.setStatus(Status.CANCELED);
             orderRepository.save(order);
+
+            publishOrderEvent(memberId, Status.CANCELED);
+
             return true;
         }
         return false;
@@ -199,30 +203,42 @@ public class OrderService {
     }
 
 
-    public String requestOrder (String email, String obejctId) {
+    public String requestOrder (String email, String obejctId) throws JsonProcessingException {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
-        Long memberId = memberServiceClient.getId(email);
+
+        Long memberId = order.getMemberId();
         log.info(memberId.toString());
 
         order.setStatus(Status.REQUEST);
         orderRepository.save(order);
-        // TODO 알림보내기 (Open Feign)
+
+        publishOrderEvent(memberId, Status.REQUEST);
 
         return "주문 접수가 완료되었습니다.";
     }
 
-    public String completeOrder (String email, String obejctId) {
+    public String completeOrder (String email, String obejctId) throws JsonProcessingException {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
-        Long memberId = memberServiceClient.getId(email);
+
+        Long memberId = order.getMemberId();
         log.info(memberId.toString());
 
         order.setStatus(Status.COMPLETE);
         orderRepository.save(order);
-        // TODO 알림보내기 TODO 알림보내기 (Open Feign)
+
+        publishOrderEvent(memberId, Status.COMPLETE);
 
         return "주문 상품이 완료되었습니다.";
+    }
+
+    // 주문 상태 변경 이벤트 발행
+    public void publishOrderEvent(Long memberId, Status status) throws JsonProcessingException {
+
+        OrderEvent orderEvent = new OrderEvent(memberId, status);
+
+        kafkaEventService.eventPublish("orderNotification", orderEvent);
     }
 
     public List<Order> getMemberOrder(String email) {
