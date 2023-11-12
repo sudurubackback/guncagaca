@@ -27,9 +27,9 @@ class _LoginPageState extends State<LoginPage> {
     String? refreshToken = await storage.read(key: 'refreshToken');
     bool? autoLoginValue = (await storage.read(key: 'autoLogin')) == 'true';
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => StorePage(),
-    ));
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => StorePage(),
+    // ));
 
     print(refreshToken);
 

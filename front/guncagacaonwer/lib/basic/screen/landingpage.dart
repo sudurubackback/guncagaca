@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:guncagacaonwer/login/screen/loginpage.dart';
 
 class LandingPage extends StatefulWidget {
@@ -12,102 +11,53 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     Timer(Duration(seconds: 5), () {
-      Get.offAll(LoginPage());
+      _navigateToLoginPage();
     });
     super.initState();
   }
 
+  void _navigateToLoginPage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
   Widget _buildScreenContent() {
     Size screenSize = MediaQuery.of(context).size;
+    double imageWidth;
+    double imageHeight;
 
     if (screenSize.width >= 2700) {
-      return _buildSuperHugeScreenContent();
+      imageWidth = 900;
+      imageHeight = 720;
     } else if (screenSize.width >= 2400) {
-      return _buildExtraHugeScreenContent();
+      imageWidth = 800;
+      imageHeight = 640;
     } else if (screenSize.width >= 2100) {
-      return _buildHugeScreenContent();
+      imageWidth = 700;
+      imageHeight = 560;
     } else if (screenSize.width >= 1800) {
-      return _buildXLargeScreenContent();
+      imageWidth = 600;
+      imageHeight = 480;
     } else if (screenSize.width >= 1500) {
-      return _buildLargeScreenContent();
+      imageWidth = 500;
+      imageHeight = 400;
     } else if (screenSize.width >= 1200) {
-      return _buildMediumScreenContent();
+      imageWidth = 400;
+      imageHeight = 320;
     } else if (screenSize.width >= 900) {
-      return _buildSmallScreenContent();
+      imageWidth = 300;
+      imageHeight = 240;
     } else {
-      return _buildXSmallScreenContent();
+      imageWidth = 200;
+      imageHeight = 160;
     }
-  }
 
-  Widget _buildSuperHugeScreenContent() {
-    // 가로 너비가 2700 이상인 경우 처리
     return Image.asset(
       "assets/mainIcon.png",
-      width: 900, // 원하는 너비로 조절
-      height: 720, // 원하는 높이로 조절
-    );
-  }
-
-  Widget _buildExtraHugeScreenContent() {
-    // 가로 너비가 2400 이상 2700 미만인 경우 처리
-    return Image.asset(
-      "assets/mainIcon.png",
-      width: 800, // 원하는 너비로 조절
-      height: 640, // 원하는 높이로 조절
-    );
-  }
-
-  Widget _buildHugeScreenContent() {
-    // 가로 너비가 2100 이상 2400 미만인 경우 처리
-    return Image.asset(
-      "assets/mainIcon.png",
-      width: 700, // 원하는 너비로 조절
-      height: 560, // 원하는 높이로 조절
-    );
-  }
-
-  Widget _buildXLargeScreenContent() {
-    // 가로 너비가 1800 이상 2100 미만인 경우 처리
-    return Image.asset(
-      "assets/mainIcon.png",
-      width: 600, // 원하는 너비로 조절
-      height: 480, // 원하는 높이로 조절
-    );
-  }
-
-  Widget _buildLargeScreenContent() {
-    // 가로 너비가 1500 이상 1800 미만인 경우 처리
-    return Image.asset(
-      "assets/mainIcon.png",
-      width: 500, // 원하는 너비로 조절
-      height: 400, // 원하는 높이로 조절
-    );
-  }
-
-  Widget _buildMediumScreenContent() {
-    // 가로 너비가 1200 이상 1500 미만인 경우 처리
-    return Image.asset(
-      "assets/mainIcon.png",
-      width: 400, // 원하는 너비로 조절
-      height: 320, // 원하는 높이로 조절
-    );
-  }
-
-  Widget _buildSmallScreenContent() {
-    // 가로 너비가 900 이상 1200 미만인 경우 처리
-    return Image.asset(
-      "assets/mainIcon.png",
-      width: 300, // 원하는 너비로 조절
-      height: 240, // 원하는 높이로 조절
-    );
-  }
-
-  Widget _buildXSmallScreenContent() {
-    // 가로 너비가 900 미만인 경우 처리
-    return Image.asset(
-      "assets/mainIcon.png",
-      width: 200, // 원하는 너비로 조절
-      height: 160, // 원하는 높이로 조절
+      width: imageWidth,
+      height: imageHeight,
     );
   }
 
