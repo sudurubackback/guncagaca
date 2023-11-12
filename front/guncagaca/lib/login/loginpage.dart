@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       // 예: 서버로 토큰을 보내 인증 수행
       // 인증이 성공하면 홈 화면으로 이동
       // 실패하면 로그인 화면으로 유지
-      Get.to(() => DefaultLayout(
+      Get.offAll(() => DefaultLayout(
             child: RootTab(mainViewModel: mainViewModel,),
             mainViewModel: mainViewModel,
         )
@@ -80,28 +80,17 @@ class _LoginPageState extends State<LoginPage> {
         ));
       } else {
         print('토큰 얻기 실패');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DefaultLayout(
-            child: RootTab(mainViewModel: mainViewModel,),
-            mainViewModel: mainViewModel,
-          )),
-        );
+        Get.snackbar('오류', '서버와 연결에 실패했습니다.', backgroundColor: Colors.red);
       }
     } else {
       print('로그인 실패');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DefaultLayout(
-          child: RootTab(mainViewModel: mainViewModel,),
-          mainViewModel: mainViewModel,
-        )),
-      );
+      Get.snackbar('오류', '로그인에 실패했습니다.', backgroundColor: Colors.red);
     }
   }
 
   Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // String? firebaseToken = null;
     String? firebaseToken = await messaging.getToken();
     print("로그인 fcm토큰 : $firebaseToken");
     final String apiUrl = "$baseUrl/api/member/sign";
@@ -121,7 +110,6 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      print(response.data);
       final Map<String, dynamic> tokens = response.data;
       return tokens;
     } else {
