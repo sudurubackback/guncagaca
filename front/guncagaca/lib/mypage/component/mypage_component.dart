@@ -9,7 +9,6 @@ import 'package:guncagaca/mypage/component/nickname.dart';
 import 'package:guncagaca/myreview/view/review_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
 import '../../point/component/point_list.dart';

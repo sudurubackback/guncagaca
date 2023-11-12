@@ -21,7 +21,6 @@ class RootTab extends StatefulWidget {
 
 class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
   late TabController controller;
-
   int currentIndex = 1;
   final List<String> tabTitles = ['주문내역', '근카 ? 가카 !', '마이페이지'];
 
@@ -49,15 +48,17 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
     setState(() {
       currentIndex = controller.index;
     });
+    widget.mainViewModel.changeTabIndex(controller.index);
   }
 
   @override
   Widget build(BuildContext context) {
+
     return DefaultLayout(
-      title : tabTitles[currentIndex],
+      title: tabTitles[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        onTap:(int index) {
+        onTap: (int index) {
           FocusScope.of(context).unfocus();
 
           controller.animateTo(index);
@@ -90,7 +91,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin{
           MypageComponent(mainViewModel: widget.mainViewModel,),
         ],
       ),
-        mainViewModel: widget.mainViewModel,
+      mainViewModel: widget.mainViewModel,
     );
   }
 }

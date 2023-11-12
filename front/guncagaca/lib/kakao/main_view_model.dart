@@ -17,7 +17,7 @@ class MainViewModel {
     currentScreen = Rx<Widget>(RootTab(mainViewModel: this));
   }
 
-  var tabIndex = 0.obs; //
+  var tabIndex = 1.obs; //
 
   void changeTabIndex(int index) {
     tabIndex.value = index;
