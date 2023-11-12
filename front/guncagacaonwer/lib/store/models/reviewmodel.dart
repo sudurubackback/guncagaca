@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 
+part 'reviewmodel.g.dart';
+
 @JsonSerializable()
 class ReviewResponse {
   final int reviewId;

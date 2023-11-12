@@ -1,15 +1,21 @@
+import 'dart:convert';
+import 'dart:html' as html;
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:guncagacaonwer/menu/models/menuregistermodel.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guncagacaonwer/menu/models/menueditmodel.dart' as request;
+import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart' as response;
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+
 
 class MenuEditPage extends StatefulWidget {
-  final Map<String, dynamic> menuData; // 가상 데이터 모델
+  final response.MenuEntity menuInfo; // 메뉴 정보
 
-  MenuEditPage({required this.menuData});
+  MenuEditPage({required this.menuInfo});
 
   @override
   _MenuEditPageState createState() => _MenuEditPageState();
@@ -18,13 +24,14 @@ class MenuEditPage extends StatefulWidget {
 class _MenuEditPageState extends State<MenuEditPage> {
 
   TextEditingController menunameController = TextEditingController();
-  TextEditingController textController2 = TextEditingController();
+  TextEditingController menupriceController = TextEditingController();
+  TextEditingController desController = TextEditingController();
 
   String selectedImage = ""; // 선택된 이미지의 파일 경로
   String selectedImageName = ""; // 선택된 이미지의 파일 이름
-  Category? selectedCategory ; // 선택된 카테고리를 저장할 변수
+  request.Category? selectedCategory ; // 선택된 카테고리를 저장할 변수
 
-  List<OptionsEntity> optionsList = []; // 옵션 목록을 저장할 리스트
+  List<request.OptionsEntity> optionsList = []; // 옵션 목록을 저장할 리스트
   List<Widget> itemWidgets = [];
 
   void _addItem() {
@@ -33,6 +40,18 @@ class _MenuEditPageState extends State<MenuEditPage> {
 
     setState(() {
       int index = itemWidgets.length;
+
+      // 해당 항목의 데이터를 optionsList에 추가
+      optionsList.add(request.OptionsEntity(
+        id: '',
+        optionName: '', // 초기값 설정
+        detailsOptions: [request.DetailsOptionEntity(
+          id: '',
+          detailOptionName: '',
+          additionalPrice: 0,
+        )],
+      ));
+
       itemWidgets.add(Row(
         children: [
           Expanded(
@@ -75,89 +94,197 @@ class _MenuEditPageState extends State<MenuEditPage> {
           ),
         ],
       ));
-      // 해당 항목의 데이터를 optionsList에 추가
-      optionsList.add(OptionsEntity(
-        optionName: optionController.text, // 옵션 명
-        detailsOptions: [DetailsOptionEntity(
-          detailOptionName: optionController.text,
-          additionalPrice: int.parse(priceController.text),
-        )],
-      ));
     });
   }
 
+  html.File? file;
+
   Future<void> _pickImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'jpeg'], // 필요한 이미지 파일 확장자를 추가하세요.
-    );
+    if (kIsWeb) {
+      // 웹에서 실행되는 경우
+      html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+      uploadInput.click();
 
-    if (result != null) {
-      PlatformFile file = result.files.first;
-
-      setState(() {
-        selectedImage = file.path!; // 선택한 이미지의 파일 경로를 저장
-        selectedImageName = file.name;
+      uploadInput.onChange.listen((e) {
+        final files = uploadInput.files;
+        if (files?.length == 1) {
+          final uploadedFile = files![0];
+          setState(() {
+            file = uploadedFile; // html.File 객체를 저장
+            selectedImageName = uploadedFile.name;
+          });
+        }
       });
     } else {
-      // 사용자가 취소를 누를 경우 처리
+      // 모바일/데스크톱에서 실행되는 경우
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png', 'jpeg'],
+      );
+
+      if (result != null) {
+        PlatformFile file = result.files.first;
+
+        setState(() {
+          selectedImage = file.path!; // 선택한 이미지의 파일 경로를 저장
+          selectedImageName = file.name;
+        });
+      } else {
+        // 사용자가 취소를 누를 경우 처리
+      }
     }
+  }
+
+  static final storage = FlutterSecureStorage();
+  String? accessToken;
+  Dio dio = Dio();
+
+  @override
+  void initState() {
+    super.initState();
+    selectedImage = widget.menuInfo.img;
+
+    // 메뉴 정보를 가져와 각 필드를 초기화합니다.
+    menunameController.text = widget.menuInfo.name; // 메뉴 이름
+    menupriceController.text = widget.menuInfo.price.toString(); // 메뉴 가격
+    desController.text = widget.menuInfo.description;
+    selectedCategory = request.Category.values.firstWhere((e) => e.toString().split('.').last == widget.menuInfo.category);
+    selectedImage = widget.menuInfo.img;
+
+    // 옵션 목록을 초기화합니다.
+    optionsList = widget.menuInfo.optionsEntity.map((option) {
+      TextEditingController optionController = TextEditingController(text: option.optionName);
+      TextEditingController priceController = TextEditingController(text: option.detailsOptions[0].additionalPrice.toString());
+      return request.OptionsEntity(
+        id: '', // ID 정보가 없으므로 초기값을 빈 문자열로 설정
+        optionName: option.optionName,
+        detailsOptions: [request.DetailsOptionEntity(
+          id: '', // ID 정보가 없으므로 초기값을 빈 문자열로 설정
+          detailOptionName: option.optionName,
+          additionalPrice: option.detailsOptions[0].additionalPrice,
+        )],
+      );
+    }).toList();
+
+    // 옵션 위젯 목록을 초기화합니다.
+    itemWidgets = optionsList.map((option) {
+      int index = optionsList.indexOf(option);
+      TextEditingController optionController = TextEditingController(text: option.optionName);
+      TextEditingController priceController = TextEditingController(text: option.detailsOptions[0].additionalPrice.toString());
+
+      return Row(
+        children: [
+          Expanded(
+            child: Container(
+              width: 150,
+              child: TextField(
+                controller: optionController,
+                onChanged: (value) {
+                  optionsList[index].optionName = value;
+                },
+                decoration: InputDecoration(
+                  hintText: '옵션 명',
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: Container(
+              width: 150,
+              child: TextField(
+                controller: priceController,
+                onChanged: (value) {
+                  optionsList[index].detailsOptions[0].additionalPrice = int.parse(value);
+                },
+                decoration: InputDecoration(
+                  hintText: '가격',
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.clear),
+            onPressed: () {
+              setState(() {
+                itemWidgets.removeAt(index);
+                optionsList.removeAt(index);
+              });
+            },
+          ),
+        ],
+      );
+    }).toList();
+
+    setupDio();
+  }
+
+  Future<void> setupDio() async {
+    accessToken = await storage.read(key: 'accessToken');
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true, request: true));
+    dio.options.headers['Authorization'] = 'Bearer $accessToken'; // 헤더에 토큰 추가
   }
 
   Future<void> updateMenu() async {
-    // 이 부분에서 필요한 정보를 모두 모아 `MenuEditRequest`를 생성합니다.
-    // 이 예제에서는 'menunameController', 'textController2', 'selectedCategory' 및 'optionList'를 사용합니다.
-    // 실제 앱에서는 사용자가 입력한 값을 사용해야 합니다.
+    var requestUrl = 'https://k9d102.p.ssafy.io/api/ceo/menu/edit';
 
-    Map<String, dynamic> requestData = {
-      'name': menunameController.text,
-      'price': int.parse(textController2.text),
-      'category': selectedCategory!,
-      'optionsList': optionsList,
-      // 필요한 다른 필드들
-    };
+    String extension = selectedImageName.split('.').last;
 
-    // FormData 인스턴스 생성
-    FormData formData = new FormData.fromMap({
-      ...requestData,
-      if (selectedImage.isNotEmpty)
-        "file": await MultipartFile.fromFile(selectedImage, filename: selectedImageName), // 업로드할 파일
+    MultipartFile multipartFile;
+
+    if (kIsWeb) {
+      // 웹에서 실행되는 경우
+      if (file != null) {
+        final reader = html.FileReader();
+        reader.readAsDataUrl(file!);
+        await reader.onLoad.first;
+        final encoded = reader.result as String;
+        final stripped = encoded.replaceFirst(RegExp(r'data:image/[^;]+;base64,'), '');
+        final content = base64.decode(stripped);
+        multipartFile = MultipartFile.fromBytes(
+          content,
+          filename: selectedImageName,
+          contentType: MediaType('image', extension),
+        );
+      } else {
+        throw Exception('No image selected');
+      }
+    } else {
+      // 모바일/데스크톱에서 실행되는 경우
+      multipartFile = await MultipartFile.fromFile(
+        selectedImage,
+        filename: selectedImageName,
+        contentType: MediaType('image', extension),  // 'Content-Type' 지정
+      );
+    }
+
+    var formData = FormData.fromMap({
+      'request': request.MenuEditRequest(
+        id: widget.menuInfo.id,
+        name: menunameController.text,
+        price: int.parse(menupriceController.text),
+        description: desController.text,
+        img: "",
+        category: selectedCategory!,
+        optionsList: optionsList,
+      ).toMap(),
+      'file': multipartFile,
     });
 
-    Dio dio = Dio(); // Dio 인스턴스 생성
+    var response = await dio.put(
+      requestUrl,
+      data: formData,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
 
-    try {
-      Response response = await dio.put("/menu/edit", data: formData);
-
-      if (response.statusCode == 200) {
-        // 성공적으로 메뉴가 수정되었습니다.
-        print("Menu updated successfully");
-      } else {
-        // 메뉴 수정에 실패했습니다.
-        print("Failed to update the menu");
-      }
-    } catch (e) {
-      print("An error occurred while updating the menu: $e");
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update menu');
     }
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   // widget의 menuData에서 메뉴명과 가격을 가져와 초기값으로 설정
-  //   menunameController.text = widget.menuData['text'];
-  //   textController2.text = widget.menuData['price'];
-  //
-  //   // 기존 옵션 데이터 가져와 초기값으로 설정
-  //   if (widget.menuData['options'] != null) {
-  //     for (var key in widget.menuData['options'].keys) {
-  //       String optionName = key;
-  //       String optionPrice = widget.menuData['options'][key];
-  //       _addItem(optionName, optionPrice);
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -165,8 +292,6 @@ class _MenuEditPageState extends State<MenuEditPage> {
     final deviceHeight = MediaQuery.of(context).size.height;
     final standardDeviceWidth = 500;
     final standardDeviceHeight = 350;
-
-    Map<String, dynamic> menuData = widget.menuData;
 
     return Scaffold(
       appBar: AppBar(
@@ -180,7 +305,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
         child: Column(
           children: [
             SizedBox(
-              height: 16 * (deviceHeight / standardDeviceHeight),
+              height: 3 * (deviceHeight / standardDeviceHeight),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -207,7 +332,11 @@ class _MenuEditPageState extends State<MenuEditPage> {
                     SizedBox(
                       width: 5 * (deviceWidth / standardDeviceWidth),
                     ),
-                    Image.asset(menuData['image']), // 이미지 표시
+                    Image.network(
+                      selectedImage, // 이미지 파일 경로
+                      width: 90 * (deviceWidth / standardDeviceWidth),
+                      height: 70 * (deviceHeight / standardDeviceHeight),
+                    ), // 이미지 표시
                   ],
                 ),
                 SizedBox(
@@ -232,16 +361,16 @@ class _MenuEditPageState extends State<MenuEditPage> {
                             SizedBox(width: 20 * (deviceWidth / standardDeviceWidth)),
                             Container(
                               width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
-                              child: DropdownButton<Category>(
+                              child: DropdownButton<request.Category>(
                                 isExpanded: true, // 이 속성을 true로 설정
                                 value: selectedCategory,
-                                items: Category.values.map((Category category) {
-                                  return DropdownMenuItem<Category>(
+                                items: request.Category.values.map((request.Category category) {
+                                  return DropdownMenuItem<request.Category>(
                                     value: category,
                                     child: Text(category.toString().split('.').last), // Enum 값을 문자열로 변환
                                   );
                                 }).toList(),
-                                onChanged: (Category? newValue) {
+                                onChanged: (request.Category? newValue) {
                                   setState(() {
                                     selectedCategory = newValue; // newValue 값을 enum 형태로 저장
                                   });
@@ -268,13 +397,13 @@ class _MenuEditPageState extends State<MenuEditPage> {
                             SizedBox(width: 28 * (deviceWidth / standardDeviceWidth)),
                             Container(
                               margin: EdgeInsets.only(
-                                  top: 4 * (deviceHeight / standardDeviceHeight),
-                                  bottom: 3 * (deviceHeight / standardDeviceHeight)),
+                                bottom: 2 * (deviceHeight / standardDeviceHeight)),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                                 borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                               ),
                               width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
+                              height: 20 * (deviceHeight / standardDeviceHeight),
                               child: TextField(
                                 controller: menunameController,
                                 decoration: InputDecoration(
@@ -302,8 +431,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                             SizedBox(width: 16.5 * (deviceWidth / standardDeviceWidth)),
                             Container(
                               margin: EdgeInsets.only(
-                                  top: 4 * (deviceHeight / standardDeviceHeight),
-                                  bottom: 3 * (deviceHeight / standardDeviceHeight)),
+                                  bottom: 2 * (deviceHeight / standardDeviceHeight)),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                                 borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
@@ -311,7 +439,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                               width: 80 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
                               height: 20 * (deviceHeight / standardDeviceHeight),
                               child: TextField(
-                                controller: textController2,
+                                controller: menupriceController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none, // 내부 테두리 제거
                                 ),
@@ -325,12 +453,40 @@ class _MenuEditPageState extends State<MenuEditPage> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 10 * (deviceHeight / standardDeviceHeight),
+            Container(
+              margin: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
+              height: 30 * (deviceHeight / standardDeviceHeight),
+              child: Row(
+                children: [
+                  Text(
+                    "메뉴 소개",
+                    style: TextStyle(
+                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                    ),
+                  ),
+                  SizedBox(width: 10 * (deviceWidth / standardDeviceWidth)),
+                  Container(
+                    margin: EdgeInsets.only(
+                        bottom: 2 * (deviceHeight / standardDeviceHeight)),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
+                      borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
+                    ),
+                    width: 300 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
+                    height: 30 * (deviceHeight / standardDeviceHeight),
+                    child: TextField(
+                      controller: desController, // 메뉴 소개를 위한 컨트롤러
+                      decoration: InputDecoration(
+                        border: InputBorder.none, // 내부 테두리 제거
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Container(
               width: 300 * (deviceWidth / standardDeviceWidth),
-              height: 130 * (deviceHeight / standardDeviceHeight),
+              height: 110 * (deviceHeight / standardDeviceHeight),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.0),
               ),
@@ -353,7 +509,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // _addItem('옵션 명', '옵션 가격'); // + 버튼 클릭 시 항목 추가
+                            _addItem; // + 버튼 클릭 시 항목 추가
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Color(0xFFCDABA4)),
@@ -399,10 +555,9 @@ class _MenuEditPageState extends State<MenuEditPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // "확인" 버튼을 눌렀을 때의 동작 추가 (데이터 저장)
-                    // 여기에서 데이터를 수정하고 저장하는 로직을 구현합니다.
-                    // 저장이 완료되면 페이지를 닫을 수 있습니다.
+                  onPressed: () async {
+                    updateMenu();
+                    Navigator.pop(context); // 이전 창으로 돌아가기
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green),

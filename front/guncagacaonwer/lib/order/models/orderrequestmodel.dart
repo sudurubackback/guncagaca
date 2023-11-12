@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'orderrequestmodel.g.dart';
+
 @JsonSerializable()
 class OrderRequestResponse {
   final String message;
