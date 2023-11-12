@@ -80,5 +80,10 @@ public class MemberController {
         map.put("firebase_token", memberService.getFirebaseToken(token));
         return ResponseEntity.ok(map);
     }
+    
+    @GetMapping("/firebaseToken/{memberId}")
+    public ResponseEntity<String> getFirebaseTokenByMemberId(@RequestHeader("Authorization") String token, @PathVariable Long memberId) {
+        return ResponseEntity.ok(memberService.getFirebaseTokenByMemberId(memberId));
+    }
 }
 

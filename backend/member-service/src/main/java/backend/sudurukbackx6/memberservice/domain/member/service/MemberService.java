@@ -16,6 +16,7 @@ import backend.sudurukbackx6.memberservice.redis.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -197,6 +198,12 @@ public class MemberService {
 
     public String getFirebaseToken(String token) {
         Member member = jwtProvider.extractUser(token);
+        return member.getFcmToken();
+    }
+
+    public String getFirebaseTokenByMemberId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다."));
         return member.getFcmToken();
     }
 }
