@@ -158,7 +158,7 @@ class _OrderPageState extends State<OrderPage> {
                     },
                     child: Container(
                       width: 54 * (deviceWidth / standardDeviceWidth),
-                      height: 63 * (deviceHeight / standardDeviceHeight),
+                      height: 66.5 * (deviceHeight / standardDeviceHeight),
                       decoration: BoxDecoration(
                         color: selectedButtonIndex == 0 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
                         border: selectedButtonIndex == 0 ? null : Border.all(
@@ -184,7 +184,7 @@ class _OrderPageState extends State<OrderPage> {
                     },
                     child: Container(
                       width: 54 * (deviceWidth / standardDeviceWidth),
-                      height: 63 * (deviceHeight / standardDeviceHeight),
+                      height: 66.5 * (deviceHeight / standardDeviceHeight),
                       decoration: BoxDecoration(
                         color: selectedButtonIndex == 1 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
                         border: selectedButtonIndex == 1 ? null : Border.all(
@@ -211,7 +211,7 @@ class _OrderPageState extends State<OrderPage> {
                     },
                     child: Container(
                       width: 54 * (deviceWidth / standardDeviceWidth),
-                      height: 63 * (deviceHeight / standardDeviceHeight),
+                      height: 66.5 * (deviceHeight / standardDeviceHeight),
                       decoration: BoxDecoration(
                         color: selectedButtonIndex == 2 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
                         border: selectedButtonIndex == 2 ? null : Border.all(
@@ -238,7 +238,7 @@ class _OrderPageState extends State<OrderPage> {
                     },
                     child: Container(
                       width: 54 * (deviceWidth / standardDeviceWidth),
-                      height: 63 * (deviceHeight / standardDeviceHeight),
+                      height: 66.5 * (deviceHeight / standardDeviceHeight),
                       decoration: BoxDecoration(
                         color: selectedButtonIndex == 3 ? Color(0xFFFFFFFF) : Color(0xFFD9D9D9),
                         border: selectedButtonIndex == 3 ? null : Border.all(

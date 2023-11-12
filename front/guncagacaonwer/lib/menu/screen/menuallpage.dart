@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/menu/api/menuallpage_api_service.dart';
 import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart';
 import 'package:guncagacaonwer/menu/screen/menueditpage.dart';
@@ -68,18 +69,27 @@ class _MenuAllPageState extends State<MenuAllPage> {
           children: [
             // 카테고리 이름을 표시하는 Container
             Container(
-              color: Colors.grey,
+              color: BACK_COLOR,
               width: deviceWidth,
-              child: Text(
-                category,
-                style: TextStyle(fontSize: 20),
+              child: Column(
+                children: [
+
+                    Container(
+                      height: 2,
+                      color: PRIMARY_COLOR,
+                    ),
+                  Text(
+                    category,
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ],
               ),
             ),
 
             // 검은색 구분선
             Container(
               height: 2,
-              color: Colors.black,
+              color: PRIMARY_COLOR,
             ),
 
             // 메뉴를 표시하는 GridView.builder
@@ -102,8 +112,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
                       width: 1.0, // 외각선 두께
                     ),
                   ),
-                  width: 80 * (deviceWidth / standardDeviceWidth), // 각 박스의 너비
-                  height: 80 * (deviceHeight / standardDeviceHeight), // 각 박스의 높이
+                  width: 100 * (deviceWidth / standardDeviceWidth), // 각 박스의 너비
+                  height: 150 * (deviceHeight / standardDeviceHeight), // 각 박스의 높이
                   child: Column(
                     children: [
                       // 이미지
@@ -119,7 +129,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                               errorWidget: (context, url, error) => Icon(Icons.error),
                               width: 90 * (deviceWidth / standardDeviceWidth),
                               height: 70 * (deviceHeight / standardDeviceHeight),
-                              fit: BoxFit.cover,
+                              // fit: BoxFit.cover,
                               color: menu.status == 'SOLD_OUT' ? Color.fromRGBO(0, 0, 0, 0.4) : null,
                             ),
                             if (menu.status == 'SOLD_OUT')
@@ -139,6 +149,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                       Text(
                         menu.name, // 박스에 할당된 텍스트 출력
                         textAlign: TextAlign.center, // 텍스트 중앙 정렬
+                        style: TextStyle(fontSize: 20),
                       ),
                       SizedBox(
                         height: 2 * (deviceHeight / standardDeviceHeight),
@@ -213,10 +224,10 @@ class _MenuAllPageState extends State<MenuAllPage> {
               },
             ),
             // 검은색 구분선
-            Container(
-              height: 2,
-              color: Colors.black,
-            ),
+            // Container(
+            //   height: 2,
+            //   color: PRIMARY_COLOR,
+            // ),
           ],
         );
       },

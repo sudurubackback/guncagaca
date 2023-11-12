@@ -148,7 +148,7 @@ class _MenuPageState extends State<MenuPage> {
                   child: Container(
                     width: 70 * (deviceWidth / standardDeviceWidth),
                     height: 30 * (deviceHeight / standardDeviceHeight),
-                    color: selectedButtonIndex == 0 ? Color(0xFF831800) : Color(0xFF828282),
+                    color: selectedButtonIndex == 0 ? Color(0xFFFFFFFF) : Color(0xFF828282),
                     padding: EdgeInsets.all(4),
                     child: Center(
                       child: Text(
@@ -170,7 +170,7 @@ class _MenuPageState extends State<MenuPage> {
                   child: Container(
                     width: 70 * (deviceWidth / standardDeviceWidth),
                     height: 30 * (deviceHeight / standardDeviceHeight),
-                    color: selectedButtonIndex == 1 ? Color(0xFF831800) : Color(0xFF828282),
+                    color: selectedButtonIndex == 1 ? Color(0xFFFFFFFF) : Color(0xFF828282),
                     padding: EdgeInsets.all(4),
                     child: Center(
                       child: Text(
