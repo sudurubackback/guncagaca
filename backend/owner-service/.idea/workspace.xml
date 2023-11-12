@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5466980d-6779-46d5-aa6e-33683b258006" name="변경" comment="" />
+    <list default="true" id="a9739880-b555-4efd-9912-48c5dbc44b1f" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/backend/sudurukbackx6/ownerservice/common/config/CorsConfig.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,25 +17,20 @@
       <ProjectState />
     </projectState>
   </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <projects_view>
-          <tree_state>
-            <expand />
-            <select />
-          </tree_state>
-        </projects_view>
-      </state>
-    </system>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 8
+  &quot;associatedIndex&quot;: 7
 }</component>
-  <component name="ProjectId" id="2XK66RtAT8Fp7OwrkpetsVUMlen" />
+  <component name="ProjectId" id="2XyPII85rkeoCMBQQohmQC3vCUB" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -43,7 +40,11 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "backend-member",
+    "git-widget-placeholder": "backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "spring.configuration.checksum": "d7891a9051c0519583ff204ae49e7c1f",
     "vue.rearranger.settings.migration": "true"
   }
@@ -60,13 +61,13 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="디폴트 작업">
-      <changelist id="5466980d-6779-46d5-aa6e-33683b258006" name="변경" comment="" />
-      <created>1698365248860</created>
+      <changelist id="a9739880-b555-4efd-9912-48c5dbc44b1f" name="변경" comment="" />
+      <created>1699598265277</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1698365248860</updated>
-      <workItem from="1698365249929" duration="27000" />
-      <workItem from="1698367167220" duration="73000" />
+      <updated>1699598265277</updated>
+      <workItem from="1699598266364" duration="1031000" />
+      <workItem from="1699599354103" duration="53000" />
     </task>
     <servers />
   </component>

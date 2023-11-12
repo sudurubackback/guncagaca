@@ -12,3 +12,8 @@ const SIDE_COLOR = Color(0xFFD9D9D9);
 
 // 주요 버튼 색상
 const BUTTON_COLOR = Color(0xFFCDABA4);
+
+// 주색상
+const PRIMARY_COLOR = Color(0xff9B5748);
+// 배경색
+const BACK_COLOR = Color(0xfff8e9d7);

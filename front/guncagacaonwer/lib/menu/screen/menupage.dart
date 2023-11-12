@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/common/layout/default_layout.dart';
 import 'package:guncagacaonwer/menu/screen/menuallpage.dart';
 // import 'package:guncagacaonwer/menu/screen/menuregistrationpage.dart';
@@ -53,66 +54,74 @@ class _MenuPageState extends State<MenuPage> {
 
     return DefaultLayout(
       customAppBarBottom: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.02 * (deviceHeight / standardDeviceHeight)),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.03 * (deviceHeight / standardDeviceHeight)),
         child: Container(
-          color: Color(0xFF626262),
+          height: MediaQuery.of(context).size.height * 0.04 * (deviceHeight / standardDeviceHeight),
+          color: PRIMARY_COLOR,
           child: Row(
             children: [
-              InkWell(
-                onTap: () {
-                  navigateToPage(0);
-                },
-                child: Container(
-                  width: 100 * (deviceWidth / standardDeviceWidth),
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF828282)),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "주문접수",
-                      style: TextStyle(
-                        fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    navigateToPage(0);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFFD9D9D9)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "주문접수",
+                        style: TextStyle(
+                          fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
+                          color: Colors.white
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  navigateToPage(1);
-                },
-                child: Container(
-                  width: 100 * (deviceWidth / standardDeviceWidth),
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF828282)),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "매장관리",
-                      style: TextStyle(
-                        fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    navigateToPage(1);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFFD9D9D9)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "매장관리",
+                        style: TextStyle(
+                          fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
+                            color: Colors.white
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                },
-                child: Container(
-                  width: 100 * (deviceWidth / standardDeviceWidth),
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF828282)),
-                    color: Color(0xFF831800),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "메뉴관리",
-                      style: TextStyle(
-                        fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    navigateToPage(1);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFFD9D9D9)),
+                      color: Color(0xff1C386D),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "메뉴관리",
+                        style: TextStyle(
+                          fontSize: 13.5 * (deviceWidth / standardDeviceWidth),
+                            color: Colors.white
+                        ),
                       ),
                     ),
                   ),
