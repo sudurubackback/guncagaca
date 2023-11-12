@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.orderservice.domain.order.service;
 
 import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
+import backend.sudurukbackx6.orderservice.client.StoreServiceClient;
 import backend.sudurukbackx6.orderservice.config.KafkaEventService;
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
 import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
@@ -36,6 +37,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberServiceClient memberServiceClient;
     private final KafkaEventService kafkaEventService;
+    private final StoreServiceClient storeServiceClient;
 
     @Value("${bootpay.clientId}")
     private String CLIENT_ID;
@@ -131,7 +133,7 @@ public class OrderService {
             order.setStatus(Status.CANCELED);
             orderRepository.save(order);
 
-            publishOrderEvent(memberId, Status.CANCELED);
+            publishOrderEvent(email, memberId, Status.CANCELED, order.getStoreId(), orderCancelRequestDto.getReason());
 
             return true;
         }
@@ -213,7 +215,7 @@ public class OrderService {
         order.setStatus(Status.REQUEST);
         orderRepository.save(order);
 
-        publishOrderEvent(memberId, Status.REQUEST);
+        publishOrderEvent(email, memberId, Status.REQUEST, order.getStoreId(), null);
 
         return "주문 접수가 완료되었습니다.";
     }
@@ -228,15 +230,16 @@ public class OrderService {
         order.setStatus(Status.COMPLETE);
         orderRepository.save(order);
 
-        publishOrderEvent(memberId, Status.COMPLETE);
+        publishOrderEvent(email, memberId, Status.COMPLETE, order.getStoreId(), null);
 
         return "주문 상품이 완료되었습니다.";
     }
 
     // 주문 상태 변경 이벤트 발행
-    public void publishOrderEvent(Long memberId, Status status) throws JsonProcessingException {
+    public void publishOrderEvent(String email, Long memberId, Status status, Long storeId, String reason) throws JsonProcessingException {
 
-        OrderEvent orderEvent = new OrderEvent(memberId, status);
+        String storeName = storeServiceClient.getStore(email, storeId).getCafeName();
+        OrderEvent orderEvent = new OrderEvent(memberId, status, storeId, storeName, reason);
 
         kafkaEventService.eventPublish("orderNotification", orderEvent);
     }
