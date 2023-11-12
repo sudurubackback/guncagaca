@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MemberResDto {
-    String firebase_token;
+    String firebaseToken;
 }

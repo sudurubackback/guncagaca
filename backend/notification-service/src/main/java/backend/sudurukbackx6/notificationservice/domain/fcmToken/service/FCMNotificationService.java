@@ -4,9 +4,17 @@ import backend.sudurukbackx6.notificationservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.notificationservice.common.error.exception.BadRequestException;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.MemberFeignClient;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.dto.response.MemberResDto;
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.AlertHistory;
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.Status;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.repository.AlertHistoryRepository;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.FCMNotificationRequestDto;
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.NotificationDto;
+import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.NotificationEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -24,117 +32,70 @@ import lombok.RequiredArgsConstructor;
 public class FCMNotificationService {
 
 	private final FirebaseMessaging firebaseMessaging;
-//	private final AlertHistoryRepository alertHistoryRepository;
+	private final AlertHistoryService alertHistoryService;
 	private final MemberFeignClient memberFeignClient;
 
-	public void sendMemberFCM(FCMNotificationRequestDto requestDto, String token) throws FirebaseMessagingException {
+	@KafkaListener(topics = "orderNotification", groupId = "notification")
+	public void subscribeEvent(@Payload String eventString) {
+		// json으로 역직렬화
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			NotificationEvent notificationEvent = objectMapper.readValue(eventString, NotificationEvent.class);
+			sendFCM(notificationEvent);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-		MemberResDto firebaseToken = memberFeignClient.getFirebaseToken(token);
-		System.out.println(firebaseToken.getFirebase_token());
-		if(firebaseToken==null|| firebaseToken.getFirebase_token()==null){
+	public void sendFCM(NotificationEvent notificationEvent) throws FirebaseMessagingException {
+
+		String firebaseToken = memberFeignClient.getFirebaseTokenByMemberId(notificationEvent.getMemberId());
+		log.info(firebaseToken);
+
+		if(firebaseToken==null){
 			throw new BadRequestException(ErrorCode.EMPTY_FIREBASE_TOKEN);
 		}
 
 		//이제 fcm코드로 바꾼다.
+		NotificationDto notificationDto = makeNotification(notificationEvent.getStatus(), notificationEvent.getStoreName());
 
 		Notification notification = Notification.builder()
-				.setTitle(requestDto.getTitle())
-				.setBody(requestDto.getBody())
-//				.setImage(requestDto.getImageUrl())
+				.setTitle(notificationDto.getTitle())
+				.setBody(notificationDto.getBody())
+				.setImage("icon.png")
 				.build();
 
 		Message message = Message.builder()
-				.setToken(firebaseToken.getFirebase_token())
+				.setToken(firebaseToken)
 				.setNotification(notification)
-//				.putData("productCode", requestDto.getProductCode())
 				.build();
 
 		firebaseMessaging.send(message);
 
-//		Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(()
-//				-> new BusinessException(ErrorCode.NOT_EXISTS_USER_ID)
-//		);
-//
-//		if (member.getFirebaseToken() != null) {
-//			Notification notification = Notification.builder()
-//				.setTitle(requestDto.getTitle())
-//				.setBody(requestDto.getBody())
-//				.setImage(requestDto.getImageUrl())
-//				.build();
-//
-//			Message message = Message.builder()
-//				.setToken(member.getFirebaseToken())
-//				.setNotification(notification)
-//				.putData("productCode", requestDto.getProductCode())
-//				.build();
-//
-//			try {
-//				log.info("title {}", requestDto.getTitle());
-//				firebaseMessaging.send(message);
-//
-//				// 알림 내역 저장
-//				AlertHistory alertHistory = AlertHistory.builder()
-//					.title(requestDto.getTitle())
-//					.body(requestDto.getBody())
-//					.member(member)
-//					.imageUrl(requestDto.getImageUrl())
-//					.productCode(requestDto.getProductCode())
-//					.build();
-//				alertHistoryRepository.save(alertHistory);
-//
-//				return "send 성공";
-//
-//			} catch (FirebaseMessagingException e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
-//		else {
-//			return "FCMToken 없습니다";
-//		}
+		alertHistoryService.saveAlertHistory(notificationEvent, notificationDto);
 	}
 
-	public String sendNotification(FCMNotificationRequestDto requestDto) {
+	public NotificationDto makeNotification(Status status, String storeName) {
+		String title = "알림";
+		String body = "";
+		switch (status) {
+			case REQUEST:
+				title = "주문이 접수되었습니다.";
+				body = storeName + "에서 주문하신 메뉴를 진행중 입니다.";
+				break;
+			case COMPLETE:
+				title = "조리가 완료되었습니다.";
+				body = storeName + "에서 조리를 완료하였습니다. 맛있게 드세요.";
+				break;
+			case CANCELED:
+				title = "주문이 취소되었습니다.";
+				body = storeName + "에서 주문을 취소하였습니다. 사유 :";
+				break;
 
-//		Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(()
-//				-> new BusinessException(ErrorCode.NOT_EXISTS_USER_ID)
-//		);
-//
-//		if (member.getFirebaseToken() != null) {
-//			Notification notification = Notification.builder()
-//				.setTitle(requestDto.getTitle())
-//				.setBody(requestDto.getBody())
-//				.setImage(requestDto.getImageUrl())
-//				.build();
-//
-//			Message message = Message.builder()
-//				.setToken(member.getFirebaseToken())
-//				.setNotification(notification)
-//				.putData("productCode", requestDto.getProductCode())
-//				.build();
-//
-//			try {
-//				log.info("title {}", requestDto.getTitle());
-//				firebaseMessaging.send(message);
-//
-//				// 알림 내역 저장
-//				AlertHistory alertHistory = AlertHistory.builder()
-//					.title(requestDto.getTitle())
-//					.body(requestDto.getBody())
-//					.member(member)
-//					.imageUrl(requestDto.getImageUrl())
-//					.productCode(requestDto.getProductCode())
-//					.build();
-//				alertHistoryRepository.save(alertHistory);
-//
-//				return "send 성공";
-//
-//			} catch (FirebaseMessagingException e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
-//		else {
-//			return "FCMToken 없습니다";
-//		}
-		return null;
+		}
+		return new NotificationDto(title, body);
 	}
+
 }
