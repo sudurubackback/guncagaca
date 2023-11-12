@@ -9,9 +9,15 @@ import lombok.Setter;
 public class OrderEvent {
     private Long memberId;
     private Status status;
+    private Long storeId;
+    private String storeName;
+    private String reason;
 
-    public OrderEvent(Long memberId, Status status) {
+    public OrderEvent(Long memberId, Status status, Long storeId, String storeName, String reason) {
         this.memberId = memberId;
         this.status = status;
+        this.storeId = storeId;
+        this.storeName = storeName;
+        this.reason = reason;
     }
 }
