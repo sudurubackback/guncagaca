@@ -117,7 +117,7 @@ class _OrderPageState extends State<OrderPage> {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    navigateToPage(1);
+                    navigateToPage(2);
                   },
                   child: Container(
                     padding: EdgeInsets.all(4),
