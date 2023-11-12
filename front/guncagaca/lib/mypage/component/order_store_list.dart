@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/utils/dio_client.dart';
+import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
 
 class OrderStoreList extends StatefulWidget {
@@ -18,7 +19,7 @@ class OrderStoreList extends StatefulWidget {
 
 class _OrderStoreListState extends State<OrderStoreList> {
   List<Map<String, dynamic>> storeOrders = [];
-
+  final token = TokenManager().token;
 
   @override
   void initState() {
@@ -39,12 +40,12 @@ class _OrderStoreListState extends State<OrderStoreList> {
 
     if (email != null) {
       // 주문 내역 가져오기
-      final String apiUrl = 'http://k9d102.p.ssafy.io:8083/api/order/member/${widget.storeId}';
+      final String apiUrl = '$baseUrl/api/order/member/${widget.storeId}';
       var orderResponse = await dio.get(
           apiUrl,
           options: Options(
               headers: {
-                'Email': email,
+                'Authorization': "Bearer $token",
               }
           ),
           queryParameters: {
@@ -68,16 +69,16 @@ class _OrderStoreListState extends State<OrderStoreList> {
     String year = datetime.year.toString().substring(2, 4);
     String month = datetime.month.toString().padLeft(2, '0');
     String day = datetime.day.toString().padLeft(2, '0');
-    String period = datetime.hour < 12 ? "AM" : "PM";
-    String hour = (datetime.hour <= 12 ? datetime.hour : datetime.hour - 12).toString().padLeft(2, '0');
-    String minute = datetime.minute.toString().padLeft(2, '0');
+    // String period = datetime.hour < 12 ? "AM" : "PM";
+    // String hour = (datetime.hour <= 12 ? datetime.hour : datetime.hour - 12).toString().padLeft(2, '0');
+    // String minute = datetime.minute.toString().padLeft(2, '0');
 
     return "$year.$month.$day ";
   }
 
   @override
   Widget build(BuildContext context) {
-    return storeOrders.isEmpty || storeOrders.isEmpty
+    return storeOrders.isEmpty
         ? Center(
           child: Column(
             children: [
@@ -93,20 +94,19 @@ class _OrderStoreListState extends State<OrderStoreList> {
     ListView.builder(
           itemCount: storeOrders.length,
           itemBuilder: (BuildContext context, int index) {
-          if (index == storeOrders[index].length) {
+          if (index == storeOrders.length) {
             return Center(
                 child: Column(
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1,),
-                    Text(
-                      "주문내역이 없습니다.",
-                      style: TextStyle(fontSize: 18.0),
-                    ),
+                    // Text(
+                    //   "주문내역이 없습니다.",
+                    //   style: TextStyle(fontSize: 18.0),
+                    // ),
                   ],
                 )
             );
           }
-
           return
             Padding(
               padding: EdgeInsets.only(top: 20.0, ),

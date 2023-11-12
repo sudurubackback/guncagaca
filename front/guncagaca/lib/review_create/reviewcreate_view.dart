@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:guncagaca/common/layout/custom_appbar.dart';
 import '../common/const/colors.dart';
 import '../common/utils/dio_client.dart';
 import '../common/utils/oauth_token_manager.dart';
+import '../kakao/main_view_model.dart';
 import 'reviewcreate_component.dart';
 
 
@@ -12,8 +14,9 @@ class ReviewCreatePage extends StatefulWidget {
   final String cafeName;
   final int storeId;
   final String orderId;
+  final MainViewModel mainViewModel;
 
-  ReviewCreatePage({required this.cafeName, required this.storeId, required this.orderId});
+  ReviewCreatePage({required this.cafeName, required this.storeId, required this.orderId, required this.mainViewModel});
 
   @override
   _ReviewCreateState createState() => _ReviewCreateState();
@@ -65,64 +68,7 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
         FocusScope.of(context).unfocus();
       },
       child :Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
-          child: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 20),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 30.0,
-                    color: Color(0xff000000),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only( top: 20.0),
-                  child: const Row(
-                    children: [
-                      Text(
-                        '리뷰 쓰기',
-                        style: TextStyle(color: Colors.black, fontSize: 29.0),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, top: 20),
-                  child: Opacity(
-                    opacity: 0.0,
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      iconSize: 30.0,
-                      color: Color(0xff000000),
-                      onPressed: () {
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(2.0),
-              child: Container(
-                color: PRIMARY_COLOR,
-                height: 2.0,
-              ),
-            ),
-          ),
-        ),
+        appBar: CustomAppBar(title: "리뷰 작성", mainViewModel: widget.mainViewModel,),
         body: SingleChildScrollView(
           child: Column(
             children: [

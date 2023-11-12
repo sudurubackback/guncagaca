@@ -287,6 +287,7 @@ class _OrderListState extends State<OrderList> {
                                         cafeName: storeOrders[index]['store']['cafeName'],
                                         storeId: storeOrders[index]['store']['storeId'],
                                         orderId: storeOrders[index]['id'],
+                                      mainViewModel: widget.mainViewModel,
                                       )
                                     );
                                     if (result == 'true') {
