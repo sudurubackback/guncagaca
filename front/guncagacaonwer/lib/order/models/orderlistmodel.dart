@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'orderlistmodel.g.dart';
+
 @JsonSerializable()
 class Order {
   final String id;

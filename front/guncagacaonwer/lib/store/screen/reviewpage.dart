@@ -36,7 +36,9 @@ class _ReviewPageState extends State<ReviewPage> {
   void fetchReviews() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
+
       final cafeId = ownerResponse.storeId;
+
 
       if (cafeId != null) {
         final response = await apiService.getReview(cafeId);

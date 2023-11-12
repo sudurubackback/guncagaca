@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'ordercompletemodel.g.dart';
+
 @JsonSerializable()
 class OrderCompleteResponse {
   final String message;
