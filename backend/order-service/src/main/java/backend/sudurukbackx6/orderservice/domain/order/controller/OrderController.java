@@ -9,6 +9,7 @@ import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.StoreOrderResponse;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.service.OrderService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,7 +37,7 @@ public class OrderController {
     // 주문 취소
     @PostMapping("/cancel")
     @Operation(summary = "주문취소", description = "결제 시 생성된 receiptId로 결제 취소 후 주문 취소 처리", tags = { "Order Controller" })
-    public ResponseEntity<String> cancelOrder(@RequestHeader("Email") String email, @RequestBody OrderCancelRequestDto cancelRequestDto) {
+    public ResponseEntity<String> cancelOrder(@RequestHeader("Email") String email, @RequestBody OrderCancelRequestDto cancelRequestDto) throws JsonProcessingException {
 
         if (orderService.cancelOrder(email, cancelRequestDto)) {
             return ResponseEntity.ok(String.format("%s 주문 취소", cancelRequestDto.getReceiptId()));
@@ -100,14 +101,14 @@ public class OrderController {
     // 사장님이 주문 접수
     @PostMapping("/request/{orderId}")
     @Operation(summary = "주문 접수 처리", description = "사장님이 주문 확인 후 접수 처리", tags = { "Owner Controller" })
-    public ResponseEntity<String> requestOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
+    public ResponseEntity<String> requestOrder(@RequestHeader("Email") String email, @PathVariable String orderId) throws JsonProcessingException {
         return ResponseEntity.ok(orderService.requestOrder(email, orderId));
     }
 
     // 사장님이 주문 완료
     @PostMapping("/complete/{orderId}")
     @Operation(summary = "주문 완료 처리", description = "사장님이 주문 준비 완료 처리", tags = { "Owner Controller" })
-    public ResponseEntity<String> completeOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
+    public ResponseEntity<String> completeOrder(@RequestHeader("Email") String email, @PathVariable String orderId) throws JsonProcessingException {
         return ResponseEntity.ok(orderService.completeOrder(email, orderId));
     }
 
