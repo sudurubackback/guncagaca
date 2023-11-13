@@ -1,6 +1,7 @@
 package com.sudurukbackx6.adminservice.domain.owner.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.ChangePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
@@ -40,7 +41,7 @@ public interface OwnerService {
     void synchronizeServer(String email) throws JsonProcessingException;
 
     //비밀번호 수정
-    void updatePassword(String email, String password);
+    void updatePassword(String email, ChangePwReqDto changePwReqDto);
 
     //비밀번호 찾기
     void findPassword(String email) throws MessagingException;

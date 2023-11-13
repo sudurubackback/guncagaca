@@ -2,6 +2,7 @@ package com.sudurukbackx6.adminservice.domain.owner.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.ChangePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
@@ -105,14 +106,13 @@ public class OwnerController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<? extends BaseResponseBody> updatePassword(@RequestHeader("Email") String email, @RequestBody Map<String, String> map) throws IOException {
-        if(map.get("password")==null)
-            throw new IOException("비밀번호를 입력해주세요");
-        ownerService.updatePassword(email, map.get("password"));
+    public ResponseEntity<? extends BaseResponseBody> updatePassword(@RequestHeader("Email") String email, @RequestBody ChangePwReqDto reqDto) throws IOException {
+
+        ownerService.updatePassword(email, reqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "비밀번호 변경 완료"));
     }
 
-    @PostMapping("/password")
+    @PostMapping("/resetpassword")
     public ResponseEntity<? extends BaseResponseBody> resetPassword(@RequestBody Map<String, String> map) throws IOException, MessagingException {
         if(map.get("email")==null)
             throw new IOException("이메일을 입력해주세요");

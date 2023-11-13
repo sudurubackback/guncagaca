@@ -6,6 +6,7 @@ import com.sudurukbackx6.adminservice.common.config.KafkaEventService;
 import com.sudurukbackx6.adminservice.common.dto.SignupEvent;
 import com.sudurukbackx6.adminservice.common.dto.StoreSaveEvent;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.ChangePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
@@ -165,9 +166,15 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public void updatePassword(String email, String password) {
+    public void updatePassword(String email, ChangePwReqDto changePwReqDto) {
         Owners owner = ownersRepository.findByEmail(email)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        String password = changePwReqDto.getPassword();
+        String newPassword = changePwReqDto.getNewPassword();
+
+        if(!passwordEncoder.matches(password, owner.getPassword()))
+            throw new BadRequestException(ErrorCode.NOT_MATCH);
 
         owner.changePassword(passwordEncoder.encode(password));
     }
