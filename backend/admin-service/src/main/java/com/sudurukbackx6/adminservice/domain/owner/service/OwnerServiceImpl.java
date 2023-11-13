@@ -68,6 +68,14 @@ public class OwnerServiceImpl implements OwnerService {
             TokenDto refreshToken = jwtProvider.createRefreshToken(owner.getBusiness().getName(), owner.getEmail());
 
             redisUtil.saveRefreshToken(owner.getEmail(), refreshToken.getToken());
+
+            if(owner.getStore()==null){
+                return SignResponseDto.builder()
+                        .accessToken(accessToken.getToken())
+                        .refreshToken(refreshToken.getToken())
+                        .isApproved(false)
+                        .build();
+            }
             return SignResponseDto.builder()
                     .accessToken(accessToken.getToken())
                     .refreshToken(refreshToken.getToken())

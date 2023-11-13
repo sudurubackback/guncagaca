@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 public class SignResponseDto {
     public String accessToken;
     public String refreshToken;
-
+    private boolean isApproved;
     @Builder
-    public SignResponseDto(String accessToken, String refreshToken) {
+    public SignResponseDto(String accessToken, String refreshToken, boolean isApproved) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.isApproved = isApproved;
     }
 }

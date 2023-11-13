@@ -2,13 +2,10 @@ package com.sudurukbackx6.adminservice.domain.owner.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
-import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.service.OwnerService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 
 @Slf4j
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/api/ceo")
 public class OwnerController {
