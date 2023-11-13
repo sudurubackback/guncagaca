@@ -1,6 +1,5 @@
 package backend.sudurukbackx6.ownerservice.domain.order.service;
 
-import backend.sudurukbackx6.ownerservice.common.client.MemberServiceClient;
 import backend.sudurukbackx6.ownerservice.domain.menu.entity.enumTypes.Status;
 import backend.sudurukbackx6.ownerservice.domain.order.entity.Order;
 import backend.sudurukbackx6.ownerservice.domain.order.repository.OrderRepository;
@@ -26,8 +25,6 @@ import java.util.Objects;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-
-    private final MemberServiceClient memberServiceClient;
 
     @Value("${bootpay.clientId}")
     private String CLIENT_ID;
@@ -160,8 +157,8 @@ public class OrderService {
     public String requestOrder (String email, String obejctId) {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
-        Long memberId = memberServiceClient.getId(email);
-        log.info(memberId.toString());
+//        Long memberId = memberServiceClient.getId(email);
+//        log.info(memberId.toString());
 
         order.setStatus(Status.REQUEST);
         orderRepository.save(order);
@@ -174,8 +171,8 @@ public class OrderService {
     public String completeOrder (String email, String obejctId) {
         Order order = orderRepository.findById(obejctId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
-        Long memberId = memberServiceClient.getId(email);
-        log.info(memberId.toString());
+//        Long memberId = memberServiceClient.getId(email);
+//        log.info(memberId.toString());
 
         order.setStatus(Status.COMPLETE);
         orderRepository.save(order);
