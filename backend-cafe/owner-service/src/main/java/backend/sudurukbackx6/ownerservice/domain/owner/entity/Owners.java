@@ -1,8 +1,6 @@
 package backend.sudurukbackx6.ownerservice.domain.owner.entity;
 
 import backend.sudurukbackx6.ownerservice.common.entity.TimeEntity;
-import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
-import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,12 +15,6 @@ public class Owners extends TimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "owner_id")
     private Long ownerId;
-
-    /*    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-        private */
-    @OneToOne
-    @JoinColumn(name = "business_Id")
-    private Business business;
 
     private String password;
 
@@ -45,9 +37,8 @@ public class Owners extends TimeEntity {
     }
 
     @Builder
-    public Owners(Long ownerId, Business business, String password, String email, String tel, Long storeId, String ip, String ddns, String port) {
+    public Owners(Long ownerId, String password, String email, String tel, Long storeId, String ip, String ddns, String port) {
         this.ownerId = ownerId;
-        this.business = business;
         this.password = password;
         this.email = email;
         this.tel = tel;
@@ -58,11 +49,10 @@ public class Owners extends TimeEntity {
     }
 
     @Builder
-    public Owners(String email, String password, String tel, Business business) {
+    public Owners(String email, String password, String tel) {
         this.email = email;
         this.password = password;
         this.tel = tel;
-        this.business = business;
     }
 
     public void changePassword(String newPassword) {
