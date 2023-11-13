@@ -30,13 +30,13 @@ public class OwnerController {
 
     //1. 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<? extends BaseResponseBody> signUp(OwnerSignUpReqDto signUpReqDto) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody OwnerSignUpReqDto signUpReqDto) throws IOException {
         ownerService.signUp(signUpReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "회원가입 성공"));
     }
     //2. 로그인
     @PostMapping("/signin")
-    public ResponseEntity<? extends BaseResponseBody> signIn(OwnerSignInReqDto signinInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> signIn(@RequestBody  OwnerSignInReqDto signinInfo) throws IOException {
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "로그인 성공", ownerService.signIn(signinInfo)));
     }
