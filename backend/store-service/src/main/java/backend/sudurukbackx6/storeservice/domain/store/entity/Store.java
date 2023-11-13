@@ -6,13 +6,14 @@ import javax.persistence.*;
 
 import backend.sudurukbackx6.storeservice.domain.likes.entity.Likey;
 import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
+import backend.sudurukbackx6.storeservice.global.BaseTimeEntity;
 import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store {
+public class Store extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
