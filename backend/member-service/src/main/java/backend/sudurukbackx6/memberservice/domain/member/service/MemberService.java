@@ -99,8 +99,10 @@ public class MemberService {
                 .email(member.getEmail())
                 .build();
     }
-    public MemberInfoResponse getMemberInfo(String token){
-        Member member = jwtProvider.extractUser(token);
+    public MemberInfoResponse getMemberInfo(String email){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 이메일을 찾을수 없습니다."));
+
         return MemberInfoResponse.builder()
                 .id(member.getId())
                 .email(member.getEmail())
@@ -124,7 +126,7 @@ public class MemberService {
     }
 
 
-    public List<MyPointsResponse> myPoint(String email, String token) {
+    public List<MyPointsResponse> myPoint(String email) {
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
@@ -139,7 +141,7 @@ public class MemberService {
         List<MyPointsResponse> myPointsResponses = new ArrayList<>();
 
         for (Long cafeId : cafeIds) {
-            StoreResponse storeInfo = storeFeignClient.cafeDetail(token, cafeId);
+            StoreResponse storeInfo = storeFeignClient.cafeDetail(email, cafeId);
 
             log.info(storeInfo.toString());
             String name = storeInfo.getCafeName();
@@ -167,7 +169,7 @@ public class MemberService {
         return myPointsResponses;
     }
 
-    public PointStoreResponse pointStore(String email,String token, Long cafeId) {
+    public PointStoreResponse pointStore(String email, Long cafeId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 정보가 존재하지 않습니다."));
 
@@ -196,8 +198,9 @@ public class MemberService {
         return member.getId();
     }
 
-    public String getFirebaseToken(String token) {
-        Member member = jwtProvider.extractUser(token);
+    public String getFirebaseToken(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 이메일을 찾을수 없습니다."));
         return member.getFcmToken();
     }
 
