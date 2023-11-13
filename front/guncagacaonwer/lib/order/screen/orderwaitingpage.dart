@@ -32,7 +32,6 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   @override
   void initState() {
     super.initState();
-
     setupApiService().then((_) {
       fetchOrders();
     });
@@ -48,7 +47,6 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
       print(ownerResponse.email);
       int storeId = ownerResponse.storeId;
       print(storeId);
-      String email = ownerResponse.email;
       if (storeId != null) {
         final response = await dio.get(
           "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId/1",
@@ -66,6 +64,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
             // 예를 들어, 주문 목록을 화면에 출력하거나 다른 작업을 수행할 수 있습니다.
 
             setState(() {});
+            print("api 호출 화면이 새로 고쳐집니다.");
           } else {
             print('API 응답 형식이 예상과 다릅니다: $response.data');
           }
@@ -98,7 +97,8 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
         if (response.statusCode == 200) {
 
           print("주문성공");
-
+          fetchOrders();
+          print("화면이 새로 고쳐집니다.");
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
         }
@@ -132,9 +132,9 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
         );
 
         if (response.statusCode == 200) {
-
           print("주문취소");
-
+          fetchOrders();
+          print("화면이 새로 고쳐집니다.");
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
         }

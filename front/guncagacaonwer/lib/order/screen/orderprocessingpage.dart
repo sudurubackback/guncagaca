@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 
+import '../../common/dioclient.dart';
 import '../api/processingpage_api_service.dart';
 
 class OrderProcessingPage extends StatefulWidget {
@@ -14,10 +15,9 @@ class OrderProcessingPage extends StatefulWidget {
 }
 
 class _OrderProcessingPageState extends State<OrderProcessingPage> {
-
+  List<Map<String, dynamic>> orders = []; // ordersData 리스트 선언
   bool isSelected = false;
 
-  List<Order> orders = [];
   late ApiService apiService;
 
   static final storage = FlutterSecureStorage();
@@ -33,22 +33,52 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
   @override
   void initState() {
     super.initState();
-
-    setupApiService();
-    fetchOrders();
+    setupApiService().then((_) {
+      fetchOrders();
+    });
   }
+
+  String baseUrl = 'https://k9d102.p.ssafy.io';
+  Dio dio = DioClient.getInstance();
 
   // 주문 처리 데이터 get
   Future<void> fetchOrders() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
+      print("주문접수");
+      print(ownerResponse.email);
       int storeId = ownerResponse.storeId;
-      List<Order> orderList = await apiService.getProcessingList(storeId, "2");
-      setState(() {
-        orders = orderList;
-      });
+      print(storeId);
+      if (storeId != null) {
+        final response = await dio.get(
+          // "$baseUrl/api/order/list/$storeId/2",
+          "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId/2",
+        );
+
+        if (response.statusCode == 200) {
+          // API 응답이 Map 형식인지 확인
+          if (response.data is Map<String, dynamic>) {
+            Map<String, dynamic> jsonData = response.data;
+            // 'data' 키에 해당하는 주문 목록을 가져옵니다.
+            orders = List<Map<String, dynamic>>.from(jsonData['data']);
+            // 주문 목록을 받아온 후 각 주문에 inProgress를 추가하고 초기화
+            orders.forEach((order) {
+              order['inProgress'] = false;
+            });
+
+            setState(() {});
+
+            print(orders);
+            print("api 호출 화면이 새로 고쳐집니다.");
+          } else {
+            print('API 응답 형식이 예상과 다릅니다: $response.data');
+          }
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      }
     } catch (e) {
-      print(e);
+      print("네트워크 오류: $e");
     }
   }
 
@@ -75,13 +105,13 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
           Expanded(
             child: ListView.builder(
               itemCount: orders.length,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, index) {
                 final order = orders[index];
-                int totalQuantity = order.menus.map((menu) => menu.quantity).reduce((a, b) => a + b);
+                int totalQuantity = order['menus'].fold(0, (prev, menu) => prev + menu['quantity']);
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(order.orderPrice);
-
-                DateTime dateTime = DateTime.parse(order.orderTime);
+                String formattedTotalPrice = formatter.format(order['orderPrice']);
+                // 주문 시간에서 날짜와 시간 추출
+                DateTime dateTime = DateTime.parse(order['orderTime']);
                 String timeOfDay = "";
                 String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
                 List<String> dateTimeParts = formattedTime.split(" ");
@@ -168,7 +198,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '주문자 번호 : ${order.memberId}',
+                                '주문자 번호 : ${order['memberId']}',
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                   color: Color(0xFF9B5748),
@@ -260,13 +290,13 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                       onPressed: () {
                                         // 버튼 동작을 여기에 추가
                                         setState(() {
-                                          if (!order.inProgress) {
-                                            order.inProgress = true;
+                                          if (!order['inProgress']) {
+                                            order['inProgress'] = true;
                                           }
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: order.inProgress
+                                        backgroundColor: order['inProgress']
                                             ? Colors.orange
                                             : Colors.grey,
                                         minimumSize: Size(
@@ -275,11 +305,11 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                         ),
                                       ),
                                       child: Text(
-                                        order.inProgress
+                                        order['inProgress']
                                             ? '준비중'
                                             : '제작\n대기',
                                         style: TextStyle(
-                                          color: order.inProgress
+                                          color: order['inProgress']
                                               ? Colors.white
                                               : Colors.black,
                                           fontSize: 8 * (deviceWidth / standardDeviceWidth),
@@ -306,10 +336,10 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  if (!order.inProgress) {
+                                                  if (!order['inProgress']) {
                                                     // "제작" 버튼이 눌렸을 때의 기능 추가
                                                     // 예: 어떤 작업을 실행하거나 상태 변경
-                                                    order.inProgress = true;
+                                                    order['inProgress'] = true;
                                                   } else {
                                                     // "완료" 버튼이 눌렸을 때의 기능 추가
                                                     // 모달 다이얼로그 구현
@@ -325,10 +355,10 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                               child: Column(
                                                                 children: [
                                                                   Text('주문 정보:'),
-                                                                  Text('주문 시간: ${order.orderTime}'),
+                                                                  Text('주문 시간: ${order['orderTime']}'),
                                                                   Text('메뉴 수량: $totalQuantity'),
                                                                   // 다른 주문 정보 출력...
-                                                                  if (order.inProgress)
+                                                                  if (order['inProgress'])
                                                                     TextButton(
                                                                       onPressed: () {
                                                                         // FCM를 사용하여 알림 보내기 (FCM 관련 코드 필요)
@@ -357,7 +387,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                 });
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: order.inProgress
+                                                backgroundColor: order['inProgress']
                                                     ? Color(0xFF4449BA)
                                                     : Color(0xFF4449BA),
                                                 minimumSize: Size(
@@ -366,7 +396,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                 ),
                                               ),
                                               child: Text(
-                                                order.inProgress ? '완료' : '제작',
+                                                order['inProgress'] ? '완료' : '제작',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 18,
