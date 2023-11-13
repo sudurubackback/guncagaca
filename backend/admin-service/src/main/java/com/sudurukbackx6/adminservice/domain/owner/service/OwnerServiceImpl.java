@@ -6,9 +6,11 @@ import com.sudurukbackx6.adminservice.common.config.KafkaEventService;
 import com.sudurukbackx6.adminservice.common.dto.SignupEvent;
 import com.sudurukbackx6.adminservice.common.dto.StoreSaveEvent;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.ChangePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
+import com.sudurukbackx6.adminservice.domain.owner.dto.response.NetworkResDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
@@ -68,9 +70,12 @@ public class OwnerServiceImpl implements OwnerService {
             TokenDto refreshToken = jwtProvider.createRefreshToken(owner.getBusiness().getName(), owner.getEmail());
 
             redisUtil.saveRefreshToken(owner.getEmail(), refreshToken.getToken());
+
+
             return SignResponseDto.builder()
                     .accessToken(accessToken.getToken())
                     .refreshToken(refreshToken.getToken())
+                    .owner(owner)
                     .build();
         } else {
             throw new BadRequestException(ErrorCode.NOT_MATCH);
@@ -90,9 +95,8 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void signOut(String email) {
-        //회원탈퇴, redis에서 해당 토큰을 지우고, 회원정보를 지운다.
+        //회원탈퇴, redis에서 해당 토큰을 지운다
         redisUtil.deleteRefreshToken(email);
-        ownersRepository.deleteByEmail(email);
     }
 
     @Override
@@ -122,7 +126,7 @@ public class OwnerServiceImpl implements OwnerService {
                 .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
 
         // 네트워크 설정
-        owner.changeNetwork(networkReqDto.getIp(), networkReqDto.getDdns(), "8000");
+        owner.changeNetwork(networkReqDto.getIp(), networkReqDto.getDdns(), networkReqDto.getPort());
     }
 
     @Override
@@ -159,6 +163,48 @@ public class OwnerServiceImpl implements OwnerService {
 
         kafkaEventService.publishbyStoreSave("adminStore", saveEvent);
 
+    }
+
+    @Override
+    public void updatePassword(String email, ChangePwReqDto changePwReqDto) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        String password = changePwReqDto.getPassword();
+        String newPassword = changePwReqDto.getNewPassword();
+
+        if(!passwordEncoder.matches(password, owner.getPassword()))
+            throw new BadRequestException(ErrorCode.NOT_MATCH);
+
+        owner.changePassword(passwordEncoder.encode(newPassword));
+    }
+
+    @Override
+    public void findPassword(String email) throws MessagingException {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        owner.changePassword(passwordEncoder.encode(mailSenderService.sendPassword(email)));
+    }
+
+    @Override
+    public boolean auth(String email, String password) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        return passwordEncoder.matches(password, owner.getPassword());
+    }
+
+    @Override
+    public NetworkResDto getNetwork(String email) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        return NetworkResDto.builder()
+                .ip(owner.getIp())
+                .ddns(owner.getDdns())
+                .port(owner.getPort())
+                .build();
     }
 
 }

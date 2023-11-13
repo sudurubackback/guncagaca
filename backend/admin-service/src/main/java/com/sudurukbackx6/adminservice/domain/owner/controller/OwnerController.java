@@ -2,13 +2,11 @@ package com.sudurukbackx6.adminservice.domain.owner.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
-import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.ChangePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.service.OwnerService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 
 @Slf4j
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/api/ceo")
 public class OwnerController {
@@ -95,11 +93,42 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "네트워크 설정 완료"));
     }
 
+    @GetMapping("/network")
+    public ResponseEntity<? extends BaseResponseBody> getNetwork(@RequestHeader("Email") String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "네트워크 설정 조회 성공", ownerService.getNetwork(email)));
+    }
+
     // 서버 동기화
     @PostMapping("/sync")
     public ResponseEntity<? extends BaseResponseBody> synchronizeServer(@RequestHeader("Email") String email) throws JsonProcessingException {
         ownerService.synchronizeServer(email);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "서버 동기화 완료"));
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<? extends BaseResponseBody> updatePassword(@RequestHeader("Email") String email, @RequestBody ChangePwReqDto reqDto) throws IOException {
+
+        ownerService.updatePassword(email, reqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "비밀번호 변경 완료"));
+    }
+
+    @PostMapping("/resetpassword")
+    public ResponseEntity<? extends BaseResponseBody> resetPassword(@RequestBody Map<String, String> map) throws IOException, MessagingException {
+        if(map.get("email")==null)
+            throw new IOException("이메일을 입력해주세요");
+        ownerService.findPassword(map.get("email"));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "비밀번호를 이메일로 전송하였습니다."));
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<? extends BaseResponseBody> auth(@RequestHeader("Email") String email, @RequestBody Map<String, String> map) throws IOException {
+        if(map.get("password")==null)
+            throw new IOException("비밀번호를 입력해주세요");
+
+        boolean flag = ownerService.auth(email, map.get("password"));
+
+        if(!flag) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseBody<>(400, "인증 실패"));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "인증 성공"));
     }
 
 }
