@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(url = "http://k9d102.p.ssafy.io:8085", name = "store-service")
 public interface StoreFeignClient {
     @GetMapping("/api/store/{cafe_id}")
-    StoreResponse cafeDetail(@RequestHeader("Authorization") String token, @PathVariable(name = "cafe_id") Long cafe_id);
+    StoreResponse cafeDetail(@RequestHeader("Email") String email, @PathVariable(name = "cafe_id") Long cafe_id);
 }
