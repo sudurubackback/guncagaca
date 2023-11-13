@@ -33,6 +33,7 @@ public class BusinessServiceImpl implements BusinessService {
             //사업자 등록이 되어있는지 확인
 
             // 사업자 등록증 S3 업로드
+            
             String uploadURL = s3Uploader.upload(multipartFile, reqDto.getBusiness_name());
             Business business = new Business(reqDto, uploadURL);
             Business saved= businessRepository.save(business);
