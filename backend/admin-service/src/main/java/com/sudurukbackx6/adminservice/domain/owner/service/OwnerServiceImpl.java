@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
 import com.sudurukbackx6.adminservice.common.config.KafkaEventService;
 import com.sudurukbackx6.adminservice.common.dto.SignupEvent;
+import com.sudurukbackx6.adminservice.common.dto.StoreSaveEvent;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
@@ -13,6 +14,7 @@ import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Role;
 import com.sudurukbackx6.adminservice.domain.owner.repository.OwnersRepository;
+import com.sudurukbackx6.adminservice.domain.store.entity.Store;
 import com.sudurukbackx6.adminservice.jwt.JwtProvider;
 import com.sudurukbackx6.adminservice.jwt.TokenDto;
 import com.sudurukbackx6.adminservice.mail.service.MailSenderService;
@@ -125,11 +127,12 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void synchronizeServer(String email) throws JsonProcessingException {
-        // 회원 정보 동기화
         Owners owner = ownersRepository.findByEmail(email)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+        Store store = owner.getStore();
 
-        SignupEvent event = SignupEvent.builder()
+        // 회원 정보 동기화
+        SignupEvent signupEvent = SignupEvent.builder()
                 .ownerId(owner.getOwnerId())
                 .storeId(owner.getStore().getId())
                 .email(owner.getEmail())
@@ -139,9 +142,23 @@ public class OwnerServiceImpl implements OwnerService {
                 .ddns(owner.getDdns())
                 .build();
 
-        kafkaEventService.publishbySignup("adminOwner", event);
+        kafkaEventService.publishbySignup("adminOwner", signupEvent);
 
         // 가게 정보 동기화
+        StoreSaveEvent saveEvent = StoreSaveEvent.builder()
+                .storeId(store.getId())
+                .address(store.getAddress())
+                .tel(store.getTel())
+                .description(store.getDescription())
+                .openTime(store.getOpenTime())
+                .closeTime(store.getCloseTime())
+                .latitude(store.getLatitude())
+                .longitude(store.getLongitude())
+                .storeImg(store.getImg())
+                .build();
+
+        kafkaEventService.publishbyStoreSave("adminStore", saveEvent);
+
     }
 
 }
