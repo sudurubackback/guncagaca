@@ -15,4 +15,14 @@ public class SignupEvent {
     private Long storeId;
     private String ip;
     private String ddns;
+
+    public SignupEvent(Long ownerId, String email, String password, String tel, Long storeId, String ip, String ddns) {
+        this.ownerId = ownerId;
+        this.email = email;
+        this.password = password;
+        this.tel = tel;
+        this.storeId = storeId;
+        this.ip = ip;
+        this.ddns = ddns;
+    }
 }
