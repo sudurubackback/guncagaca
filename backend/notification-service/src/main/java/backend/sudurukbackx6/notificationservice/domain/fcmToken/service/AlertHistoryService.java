@@ -36,8 +36,8 @@ public class AlertHistoryService {
 	}
 
 	// 알림 목록 조회
-	public List<AlertHistoryDto> getAlertHistory(String token) {
-		MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(token);
+	public List<AlertHistoryDto> getAlertHistory(String email) {
+		MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(email);
 		Long myId = memberInfo.getId();
 		List<AlertHistory> alertHistories = alertHistoryRepository.findAllByMemberIdOrderByCreateTimeDesc(myId);
 
@@ -56,8 +56,8 @@ public class AlertHistoryService {
 	}
 
 	// 알림 삭제
-	public void deleteAlertHistory(String token, Long alertId) {
-		MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(token);
+	public void deleteAlertHistory(String email, Long alertId) {
+		MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(email);
 		Long memberId = memberInfo.getId();
 
 		// 알림 기록 가져오기
