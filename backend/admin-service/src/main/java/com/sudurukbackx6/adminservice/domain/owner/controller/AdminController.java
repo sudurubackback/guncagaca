@@ -1,5 +1,6 @@
 package com.sudurukbackx6.adminservice.domain.owner.controller;
 
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.ToggleApprovalRequestDto;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,9 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getOwnerInfo(email));
     }
 
-
-//    @PostMapping("/approval")
-//    public ResponseEntity<String> toggleApproval(@RequestBody Map<String, Long> requestBody) {
-//        Long adminId = requestBody.get("adminId");
-////        adminService.toggleApproval(adminId);
-//        return ResponseEntity.ok("Approval 상태가 토글되었습니다.");
-//    }
+    @PostMapping("/approval")
+    public ResponseEntity<String> toggleApproval(@RequestBody ToggleApprovalRequestDto toggleApprovalRequestDto) {
+        adminService.toggleApproval(toggleApprovalRequestDto);
+        return ResponseEntity.ok("Approval 상태가 토글되었습니다.");
+    }
 }
