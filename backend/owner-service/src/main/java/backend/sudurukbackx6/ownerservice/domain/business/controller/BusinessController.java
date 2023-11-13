@@ -25,7 +25,7 @@ import java.net.URISyntaxException;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/ceo")
+@RequestMapping("/api/owner")
 public class BusinessController {
     private final BusinessService businessService;
 
