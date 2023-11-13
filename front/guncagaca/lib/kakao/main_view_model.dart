@@ -47,6 +47,15 @@ class MainViewModel {
     await _socialLogin.logout();
     isLogined = false;
     user = null;
+
+    // SharedPreferences에서 토큰 삭제
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('accessToken');
+    await prefs.remove('refreshToken');
+
+    // 혹은 토큰을 빈 문자열로 초기화
+    // await prefs.setString('accessToken', '');
+    // await prefs.setString('refreshToken', '');
   }
 
   Future<void> _saveEmailToPreferences(String? email) async {
