@@ -46,8 +46,7 @@ public class Store {
 
     private String closeTime;
 
-    @OneToOne
-    @JoinColumn(name = "owners_id")  // 수정된 부분
+    @OneToOne(mappedBy = "store", cascade = CascadeType.ALL)
     private Owners owner;
 
     @Builder
