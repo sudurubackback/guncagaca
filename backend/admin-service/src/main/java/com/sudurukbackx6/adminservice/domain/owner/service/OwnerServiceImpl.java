@@ -181,7 +181,7 @@ public class OwnerServiceImpl implements OwnerService {
         Owners owner = ownersRepository.findByEmail(email)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
 
-        owner.changePassword(mailSenderService.sendPassword(email));
+        owner.changePassword(passwordEncoder.encode(mailSenderService.sendPassword(email)));
     }
 
 }
