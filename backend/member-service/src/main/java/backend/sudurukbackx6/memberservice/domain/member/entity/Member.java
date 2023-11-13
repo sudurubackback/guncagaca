@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.memberservice.domain.member.entity;
 
 import backend.sudurukbackx6.memberservice.domain.points.entity.Point;
+import backend.sudurukbackx6.memberservice.global.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
