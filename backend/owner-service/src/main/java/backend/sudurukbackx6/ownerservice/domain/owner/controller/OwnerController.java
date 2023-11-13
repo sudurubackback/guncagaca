@@ -27,7 +27,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/ceo")
+@RequestMapping("/api/owner")
 public class OwnerController {
 
     private final OwnerService ownerService;

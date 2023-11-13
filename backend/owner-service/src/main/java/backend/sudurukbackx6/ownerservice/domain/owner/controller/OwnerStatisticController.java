@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/ceo")
+@RequestMapping("/api/owner")
 public class OwnerStatisticController {
 
     private final OwnerStatisticsService ownerStatisticsService;
