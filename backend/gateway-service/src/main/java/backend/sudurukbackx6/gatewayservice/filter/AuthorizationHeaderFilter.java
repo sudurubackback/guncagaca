@@ -51,7 +51,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             // Token값이 잘못된 경우
             if (!isJwtValid(token)) {
-                return onError(exchange, "no authorization header", HttpStatus.UNAUTHORIZED);
+                return onError(exchange, "invalid token", HttpStatus.UNAUTHORIZED);
             }
 
             // 유효기간이 지난 Token인 경우
