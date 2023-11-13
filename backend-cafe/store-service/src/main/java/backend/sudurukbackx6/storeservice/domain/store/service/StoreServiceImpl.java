@@ -16,7 +16,11 @@ import backend.sudurukbackx6.storeservice.domain.store.client.dto.OwnerInfoRespo
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.*;
 import backend.sudurukbackx6.storeservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import backend.sudurukbackx6.storeservice.global.s3.S3Uploader;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -240,6 +244,33 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Store getCafe(Long cafeId) {
         return storeRepository.findById(cafeId).orElseThrow();
+    }
+
+    @KafkaListener(topics = "adminStore", groupId = "store")
+    public void subscribeEvent(@Payload String eventString) {
+        // json으로 역직렬화
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            StoreSaveEvent storeSaveEvent = objectMapper.readValue(eventString, StoreSaveEvent.class);
+            syncSaveStore(storeSaveEvent);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void syncSaveStore(StoreSaveEvent storeSaveEvent) {
+        Store store = Store.builder()
+                .name(storeSaveEvent.getStoreName())
+                .address(storeSaveEvent.getAddress())
+                .description(storeSaveEvent.getDescription())
+                .openTime(storeSaveEvent.getOpenTime())
+                .closeTime(storeSaveEvent.getCloseTime())
+                .latitude(storeSaveEvent.getLatitude())
+                .longitude(storeSaveEvent.getLongitude())
+                .tel(storeSaveEvent.getTel())
+                .img(storeSaveEvent.getStoreImg())
+                .build();
+        storeRepository.save(store);
     }
 
 }
