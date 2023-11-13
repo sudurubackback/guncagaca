@@ -64,9 +64,9 @@ public class StoreServiceImpl implements StoreService {
 
     // 카페 등록
     @Override
-    public void cafeSave(MultipartFile multipartFile, StoreRequest request, String token) throws IOException {
+    public void cafeSave(MultipartFile multipartFile, StoreRequest request, String email) throws IOException {
 
-        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(email);
 
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
@@ -106,8 +106,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public void cafeImgChage(MultipartFile multipartFile, String token) throws IOException {
-        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+    public void cafeImgChage(MultipartFile multipartFile, String email) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(email);
         Long cafeId = ownerInfo.getStoreId();
         Store store = storeRepository.findById(cafeId).orElseThrow();
 
@@ -116,8 +116,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public void updateCafeInfo(String token, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
-        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(token);
+    public void updateCafeInfo(String email, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
+        OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(email);
         Long cafeId = ownerInfo.getStoreId();
 
         log.info("description : {}", storeUpdateReqDto.getDescription());
@@ -175,7 +175,7 @@ public class StoreServiceImpl implements StoreService {
         double lat2 = Math.toRadians(store.getLatitude());
 
         double a = Math.pow(Math.sin(dLat / 2), 2)
-            + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2), 2);
+                + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLon / 2), 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return c;
     }
@@ -198,13 +198,13 @@ public class StoreServiceImpl implements StoreService {
 
     // 리뷰 최신순
     @Override
-    public List<StoreReviewResponse> cafeReview(String token, Long cafeId) {
+    public List<StoreReviewResponse> cafeReview(String email, Long cafeId) {
 
         List<Review> reviewList = reviewRepository.findByStoreIdOrderByIdDesc(cafeId);
         // 리뷰의 멤버Id 목록
         Set<Long> memberIds = reviewList.stream().map(Review::getMemberId).collect(Collectors.toSet());
         List<Long> memberIdsList = new ArrayList<>(memberIds);
-        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfo(token, memberIdsList);
+        List<MemberInfoResponse> memberInfoList = memberServiceClient.getMemberInfoBulk(email, memberIdsList);
 
         // Id : 닉네임
         Map<Long, String> memberIdToNicknameMap = memberInfoList.stream()
@@ -234,7 +234,7 @@ public class StoreServiceImpl implements StoreService {
     public void updateStarPoint(Long storeId, Double point) {
         Store store = getCafe(storeId);
 
-        int reviewCount = store.getReview().size();
+        int reviewCount = store.getReviews().size();
         Double totalPoint = (reviewCount-1) * store.getStarPoint(); // 총점 (방금 작성한 리뷰는 카운트 x)
 
         Double newStarPoint = (totalPoint + point) / reviewCount;
