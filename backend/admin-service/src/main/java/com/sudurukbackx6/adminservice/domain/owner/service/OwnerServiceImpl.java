@@ -176,7 +176,7 @@ public class OwnerServiceImpl implements OwnerService {
         if(!passwordEncoder.matches(password, owner.getPassword()))
             throw new BadRequestException(ErrorCode.NOT_MATCH);
 
-        owner.changePassword(passwordEncoder.encode(password));
+        owner.changePassword(passwordEncoder.encode(newPassword));
     }
 
     @Override
