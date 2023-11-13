@@ -18,6 +18,8 @@ cloud:
 spring:
   application:
     name: owner-service
+  main:
+    allow-bean-definition-overriding: true
   data:
     mongodb:
       uri: mongodb://root:d102d102@k9d102a.p.ssafy.io:27017/menu_db?authSource=admin&authMechanism=SCRAM-SHA-1
