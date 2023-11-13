@@ -98,9 +98,8 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void signOut(String email) {
-        //회원탈퇴, redis에서 해당 토큰을 지우고, 회원정보를 지운다.
+        //회원탈퇴, redis에서 해당 토큰을 지운다
         redisUtil.deleteRefreshToken(email);
-        ownersRepository.deleteByEmail(email);
     }
 
     @Override
