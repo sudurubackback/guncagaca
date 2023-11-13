@@ -4,6 +4,7 @@ import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
 import backend.sudurukbackx6.ownerservice.domain.owner.repository.OwnersRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +13,12 @@ import java.util.HashMap;
 
 @Component
 @RequiredArgsConstructor
+@RefreshScope
 public class JwtProvider {
     private final OwnersRepository ownersRepository;
+    private final JwtProperties jwtProperties;
 
-    private String secret = "dkssudsksmsdmswlddlfkrhgksmsepsjsms";
+    private final String secret = jwtProperties.getSecret();
     private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 2L; // 2 hours -> 테스트 편의성을 위해 30 days
     private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24L; // 1 days
 
