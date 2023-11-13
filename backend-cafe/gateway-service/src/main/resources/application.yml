@@ -39,7 +39,13 @@ spring:
         - id: owner-service
           uri: http://localhost:8080
           predicates: # 조건절
-            - Path=/api/ceo/menu/**
+            - Path=/api/ceo/signin
+            - Method=POST
+
+        - id: owner-service
+          uri: http://localhost:8080
+          predicates: # 조건절
+            - Path=/api/ceo/**
             - Method=POST
           filters:
             - AuthorizationHeaderFilter
@@ -47,8 +53,10 @@ spring:
         - id: owner-service
           uri: http://localhost:8080
           predicates: # 조건절
-            - Path=/api/ceo/signin
+            - Path=/api/ceo/menu/**
             - Method=POST
+          filters:
+            - AuthorizationHeaderFilter
 
         - id: owner-service
           uri: http://localhost:8080
