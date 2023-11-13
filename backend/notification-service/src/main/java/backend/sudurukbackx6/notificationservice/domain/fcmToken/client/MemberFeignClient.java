@@ -1,7 +1,6 @@
 package backend.sudurukbackx6.notificationservice.domain.fcmToken.client;
 
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.dto.response.MemberInfoResponse;
-import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.dto.response.MemberResDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +12,9 @@ public interface MemberFeignClient {
     String getFirebaseTokenByMemberId(@PathVariable Long memberId);
 
     @GetMapping("/api/member/memberInfo")
-    MemberInfoResponse getMemberInfo(@RequestHeader("Authorization") String token);
+    MemberInfoResponse getMemberInfo(@RequestHeader("Email") String email);
 
     @PostMapping("/api/member/memberInfo/bulk")
-    List<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds);
+    List<MemberInfoResponse> getMemberInfo(@RequestHeader("Email") String email, @RequestBody List<Long> memberIds);
 
 }
