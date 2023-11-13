@@ -13,4 +13,5 @@ public class NotificationEvent {
     private Long storeId;
     private String storeName;
     private String reason;
+    private String orderMenu;
 }
