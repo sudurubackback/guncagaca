@@ -12,12 +12,14 @@ public class OrderEvent {
     private Long storeId;
     private String storeName;
     private String reason;
+    private String OrderMenu;
 
-    public OrderEvent(Long memberId, Status status, Long storeId, String storeName, String reason) {
+    public OrderEvent(Long memberId, Status status, Long storeId, String storeName, String reason, String orderMenu) {
         this.memberId = memberId;
         this.status = status;
         this.storeId = storeId;
         this.storeName = storeName;
         this.reason = reason;
+        this.OrderMenu = orderMenu;
     }
 }
