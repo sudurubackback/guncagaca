@@ -46,6 +46,8 @@ public class Owners extends TimeEntity {
 
     private String ddns;
 
+    private Role role;
+
     public void changeValidation() {
         validation = !validation;
     }
@@ -62,11 +64,12 @@ public class Owners extends TimeEntity {
     }
 
     @Builder
-    public Owners(String email, String password, String tel, Business business) {
+    public Owners(String email, String password, String tel, Business business, Role role) {
         this.email = email;
         this.password = password;
         this.tel = tel;
         this.business = business;
+        this.role = role;
     }
 
     public void changePassword(String newPassword) {
