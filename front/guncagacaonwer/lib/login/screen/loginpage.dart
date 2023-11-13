@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       bool result = await apiService.refresh();
       if (result) {
         print('자동 로그인 성공');
+        print(refreshToken);
         toggleLoginState();
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => StorePage(),

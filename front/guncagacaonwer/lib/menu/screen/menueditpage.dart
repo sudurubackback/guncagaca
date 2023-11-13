@@ -226,7 +226,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
   }
 
   Future<void> updateMenu() async {
-    var requestUrl = 'https://k9d102.p.ssafy.io/api/ceo/menu/edit';
+    var requestUrl = 'https://k9d102.p.ssafy.io/api/owner/menu/edit';
 
     String extension = selectedImageName.split('.').last;
 

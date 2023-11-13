@@ -34,7 +34,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          '/api/ceo/menu/sale',
+          '/api/owner/menu/sale',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -59,7 +59,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          '/api/ceo/menu/delete',
+          '/api/owner/menu/delete',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -84,7 +84,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/api/ceo/${storeId}/menu',
+              '/api/owner/${storeId}/menu',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -115,7 +115,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/api/ceo/ownerInfo',
+              '/api/owner/ownerInfo',
               queryParameters: queryParameters,
               data: _data,
             )

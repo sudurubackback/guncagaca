@@ -93,7 +93,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/api/ceo/ownerInfo',
+              '/api/owner/ownerInfo',
               queryParameters: queryParameters,
               data: _data,
             )

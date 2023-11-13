@@ -26,6 +26,6 @@ abstract class ApiService {
   @GET("/store/{storeId}/orders")
   Future<List<StoreOrderResponse>> getStoreOrdersForDateRange(@Path() int storeId, @Query('startDate') String startDate, @Query('endDate') String endDate);
 
-  @GET("/api/ceo/ownerInfo")
+  @GET("/api/owner/ownerInfo")
   Future<OwnerInfoResponse> getOwnerInfo();
 }

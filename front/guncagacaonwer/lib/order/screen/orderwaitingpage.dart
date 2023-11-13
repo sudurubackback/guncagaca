@@ -6,6 +6,8 @@ import 'package:guncagacaonwer/order/models/ordercancelmodel.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 
+import '../../common/dioclient.dart';
+
 class OrderWaitingPage extends StatefulWidget {
 
   @override
@@ -13,13 +15,14 @@ class OrderWaitingPage extends StatefulWidget {
 }
 
 class _OrderWaitingPageState extends State<OrderWaitingPage> {
-
-  List<Order> orders = [];
+  List<Map<String, dynamic>> orders = []; // ordersData 리스트 선언
   late ApiService apiService;
   static final storage = FlutterSecureStorage();
 
   Future<void> setupApiService() async {
     String? accessToken = await storage.read(key: 'accessToken');
+    String? email = await storage.read(key: 'email');
+    print("email : $email");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));
@@ -34,33 +37,76 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
       fetchOrders();
     });
   }
+  String baseUrl = 'https://k9d102.p.ssafy.io';
+  Dio dio = DioClient.getInstance();
 
   // 주문 접수 리스트 (get)
   Future<void> fetchOrders() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-
+      print("주문접수");
+      print(ownerResponse.email);
       int storeId = ownerResponse.storeId;
+      print(storeId);
+      String email = ownerResponse.email;
+      if (storeId != null) {
+        final response = await dio.get(
+          "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId/1",
+        );
 
-      List<Order> orderList = await apiService.getWaitingList(storeId, "1");
-      setState(() {
-        orders = orderList;
-      });
+        if (response.statusCode == 200) {
+          // API 응답이 Map 형식인지 확인
+          if (response.data is Map<String, dynamic>) {
+            Map<String, dynamic> jsonData = response.data;
+            // 'data' 키에 해당하는 주문 목록을 가져옵니다.
+            orders = List<Map<String, dynamic>>.from(jsonData['data']);
+
+
+            // orders를 활용하여 주문 목록을 처리하는 로직을 작성하세요.
+            // 예를 들어, 주문 목록을 화면에 출력하거나 다른 작업을 수행할 수 있습니다.
+
+            setState(() {});
+          } else {
+            print('API 응답 형식이 예상과 다릅니다: $response.data');
+          }
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      }
     } catch (e) {
-      print(e);
+      print("네트워크 오류: $e");
     }
   }
 
   // 주문 접수 요청
-  Future<void> requestOrder(Order order) async {
+  Future<void> requestOrder(String orderId) async {
     try {
-      final response = await apiService.requestOrder(order.id);
-      print("주문 접수 성공 : ${response.message}");
-      fetchOrders();
+      final ownerResponse = await apiService.getOwnerInfo();
+      print("주문접수요청");
+      print(ownerResponse.email);
+      print(orderId);
+      String email = ownerResponse.email;
+      if (orderId != null) {
+        final response = await dio.post(
+            'http://k9d102.p.ssafy.io:8086/api/ceo/request/$orderId',
+          options: Options(
+            headers: {'Email': email}, // 헤더에 이메일 추가
+          ),
+        );
+
+        if (response.statusCode == 200) {
+
+          print("주문성공");
+
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      }
     } catch (e) {
-      print("주문 접수 에러: $e");
+      print("네트워크 오류: $e");
     }
   }
+
 
   // 취소 사유 리스트
   List<String> cancelReasons = ['사유1', '사유2', '사유3'];
@@ -139,11 +185,11 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 final order = orders[index];
-                int totalQuantity = order.menus.map((menu) => menu.quantity).reduce((a, b) => a + b);
+                int totalQuantity = order['menus'].fold(0, (prev, menu) => prev + menu['quantity']);
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(order.orderPrice);
+                String formattedTotalPrice = formatter.format(order['orderPrice']);
                 // 주문 시간에서 날짜와 시간 추출
-                DateTime dateTime = DateTime.parse(order.orderTime);
+                DateTime dateTime = DateTime.parse(order['orderTime']);
                 String timeOfDay = "";
                 String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
                 List<String> dateTimeParts = formattedTime.split(" ");
@@ -158,7 +204,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                 } else {
                   timeOfDay = "오전";
                 }
-                String menuList = order.menus.map((menu) => '${menu.menuName} ${menu.quantity}개').join(' / ');
+                String menuList = order['menus'].map((menu) => '${menu['menuName']} ${menu['quantity']}개').join(' / ');
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
@@ -188,7 +234,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
@@ -196,7 +242,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
@@ -264,7 +310,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 ElevatedButton(
                                   onPressed: () async {
                                     // 접수하기 버튼 클릭 시 수행할 동작 추가
-                                    await requestOrder(order);
+                                    await requestOrder(order['orderId']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFF406AD6), // 버튼의 배경색
@@ -284,7 +330,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 ElevatedButton(
                                   onPressed: () {
                                     // 주문 취소 버튼 클릭 시 수행할 동작 추가
-                                    showCancelDialog(order);
+                                    showCancelDialog(order['orderId']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFFD63737), // 버튼의 배경색

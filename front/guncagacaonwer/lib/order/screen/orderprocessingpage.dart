@@ -52,9 +52,9 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
     }
   }
 
-  Future<void> completeOrder(Order order) async {
+  Future<void> completeOrder(String orderId) async {
     try {
-      final response = await apiService.completeOrder(order.id);
+      final response = await apiService.completeOrder(orderId);
       print("주문 완료 성공: ${response.message}");
       fetchOrders();
     } catch (e) {
@@ -344,7 +344,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                             TextButton(
                                                               onPressed: () {
                                                                 // 완료 처리
-                                                                completeOrder(order);
+                                                                // completeOrder(order);
                                                                 Navigator.of(context).pop(); // 모달 닫기
                                                               },
                                                               child: Text('확인'),

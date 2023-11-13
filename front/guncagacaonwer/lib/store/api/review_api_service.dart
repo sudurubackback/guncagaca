@@ -26,6 +26,6 @@ abstract class ApiService {
   @GET("/api/store/{cafeId}/review")
   Future<List<ReviewResponse>> getReview(@Path("cafeId") int cafeId);
 
-  @GET("/api/ceo/ownerInfo")
+  @GET("/api/owner/ownerInfo")
   Future<OwnerInfoResponse> getOwnerInfo();
 }
