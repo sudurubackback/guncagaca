@@ -43,4 +43,6 @@ public interface OwnerService {
 
     //비밀번호 찾기
     void findPassword(String email) throws MessagingException;
+
+    boolean auth(String email, String password);
 }

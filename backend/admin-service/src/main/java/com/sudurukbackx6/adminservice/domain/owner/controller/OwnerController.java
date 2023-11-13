@@ -115,4 +115,15 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "비밀번호를 이메일로 전송하였습니다."));
     }
 
+    @PostMapping("/auth")
+    public ResponseEntity<? extends BaseResponseBody> auth(@RequestHeader("Email") String email, @RequestBody Map<String, String> map) throws IOException {
+        if(map.get("password")==null)
+            throw new IOException("비밀번호를 입력해주세요");
+
+        boolean flag = ownerService.auth(email, map.get("password"));
+
+        if(!flag) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseBody<>(400, "인증 실패"));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "인증 성공"));
+    }
+
 }

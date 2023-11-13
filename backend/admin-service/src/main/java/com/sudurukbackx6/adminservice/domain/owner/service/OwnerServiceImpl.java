@@ -184,4 +184,12 @@ public class OwnerServiceImpl implements OwnerService {
         owner.changePassword(passwordEncoder.encode(mailSenderService.sendPassword(email)));
     }
 
+    @Override
+    public boolean auth(String email, String password) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        return passwordEncoder.matches(password, owner.getPassword());
+    }
+
 }
