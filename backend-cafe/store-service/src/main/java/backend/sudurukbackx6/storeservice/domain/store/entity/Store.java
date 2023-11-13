@@ -54,14 +54,14 @@ public class Store {
     private String closeTime;
 
     @OneToMany(mappedBy = "store")
-    private List<Review> review;
+    private List<Review> reviews;
 
     @OneToMany(mappedBy = "store")
     private List<Likey> likeys;
 
     @Builder
     public Store(Long id, String name, Double latitude, Double longitude, String address, String tel, String img,
-                 String openTime, String closeTime, String description, List<Review> review) {
+                 String openTime, String closeTime, String description, List<Review> reviews) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -74,7 +74,7 @@ public class Store {
         this.closeTime = closeTime;
         this.starPoint = 0.0;
         this.description = description;
-        this.review = review;
+        this.reviews = reviews;
     }
 
     public void setImg(String img) {

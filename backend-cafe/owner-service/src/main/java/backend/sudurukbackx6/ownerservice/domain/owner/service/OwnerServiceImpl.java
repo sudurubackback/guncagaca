@@ -4,11 +4,10 @@ import backend.sudurukbackx6.ownerservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.ownerservice.common.error.exception.BadRequestException;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
-import backend.sudurukbackx6.ownerservice.domain.business.entity.Business;
-import backend.sudurukbackx6.ownerservice.domain.business.service.BusinessService;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
+import backend.sudurukbackx6.ownerservice.domain.owner.dto.response.OwnerSignupEvent;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.response.SignInResDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
 import backend.sudurukbackx6.ownerservice.domain.owner.repository.OwnersRepository;
@@ -17,8 +16,12 @@ import backend.sudurukbackx6.ownerservice.jwt.JwtProvider;
 import backend.sudurukbackx6.ownerservice.jwt.TokenDto;
 import backend.sudurukbackx6.ownerservice.mail.service.MailSenderService;
 import backend.sudurukbackx6.ownerservice.redis.util.RedisUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +40,6 @@ public class OwnerServiceImpl implements OwnerService {
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
     private final Encrypt encrypt;
-    private final BusinessService businessService;
 
     @Override
     public SignInResDto signIn(SignInReqDto request) {
@@ -68,9 +70,8 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public void signOut(String header) {
+    public void signOut(String email) {
         //로그아웃
-        String email = jwtProvider.extractEmail(header);
         redisUtil.deleteRefreshToken(email);
     }
 
@@ -102,8 +103,9 @@ public class OwnerServiceImpl implements OwnerService {
 //    }
 
     @Override
-    public OwnerInfoResponse ownerInfo (String token){
-        Owners owners = jwtProvider.extractUser(token);
+    public OwnerInfoResponse ownerInfo (String email){
+        Owners owners = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
         return OwnerInfoResponse.builder()
                 .email(owners.getEmail())
                 .tel(owners.getTel())
@@ -113,7 +115,8 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public Long ownerStoreId(SetStoreIdFromOwnerRequest request){
-        Owners owners = ownersRepository.findByEmail(request.getEmail()).orElseThrow();
+        Owners owners = ownersRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
         owners.setStoreId(request.getStoreId());
         return request.getStoreId();
     }
@@ -123,4 +126,24 @@ public class OwnerServiceImpl implements OwnerService {
         owner.changeValidation();
     }
 */
+    @KafkaListener(topics = "adminOwner", groupId = "owner")
+    public void subscribeEvent(@Payload String eventString) {
+        // json으로 역직렬화
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            OwnerSignupEvent ownerSignupEvent = objectMapper.readValue(eventString, OwnerSignupEvent.class);
+            syncSignup(ownerSignupEvent);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void syncSignup(OwnerSignupEvent ownerSignupEvent) {
+        Owners owner = Owners.builder()
+                .email(ownerSignupEvent.getEmail())
+                .password(ownerSignupEvent.getPassword())
+                .tel(ownerSignupEvent.getTel())
+                .build();
+        ownersRepository.save(owner);
+    }
 }

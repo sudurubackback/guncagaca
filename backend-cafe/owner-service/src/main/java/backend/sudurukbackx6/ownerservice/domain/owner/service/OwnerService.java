@@ -15,7 +15,7 @@ public interface OwnerService {
 
     //1. 로그인 & 로그아웃
     SignInResDto signIn(SignInReqDto request);
-    void signOut(String header);
+    void signOut(String email);
 
     //2. accesstoen 갱신
     SignInResDto refreshAccessToken(String header);
@@ -23,7 +23,7 @@ public interface OwnerService {
 //    Owners findByEmail(String email);
 
     // 이메일 받아서 owner 받아오기
-    OwnerInfoResponse ownerInfo (String token);
+    OwnerInfoResponse ownerInfo (String email);
 
     Long ownerStoreId (SetStoreIdFromOwnerRequest request);
 //    void toggleValidStatus(String email);
