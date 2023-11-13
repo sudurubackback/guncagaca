@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface StoreServiceClient {
 
     @GetMapping("/api/store/{cafeId}")
-    StoreInfoDto getStore(@RequestParam("email") String email, @PathVariable Long cafeId);
+    StoreInfoDto getStore(@RequestParam("Email") String email, @PathVariable Long cafeId);
 }
