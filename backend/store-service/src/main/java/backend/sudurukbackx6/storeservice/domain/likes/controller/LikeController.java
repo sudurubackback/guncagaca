@@ -24,9 +24,9 @@ public class LikeController {
 
     // 멤버가 찜한 목록 조회
     @GetMapping("/mypage/like-store")
-    @Operation(summary = "찜 가게 조회", description = "token 필요\n현재 멤버가 찜한 가게 리스트 조회", tags = { "Store Controller" })
-    public ResponseEntity<List<LikeResponse>> LikedStoresByMemberId(@RequestHeader("Authorization") String token){
-        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+    @Operation(summary = "찜 가게 조회", description = "현재 멤버가 찜한 가게 리스트 조회", tags = { "Store Controller" })
+    public ResponseEntity<List<LikeResponse>> LikedStoresByMemberId(@RequestHeader("Email") String email){
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(email);
         return ResponseEntity.ok(likeService.getLikedStoresByMemberId(memberInfo.getId()));
 
     }

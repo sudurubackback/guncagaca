@@ -115,8 +115,8 @@ public class OwnerController {
     }
 
     @GetMapping("/ownerInfo")
-    public ResponseEntity<OwnerInfoResponse> getOwnerInfo(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(ownerService.ownerInfo(token));
+    public ResponseEntity<OwnerInfoResponse> getOwnerInfo(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(ownerService.ownerInfo(email));
     }
 
     @PutMapping("/ownersStore")
