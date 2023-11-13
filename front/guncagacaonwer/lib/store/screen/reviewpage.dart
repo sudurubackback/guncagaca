@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/store/api/review_api_service.dart';
 import 'package:guncagacaonwer/store/models/reviewmodel.dart';
 
@@ -36,7 +37,9 @@ class _ReviewPageState extends State<ReviewPage> {
   void fetchReviews() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
+
       final cafeId = ownerResponse.storeId;
+
 
       if (cafeId != null) {
         final response = await apiService.getReview(cafeId);
@@ -81,7 +84,13 @@ class _ReviewPageState extends State<ReviewPage> {
                     width: 180 * (deviceWidth / standardDeviceWidth),
                     height: 55 * (deviceHeight / standardDeviceHeight),
                     decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
+                      // color: Color(0xFFD9D9D9),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: PRIMARY_COLOR, // 외곽선 색상
+                        width: 2.0, // 외곽선 두께
+                      ),
+                        borderRadius: BorderRadius.circular(20.0)
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -120,7 +129,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         Expanded(
                           child: Container(
                             margin: EdgeInsets.only(left: 16 * (deviceWidth / standardDeviceWidth)), // 왼쪽 마진 설정
-                            child: ReviewContent(content: '리뷰 내용: ${review.content}'),  // ReviewContent 위젯 사용
+                            child: ReviewContent(content: review.content,nickname: review.nickname,),  // ReviewContent 위젯 사용
                           ),
                         ),
                       ],
@@ -138,8 +147,12 @@ class _ReviewPageState extends State<ReviewPage> {
 
 class ReviewContent extends StatefulWidget {
   final String content;
+  final String nickname;
 
-  ReviewContent({required this.content});
+  ReviewContent({
+    required this.content,
+    required this.nickname,
+  });
 
   @override
   _ReviewContentState createState() => _ReviewContentState();
@@ -147,33 +160,91 @@ class ReviewContent extends StatefulWidget {
 
 class _ReviewContentState extends State<ReviewContent> {
   bool showFullText = false;
+  final int previewLength = 30; // 미리보기에 나타낼 글자 수
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
+        // 리뷰쓴 사람의 아이디 표시
+        Text(
+          '${widget.nickname} 님',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.025,),
+        // 리뷰 내용 표시
         showFullText
-          ? Container(
-            child: SingleChildScrollView(
+            ? Container(
+          child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: Text(widget.content),
+            child: Text(
+              widget.content,
+              style: TextStyle(fontSize: 27),
             ),
-          )
-          : Text(
-            widget.content,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 3,
           ),
-        TextButton(
-          child: Text(showFullText ? '간략히 보기' : '더 보기'),
-          onPressed: () {
-            setState(() {
-              showFullText = !showFullText;
-            });
-          },
+        )
+            : Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Text(
+                  _getPreviewText(),
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+            if (widget.content.length > previewLength) // 예시로 30글자 이상일 때만 더 보기 버튼 표시
+              TextButton(
+                child: Text('더 보기', style: TextStyle(color: PRIMARY_COLOR)),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('리뷰 내용', style: TextStyle(fontSize: 23)),
+                        content: SingleChildScrollView(
+                          child: Text(_getDialogText(), style: TextStyle(fontSize: 27)),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // 다이얼로그 닫기
+                            },
+                            child: Text('닫기', style: TextStyle(color: PRIMARY_COLOR)),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+          ],
         ),
       ],
     );
+  }
+
+  String _getPreviewText() {
+    if (widget.content.length <= previewLength) {
+      return widget.content;
+    } else {
+      return widget.content.substring(0, previewLength) + '...';
+    }
+  }
+
+  String _getDialogText() {
+    String dialogText = '';
+    for (int i = 0; i < widget.content.length; i += previewLength) {
+      int end = i + previewLength;
+      if (end > widget.content.length) {
+        end = widget.content.length;
+      }
+      dialogText += widget.content.substring(i, end) + '\n';
+    }
+    return dialogText.trim();
   }
 }

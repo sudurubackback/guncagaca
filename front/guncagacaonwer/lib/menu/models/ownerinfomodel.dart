@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+part 'ownerinfomodel.g.dart';
+
+@JsonSerializable()
 class OwnerInfoResponse {
   final String email;
   final String tel;

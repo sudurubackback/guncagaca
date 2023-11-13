@@ -27,6 +27,10 @@ class _LoginPageState extends State<LoginPage> {
     String? refreshToken = await storage.read(key: 'refreshToken');
     bool? autoLoginValue = (await storage.read(key: 'autoLogin')) == 'true';
 
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //   builder: (context) => StorePage(),
+    // ));
+
     print(refreshToken);
 
     if (autoLoginValue != null && autoLoginValue == true && refreshToken != null && refreshToken.isNotEmpty) {
@@ -39,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         ));
       } else {
         print('자동 로그인 실패');
+
       }
     }
   }
