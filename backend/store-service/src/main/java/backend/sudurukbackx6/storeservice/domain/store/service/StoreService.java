@@ -17,17 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 public interface StoreService {
 
 
-    void cafeSave(MultipartFile multipartFile,StoreRequest request, String token) throws IOException;
+    void cafeSave(MultipartFile multipartFile,StoreRequest request, String email) throws IOException;
     List<NeerStoreResponse> cafeList(Long memberId, LocateRequest request);
-    List<NeerStoreResponse> searchCafe(Long memberId, String keyword, LocateRequest request);
     StoreResponse cafeDetail(Long memberId, Long cafeId);
     List<StoreReviewResponse> cafeReview(Long cafeId);
-//    List<StoreMenuResponse> cafeMenu(String token, Long cafeId);
-//    StoreMenuResponse cafeMenuDetail(String token, Long cafeId, Long menuIndex);
-    List<StoreReviewResponse> cafeReview(String token, Long cafeId);
+    List<StoreReviewResponse> cafeReview(String email, Long cafeId);
     Store getCafe(Long cafeId);
     void updateStarPoint(Long storeId, Double point);
-    void cafeImgChage(MultipartFile multipartFile, String token) throws IOException;
-    void updateCafeInfo(String token, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException;
+    void cafeImgChage(MultipartFile multipartFile, String email) throws IOException;
+    void updateCafeInfo(String email, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException;
 
 }
