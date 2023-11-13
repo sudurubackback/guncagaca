@@ -1,8 +1,10 @@
 package com.sudurukbackx6.adminservice.domain.owner.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
+import com.sudurukbackx6.adminservice.common.config.KafkaEventService;
+import com.sudurukbackx6.adminservice.common.dto.SignupEvent;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
-import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
@@ -37,6 +39,7 @@ public class OwnerServiceImpl implements OwnerService {
     private final BusinessService businessService;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
+    private final KafkaEventService kafkaEventService;
 
 
     @Override
@@ -119,4 +122,26 @@ public class OwnerServiceImpl implements OwnerService {
         // 네트워크 설정
         owner.changeNetwork(networkReqDto.getIp(), networkReqDto.getDdns(), "8000");
     }
+
+    @Override
+    public void synchronizeServer(String email) throws JsonProcessingException {
+        // 회원 정보 동기화
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        SignupEvent event = SignupEvent.builder()
+                .ownerId(owner.getOwnerId())
+                .storeId(owner.getStore().getId())
+                .email(owner.getEmail())
+                .password(owner.getPassword())
+                .tel(owner.getTel())
+                .ip(owner.getIp())
+                .ddns(owner.getDdns())
+                .build();
+
+        kafkaEventService.publishbySignup("adminOwner", event);
+
+        // 가게 정보 동기화
+    }
+
 }
