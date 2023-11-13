@@ -61,10 +61,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
             Map<String, dynamic> jsonData = response.data;
             // 'data' 키에 해당하는 주문 목록을 가져옵니다.
             orders = List<Map<String, dynamic>>.from(jsonData['data']);
-            // 주문 목록을 받아온 후 각 주문에 inProgress를 추가하고 초기화
-            orders.forEach((order) {
-              order['inProgress'] = false;
-            });
+
 
             setState(() {});
 
@@ -225,6 +222,18 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              SizedBox(
+                                width: 2 * (deviceWidth / standardDeviceWidth),
+                              ),
+                              Container(
+                                width: 40 * (deviceWidth / standardDeviceWidth),
+                                height: 60 * (deviceHeight / standardDeviceHeight),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                  ],
+                                ),
+                              ),
                               Container(
                                 width: 40 * (deviceWidth / standardDeviceWidth),
                                 height: 60 * (deviceHeight / standardDeviceHeight),
@@ -269,7 +278,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                     ),
                                   ),
                                   child: Text(
-                                    '주문표\n 인쇄',
+                                    '상세\n보기',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 8 * (deviceWidth / standardDeviceWidth),
@@ -277,48 +286,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                width: 2 * (deviceWidth / standardDeviceWidth),
-                              ),
-                              Container(
-                                width: 40 * (deviceWidth / standardDeviceWidth),
-                                height: 60 * (deviceHeight / standardDeviceHeight),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        // 버튼 동작을 여기에 추가
-                                        setState(() {
-                                          if (!order['inProgress']) {
-                                            order['inProgress'] = true;
-                                          }
-                                        });
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: order['inProgress']
-                                            ? Colors.orange
-                                            : Colors.grey,
-                                        minimumSize: Size(
-                                          40 * (deviceWidth / standardDeviceWidth),
-                                          60 * (deviceHeight / standardDeviceHeight),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        order['inProgress']
-                                            ? '준비중'
-                                            : '제작\n대기',
-                                        style: TextStyle(
-                                          color: order['inProgress']
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 8 * (deviceWidth / standardDeviceWidth),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+
                               SizedBox(
                                 width: 2 * (deviceWidth / standardDeviceWidth),
                               ),
@@ -336,13 +304,6 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  if (!order['inProgress']) {
-                                                    // "제작" 버튼이 눌렸을 때의 기능 추가
-                                                    // 예: 어떤 작업을 실행하거나 상태 변경
-                                                    order['inProgress'] = true;
-                                                  } else {
-                                                    // "완료" 버튼이 눌렸을 때의 기능 추가
-                                                    // 모달 다이얼로그 구현
                                                     showDialog(
                                                       context: context,
                                                       builder: (BuildContext context) {
@@ -358,7 +319,6 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                                   Text('주문 시간: ${order['orderTime']}'),
                                                                   Text('메뉴 수량: $totalQuantity'),
                                                                   // 다른 주문 정보 출력...
-                                                                  if (order['inProgress'])
                                                                     TextButton(
                                                                       onPressed: () {
                                                                         // FCM를 사용하여 알림 보내기 (FCM 관련 코드 필요)
@@ -383,20 +343,19 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                         );
                                                       },
                                                     );
-                                                  }
+
                                                 });
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: order['inProgress']
-                                                    ? Color(0xFF4449BA)
-                                                    : Color(0xFF4449BA),
+                                                backgroundColor:
+                                                    Color(0xFF4449BA),
                                                 minimumSize: Size(
                                                   40 * (deviceWidth / standardDeviceWidth),
                                                   60 * (deviceHeight / standardDeviceHeight),
                                                 ),
                                               ),
                                               child: Text(
-                                                order['inProgress'] ? '완료' : '제작',
+                                                 '완료' ,
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 18,
