@@ -9,6 +9,7 @@ import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
+import com.sudurukbackx6.adminservice.domain.owner.entity.Role;
 import com.sudurukbackx6.adminservice.domain.owner.repository.OwnersRepository;
 import com.sudurukbackx6.adminservice.jwt.JwtProvider;
 import com.sudurukbackx6.adminservice.jwt.TokenDto;
@@ -45,7 +46,7 @@ public class OwnerServiceImpl implements OwnerService {
         if (exitOwner.isEmpty()) {
             //이미 가입된 회원이 없으면? 회원가입 진행한다.
             Business business = businessService.getBusinessById(signUpReqDto.getBusiness_id());
-            Owners owner = new Owners(signUpReqDto.getEmail(), passwordEncoder.encode(signUpReqDto.getPassword()), signUpReqDto.getTel(), business);
+            Owners owner = new Owners(signUpReqDto.getEmail(), passwordEncoder.encode(signUpReqDto.getPassword()), signUpReqDto.getTel(), business, Role.USER);
             ownersRepository.save(owner);
         } else {
             throw new BadRequestException(ErrorCode.DUPLICATED_EMAIL);  //중복된 이메일이라는 오류 뱉음
