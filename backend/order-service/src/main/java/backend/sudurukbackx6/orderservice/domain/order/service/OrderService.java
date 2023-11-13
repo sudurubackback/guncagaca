@@ -3,6 +3,7 @@ package backend.sudurukbackx6.orderservice.domain.order.service;
 import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
 import backend.sudurukbackx6.orderservice.client.StoreServiceClient;
 import backend.sudurukbackx6.orderservice.config.KafkaEventService;
+import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
 import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
 import backend.sudurukbackx6.orderservice.client.OwnerServiceClient;
@@ -133,7 +134,16 @@ public class OrderService {
             order.setStatus(Status.CANCELED);
             orderRepository.save(order);
 
-            publishOrderEvent(email, memberId, Status.CANCELED, order.getStoreId(), orderCancelRequestDto.getReason());
+            String orderMenu = null;
+            List<Menu> menus = order.getMenus();
+            if (menus != null && !menus.isEmpty()) {
+                if (menus.size() > 1) {
+                    orderMenu = menus.get(0).getMenuName() + " 외 " + (menus.size() - 1) + "개";
+                } else {
+                    orderMenu = menus.get(0).getMenuName();
+                }
+            }
+            publishOrderEvent(email, memberId, Status.COMPLETE, order.getStoreId(), null, orderMenu);
 
             return true;
         }
@@ -215,7 +225,16 @@ public class OrderService {
         order.setStatus(Status.REQUEST);
         orderRepository.save(order);
 
-        publishOrderEvent(email, memberId, Status.REQUEST, order.getStoreId(), null);
+        String orderMenu = null;
+        List<Menu> menus = order.getMenus();
+        if (menus != null && !menus.isEmpty()) {
+            if (menus.size() > 1) {
+                orderMenu = menus.get(0).getMenuName() + " 외 " + (menus.size() - 1) + "개";
+            } else {
+                orderMenu = menus.get(0).getMenuName();
+            }
+        }
+        publishOrderEvent(email, memberId, Status.COMPLETE, order.getStoreId(), null, orderMenu);
 
         return "주문 접수가 완료되었습니다.";
     }
@@ -230,16 +249,25 @@ public class OrderService {
         order.setStatus(Status.COMPLETE);
         orderRepository.save(order);
 
-        publishOrderEvent(email, memberId, Status.COMPLETE, order.getStoreId(), null);
+        String orderMenu = null;
+        List<Menu> menus = order.getMenus();
+        if (menus != null && !menus.isEmpty()) {
+            if (menus.size() > 1) {
+                orderMenu = menus.get(0).getMenuName() + " 외 " + (menus.size() - 1) + "개";
+            } else {
+                orderMenu = menus.get(0).getMenuName();
+            }
+        }
+        publishOrderEvent(email, memberId, Status.COMPLETE, order.getStoreId(), null, orderMenu);
 
         return "주문 상품이 완료되었습니다.";
     }
 
     // 주문 상태 변경 이벤트 발행
-    public void publishOrderEvent(String email, Long memberId, Status status, Long storeId, String reason) throws JsonProcessingException {
+    public void publishOrderEvent(String email, Long memberId, Status status, Long storeId, String reason, String orderMenu) throws JsonProcessingException {
 
         String storeName = storeServiceClient.getStore(email, storeId).getCafeName();
-        OrderEvent orderEvent = new OrderEvent(memberId, status, storeId, storeName, reason);
+        OrderEvent orderEvent = new OrderEvent(memberId, status, storeId, storeName, reason, orderMenu);
 
         kafkaEventService.eventPublish("orderNotification", orderEvent);
     }
