@@ -4,20 +4,28 @@ import backend.sudurukbackx6.memberservice.domain.member.entity.Member;
 import backend.sudurukbackx6.memberservice.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.HashMap;
 
 @Component
 @RequiredArgsConstructor
+@Configuration
 public class JwtProvider {
     private final MemberRepository memberRepository;
+    private final JwtProperties jwtProperties;
 
-    private String secret = "zxcvbnmasdfghjklzxcvbnmasdfghjkl";
+    private String secret;
     private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 2L; // 2 hours -> 테스트 편의성을 위해 30 days
     private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24L; // 1 days
 
+    @PostConstruct
+    public void init() {
+        this.secret = jwtProperties.getSecret();
+    }
     /**
      * AccessToken 생성
      */
