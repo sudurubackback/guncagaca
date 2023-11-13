@@ -13,8 +13,8 @@ import java.util.List;
 public interface MemberServiceClient {
 
     @GetMapping("/api/member/memberInfo")
-    MemberInfoResponse getMemberInfo(@RequestHeader("Authorization") String token);
+    MemberInfoResponse getMemberInfo(@RequestHeader("Email") String email);
 
     @PostMapping("/api/member/memberInfo/bulk")
-    List<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds);
+    List<MemberInfoResponse> getMemberInfoBulk(@RequestHeader("Email") String email, @RequestBody List<Long> memberIds);
 }
