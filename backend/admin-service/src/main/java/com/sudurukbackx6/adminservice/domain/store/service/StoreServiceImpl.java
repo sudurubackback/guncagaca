@@ -92,6 +92,8 @@ public class StoreServiceImpl implements StoreService {
                     .build();
 
             storeRepository.saveAndFlush(store);
+            // owner에 store 등록
+            owner.changeStore(store);
 
         } else {
             throw new RuntimeException("해당 이메일을 가진 소유자를 찾을 수 없습니다.");

@@ -260,6 +260,7 @@ public class StoreServiceImpl implements StoreService {
 
     public void syncSaveStore(StoreSaveEvent storeSaveEvent) {
         Store store = Store.builder()
+                .id(storeSaveEvent.getStoreId())
                 .name(storeSaveEvent.getStoreName())
                 .address(storeSaveEvent.getAddress())
                 .description(storeSaveEvent.getDescription())
