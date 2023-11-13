@@ -125,7 +125,7 @@ public class OwnerServiceImpl implements OwnerService {
         owner.changeValidation();
     }
 */
-    @KafkaListener(topics = "ownerAdmin", groupId = "notification")
+    @KafkaListener(topics = "adminOwner", groupId = "owner")
     public void subscribeEvent(@Payload String eventString) {
         // json으로 역직렬화
         ObjectMapper objectMapper = new ObjectMapper();
