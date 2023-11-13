@@ -24,9 +24,15 @@ class DioClient {
           // 에러 발생 시에 해야 할 작업
           print("Error occurred: ${e.message}");
 
-          // 500 에러 발생 시 토큰 갱신 로직
-          if (e.response?.statusCode == 500) {
+          // 401, 500 에러 발생 시 토큰 갱신 로직
+          if (e.response?.statusCode == 401 || e.response?.statusCode == 500) {
             final originalRequest = e.requestOptions; // 원래의 요청 저장
+
+            // 재시도 횟수 확인 및 제한
+            if (originalRequest.headers.containsKey('retry') &&
+                originalRequest.headers['retry'] >= 3) {
+              return handler.next(e);
+            }
 
             try {
               final newToken = await _refreshToken();
@@ -36,6 +42,7 @@ class DioClient {
 
                 // 원래의 요청을 다시 실행
                 originalRequest.headers['Authorization'] = 'Bearer $newToken';
+                originalRequest.headers['retry'] = (originalRequest.headers['retry'] ?? 0) + 1;
                 final response = await _dio.fetch(originalRequest);
                 return handler.resolve(response); // 새로운 응답으로 핸들러를 처리
               }
