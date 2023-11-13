@@ -140,7 +140,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
@@ -148,7 +148,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),

@@ -154,7 +154,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
@@ -162,7 +162,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
