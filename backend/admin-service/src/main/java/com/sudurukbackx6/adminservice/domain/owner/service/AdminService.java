@@ -2,6 +2,7 @@ package com.sudurukbackx6.adminservice.domain.owner.service;
 
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
+import com.sudurukbackx6.adminservice.domain.owner.dto.request.ToggleApprovalRequestDto;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Role;
@@ -30,5 +31,12 @@ public class AdminService {
         }
 
         return businessRepository.findAll();
+    }
+
+    public void toggleApproval(ToggleApprovalRequestDto toggleApprovalRequestDto) {
+        Owners owner = ownersRepository.findByEmail(toggleApprovalRequestDto.getEmail())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        owner.changeValidation();
     }
 }
