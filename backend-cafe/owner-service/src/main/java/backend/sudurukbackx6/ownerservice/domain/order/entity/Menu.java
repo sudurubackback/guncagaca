@@ -14,20 +14,22 @@ import java.util.List;
 @AllArgsConstructor
 public class Menu {
 
-    @Column(name = "menu_id")
     private String menuId;
-
     private String menuName;
-
     private int price;
-
-    private int totalPrice; // 옵션 포함 가격
-
+    private int totalPrice;
     private int quantity;
-
     private String img;
-
     private String category;
-
     private List<Option> options;
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Option {
+
+        private String optionName;
+        private String selectedOption;
+    }
 }
