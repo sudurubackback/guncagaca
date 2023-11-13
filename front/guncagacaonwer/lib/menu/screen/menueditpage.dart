@@ -447,7 +447,6 @@ class _MenuEditPageState extends State<MenuEditPage> {
     dio.options.headers['Authorization'] = 'Bearer $accessToken'; // 헤더에 토큰 추가
   }
 
-  // 메뉴 수정을 위한 통신 코드
   Future<void> _updateMenu() async {
     try {
       var requestUrl = 'https://k9d102.p.ssafy.io/api/owner/menu/edit';

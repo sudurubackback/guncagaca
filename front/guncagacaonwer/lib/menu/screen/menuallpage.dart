@@ -20,6 +20,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
 
   Future<void> setupApiService() async {
     String? accessToken = await storage.read(key: 'accessToken');
+    print("여기 있음 ${accessToken}");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));

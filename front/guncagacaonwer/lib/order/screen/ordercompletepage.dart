@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 
+import '../../common/dioclient.dart';
 import '../api/completepage_api_service.dart';
 
 
@@ -14,8 +15,7 @@ class OrderCompletePage extends StatefulWidget {
 }
 
 class _OrderCompletePageState extends State<OrderCompletePage> {
-
-  List<StoreOrderResponse> orders = [];
+  List<Map<String, dynamic>> orders = []; // ordersData 리스트 선언
   late ApiService apiService;
 
   static final storage = FlutterSecureStorage();
@@ -31,25 +31,49 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
   @override
   void initState() {
     super.initState();
-
-    setupApiService();
-    fetchOrders();
+    setupApiService().then((_) {
+      fetchOrders();
+    });
   }
+
+  String baseUrl = 'https://k9d102.p.ssafy.io';
+  Dio dio = DioClient.getInstance();
 
   // 주문 처리 데이터 get
   Future<void> fetchOrders() async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
+      print("완료");
+      print(ownerResponse.email);
       int storeId = ownerResponse.storeId;
-      String endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      String startDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      print(storeId);
+      if (storeId != null) {
+        final response = await dio.get(
+          "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId/4",
+        );
 
-      List<StoreOrderResponse> orderList = await apiService.getStoreOrdersForDateRange(storeId, startDate, endDate);
-      setState(() {
-        orders = orderList;
-      });
+        if (response.statusCode == 200) {
+          // API 응답이 Map 형식인지 확인
+          if (response.data is Map<String, dynamic>) {
+            Map<String, dynamic> jsonData = response.data;
+            // 'data' 키에 해당하는 주문 목록을 가져옵니다.
+            orders = List<Map<String, dynamic>>.from(jsonData['data']);
+            print(orders);
+
+            // orders를 활용하여 주문 목록을 처리하는 로직을 작성하세요.
+            // 예를 들어, 주문 목록을 화면에 출력하거나 다른 작업을 수행할 수 있습니다.
+
+            setState(() {});
+            print("api 호출 화면이 새로 고쳐집니다.");
+          } else {
+            print('API 응답 형식이 예상과 다릅니다: $response.data');
+          }
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      }
     } catch (e) {
-      print(e);
+      print("네트워크 오류: $e");
     }
   }
 
@@ -66,13 +90,13 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
           Expanded(
             child: ListView.builder(
               itemCount: orders.length,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, index) {
                 final order = orders[index];
+                int totalQuantity = order['menus'].fold(0, (prev, menu) => prev + menu['quantity']);
                 final formatter = NumberFormat('#,###');
-                int totalQuantity = order.menuList.map((menu) => menu.quantity).reduce((a, b) => a + b);
-                String formattedTotalPrice = formatter.format(order.price);
+                String formattedTotalPrice = formatter.format(order['orderPrice']);
                 // 주문 시간에서 날짜와 시간 추출
-                DateTime dateTime = DateTime.parse(order.orderTime);
+                DateTime dateTime = DateTime.parse(order['orderTime']);
                 String timeOfDay = "";
                 String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
                 List<String> dateTimeParts = formattedTime.split(" ");
@@ -116,7 +140,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 '주문 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
@@ -124,7 +148,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 timeOfDay,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 7 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
@@ -160,7 +184,7 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '주문자 번호 : ${order.memberId}',
+                                '주문자 번호 : ${order['memberId']}',
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                   color: Color(0xFF9B5748),
