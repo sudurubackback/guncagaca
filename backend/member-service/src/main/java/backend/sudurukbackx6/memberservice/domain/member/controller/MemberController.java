@@ -47,24 +47,24 @@ public class MemberController {
 
     /* OpenFeign을 통해 받아올 떄 안에 memberId, email, nickname을 반환*/
     @GetMapping("/memberInfo")
-    public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(memberService.getMemberInfo(token));
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.getMemberInfo(email));
     }
 
     // memberId 리스트로 받아서 리스트로 반환
     @PostMapping("/memberInfo/bulk")
-    public List<MemberInfoResponse> getMemberInfoBulk(@RequestHeader("Authorization") String token, @RequestBody List<Long> memberIds) {
+    public List<MemberInfoResponse> getMemberInfoBulk(@RequestHeader("Email") String email, @RequestBody List<Long> memberIds) {
         return memberService.getMemberInfoBulk(memberIds);
     }
 
     @GetMapping("/mypage/point")
-    public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Authorization") String token,@RequestHeader("Email") String email) {
-        return ResponseEntity.ok(memberService.myPoint(email,token));
+    public ResponseEntity<List<MyPointsResponse>> getMyPoints(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.myPoint(email));
     }
 
     @GetMapping("/mypage/point/{cafe_id}")
-    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Authorization") String token, @RequestHeader("Email") String email,@PathVariable Long cafe_id){
-        return ResponseEntity.ok(memberService.pointStore(email,token, cafe_id));
+    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Email") String email,@PathVariable Long cafe_id){
+        return ResponseEntity.ok(memberService.pointStore(email, cafe_id));
     }
 
     @GetMapping("/id")
@@ -73,16 +73,14 @@ public class MemberController {
     }
 
     @GetMapping("/firebaseToken")
-    public ResponseEntity<Map<String,String>> getFirebaseToken(@RequestHeader("Authorization") String token) {
-        System.out.println("*****************************불리긴 함 **************************");
+    public ResponseEntity<Map<String,String>> getFirebaseToken(@RequestHeader("Email") String email) {
         Map<String, String> map = new HashMap<>();
-        System.out.println("token = " + token);
-        map.put("firebase_token", memberService.getFirebaseToken(token));
+        map.put("firebase_token", memberService.getFirebaseToken(email));
         return ResponseEntity.ok(map);
     }
     
     @GetMapping("/firebaseToken/{memberId}")
-    public ResponseEntity<String> getFirebaseTokenByMemberId(@RequestHeader("Authorization") String token, @PathVariable Long memberId) {
+    public ResponseEntity<String> getFirebaseTokenByMemberId(@RequestHeader("Email") String email, @PathVariable Long memberId) {
         return ResponseEntity.ok(memberService.getFirebaseTokenByMemberId(memberId));
     }
 }

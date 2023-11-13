@@ -41,9 +41,9 @@ public class ReviewServiceImpl implements ReviewService{
      */
 
     @Override
-    public ReviewDto.Response reviewSave(String token, Long cafeId, String orderId, ReviewDto.Request request) {
+    public ReviewDto.Response reviewSave(String email, Long cafeId, String orderId, ReviewDto.Request request) {
         Store store = storeRepository.findById(cafeId).orElseThrow(()-> new NotFoundException("해당 가게를 찾을 수 없습니다."));
-        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(email);
 
         log.info("memberInfo={}", memberInfo.getEmail());
         Review review = Review.builder()
@@ -65,9 +65,9 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public void reviewDelete(String token, Long cafeId, Long reviewId) {
+    public void reviewDelete(String email, Long cafeId, Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow();
-        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(token);
+        MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(email);
         if(!Objects.equals(review.getMemberId(), memberInfo.getId())){
             throw new RuntimeException();
         }
