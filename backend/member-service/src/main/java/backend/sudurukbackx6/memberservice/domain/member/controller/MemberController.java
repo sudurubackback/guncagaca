@@ -80,7 +80,7 @@ public class MemberController {
     }
     
     @GetMapping("/firebaseToken/{memberId}")
-    public ResponseEntity<String> getFirebaseTokenByMemberId(@PathVariable Long memberId) {
+    public ResponseEntity<String> getFirebaseTokenByMemberId(@RequestHeader("Email") String email, @PathVariable Long memberId) {
         return ResponseEntity.ok(memberService.getFirebaseTokenByMemberId(memberId));
     }
 }
