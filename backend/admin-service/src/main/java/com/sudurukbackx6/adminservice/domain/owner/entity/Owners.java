@@ -1,7 +1,6 @@
 package com.sudurukbackx6.adminservice.domain.owner.entity;
 
 import com.sudurukbackx6.adminservice.common.entity.TimeEntity;
-import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.store.entity.Store;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -83,5 +82,7 @@ public class Owners extends TimeEntity {
         this.store = store;
     }
 
-
+    public void changeTel(String tel) {
+        this.tel = tel;
+    }
 }
