@@ -61,7 +61,7 @@ public class FCMNotificationService {
 		}
 
 		//이제 fcm코드로 바꾼다.
-		NotificationDto notificationDto = makeNotification(notificationEvent.getStatus(), notificationEvent.getStoreName());
+		NotificationDto notificationDto = makeNotification(notificationEvent);
 
 		Notification notification = Notification.builder()
 				.setTitle(notificationDto.getTitle())
@@ -79,21 +79,22 @@ public class FCMNotificationService {
 		alertHistoryService.saveAlertHistory(notificationEvent, notificationDto);
 	}
 
-	public NotificationDto makeNotification(Status status, String storeName) {
+	public NotificationDto makeNotification(NotificationEvent notificationEvent) {
 		String title = "알림";
 		String body = "";
-		switch (status) {
+		String cafeNAme = notificationEvent.getStoreName();
+		switch (notificationEvent.getStatus()) {
 			case REQUEST:
 				title = "주문이 접수되었습니다.";
-				body = storeName + "에서 주문하신 메뉴를 진행중 입니다.";
+				body = cafeNAme + "에서 주문하신 메뉴를 진행중 입니다.\n주문메뉴 : " + notificationEvent.getOrderMenu();
 				break;
 			case COMPLETE:
 				title = "조리가 완료되었습니다.";
-				body = storeName + "에서 조리를 완료하였습니다. 맛있게 드세요.";
+				body = cafeNAme + "에서 조리를 완료하였습니다. 맛있게 드세요.\n주문메뉴 : " + notificationEvent.getOrderMenu();
 				break;
 			case CANCELED:
 				title = "주문이 취소되었습니다.";
-				body = storeName + "에서 주문을 취소하였습니다. 사유 :";
+				body = cafeNAme + "에서 주문을 취소하였습니다. 사유 :" + notificationEvent.getReason();
 				break;
 
 		}

@@ -48,6 +48,7 @@ public class AlertHistoryService {
 					.alertId(alertHistory.getId())
 					.title(alertHistory.getTitle())
 					.body(alertHistory.getBody())
+					.time(alertHistory.getCreateTime())
 					.build();
 
 			alertHistoryDtos.add(alertHistoryDto);
