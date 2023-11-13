@@ -94,4 +94,11 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "네트워크 설정 완료"));
     }
 
+    // 서버 동기화
+    @PostMapping("/sync")
+    public ResponseEntity<? extends BaseResponseBody> synchronizeServer(@RequestHeader("Email") String email) {
+        ownerService.synchronizeServer(email);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "서버 동기화 완료"));
+    }
+
 }
