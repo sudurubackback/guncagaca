@@ -70,9 +70,8 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public void signOut(String header) {
+    public void signOut(String email) {
         //로그아웃
-        String email = jwtProvider.extractEmail(header);
         redisUtil.deleteRefreshToken(email);
     }
 
@@ -104,8 +103,9 @@ public class OwnerServiceImpl implements OwnerService {
 //    }
 
     @Override
-    public OwnerInfoResponse ownerInfo (String token){
-        Owners owners = jwtProvider.extractUser(token);
+    public OwnerInfoResponse ownerInfo (String email){
+        Owners owners = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
         return OwnerInfoResponse.builder()
                 .email(owners.getEmail())
                 .tel(owners.getTel())
@@ -115,7 +115,8 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public Long ownerStoreId(SetStoreIdFromOwnerRequest request){
-        Owners owners = ownersRepository.findByEmail(request.getEmail()).orElseThrow();
+        Owners owners = ownersRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
         owners.setStoreId(request.getStoreId());
         return request.getStoreId();
     }
