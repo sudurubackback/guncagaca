@@ -16,18 +16,12 @@ public class SignResponseDto {
     public String accessToken;
     public String refreshToken;
     private boolean isApproved;
-    private String ddns;
-    private String ip;
-    private String port;
-    private String tel;
+    private boolean isSetNetwork;
     @Builder
     public SignResponseDto(String accessToken, String refreshToken, Owners owner) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.isApproved= owner.getStore() != null;
-        this.ddns = owner.getDdns();
-        this.ip = owner.getIp();
-        this.port = owner.getPort();
-        this.tel = owner.getTel();
+        this.isSetNetwork = owner.getIp() != null  && owner.getDdns() != null && owner.getPort() != null;
     }
 }

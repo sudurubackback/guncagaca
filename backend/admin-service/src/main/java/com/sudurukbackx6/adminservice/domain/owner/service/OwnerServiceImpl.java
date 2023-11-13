@@ -9,6 +9,7 @@ import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
+import com.sudurukbackx6.adminservice.domain.owner.dto.response.NetworkResDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
@@ -69,16 +70,11 @@ public class OwnerServiceImpl implements OwnerService {
 
             redisUtil.saveRefreshToken(owner.getEmail(), refreshToken.getToken());
 
-            if(owner.getStore()==null){
-                return SignResponseDto.builder()
-                        .accessToken(accessToken.getToken())
-                        .refreshToken(refreshToken.getToken())
-                        .owner(owner)
-                        .build();
-            }
+
             return SignResponseDto.builder()
                     .accessToken(accessToken.getToken())
                     .refreshToken(refreshToken.getToken())
+                    .owner(owner)
                     .build();
         } else {
             throw new BadRequestException(ErrorCode.NOT_MATCH);
@@ -190,6 +186,18 @@ public class OwnerServiceImpl implements OwnerService {
                 .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
 
         return passwordEncoder.matches(password, owner.getPassword());
+    }
+
+    @Override
+    public NetworkResDto getNetwork(String email) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        return NetworkResDto.builder()
+                .ip(owner.getIp())
+                .ddns(owner.getDdns())
+                .port(owner.getPort())
+                .build();
     }
 
 }

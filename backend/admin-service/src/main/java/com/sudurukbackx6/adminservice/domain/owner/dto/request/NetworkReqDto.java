@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class NetworkReqDto {
     private String ddns;
     private String ip;
+    private String port;
 }

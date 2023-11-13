@@ -92,6 +92,11 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "네트워크 설정 완료"));
     }
 
+    @GetMapping("/network")
+    public ResponseEntity<? extends BaseResponseBody> getNetwork(@RequestHeader("Email") String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "네트워크 설정 조회 성공", ownerService.getNetwork(email)));
+    }
+
     // 서버 동기화
     @PostMapping("/sync")
     public ResponseEntity<? extends BaseResponseBody> synchronizeServer(@RequestHeader("Email") String email) throws JsonProcessingException {
