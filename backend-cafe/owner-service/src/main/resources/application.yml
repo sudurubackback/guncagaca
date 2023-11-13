@@ -26,6 +26,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ENC(8jiqggGX01/O42mRkKrUZg==)
     password: ENC(plIEZt17Ks31RnTslRYz3bh+6yrmbtfk)
+  kafka:
+    bootstrap-servers: k9d102.p.ssafy.io:9092, k9d102.p.ssafy.io:9093, k9d102.p.ssafy.io:9094
 
   # SMTP설정
   mail:
