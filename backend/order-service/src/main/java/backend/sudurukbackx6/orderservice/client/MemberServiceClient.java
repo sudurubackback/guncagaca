@@ -2,6 +2,7 @@ package backend.sudurukbackx6.orderservice.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -9,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MemberServiceClient {
 
     @GetMapping("/api/member/id")
-    Long getId(@RequestParam("Email") String email);
+    Long getId(@RequestHeader("Email") String email);
 
 }
