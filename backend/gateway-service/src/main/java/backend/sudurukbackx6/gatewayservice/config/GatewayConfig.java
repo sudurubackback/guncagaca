@@ -36,6 +36,10 @@ public class GatewayConfig {
                         .and()
                         .method(HttpMethod.GET)
                         .uri("lb://PAY-SERVICE"))
+                .route(r -> r.path("/admin-service/v3/api-docs")
+                        .and()
+                        .method(HttpMethod.GET)
+                        .uri("lb://ADMIN-SERVICE"))
                 .build();
     }
 }
