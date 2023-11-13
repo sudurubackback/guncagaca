@@ -99,4 +99,20 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "서버 동기화 완료"));
     }
 
+    @PutMapping("/password")
+    public ResponseEntity<? extends BaseResponseBody> updatePassword(@RequestHeader("Email") String email, @RequestBody Map<String, String> map) throws IOException {
+        if(map.get("password")==null)
+            throw new IOException("비밀번호를 입력해주세요");
+        ownerService.updatePassword(email, map.get("password"));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "비밀번호 변경 완료"));
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<? extends BaseResponseBody> resetPassword(@RequestBody Map<String, String> map) throws IOException, MessagingException {
+        if(map.get("email")==null)
+            throw new IOException("이메일을 입력해주세요");
+        ownerService.findPassword(map.get("email"));
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "비밀번호를 이메일로 전송하였습니다."));
+    }
+
 }

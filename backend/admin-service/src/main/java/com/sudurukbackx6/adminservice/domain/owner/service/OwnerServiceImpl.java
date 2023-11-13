@@ -73,7 +73,7 @@ public class OwnerServiceImpl implements OwnerService {
                 return SignResponseDto.builder()
                         .accessToken(accessToken.getToken())
                         .refreshToken(refreshToken.getToken())
-                        .isApproved(false)
+                        .owner(owner)
                         .build();
             }
             return SignResponseDto.builder()
@@ -166,6 +166,22 @@ public class OwnerServiceImpl implements OwnerService {
 
         kafkaEventService.publishbyStoreSave("adminStore", saveEvent);
 
+    }
+
+    @Override
+    public void updatePassword(String email, String password) {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        owner.changePassword(passwordEncoder.encode(password));
+    }
+
+    @Override
+    public void findPassword(String email) throws MessagingException {
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+
+        owner.changePassword(mailSenderService.sendPassword(email));
     }
 
 }

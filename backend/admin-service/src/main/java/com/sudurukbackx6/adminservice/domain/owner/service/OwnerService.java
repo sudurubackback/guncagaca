@@ -1,12 +1,9 @@
 package com.sudurukbackx6.adminservice.domain.owner.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
-import com.sudurukbackx6.adminservice.domain.owner.dto.request.UpdatePwReqDto;
-import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignInResDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
 
 import javax.mail.MessagingException;
@@ -40,4 +37,10 @@ public interface OwnerService {
 
     // kafka 동기화
     void synchronizeServer(String email) throws JsonProcessingException;
+
+    //비밀번호 수정
+    void updatePassword(String email, String password);
+
+    //비밀번호 찾기
+    void findPassword(String email) throws MessagingException;
 }
