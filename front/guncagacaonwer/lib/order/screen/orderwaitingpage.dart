@@ -60,7 +60,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
             Map<String, dynamic> jsonData = response.data;
             // 'data' 키에 해당하는 주문 목록을 가져옵니다.
             orders = List<Map<String, dynamic>>.from(jsonData['data']);
-
+            print(orders);
 
             // orders를 활용하여 주문 목록을 처리하는 로직을 작성하세요.
             // 예를 들어, 주문 목록을 화면에 출력하거나 다른 작업을 수행할 수 있습니다.
@@ -85,12 +85,13 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
       print("주문접수요청");
       print(ownerResponse.email);
       print(orderId);
-      String email = ownerResponse.email;
+      // String email = ownerResponse.email;
+      print(await storage.read(key: 'accessToken'));
       if (orderId != null) {
         final response = await dio.post(
-            'http://k9d102.p.ssafy.io:8086/api/ceo/request/$orderId',
+            'https://k9d102.p.ssafy.io/api/order/request/$orderId',
           options: Options(
-            headers: {'Email': email}, // 헤더에 이메일 추가
+            headers: {'Authorization': 'Bearer ${await storage.read(key: 'accessToken')}',}, // 헤더에 이메일 추가
           ),
         );
 
@@ -113,24 +114,40 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   String selectedReason = "";
 
   // 주문 취소 요청
-  Future<void> cancelOrder(Order order) async {
-    OrderCancelRequest orderCancelRequest = OrderCancelRequest(
-      reason: selectedReason,
-      receiptId: order.receiptId,
-      orderId: order.id,
-    );
-
+  Future<void> cancelOrder(String orderId,String receiptId,String reason) async {
     try {
-      final response = await apiService.cancelOrder(orderCancelRequest);
-      print("주문 취소 성공: $response");
-      fetchOrders();
+      final ownerResponse = await apiService.getOwnerInfo();
+      print("주문취소요청");
+      print(ownerResponse.email);
+      print(orderId);
+      // String email = ownerResponse.email;
+      print(await storage.read(key: 'accessToken'));
+      if (orderId != null) {
+        final response = await dio.post(
+          'https://k9d102.p.ssafy.io/api/order/cancel',
+          options: Options(
+            headers: {'Authorization': 'Bearer ${await storage.read(key: 'accessToken')}',}, // 헤더에 이메일 추가
+          ),
+          data: {'orderId': orderId,'receiptId': receiptId, 'reason': reason},
+        );
+
+        if (response.statusCode == 200) {
+
+          print("주문취소");
+
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+        }
+      }
     } catch (e) {
-      print("주문 취소 에러: $e");
+      print("네트워크 오류: $e");
     }
   }
 
   // 취소 요청 모달
-  Future<void> showCancelDialog(Order order) async {
+// 취소 요청 모달
+  Future<void> showCancelDialog(String orderId, String receiptId) async {
+    String selectedReason = cancelReasons.first;  // 추가: 취소 사유 초기값 설정
     return showDialog<void>(
       context: context,
       builder: (BuildContext content) {
@@ -160,8 +177,13 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
             TextButton(
               child: Text('확인'),
               onPressed: () async {
-                await cancelOrder(order);
-                Navigator.of(context).pop();
+                if (selectedReason.isNotEmpty) {
+                  await cancelOrder(orderId, receiptId, selectedReason);  // 추가: 취소 사유 전달
+                  Navigator.of(context).pop();
+                } else {
+                  // 취소 사유가 선택되지 않았을 경우 사용자에게 메시지 표시 또는 다른 조치 수행
+                  print("취소 사유를 선택하세요.");
+                }
               },
             ),
           ],
@@ -330,7 +352,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 ElevatedButton(
                                   onPressed: () {
                                     // 주문 취소 버튼 클릭 시 수행할 동작 추가
-                                    showCancelDialog(order['orderId']);
+                                    showCancelDialog(order['orderId'],order['receiptId']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFFD63737), // 버튼의 배경색

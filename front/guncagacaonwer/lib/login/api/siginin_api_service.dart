@@ -29,6 +29,8 @@ class SignInApiService {
 
       if (response.statusCode == 200) {
         TokenResult tokenResult = TokenResult.fromJson(response.data);
+        print("tokenResult");
+        print(tokenResult.accessToken);
 
         await saveToken(tokenResult);
 
