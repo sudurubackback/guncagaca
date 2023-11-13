@@ -181,12 +181,14 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public OwnerInfoResponse ownerInfo (String token){
-        Owners owners = jwtProvider.extractUser(token);
+    public OwnerInfoResponse ownerInfo (String email){
+        Owners owner = ownersRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 이메일을 찾을수 없습니다."));
+
         return OwnerInfoResponse.builder()
-                .email(owners.getEmail())
-                .tel(owners.getTel())
-                .storeId(owners.getStoreId())
+                .email(owner.getEmail())
+                .tel(owner.getTel())
+                .storeId(owner.getStoreId())
                 .build();
     }
 
