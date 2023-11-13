@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.memberservice.domain.points.entity;
 
 import backend.sudurukbackx6.memberservice.domain.member.entity.Member;
+import backend.sudurukbackx6.memberservice.global.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Point {
+public class Point extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
