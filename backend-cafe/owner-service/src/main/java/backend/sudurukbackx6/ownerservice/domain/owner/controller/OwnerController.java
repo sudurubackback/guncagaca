@@ -38,25 +38,25 @@ public class OwnerController {
 
     @Operation(summary = "로그아웃", description = "로그아웃 \n\n")
     @PostMapping("/signout")
-    public ResponseEntity<? extends BaseResponseBody> signout(@RequestHeader("Authorization") String header) throws IOException, InterruptedException {
-        ownerService.signOut(header);
+    public ResponseEntity<? extends BaseResponseBody> signout(@RequestHeader("Email") String email) throws IOException, InterruptedException {
+        ownerService.signOut(email);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "로그아웃 성공"));
     }
 
     @SecurityRequirement(name = "Authorization Header")
     @Operation(summary = "accesstoken 갱신", description = "refresh token을 사용해서 accasstoken 갱신\n\n")
     @PostMapping("/refresh")
-    public ResponseEntity<? extends BaseResponseBody> refreshAccessToken(@RequestHeader("Authorization") String token) throws IOException, InterruptedException, MessagingException {
+    public ResponseEntity<? extends BaseResponseBody> refreshAccessToken(@RequestHeader("Authorization") String header) throws IOException, InterruptedException, MessagingException {
 
         Map<String, String> map = new HashMap<>();
-        SignInResDto newAccessToken = ownerService.refreshAccessToken(token);
+        SignInResDto newAccessToken = ownerService.refreshAccessToken(header);
 
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "accesstoken갱신 성공", newAccessToken));
     }
 
     @GetMapping("/ownerInfo")
-    public ResponseEntity<OwnerInfoResponse> getOwnerInfo(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(ownerService.ownerInfo(token));
+    public ResponseEntity<OwnerInfoResponse> getOwnerInfo(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(ownerService.ownerInfo(email));
     }
 
     @PutMapping("/ownersStore")

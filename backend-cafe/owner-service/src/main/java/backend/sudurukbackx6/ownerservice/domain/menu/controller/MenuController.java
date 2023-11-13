@@ -46,6 +46,7 @@ public class MenuController {
 //	public ResponseEntity<OrderResponseDto> getOrder(@RequestBody OrderRequestDto orderRequestDto) {
 //		return ResponseEntity.ok(menuService.getOrder(orderRequestDto));
 //	}
+	
 	@PostMapping(value = "/image",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public String uploadTest(@RequestPart(value="file", required = false) MultipartFile file) throws IOException {
 		return menuService.uploadTest(file);

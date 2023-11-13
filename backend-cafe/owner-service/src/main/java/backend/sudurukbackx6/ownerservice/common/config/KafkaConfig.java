@@ -1,4 +1,4 @@
-package backend.sudurukbackx6.storeservice.global.config;
+package backend.sudurukbackx6.ownerservice.common.config;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
