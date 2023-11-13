@@ -16,7 +16,6 @@ import java.util.HashMap;
 @Component
 @RequiredArgsConstructor
 @Configuration
-@RefreshScope
 public class JwtProvider {
     private final OwnersRepository ownersRepository;
     private final JwtProperties jwtProperties;

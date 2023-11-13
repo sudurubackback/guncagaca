@@ -1,4 +1,5 @@
-package backend.sudurukbackx6.ownerservice.jwt;
+package backend.sudurukbackx6.memberservice.jwt;
+
 
 import lombok.Getter;
 import lombok.Setter;
