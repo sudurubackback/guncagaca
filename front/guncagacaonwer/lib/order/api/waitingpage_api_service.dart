@@ -30,14 +30,14 @@ abstract class ApiService {
   Future<OrderRequestResponse> requestOrder(@Path("orderId") String orderId);
 
   // 목록 리스트
-  @GET("/api/list/{storeId}/{status}")
+  @GET("/api/order/list/{storeId}/{status}")
   Future<List<Order>> getWaitingList(
       @Path("storeId") int storeId,
       @Path("status") String status,
   );
 
   // 사장님 정보
-  @GET("/api/ceo/ownerInfo")
+  @GET("/api/owner/ownerInfo")
   Future<OwnerInfoResponse> getOwnerInfo();
 
   // 주문 취소

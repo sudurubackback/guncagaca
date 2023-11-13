@@ -21,12 +21,11 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<void> updateMenuStatus(Map<String, dynamic> menuId) async {
+  Future<void> updateMenuStatus(String menuId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(menuId);
+    final _data = menuId;
     await _dio.fetch<void>(_setStreamType<void>(Options(
       method: 'PUT',
       headers: _headers,
@@ -34,7 +33,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          '/api/ceo/menu/sale',
+          '/api/owner/menu/sale',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -46,12 +45,11 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<void> deleteMenu(Map<String, dynamic> menuId) async {
+  Future<void> deleteMenu(String menuId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(menuId);
+    final _data = menuId;
     await _dio.fetch<void>(_setStreamType<void>(Options(
       method: 'DELETE',
       headers: _headers,
@@ -59,7 +57,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          '/api/ceo/menu/delete',
+          '/api/owner/menu/delete',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -71,7 +69,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<Map<String, List<MenuEntity>>> getMenues(String storeId) async {
+  Future<Map<String, List<MenuEntity>>> getMenues(int storeId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -84,7 +82,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/api/ceo/${storeId}/menu',
+              '/api/owner/${storeId}/menu',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -115,7 +113,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/api/ceo/ownerInfo',
+              '/api/owner/ownerInfo',
               queryParameters: queryParameters,
               data: _data,
             )

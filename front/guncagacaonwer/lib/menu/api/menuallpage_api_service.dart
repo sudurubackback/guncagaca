@@ -23,15 +23,15 @@ class AuthInterceptor extends Interceptor {
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
-  @PUT("/api/ceo/menu/sale")
-  Future<void> updateMenuStatus(@Body() Map<String, dynamic> menuId);
+  @PUT("/api/owner/menu/sale")
+  Future<void> updateMenuStatus(@Body() String menuId);
 
-  @DELETE("/api/ceo/menu/delete")
-  Future<void> deleteMenu(@Body() Map<String, dynamic> menuId);
+  @DELETE("/api/owner/menu/delete")
+  Future<void> deleteMenu(@Body() String menuId);
   
-  @GET("/api/ceo/{storeId}/menu")
-  Future<Map<String, List<MenuEntity>>> getMenues(@Path() String storeId);
+  @GET("/api/owner/{storeId}/menu")
+  Future<Map<String, List<MenuEntity>>> getMenues(@Path() int storeId);
 
-  @GET("/api/ceo/ownerInfo")
+  @GET("/api/owner/ownerInfo")
   Future<OwnerInfoResponse> getOwnerInfo();
 }

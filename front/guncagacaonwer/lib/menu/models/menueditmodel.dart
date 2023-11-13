@@ -1,8 +1,11 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'menueditmodel.g.dart';
+
+@JsonSerializable()
 class MenuEditRequest {
-  String id;
-  String name;
+  String id; // 메뉴 id
+  String name; // 메뉴 명
   int price;
   String description;
   String img;
@@ -19,65 +22,115 @@ class MenuEditRequest {
     required this.optionsList,
   });
 
-  Map<String, dynamic> toMap() {
+  factory MenuEditRequest.fromJson(Map<String, dynamic> json) {
+    return MenuEditRequest(
+      id: json['id'],
+      name: json['name'],
+      price: json['price'],
+      description: json['description'],
+      img: json['img'],
+      category: convertStringToCategory(json['category']),
+      optionsList: List<OptionsEntity>.from(
+        json['optionsList'].map((options) => OptionsEntity.fromJson(options)),
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'price': price,
       'description': description,
       'img': img,
-      'category': category.toShortString(),
-      'optionsList': optionsList.map((x) => x.toMap()).toList(),
+      'category': category.toString().split('.').last,
+      'optionsList': optionsList.map((options) => options.toJson()).toList(),
     };
   }
-
-  String toJson() => json.encode(toMap());
 }
 
-enum Category { COFFEE, OTHERS, SMOOTHIE, AID, TEA, DESSERT, DRINK }
-
-extension CategoryExtension on Category {
-  String toShortString() {
-    return toString().split('.').last;
-  }
-}
-
+@JsonSerializable()
 class OptionsEntity {
-  String id;
   String optionName;
   List<DetailsOptionEntity> detailsOptions;
 
   OptionsEntity({
-    required this.id,
     required this.optionName,
     required this.detailsOptions,
   });
 
-  Map<String, dynamic> toMap() {
+  factory OptionsEntity.fromJson(Map<String, dynamic> json) {
+    return OptionsEntity(
+      optionName: json['optionName'],
+      detailsOptions: List<DetailsOptionEntity>.from(
+        json['detailsOptions'].map(
+              (detailsOptions) => DetailsOptionEntity.fromJson(detailsOptions),
+        ),
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'optionName': optionName,
-      'detailsOptions': detailsOptions.map((x) => x.toMap()).toList(),
+      'detailsOptions': detailsOptions.map((options) => options.toJson()).toList(),
     };
   }
 }
 
+@JsonSerializable()
 class DetailsOptionEntity {
-  String id;
   String detailOptionName;
   int additionalPrice;
 
   DetailsOptionEntity({
-    required this.id,
     required this.detailOptionName,
     required this.additionalPrice,
   });
 
-  Map<String, dynamic> toMap() {
+  factory DetailsOptionEntity.fromJson(Map<String, dynamic> json) {
+    return DetailsOptionEntity(
+      detailOptionName: json['detailOptionName'],
+      additionalPrice: json['additionalPrice'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'detailOptionName': detailOptionName,
       'additionalPrice': additionalPrice,
     };
+  }
+}
+
+enum Category {
+  COFFEE,
+  OTHERS,
+  SMOOTHIE,
+  AID,
+  TEA,
+  DESSERT,
+  DRINK
+}
+
+// 카테고리 변환 함수
+Category convertStringToCategory(String categoryString) {
+  switch (categoryString) {
+    case 'COFFEE':
+      return Category.COFFEE;
+    case 'OTHERS':
+      return Category.OTHERS;
+    case 'SMOOTHIE':
+      return Category.SMOOTHIE;
+    case 'AID':
+      return Category.AID;
+    case 'TEA':
+      return Category.TEA;
+    case 'DESSERT':
+      return Category.DESSERT;
+    case 'DRINK':
+      return Category.DRINK;
+    default:
+      throw ArgumentError('Invalid category string: $categoryString');
   }
 }
