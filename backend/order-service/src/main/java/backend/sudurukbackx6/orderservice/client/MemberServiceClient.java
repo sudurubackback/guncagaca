@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MemberServiceClient {
 
     @GetMapping("/api/member/id")
-    Long getId(@RequestParam("email") String email);
+    Long getId(@RequestParam("Email") String email);
 
 }
