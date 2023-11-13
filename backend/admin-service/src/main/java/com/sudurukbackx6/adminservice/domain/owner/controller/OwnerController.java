@@ -1,5 +1,6 @@
 package com.sudurukbackx6.adminservice.domain.owner.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
 import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
@@ -92,6 +93,13 @@ public class OwnerController {
     public ResponseEntity<? extends BaseResponseBody> setNetwork(@RequestHeader("Email") String email, @RequestBody NetworkReqDto networkReqDto) {
         ownerService.setNetwork(email, networkReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "네트워크 설정 완료"));
+    }
+
+    // 서버 동기화
+    @PostMapping("/sync")
+    public ResponseEntity<? extends BaseResponseBody> synchronizeServer(@RequestHeader("Email") String email) throws JsonProcessingException {
+        ownerService.synchronizeServer(email);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "서버 동기화 완료"));
     }
 
 }

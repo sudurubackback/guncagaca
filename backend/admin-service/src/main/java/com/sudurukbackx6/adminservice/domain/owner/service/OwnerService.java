@@ -1,5 +1,6 @@
 package com.sudurukbackx6.adminservice.domain.owner.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sudurukbackx6.adminservice.domain.owner.dto.SetStoreIdFromOwnerRequest;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
@@ -37,4 +38,6 @@ public interface OwnerService {
     // 네트워크(ip, ddns) 설정
     void setNetwork(String email, NetworkReqDto networkReqDto);
 
+    // kafka 동기화
+    void synchronizeServer(String email) throws JsonProcessingException;
 }

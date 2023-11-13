@@ -140,10 +140,15 @@ public class OwnerServiceImpl implements OwnerService {
 
     public void syncSignup(OwnerSignupEvent ownerSignupEvent) {
         Owners owner = Owners.builder()
+                .ownerId(ownerSignupEvent.getOwnerId())
+                .storeId(ownerSignupEvent.getStoreId())
                 .email(ownerSignupEvent.getEmail())
                 .password(ownerSignupEvent.getPassword())
                 .tel(ownerSignupEvent.getTel())
+                .ip(ownerSignupEvent.getIp())
+                .ddns(ownerSignupEvent.getDdns())
                 .build();
+
         ownersRepository.save(owner);
     }
 }

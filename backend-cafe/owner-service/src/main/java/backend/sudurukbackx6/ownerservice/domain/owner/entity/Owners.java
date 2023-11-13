@@ -24,17 +24,12 @@ public class Owners extends TimeEntity {
 
     private Long storeId;
 
-    private boolean validation = false;
-
     private String ip;
 
     private String ddns;
 
     private String port;
 
-    public void changeValidation() {
-        validation = !validation;
-    }
 
     @Builder
     public Owners(Long ownerId, String password, String email, String tel, Long storeId, String ip, String ddns, String port) {

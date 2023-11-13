@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StoreSaveEvent {
+    private Long storeId;
     private String storeName;
     private String address;
     private String tel;

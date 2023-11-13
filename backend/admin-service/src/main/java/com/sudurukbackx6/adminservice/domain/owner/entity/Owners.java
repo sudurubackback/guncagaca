@@ -1,7 +1,6 @@
 package com.sudurukbackx6.adminservice.domain.owner.entity;
 
 import com.sudurukbackx6.adminservice.common.entity.TimeEntity;
-import com.sudurukbackx6.adminservice.domain.admin.entity.Admin;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.store.entity.Store;
 import lombok.AccessLevel;
@@ -27,14 +26,13 @@ public class Owners extends TimeEntity {
     @OneToOne
     @JoinColumn(name = "business_Id")
     private Business business;
-    @OneToOne
-    @JoinColumn(name = "admin_Id")
-    private Admin admin;
+
     private String password;
     private String email;
     private String tel;
 
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "owners_id")  // 수정된 부분
     private Store store;
 
     private boolean validation = false;
@@ -46,15 +44,16 @@ public class Owners extends TimeEntity {
 
     private String ddns;
 
+    private Role role;
+
     public void changeValidation() {
         validation = !validation;
     }
 
     @Builder
-    public Owners(Long ownerId, Business business,Admin admin, String password, String email, String tel, Store store) {
+    public Owners(Long ownerId, Business business, String password, String email, String tel, Store store) {
         this.ownerId = ownerId;
         this.business = business;
-        this.admin = admin;
         this.password = password;
         this.email = email;
         this.tel = tel;
@@ -62,11 +61,12 @@ public class Owners extends TimeEntity {
     }
 
     @Builder
-    public Owners(String email, String password, String tel, Business business) {
+    public Owners(String email, String password, String tel, Business business, Role role) {
         this.email = email;
         this.password = password;
         this.tel = tel;
         this.business = business;
+        this.role = role;
     }
 
     public void changePassword(String newPassword) {
@@ -77,6 +77,10 @@ public class Owners extends TimeEntity {
         this.ip = ip;
         this.ddns = ddns;
         this.port = port;
+    }
+
+    public void changeStore(Store store) {
+        this.store = store;
     }
 
 
