@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 //@FeignClient(url = "http://localhost:8086", name="owner-service")
 public interface OwnerServiceClient {
     @GetMapping("/api/ceo/ownerInfo")
-    OwnerInfoResponse getOwnerInfo(@RequestHeader("Authorization") String token);
+    OwnerInfoResponse getOwnerInfo(@RequestHeader("Email") String email);
 
     @PutMapping("/api/ceo/ownersStore")
     Long changeOwnersStoreId(@RequestBody ChangeOwnerStoreIdRequest request);
