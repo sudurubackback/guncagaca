@@ -125,7 +125,7 @@ public class OwnerServiceImpl implements OwnerService {
                 .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
 
         // 네트워크 설정
-        owner.changeNetwork(networkReqDto.getIp(), networkReqDto.getDdns(), "8000");
+        owner.changeNetwork(networkReqDto.getIp(), networkReqDto.getDdns(), networkReqDto.getPort());
     }
 
     @Override
