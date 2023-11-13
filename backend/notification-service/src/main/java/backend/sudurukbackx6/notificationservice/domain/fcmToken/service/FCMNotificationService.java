@@ -24,11 +24,13 @@ import com.google.firebase.messaging.Notification;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional
 public class FCMNotificationService {
 
 	private final FirebaseMessaging firebaseMessaging;
