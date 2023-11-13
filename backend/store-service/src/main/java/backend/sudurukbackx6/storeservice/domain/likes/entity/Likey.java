@@ -1,6 +1,7 @@
 package backend.sudurukbackx6.storeservice.domain.likes.entity;
 
 import backend.sudurukbackx6.storeservice.domain.store.entity.Store;
+import backend.sudurukbackx6.storeservice.global.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Likey {
+public class Likey extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
