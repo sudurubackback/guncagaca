@@ -63,12 +63,12 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/point/{cafe_id}")
-    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Email") String email,@PathVariable Long cafe_id){
+    public ResponseEntity<PointStoreResponse> getPointStore(@RequestHeader("Email") String email, @PathVariable Long cafe_id){
         return ResponseEntity.ok(memberService.pointStore(email, cafe_id));
     }
 
     @GetMapping("/id")
-    public ResponseEntity<Long> getId(@RequestParam String email) {
+    public ResponseEntity<Long> getId(@RequestHeader("Email") String email) {
         return ResponseEntity.ok(memberService.getId(email));
     }
 
