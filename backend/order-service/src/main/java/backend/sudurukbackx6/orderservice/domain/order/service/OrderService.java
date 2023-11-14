@@ -147,7 +147,7 @@ public class OrderService {
                     orderMenu = menus.get(0).getMenuName();
                 }
             }
-            publishOrderEvent(email, memberId, Status.CANCELED, order.getStoreId(), null, orderMenu);
+            publishOrderEvent(email, memberId, Status.CANCELED, order.getStoreId(), orderCancelRequestDto.getReason(), orderMenu);
 
             return true;
         }
