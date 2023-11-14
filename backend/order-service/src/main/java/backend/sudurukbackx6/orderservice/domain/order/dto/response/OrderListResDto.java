@@ -15,7 +15,6 @@ public class OrderListResDto {
     private String orderId;
     private String receiptId;
     private Long memberId;
-
     private Long storeId;
 
     private int orderPrice;
