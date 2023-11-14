@@ -124,7 +124,8 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                   }
 
                   return '${menu['menuName']} $optionText ${menu['quantity']}개';
-                }).join(' / ');                return Padding(
+                }).join(' / ');
+                return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,
