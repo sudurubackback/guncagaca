@@ -30,6 +30,11 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getSign(signRequestDto));
     }
 
+    @PostMapping("/signout")
+    public ResponseEntity<SignResponseDto> getSignout(@RequestHeader("Email") String email) {
+        return ResponseEntity.ok(memberService.getSignout(email));
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<SignResponseDto> refreshAccessToken(@RequestHeader("Email") String email) {
         return ResponseEntity.ok(memberService.refreshAccessToken(email));
