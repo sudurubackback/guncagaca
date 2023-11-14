@@ -106,10 +106,12 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                 final order = orders[index];
                 int totalQuantity = order['menus'].fold(0, (prev, menu) => prev + menu['quantity']);
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(order['orderPrice']);
+                String formattedTotalPrice = formatter.format(order['price']);
                 // 주문 시간에서 날짜와 시간 추출
-                DateTime dateTime = DateTime.parse(order['orderTime']);
+                DateTime dateTime1 = DateTime.parse(order['orderTime']);
+                DateTime dateTime = dateTime1.add(Duration(minutes: order['eta']));
                 String timeOfDay = "";
+                String formattedTime1 = "${dateTime1.year}-${dateTime1.month.toString().padLeft(2, '0')}-${dateTime1.day.toString().padLeft(2, '0')} ${dateTime1.hour.toString().padLeft(2, '0')}:${dateTime1.minute.toString().padLeft(2, '0')}";
                 String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
                 List<String> dateTimeParts = formattedTime.split(" ");
                 String time = dateTimeParts[1].substring(0, 5);
@@ -123,6 +125,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                 } else {
                   timeOfDay = "오전";
                 }
+                String menuList = order['menus'].map((menu) => '${menu['menuName']} -${menu['optionName'] ?? ''} ${menu['selectedOption'] ?? ''} ${menu['quantity']}개').join(' / ');
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
@@ -148,7 +151,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '주문 시간',
+                                '도착 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 7 * (deviceWidth / standardDeviceWidth),
@@ -194,20 +197,40 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
+                              Row(children: [
                               Text(
-                                '주문자 번호 : ${order['memberId']}',
+                              '주문자 번호 : ${order['memberId']}  ',
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                   color: Color(0xFF9B5748),
                                 ),
                               ),
+                                Container(
+                                  width: 30 * (deviceWidth / standardDeviceWidth),
+                                  decoration: BoxDecoration(
+                                    color: order['takeoutYn'] ? Colors.green : Colors.red,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        order['takeoutYn'] ? '매장' : '포장',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 7 * (deviceWidth / standardDeviceWidth),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],),
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                "도착 예정 시간: " +
-                                    timeOfDay +
-                                    ' $hour:${time.split(":")[1]}',
+                                "$formattedTime1",
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
@@ -237,7 +260,8 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                               Container(
                                 width: 40 * (deviceWidth / standardDeviceWidth),
                                 height: 60 * (deviceHeight / standardDeviceHeight),
-                                child: ElevatedButton(
+                                child:
+                                ElevatedButton(
                                   onPressed: () {
                                     if (!isSelected) {
                                       showDialog(
@@ -264,8 +288,6 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                           );
                                         },
                                       );
-                                    } else {
-                                      // isSelected가 false일 때의 동작 추가
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -275,6 +297,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                         color: Color(0xFFACACAC),
                                         width: 1.0,
                                       ),
+                                      borderRadius: BorderRadius.circular(5.0),
                                     ),
                                   ),
                                   child: Text(

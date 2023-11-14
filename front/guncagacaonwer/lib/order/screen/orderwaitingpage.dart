@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagacaonwer/order/api/waitingpage_api_service.dart';
 import 'package:guncagacaonwer/order/models/ordercancelmodel.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../common/dioclient.dart';
 
@@ -18,6 +20,8 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   List<Map<String, dynamic>> orders = []; // ordersData 리스트 선언
   late ApiService apiService;
   static final storage = FlutterSecureStorage();
+
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   Future<void> setupApiService() async {
     String? accessToken = await storage.read(key: 'accessToken');
@@ -98,13 +102,43 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
 
           print("주문성공");
           fetchOrders();
+          Fluttertoast.showToast(
+            msg: "주문이 성공적으로 접수되었습니다.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          // 소리 재생
+          await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
+          await _audioPlayer.play();
           print("화면이 새로 고쳐집니다.");
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+          Fluttertoast.showToast(
+            msg: "데이터 로드 실패",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
         }
       }
     } catch (e) {
       print("네트워크 오류: $e");
+      Fluttertoast.showToast(
+        msg: "네트워크 오류",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 
@@ -134,13 +168,44 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
         if (response.statusCode == 200) {
           print("주문취소");
           fetchOrders();
+          Fluttertoast.showToast(
+            msg: "주문취소가 완료되었습니다.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          // 소리 재생
+          await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
+          await _audioPlayer.play();
+
           print("화면이 새로 고쳐집니다.");
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+          Fluttertoast.showToast(
+            msg: "데이터 로드 실패",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
         }
       }
     } catch (e) {
       print("네트워크 오류: $e");
+      Fluttertoast.showToast(
+        msg: "네트워크 오류",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 
@@ -209,10 +274,12 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                 final order = orders[index];
                 int totalQuantity = order['menus'].fold(0, (prev, menu) => prev + menu['quantity']);
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(order['orderPrice']);
+                String formattedTotalPrice = formatter.format(order['price']);
                 // 주문 시간에서 날짜와 시간 추출
-                DateTime dateTime = DateTime.parse(order['orderTime']);
+                DateTime dateTime1 = DateTime.parse(order['orderTime']);
+                DateTime dateTime = dateTime1.add(Duration(minutes: order['eta']));
                 String timeOfDay = "";
+                String formattedTime1 = "${dateTime1.year}-${dateTime1.month.toString().padLeft(2, '0')}-${dateTime1.day.toString().padLeft(2, '0')} ${dateTime1.hour.toString().padLeft(2, '0')}:${dateTime1.minute.toString().padLeft(2, '0')}";
                 String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
                 List<String> dateTimeParts = formattedTime.split(" ");
                 String time = dateTimeParts[1].substring(0, 5);
@@ -226,7 +293,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                 } else {
                   timeOfDay = "오전";
                 }
-                String menuList = order['menus'].map((menu) => '${menu['menuName']} ${menu['quantity']}개').join(' / ');
+                String menuList = order['menus'].map((menu) => '${menu['menuName']} -${menu['optionName'] ?? ''} ${menu['selectedOption'] ?? ''} ${menu['quantity']}개').join(' / ');
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
@@ -253,7 +320,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '주문 시간',
+                                '도착 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 7 * (deviceWidth / standardDeviceWidth),
@@ -291,12 +358,35 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                               SizedBox(
                                 height: 4 * (deviceHeight / standardDeviceHeight),
                               ),
-                              Text(
-                                '메뉴 [$totalQuantity]개 / '+formattedTotalPrice+"원",
-                                style: TextStyle(
-                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
+                              Row(children: [
+                                Text(
+                                  "$formattedTotalPrice원 / ",
+                                  style: TextStyle(
+                                    fontSize: 8 * (deviceWidth / standardDeviceWidth),
+                                  ),
                                 ),
-                              ),
+                                Container(
+                                  width: 30 * (deviceWidth / standardDeviceWidth),
+                                  decoration: BoxDecoration(
+                                    color: order['takeoutYn'] ? Colors.green : Colors.red,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        order['takeoutYn'] ? '매장' : '포장',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 7 * (deviceWidth / standardDeviceWidth),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],),
+
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
@@ -310,8 +400,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
-                              Text(
-                                "도착 예정 시간: " + timeOfDay + ' $hour:${time.split(":")[1]}',
+                              Text("$formattedTime1",
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
@@ -332,7 +421,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 ElevatedButton(
                                   onPressed: () async {
                                     // 접수하기 버튼 클릭 시 수행할 동작 추가
-                                    await requestOrder(order['orderId']);
+                                    await requestOrder(order['id']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFF406AD6), // 버튼의 배경색
@@ -352,7 +441,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 ElevatedButton(
                                   onPressed: () {
                                     // 주문 취소 버튼 클릭 시 수행할 동작 추가
-                                    showCancelDialog(order['orderId'],order['receiptId']);
+                                    showCancelDialog(order['id'],order['receiptId']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     primary: Color(0xFFD63737), // 버튼의 배경색
