@@ -4,7 +4,6 @@ import 'package:guncagacaonwer/menu/screen/menupage.dart';
 import 'package:guncagacaonwer/order/screen/orderpage.dart';
 import 'package:guncagacaonwer/store/screen/mypage.dart';
 import 'package:guncagacaonwer/store/screen/reviewpage.dart';
-import 'package:guncagacaonwer/store/screen/infopage.dart';
 
 import '../../common/const/colors.dart';
 
@@ -24,8 +23,6 @@ class _StorePageState extends State<StorePage> {
       case 1:
         return ReviewPage();
     // return Center(child: Text("나머지 영역의 내용"));
-      case 2:
-        return StoreInfoPage();
     // return Center(child: Text("나머지 영역의 내용"));
       default:
         return Center(child: Text("나머지 영역의 내용"));
