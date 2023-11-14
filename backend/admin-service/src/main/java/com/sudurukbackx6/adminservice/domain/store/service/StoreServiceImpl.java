@@ -179,7 +179,7 @@ public class StoreServiceImpl implements StoreService {
 
 
         Store store = Store.builder().
-                name(business.getName())
+                name(business.getBusinessName())
                 .latitude(Double.valueOf(latitude))
                 .longitude(Double.valueOf(longitude))
                 .address(business.getAddress())
