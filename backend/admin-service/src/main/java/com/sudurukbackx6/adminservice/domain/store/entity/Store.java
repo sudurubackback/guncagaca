@@ -33,13 +33,12 @@ public class Store {
     @Column(columnDefinition = "VARCHAR(500)")
     private String img;
 
-    @Column(nullable = false)
+
     private String description;
 
     @Column(nullable = false)
     private Double starPoint;
 
-    @Column(nullable = false)
     private boolean isOpen;
 
     private String openTime;
