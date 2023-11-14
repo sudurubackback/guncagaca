@@ -33,7 +33,6 @@ public class Store {
     @Column(columnDefinition = "VARCHAR(500)")
     private String img;
 
-
     private String description;
 
     @Column(nullable = false)
