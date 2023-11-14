@@ -3,9 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../common/dioclient.dart';
 import '../api/processingpage_api_service.dart';
@@ -21,6 +23,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
 
   late ApiService apiService;
 
+  final AudioPlayer _audioPlayer = AudioPlayer();
   static final storage = FlutterSecureStorage();
 
   Future<void> setupApiService() async {
@@ -79,14 +82,62 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
       print("네트워크 오류: $e");
     }
   }
-
+// 주문 완료 로직
   Future<void> completeOrder(String orderId) async {
     try {
-      final response = await apiService.completeOrder(orderId);
-      print("주문 완료 성공: ${response.message}");
-      fetchOrders();
+      final ownerResponse = await apiService.getOwnerInfo();
+      print("주문완료요청");
+      print(orderId);
+      print(await storage.read(key: 'accessToken'));
+      if (orderId != null) {
+        final response = await dio.post(
+          'https://k9d102.p.ssafy.io/api/order/complete/$orderId',
+          options: Options(
+            headers: {'Authorization': 'Bearer ${await storage.read(key: 'accessToken')}',}, // 헤더에 이메일 추가
+          ),
+        );
+
+        if (response.statusCode == 200) {
+
+          print("완료성공");
+          fetchOrders();
+          Fluttertoast.showToast(
+            msg: "주문이 성공적으로 완료되었습니다.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          // 소리 재생
+          await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
+          await _audioPlayer.play();
+          print("화면이 새로 고쳐집니다.");
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+          Fluttertoast.showToast(
+            msg: "데이터 로드 실패",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      }
     } catch (e) {
-      print("주문 완료 에러: $e");
+      print("네트워크 오류: $e");
+      Fluttertoast.showToast(
+        msg: "네트워크 오류",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 
@@ -384,58 +435,76 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 setState(() {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext context) {
-                                                        return AlertDialog(
-                                                          contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                                                          content: Container(
-                                                            width: 200 * (deviceWidth / standardDeviceWidth),
-                                                            height: 280 * (deviceHeight / standardDeviceHeight),
-                                                            child: SingleChildScrollView(
-                                                              child: Column(
-                                                                children: [
-                                                                  Text('주문 정보:'),
-                                                                  Text('주문 시간: ${order['orderTime']}'),
-                                                                  Text('메뉴 수량: $totalQuantity'),
-                                                                  // 다른 주문 정보 출력...
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                                        content: Container(
+                                                          // width: 200 * (deviceWidth / standardDeviceWidth),
+                                                          // height: 280 * (deviceHeight / standardDeviceHeight),
+                                                          child: SingleChildScrollView(
+                                                            child: Column(
+                                                              children: [
+                                                                SizedBox(height:MediaQuery.of(context).size.height * 0.04 ,),
+                                                                Text('정말 완료하시겠습니까?',
+                                                                style: TextStyle(
+                                                              fontSize: 35,
+                                                            ),),
+                                                                SizedBox(height:MediaQuery.of(context).size.height * 0.04 ,),
+
+                                                                Image.asset(
+                                                                  'assets/barista.png',
+                                                                  width: 200,
+                                                                  height: 200,
+                                                                ),
+                                                                SizedBox(height:MediaQuery.of(context).size.height * 0.04 ,),
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                  children: [
                                                                     TextButton(
-                                                                      onPressed: () {
+                                                                      onPressed: () async {
+                                                                        await completeOrder(order['id']);
                                                                         // FCM를 사용하여 알림 보내기 (FCM 관련 코드 필요)
                                                                         // sendNotification(order);
+                                                                        Navigator.of(context).pop(); // 모달 닫기
                                                                       },
-                                                                      child: Text('알림 보내기'),
+                                                                      child: Text('확인',
+                                                                        style: TextStyle(
+                                                                          color: PRIMARY_COLOR,
+                                                                          fontSize: 30,
+                                                                        ),),
                                                                     ),
-                                                                ],
-                                                              ),
+                                                                    TextButton(
+                                                                      onPressed: () {
+                                                                        Navigator.of(context).pop(); // 모달 닫기
+                                                                      },
+                                                                      child: Text('취소',
+                                                                        style: TextStyle(
+                                                                          color: PRIMARY_COLOR,
+                                                                          fontSize: 30,
+                                                                        ),),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                // 완료 처리
-                                                                // completeOrder(order);
-                                                                Navigator.of(context).pop(); // 모달 닫기
-                                                              },
-                                                              child: Text('확인'),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
                                                 });
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    Color(0xFF4449BA),
+                                                backgroundColor: Color(0xFF4449BA),
                                                 minimumSize: Size(
                                                   40 * (deviceWidth / standardDeviceWidth),
                                                   60 * (deviceHeight / standardDeviceHeight),
                                                 ),
                                               ),
                                               child: Text(
-                                                 '완료' ,
+                                                '완료',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 18,
@@ -443,6 +512,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                               ),
                                             ),
                                           ),
+
                                         ],
                                       ),
                                     ),
