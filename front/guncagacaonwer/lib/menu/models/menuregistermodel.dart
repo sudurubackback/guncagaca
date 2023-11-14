@@ -4,7 +4,7 @@ part 'menuregistermodel.g.dart';
 
 @JsonSerializable()
 class MenuRegisterRequest {
-  final int id;
+  final int cafeId;
   final String name;
   final String description;
   final int price;
@@ -14,7 +14,7 @@ class MenuRegisterRequest {
   final Status status;
 
   MenuRegisterRequest({
-    required this.id,
+    required this.cafeId,
     required this.name,
     required this.description,
     required this.price,
@@ -26,7 +26,7 @@ class MenuRegisterRequest {
 
   factory MenuRegisterRequest.fromJson(Map<String, dynamic> json) {
     return MenuRegisterRequest(
-      id: json['id'] as int,
+      cafeId: json['cafeId'] as int,
       name: json['name'] as String,
       description: json['description'] as String,
       price: json['price'] as int,
@@ -40,7 +40,7 @@ class MenuRegisterRequest {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'cafeId': cafeId,
       'name': name,
       'price': price,
       'description': description,
@@ -53,7 +53,7 @@ class MenuRegisterRequest {
 
 @JsonSerializable()
 class OptionsEntity {
-  late final String optionName;
+  String optionName;
   final List<DetailsOptionEntity> detailsOptions;
 
   OptionsEntity({

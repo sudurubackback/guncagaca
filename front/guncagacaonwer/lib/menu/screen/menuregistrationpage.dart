@@ -9,6 +9,8 @@ import 'package:guncagacaonwer/menu/models/menuregistermodel.dart' as request;
 import 'package:guncagacaonwer/menu/models/menuregistermodel.dart';
 import 'package:guncagacaonwer/menu/models/ownerinfomodel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guncagacaonwer/menu/screen/menuallpage.dart';
+import 'package:guncagacaonwer/menu/screen/menupage.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
@@ -59,7 +61,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                       children: [
                         Expanded(
                           child: TextField(
-                            controller: TextEditingController(text: optionsList[index].optionName),
+                            key: ValueKey('optionName-$index'),
                             onChanged: (value) {
                               optionsList[index].optionName = value;
                             },
@@ -107,7 +109,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                     child: Container(
                       width: 150,
                       child: TextField(
-                        controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].detailOptionName),
+                        key: ValueKey('detailOptionName-$index-$detailIndex'),
                         onChanged: (value) {
                           optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                         },
@@ -121,14 +123,18 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                   Expanded(
                     child: Container(
                       width: 150,
-                      child: TextField(
-                        controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
-                        onChanged: (value) {
-                          optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                      child: ValueListenableBuilder(
+                        valueListenable: ValueNotifier(optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
+                        builder: (context, value, child) {
+                          return TextField(
+                            onChanged: (value) {
+                              optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                            },
+                            decoration: InputDecoration(
+                              hintText: '세부 옵션 가격',
+                            ),
+                          );
                         },
-                        decoration: InputDecoration(
-                          hintText: '세부 옵션 가격',
-                        ),
                       ),
                     ),
                   ),
@@ -169,7 +175,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: TextEditingController(text: option.optionName),
+                          key: ValueKey('optionName-$index'),
                           onChanged: (value) {
                             optionsList[index].optionName = value;
                           },
@@ -217,7 +223,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                   child: Container(
                     width: 150,
                     child: TextField(
-                      controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].detailOptionName),
+                      key: ValueKey('detailOptionName-$index-$detailIndex'),
                       onChanged: (value) {
                         optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                       },
@@ -231,14 +237,18 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                 Expanded(
                   child: Container(
                     width: 150,
-                    child: TextField(
-                      controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
-                      onChanged: (value) {
-                        optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                    child: ValueListenableBuilder(
+                      valueListenable: ValueNotifier(optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
+                      builder: (context, value, child) {
+                        return TextField(
+                          onChanged: (value) {
+                            optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                          },
+                          decoration: InputDecoration(
+                            hintText: '세부 옵션 가격',
+                          ),
+                        );
                       },
-                      decoration: InputDecoration(
-                        hintText: '세부 옵션 가격',
-                      ),
                     ),
                   ),
                 ),
@@ -316,7 +326,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
 
     // JSON 데이터 준비
     var menuRegisterRequest = MenuRegisterRequest(
-      id: storeId,
+      cafeId: storeId,
       name: menunameController.text,
       price: int.parse(menupriceController.text),
       description: desController.text,
@@ -634,7 +644,10 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                 ElevatedButton(
                   onPressed: () async {
                     registerMenu();
-                    Navigator.pop(context); // 이전 창으로 돌아가기
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MenuPage()), // MenuAllPage로 이동
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green),
