@@ -39,6 +39,7 @@ public class OrderService {
     private final MemberServiceClient memberServiceClient;
     private final KafkaEventService kafkaEventService;
     private final StoreServiceClient storeServiceClient;
+    private final SseService sseService;
 
     @Value("${bootpay.clientId}")
     private String CLIENT_ID;
@@ -66,6 +67,9 @@ public class OrderService {
                 .build();
 
         orderRepository.save(newOrder);
+
+        // storeId 가진 클라이언트에 SSE이벤트 발송
+        sseService.sendToStoreClients(orderRequestDto.getStoreId(), newOrder);
 
         OrderResponseDto responseDto = new OrderResponseDto(memberId, orderRequestDto.getStoreId(), orderRequestDto);
 

@@ -9,6 +9,7 @@ import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.StoreOrderResponse;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.service.OrderService;
+import backend.sudurukbackx6.orderservice.domain.order.service.SseService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,9 +26,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/order")
 @RequiredArgsConstructor
+@CrossOrigin
 public class OrderController {
 
     private final OrderService orderService;
+    private final SseService sseService;
 
     // 주문 등록
     @PostMapping("/add")
@@ -135,5 +139,10 @@ public class OrderController {
     @Operation(summary = "특정 주문 조회", description = "단일 주문 조회", tags = { "Order Controller" })
     public ResponseEntity<Order> getOrder(@RequestHeader("Email") String email, @PathVariable String orderId) {
         return ResponseEntity.ok(orderService.getOrder(orderId));
+    }
+
+    @GetMapping("/sse/{storeId}")
+    public SseEmitter subscribeToSse(@PathVariable Long storeId) {
+        return sseService.createEmitter(storeId);
     }
 }
