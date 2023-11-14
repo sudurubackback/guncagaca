@@ -2,6 +2,7 @@ package com.sudurukbackx6.adminservice.domain.admin;
 
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
 import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignInReqDto;
+import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.response.AdminSignInResDto;
 import com.sudurukbackx6.adminservice.domain.admin.service.AdminService;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.ToggleApprovalRequestDto;
@@ -19,6 +20,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<? extends BaseResponseBody> signUp(@RequestBody AdminSignUpReqDto requestDto) {
+        adminService.signUp(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "회원가입 성공"));
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<? extends BaseResponseBody> signIn(@RequestBody AdminSignInReqDto requestDto) {
