@@ -380,7 +380,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                 Container(
                                   width: 30 * (deviceWidth / standardDeviceWidth),
                                   decoration: BoxDecoration(
-                                    color: order['takeoutYn'] ? Colors.green : Colors.red,
+                                    color: order['takeoutYn'] ? MINT : Colors.red,
                                     borderRadius: BorderRadius.circular(5.0),
                                   ),
                                   child: Column(
@@ -459,13 +459,13 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                                     String optionText = '';
                                                     if (menu['options'] != null && menu['options'].isNotEmpty) {
                                                       optionText = menu['options']
-                                                          .map<String>((option) => '${option['optionName']} ${option['selectedOption']}')
+                                                          .map<String>((option) => '- ${option['optionName']} ${option['selectedOption']}\n')
                                                           .join(' ');
                                                     }
 
                                                     return Text(
-                                                      '${menu['menuName']}\n(옵션) $optionText ${menu['quantity']}개',
-                                                      style: TextStyle(fontSize: 20, height: 2,color: PRIMARY_COLOR),
+                                                      '${menu['menuName']} ${optionText.isNotEmpty ?'\n$optionText' : ''} ${menu['quantity']}개',
+                                                      style: TextStyle(fontSize: 20, height: 2, color: PRIMARY_COLOR),
                                                     );
                                                   }).toList(),
                                                 ),
