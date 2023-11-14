@@ -47,6 +47,12 @@ public class Business extends TimeEntity {
     @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String img; //사업자등록증 사진 s3 업로드
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean approval = false; //가게 승인 여부
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)")
+    private String tel; //사업자등록증 사진 s3 업로드
+
     //builer생성
     public Business(BusinessValidReqDto dto, String uploadURL) {
         this.businessNum = dto.getBusiness_number();
@@ -57,6 +63,11 @@ public class Business extends TimeEntity {
         this.businessName = dto.getBusiness_name();
         this.address = dto.getAddress();
         this.img = uploadURL;
+        this.tel = dto.getTel();
+    }
+
+    public void toggleApproval() {
+        this.approval = !this.approval;
     }
 
 }

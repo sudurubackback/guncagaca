@@ -16,4 +16,5 @@ public interface StoreService {
     void cafeImgChage(MultipartFile multipartFile, String email) throws IOException;
     void updateCafeInfo(String email, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException;
     StoreInfoResDto getStoreInfo(String email);
+    Long initStore(Long ownerId);
 }

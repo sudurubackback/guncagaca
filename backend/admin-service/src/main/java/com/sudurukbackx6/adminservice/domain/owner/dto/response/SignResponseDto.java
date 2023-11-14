@@ -22,6 +22,6 @@ public class SignResponseDto {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.isApproved= owner.getStore() != null;
-        this.isSetNetwork = owner.getIp() != null  && owner.getDdns() != null && owner.getPort() != null;
+        this.isSetNetwork = owner.getIp() != null  /*&& owner.getDdns() != null*/ && owner.getPort() != null;
     }
 }
