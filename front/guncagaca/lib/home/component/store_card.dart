@@ -20,7 +20,7 @@ class StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {// 영업중이라면 상세 화면으로 이동
+      onTap: () {
         Get.to(() => StoreDetailScreen(
           mainViewModel: mainViewModel,
           storeId: store.storeDetail.storeId,

@@ -10,6 +10,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/dioclient.dart';
+import '../../main.dart';
 
 class OrderWaitingPage extends StatefulWidget {
 
@@ -114,6 +115,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
           await _audioPlayer.setAsset('assets/sound/sound1.mp3');
           await _audioPlayer.play();
           print("화면이 새로 고쳐집니다.");
+
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
           Fluttertoast.showToast(
@@ -144,7 +146,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
 
 
   // 취소 사유 리스트
-  List<String> cancelReasons = ['사유1', '사유2', '사유3'];
+  List<String> cancelReasons = ['현재 너무 많은 고객님으로 인해 시간내 조리가 어렵습니다. 죄송합니다.', '재료가 소진되어 주문이 어렵습니다 죄송합니다.', '매장 내 인원이 많아 포장 주문으로 부탁드립니다. 죄송합니다.', '현재 주문이 어렵습니다. 죄송합니다.'];
   String selectedReason = "";
 
   // 주문 취소 요청
@@ -231,13 +233,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('취소'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('확인'),
+              child: Text('확인',  style: TextStyle(color: PRIMARY_COLOR, fontSize: 20)),
               onPressed: () async {
                 if (selectedReason.isNotEmpty) {
                   await cancelOrder(orderId, receiptId, selectedReason);  // 추가: 취소 사유 전달
@@ -246,6 +242,12 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                   // 취소 사유가 선택되지 않았을 경우 사용자에게 메시지 표시 또는 다른 조치 수행
                   print("취소 사유를 선택하세요.");
                 }
+              },
+            ),
+            TextButton(
+              child: Text('취소', style: TextStyle(color: PRIMARY_COLOR,fontSize: 20) ),
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],

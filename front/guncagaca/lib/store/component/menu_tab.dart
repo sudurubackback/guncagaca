@@ -78,14 +78,14 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
               children: categorizedMenus[category]!.map((menu) {
                 return InkWell(
                   onTap: () {
-                    if (widget.isOpen) {
+                    if (widget.isOpen && menu.status == "ON_SALE") {
                       Get.to(() => DefaultLayout(
                             title: widget.storeName,
                             mainViewModel: widget.mainViewModel,
                             child: DetailPage(menu: menu, storeName: widget.storeName,),
                             ),
                         );
-                    } else {
+                    } else if (!widget.isOpen){
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -96,6 +96,25 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
                             ],
                           ),
                           content: Text('영업중이 아닙니다.\n영업시간에 다시 방문해주세요.'),
+                          actions: [
+                            TextButton(
+                              child: Text('확인', style: TextStyle(color: PRIMARY_COLOR)),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Column(
+                            children: [
+                              Text('알림'),
+                              Divider(color: Colors.grey),
+                            ],
+                          ),
+                          content: Text('품절메뉴입니다.\n다음에 주문해주세요.'),
                           actions: [
                             TextButton(
                               child: Text('확인', style: TextStyle(color: PRIMARY_COLOR)),

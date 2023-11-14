@@ -17,9 +17,32 @@ class MenuCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 7.0),
-              child: Image.network(menu.imagePath, width: 60, height: 60, fit: BoxFit.cover),
+            Stack(
+              children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 7.0),
+                child: Image.network(menu.imagePath, width: 60, height: 60, fit: BoxFit.cover),
+              ),
+              if (menu.status == "SOLD_OUT")
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      color: Colors.black45,
+                    ),
+                    child: Center(
+                      child: Text(
+                        "품절",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(width: 16.0),
             Expanded(
