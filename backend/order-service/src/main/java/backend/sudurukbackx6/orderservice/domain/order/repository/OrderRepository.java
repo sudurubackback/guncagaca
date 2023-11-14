@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,5 +22,9 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 
     List<Order> findByMemberIdAndStoreIdOrderByOrderTimeDesc(Long memberId, Long storeId);
     List<Order> findByStoreIdAndStatus(Long storeId, Status status);
+    // 주문 상태별 주문 조회
+    List<Order> findByStoreIdAndStatusOrderByOrderTimeDesc(Long storeId, Status status);
+    // 기간별 주문 조회
+    List<Order> findByStoreIdAndOrderTimeBetweenOrderByOrderTimeDesc(Long storeId, LocalDateTime  startDate, LocalDateTime  endDate);
 }
 
