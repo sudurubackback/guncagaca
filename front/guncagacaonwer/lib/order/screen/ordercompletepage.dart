@@ -113,8 +113,17 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
                 } else {
                   timeOfDay = "오전";
                 }
-                String menuList = order['menus'].map((menu) => '${menu['menuName']} -${menu['optionName'] ?? ''} ${menu['selectedOption'] ?? ''} ${menu['quantity']}개').join(' / ');
-                return Padding(
+                String menuList = order['menus'].map((menu) {
+                  String optionText = '';
+                  if (menu['options'] != null && menu['options'].isNotEmpty) {
+                    optionText = menu['options']
+                        .map((option) =>
+                    '${option['optionName']} ${option['selectedOption']}')
+                        .join(' ');
+                  }
+
+                  return '${menu['menuName']} $optionText ${menu['quantity']}개';
+                }).join(' / ');                return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,

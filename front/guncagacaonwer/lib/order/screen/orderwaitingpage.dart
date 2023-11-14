@@ -293,7 +293,18 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                 } else {
                   timeOfDay = "오전";
                 }
-                String menuList = order['menus'].map((menu) => '${menu['menuName']} -${menu['optionName'] ?? ''} ${menu['selectedOption'] ?? ''} ${menu['quantity']}개').join(' / ');
+                String menuList = order['menus'].map((menu) {
+                  String optionText = '';
+                  if (menu['options'] != null && menu['options'].isNotEmpty) {
+                    optionText = menu['options']
+                        .map((option) =>
+                    '${option['optionName']} ${option['selectedOption']}')
+                        .join(' ');
+                  }
+
+                  return '${menu['menuName']} $optionText ${menu['quantity']}개';
+                }).join(' / ');
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
@@ -396,6 +407,8 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                     fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                     color: Color(0xFF9B5748)
                                 ),
+                                overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략 부호 표시
+                                maxLines: 1, // 최대 표시 줄 수 (생략 부호 표시를 위해 적절한 값을 설정)
                               ),
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),

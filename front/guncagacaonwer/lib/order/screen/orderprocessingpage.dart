@@ -125,8 +125,17 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                 } else {
                   timeOfDay = "오전";
                 }
-                String menuList = order['menus'].map((menu) => '${menu['menuName']} -${menu['optionName'] ?? ''} ${menu['selectedOption'] ?? ''} ${menu['quantity']}개').join(' / ');
-                return Padding(
+                String menuList = order['menus'].map((menu) {
+                  String optionText = '';
+                  if (menu['options'] != null && menu['options'].isNotEmpty) {
+                    optionText = menu['options']
+                        .map((option) =>
+                    '${option['optionName']} ${option['selectedOption']}')
+                        .join(' ');
+                  }
+
+                  return '${menu['menuName']} $optionText ${menu['quantity']}개';
+                }).join(' / ');                return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,
@@ -189,10 +198,12 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 height: 4 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '메뉴 [$totalQuantity]개 / '+formattedTotalPrice+"원",
+                                menuList,
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
+                                overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략 부호 표시
+                                maxLines: 1, // 최대 표시 줄 수 (생략 부호 표시를 위해 적절한 값을 설정)
                               ),
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),
@@ -272,12 +283,39 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                             content: Container(
                                               width: 200 * (deviceWidth / standardDeviceWidth),
                                               height: 280 * (deviceHeight / standardDeviceHeight),
-                                              child: SingleChildScrollView( // 스크롤 가능한 영역 추가
+                                              child: SingleChildScrollView(
                                                 child: Column(
                                                   children: [
                                                     // 모달 다이얼로그 내용
-                                                    Text('$totalQuantity')
-                                                    // 만약 내용이 모달 높이보다 크면 스크롤이 활성화됩니다.
+                                                    Text('주문 정보:'),
+                                                    Text('주문 시간: ${order['orderTime']}'),
+                                                    Text('도착 시간: $formattedTime1'),
+                                                    Text('주문자 번호: ${order['memberId']}'),
+                                                    Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}'),
+                                                    Text('총 메뉴 수량: $totalQuantity'),
+                                                    Text('총 주문 가격: $formattedTotalPrice 원'),
+                                                    // 다른 주문 정보 출력...
+
+                                                    // 메뉴 목록 출력
+                                                    Text('주문 메뉴 목록:'),
+                                                    Column(
+                                                      children: order['menus'].map<Widget>((menu) {
+                                                        String optionText = '';
+                                                        if (menu['options'] != null &&
+                                                            menu['options'].isNotEmpty) {
+                                                          optionText = menu['options']
+                                                              .map<String>((option) =>
+                                                          '${option['optionName']} ${option['selectedOption']}')
+                                                              .join(' ');
+                                                        }
+
+                                                        return Text(
+                                                          '${menu['menuName']} $optionText ${menu['quantity']}개',
+                                                          overflow: TextOverflow.ellipsis,
+                                                          maxLines: 1,
+                                                        );
+                                                      }).toList(),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
