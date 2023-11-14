@@ -23,7 +23,7 @@ class _StorePageState extends State<StorePage> {
       case 1:
         return ReviewPage();
     // return Center(child: Text("나머지 영역의 내용"));
-    // return Center(child: Text("나머지 영역의 내용"));
+
       default:
         return Center(child: Text("나머지 영역의 내용"));
     }
@@ -180,28 +180,6 @@ class _StorePageState extends State<StorePage> {
                         "리뷰 보기",
                         style: TextStyle(
                           fontSize: 12 * (deviceWidth / standardDeviceWidth),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 30 * (deviceHeight / standardDeviceHeight)),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedButtonIndex = 2;
-                    });
-                  },
-                  child: Container(
-                    width: 70 * (deviceWidth / standardDeviceWidth),
-                    height: 30 * (deviceHeight / standardDeviceHeight),
-                    color: selectedButtonIndex == 2 ? Color(0xFFFFFFFF) : Color(0xFF828282),
-                    padding: EdgeInsets.all(4),
-                    child: Center(
-                      child: Text(
-                        "가게 정보 수정",
-                        style: TextStyle(
-                          fontSize: 10 * (deviceWidth / standardDeviceWidth),
                         ),
                       ),
                     ),

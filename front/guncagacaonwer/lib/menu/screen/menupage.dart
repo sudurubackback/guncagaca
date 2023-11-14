@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/common/layout/default_layout.dart';
 import 'package:guncagacaonwer/menu/screen/menuallpage.dart';
-// import 'package:guncagacaonwer/menu/screen/menuregistrationpage.dart';
+import 'package:guncagacaonwer/menu/screen/menuregistrationpage.dart';
 import 'package:guncagacaonwer/order/screen/orderpage.dart';
 import 'package:guncagacaonwer/store/screen/storepage.dart';
 
@@ -20,7 +20,7 @@ class _MenuPageState extends State<MenuPage> {
         return MenuAllPage();
     // return Center(child: Text("메뉴 전체보기의 내용"));
       case 1:
-        // return MenuRegistrationPage();
+        return MenuRegistrationPage();
     // return Center(child: Text("메뉴 신규 등록의 내용"));
       default:
         return Center(child: Text("나머지 영역의 내용"));

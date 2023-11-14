@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'dart:html';
+import 'dart:html' as html;
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -9,7 +11,7 @@ import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart' as response;
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker_for_web/image_picker_for_web.dart';
+import 'package:image/image.dart' as img;
 
 
 class MenuEditPage extends StatefulWidget {
@@ -388,72 +390,26 @@ class _MenuEditPageState extends State<MenuEditPage> {
     }).toList();
   }
 
-  // void uploadImage(void Function(Uint8List, String) onDataChanged) async {
-  //   // 이미지 업로드
-  //   FileUploadInputElement uploadInput = FileUploadInputElement();
-  //   uploadInput.click();
-  //
-  //   await for (var event in uploadInput.onChange) {
-  //     final files = uploadInput.files;
-  //     if (files != null && files.length == 1) {
-  //       final blob = files[0];
-  //       final reader = FileReader();
-  //       reader.readAsDataUrl(blob);
-  //       await for (var event in reader.onLoadEnd) {
-  //         final dataUrl = reader.result as String;
-  //         final base64 = dataUrl.split(',').last;
-  //         Uint8List data = base64Decode(base64);
-  //         onDataChanged(data, blob.name); // 파일명을 콜백으로 전달
-  //       }
-  //     }
-  //   }
-  // }
-  //
-  // Uint8List? _imageBytes; // 이미지 데이터를 저장할 변수
-  // String? _fileName; // 파일 이름을 저장할 변수
-  //
-  // void _loadImage() {
-  //   uploadImage((data, fileName) {
-  //     setState(() {
-  //       _imageBytes = data;
-  //       _fileName = fileName; // 파일 이름을 저장
-  //     });
-  //   });
-  // }
+  String selectedFile = '';
+  Uint8List? image;
 
-  // String selectFile = '';
-  // // XFile file;
-  // late Uint8List selectedImageInBytes;
-  //
-  // _loadImage(bool imageFrom) async {
-  //   FilePickerResult? fileResult = await FilePicker.platform.pickFiles();
-  //
-  //   if (fileResult != null) {
-  //     setState(() {
-  //       selectFile = fileResult.files.first.name;
-  //       selectedImageInBytes = fileResult.files.first.bytes!;
-  //     });
-  //
-  //   }
-  //   print(selectFile);
-  // }
+  void _selectFile() async {
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-  // Future<Uint8List?> pickImage() async {
-  //   final ImagePickerPlugin _picker = ImagePickerPlugin();
-  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-  //
-  //   if (image != null) {
-  //     final Blob blob = await image.readAsBlob();
-  //     final reader = FileReader();
-  //     reader.readAsArrayBuffer(blob);
-  //     await reader.onLoad.first;
-  //     final Uint8List bytes = reader.result as Uint8List;
-  //     return bytes;
-  //   } else {
-  //     print("이미지가 선택되지 않았습니다.");
-  //     return null;
-  //   }
-  // }
+    if (result != null) {
+      setState(() {
+        selectedFile = result.files.first.name;
+      });
+      image = result.files.first.bytes;
+      // 이미지의 해상도를 낮춥니다.
+      img.Image? originalImage = img.decodeImage(image!);
+      if(originalImage != null){
+        img.Image lowResolutionImage = img.copyResize(originalImage, width: 600);
+        // 이미지를 다시 바이트 배열로 변환합니다.
+        image = img.encodeJpg(lowResolutionImage, quality: 75);  // JPEG 품질을 75(기본값은 100)로 설정합니다.
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -481,7 +437,16 @@ class _MenuEditPageState extends State<MenuEditPage> {
     dio.options.headers['Authorization'] = 'Bearer $accessToken'; // 헤더에 토큰 추가
   }
 
-  Future<void> _updateMenu() async {
+  Future<void> updateMenu() async {
+    // 파일 준비
+    var selectedImageFile = http.MultipartFile.fromBytes(
+      'file',
+      image!,
+      filename: selectedFile,
+      contentType: MediaType('image', 'jpeg'), // 필요한 경우 변경하세요
+    );
+
+    // JSON 데이터 준비
     var menuEditRequest = MenuEditRequest(
       id: widget.menuInfo.id,
       name: menunameController.text,
@@ -491,92 +456,39 @@ class _MenuEditPageState extends State<MenuEditPage> {
       category: selectedCategory!,
       optionsList: optionsList,
     );
-    // FormData 생성
-    FormData formData = FormData();
 
-    // 이미지 파일 추가
-    // formData.files.add(MapEntry(
-    //   'file',
-      // MultipartFile.fromBytes(
-      //   selectedImageInBytes,
-      //   filename: selectFile,
-      //   contentType: MediaType('image', 'jpeg'), // 필요한 경우 변경하세요
-      // ),
-    // ));
-
-    // JSON 데이터 추가
-    formData.fields.add(MapEntry(
-      'request',
-      jsonEncode(menuEditRequest.toJson()),
-    ));
-
-    // 요청 옵션 설정
-    var options = Options(
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'multipart/form-data',
-      },
-      method: 'PUT',
+    // MultipartRequest 객체 생성
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('https://k9d102.p.ssafy.io/api/owner/menu/edit'),
     );
 
-    try {
-      // 요청 전송
-      var response = await dio.request(
-        'https://k9d102.p.ssafy.io/api/owner/menu/edit',
-        data: formData,
-        options: options,
-      );
-      if (response.statusCode == 200) {
-        // 성공시 처리
-        print('Success: ${response.statusMessage}');
-      } else {
-        // 실패시 처리
-        print('Failure: ${response.statusMessage}');
-      }
-    } catch (e) {
-      print(formData.fields.toString());
-      print(e);
+    // 헤더 설정
+    request.headers.addAll(<String, String>{
+      'Authorization': 'Bearer $accessToken',
+    });
+
+    // 파일 추가
+    request.files.add(selectedImageFile);
+
+    // JSON 데이터를 'application/json' 형식으로 추가
+    var requestJson = http.MultipartFile.fromString(
+      'request',
+      jsonEncode(menuEditRequest.toJson()),
+      contentType: MediaType('application', 'json'),
+    );
+    request.files.add(requestJson);
+
+    // 요청 전송
+    var response = await request.send();
+
+    // 응답 확인
+    if (response.statusCode == 200) {
+      print('Menu updated successfully.');
+    } else {
+      print('Failed to update the menu.');
     }
   }
-
-  //     // JSON 데이터 생성
-  //     var data = {
-  //       'id': widget.menuInfo.id,
-  //       'name': menunameController.text,
-  //       'price': int.parse(menupriceController.text),
-  //       'description': desController.text,
-  //       'img': '', // Base64 인코딩된 이미지 데이터를 'img' 필드에 추가
-  //       'category': selectedCategory!.toString(),
-  //       'optionsList' : optionsList,
-  //     };
-  //
-  //     try {
-  //       // PUT 요청
-  //       http.Response response = await http.put(
-  //         Uri.parse('https://k9d102.p.ssafy.io/api/owner/menu/edit'),
-  //         headers: <String, String>{
-  //           'Content-Type': 'application/json; charset=UTF-8',
-  //           'Authorization': 'Bearer $accessToken',
-  //         },
-  //         body: jsonEncode(data), // JSON 데이터를 문자열로 변환하여 본문에 추가
-  //       );
-  //
-  //       if (response.statusCode == 200) {
-  //         // 성공시 처리
-  //         print('Success: ${response.body}');
-  //       } else {
-  //         // 실패시 처리
-  //         print('Failure: ${response.body}');
-  //       }
-  //     } catch (e) {
-  //       print(e);
-  //     }
-  //   }
-  // }
-
-  // updateMenu() async {
-  //   File imageFile =
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -618,6 +530,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         ElevatedButton(
                           onPressed: () {
                             // _loadImage(true);
+                            _selectFile();
                           },
                           child: Text('이미지 변경'),
                         ),
@@ -626,6 +539,20 @@ class _MenuEditPageState extends State<MenuEditPage> {
                     SizedBox(
                       width: 5 * (deviceWidth / standardDeviceWidth),
                     ),
+                    if (image != null)
+                      SizedBox(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.memory(
+                              image!,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text(selectedFile)
+                          ],
+                        ),
+                      ),
                     // selectFile.isEmpty
                     //   ? Image.network(
                     //     selectedImage, // 이미지 파일 경로
@@ -852,7 +779,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    _updateMenu();
+                    updateMenu();
                     Navigator.pop(context); // 이전 창으로 돌아가기
                   },
                   style: ButtonStyle(
