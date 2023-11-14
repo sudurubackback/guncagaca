@@ -226,7 +226,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '주문 시간',
+                                '도 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 9 * (deviceWidth / standardDeviceWidth),
@@ -283,7 +283,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                "도착 예정 시간: " + timeOfDay + ' $hour:${time.split(":")[1]}',
+                                "$formattedTime",
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),

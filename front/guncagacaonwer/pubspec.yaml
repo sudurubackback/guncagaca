@@ -54,6 +54,7 @@ dependencies:
   fluttertoast: ^8.2.1
   http_parser: ^4.0.2
   mime_type: ^1.0.0
+  just_audio: ^0.9.36
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -77,6 +78,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/sound/sound1.mp3
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

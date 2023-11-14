@@ -3,8 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../common/dioclient.dart';
 import '../api/processingpage_api_service.dart';
@@ -20,6 +23,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
 
   late ApiService apiService;
 
+  final AudioPlayer _audioPlayer = AudioPlayer();
   static final storage = FlutterSecureStorage();
 
   Future<void> setupApiService() async {
@@ -78,14 +82,62 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
       print("네트워크 오류: $e");
     }
   }
-
+// 주문 완료 로직
   Future<void> completeOrder(String orderId) async {
     try {
-      final response = await apiService.completeOrder(orderId);
-      print("주문 완료 성공: ${response.message}");
-      fetchOrders();
+      final ownerResponse = await apiService.getOwnerInfo();
+      print("주문완료요청");
+      print(orderId);
+      print(await storage.read(key: 'accessToken'));
+      if (orderId != null) {
+        final response = await dio.post(
+          'https://k9d102.p.ssafy.io/api/order/complete/$orderId',
+          options: Options(
+            headers: {'Authorization': 'Bearer ${await storage.read(key: 'accessToken')}',}, // 헤더에 이메일 추가
+          ),
+        );
+
+        if (response.statusCode == 200) {
+
+          print("완료성공");
+          fetchOrders();
+          Fluttertoast.showToast(
+            msg: "주문이 성공적으로 완료되었습니다.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          // 소리 재생
+          await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
+          await _audioPlayer.play();
+          print("화면이 새로 고쳐집니다.");
+        } else {
+          print('데이터 로드 실패, 상태 코드: ${response.statusCode}');
+          Fluttertoast.showToast(
+            msg: "데이터 로드 실패",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      }
     } catch (e) {
-      print("주문 완료 에러: $e");
+      print("네트워크 오류: $e");
+      Fluttertoast.showToast(
+        msg: "네트워크 오류",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 
@@ -106,10 +158,12 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                 final order = orders[index];
                 int totalQuantity = order['menus'].fold(0, (prev, menu) => prev + menu['quantity']);
                 final formatter = NumberFormat('#,###');
-                String formattedTotalPrice = formatter.format(order['orderPrice']);
+                String formattedTotalPrice = formatter.format(order['price']);
                 // 주문 시간에서 날짜와 시간 추출
-                DateTime dateTime = DateTime.parse(order['orderTime']);
+                DateTime dateTime1 = DateTime.parse(order['orderTime']);
+                DateTime dateTime = dateTime1.add(Duration(minutes: order['eta']));
                 String timeOfDay = "";
+                String formattedTime1 = "${dateTime1.year}-${dateTime1.month.toString().padLeft(2, '0')}-${dateTime1.day.toString().padLeft(2, '0')} ${dateTime1.hour.toString().padLeft(2, '0')}:${dateTime1.minute.toString().padLeft(2, '0')}";
                 String formattedTime = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
                 List<String> dateTimeParts = formattedTime.split(" ");
                 String time = dateTimeParts[1].substring(0, 5);
@@ -123,7 +177,17 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                 } else {
                   timeOfDay = "오전";
                 }
-                return Padding(
+                String menuList = order['menus'].map((menu) {
+                  String optionText = '';
+                  if (menu['options'] != null && menu['options'].isNotEmpty) {
+                    optionText = menu['options']
+                        .map((option) =>
+                    '${option['optionName']} ${option['selectedOption']}')
+                        .join(' ');
+                  }
+
+                  return '${menu['menuName']} $optionText ${menu['quantity']}개';
+                }).join(' / ');                return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 1),
                   child: Container(
                     alignment: Alignment.center,
@@ -148,7 +212,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '주문 시간',
+                                '도착 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 7 * (deviceWidth / standardDeviceWidth),
@@ -186,28 +250,50 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 height: 4 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                '메뉴 [$totalQuantity]개 / '+formattedTotalPrice+"원",
+                                menuList,
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
+                                overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략 부호 표시
+                                maxLines: 1, // 최대 표시 줄 수 (생략 부호 표시를 위해 적절한 값을 설정)
                               ),
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
+                              Row(children: [
                               Text(
-                                '주문자 번호 : ${order['memberId']}',
+                              '주문자 번호 : ${order['memberId']}  ',
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                   color: Color(0xFF9B5748),
                                 ),
                               ),
+                                Container(
+                                  width: 30 * (deviceWidth / standardDeviceWidth),
+                                  decoration: BoxDecoration(
+                                    color: order['takeoutYn'] ? MINT : Colors.red,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        order['takeoutYn'] ? '매장' : '포장',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 7 * (deviceWidth / standardDeviceWidth),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],),
                               SizedBox(
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                "도착 예정 시간: " +
-                                    timeOfDay +
-                                    ' $hour:${time.split(":")[1]}',
+                                "$formattedTime1",
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
@@ -237,35 +323,76 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                               Container(
                                 width: 40 * (deviceWidth / standardDeviceWidth),
                                 height: 60 * (deviceHeight / standardDeviceHeight),
-                                child: ElevatedButton(
+                                child:ElevatedButton(
                                   onPressed: () {
                                     if (!isSelected) {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                            contentPadding: EdgeInsets.all(20),
                                             content: Container(
                                               width: 200 * (deviceWidth / standardDeviceWidth),
                                               height: 280 * (deviceHeight / standardDeviceHeight),
-                                              child: SingleChildScrollView( // 스크롤 가능한 영역 추가
+                                              child: SingleChildScrollView(
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start, // Align content to the left
                                                   children: [
                                                     // 모달 다이얼로그 내용
-                                                    Text('$totalQuantity')
-                                                    // 만약 내용이 모달 높이보다 크면 스크롤이 활성화됩니다.
+                                                    Text('주문 정보', style: TextStyle(fontSize: 25, height: 2)),
+                                                    Text('주문 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('도착 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('주문자 번호: ${order['memberId']}', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('총 메뉴 수량: $totalQuantity', style: TextStyle(fontSize: 20, height: 2)),
+                                                    // 다른 주문 정보 출력...
+
+                                                    // 메뉴 목록 출력
+                                                    Text('주문 메뉴 목록:', style: TextStyle(fontSize: 20, height: 2)),
+                                                    SizedBox(height: MediaQuery.of(context).size.height * 0.03 ,),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: order['menus'].map<Widget>((menu) {
+                                                        String optionText = '';
+                                                        if (menu['options'] != null && menu['options'].isNotEmpty) {
+                                                          optionText = menu['options']
+                                                              .map<String>((option) => '- ${option['optionName']} ${option['selectedOption']}\n')
+                                                              .join(' ');
+                                                        }
+
+                                                        return Text(
+                                                          '${menu['menuName']} ${optionText.isNotEmpty ? '\n$optionText' : ''} ${menu['quantity']}개',
+                                                          style: TextStyle(fontSize: 20, height: 2, color: PRIMARY_COLOR),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                    Text('총 주문 가격: $formattedTotalPrice 원', style: TextStyle(fontSize: 27, height: 3)),
                                                   ],
                                                 ),
                                               ),
                                             ),
                                             actions: [
-                                              // 모달 다이얼로그 액션 버튼 등을 추가할 수 있습니다.
+                                              // 뒤로가기 버튼 추가
+                                              Positioned(
+                                                bottom: 10, // Adjust the distance from the bottom
+                                                right: 10, // Adjust the distance from the right
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('확인'),
+                                                  style: ElevatedButton.styleFrom(
+                                                    primary: PRIMARY_COLOR, // Set the button color
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(5.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
                                             ],
                                           );
                                         },
                                       );
-                                    } else {
-                                      // isSelected가 false일 때의 동작 추가
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -275,6 +402,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                         color: Color(0xFFACACAC),
                                         width: 1.0,
                                       ),
+                                      borderRadius: BorderRadius.circular(5.0),
                                     ),
                                   ),
                                   child: Text(
@@ -287,7 +415,10 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 ),
                               ),
 
-                              SizedBox(
+
+
+
+                                SizedBox(
                                 width: 2 * (deviceWidth / standardDeviceWidth),
                               ),
                               Container(
@@ -304,58 +435,76 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 setState(() {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext context) {
-                                                        return AlertDialog(
-                                                          contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                                                          content: Container(
-                                                            width: 200 * (deviceWidth / standardDeviceWidth),
-                                                            height: 280 * (deviceHeight / standardDeviceHeight),
-                                                            child: SingleChildScrollView(
-                                                              child: Column(
-                                                                children: [
-                                                                  Text('주문 정보:'),
-                                                                  Text('주문 시간: ${order['orderTime']}'),
-                                                                  Text('메뉴 수량: $totalQuantity'),
-                                                                  // 다른 주문 정보 출력...
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                                        content: Container(
+                                                          // width: 200 * (deviceWidth / standardDeviceWidth),
+                                                          // height: 280 * (deviceHeight / standardDeviceHeight),
+                                                          child: SingleChildScrollView(
+                                                            child: Column(
+                                                              children: [
+                                                                SizedBox(height:MediaQuery.of(context).size.height * 0.04 ,),
+                                                                Text('정말 완료하시겠습니까?',
+                                                                style: TextStyle(
+                                                              fontSize: 35,
+                                                            ),),
+                                                                SizedBox(height:MediaQuery.of(context).size.height * 0.04 ,),
+
+                                                                Image.asset(
+                                                                  'assets/barista.png',
+                                                                  width: 200,
+                                                                  height: 200,
+                                                                ),
+                                                                SizedBox(height:MediaQuery.of(context).size.height * 0.04 ,),
+                                                                Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                  children: [
                                                                     TextButton(
-                                                                      onPressed: () {
+                                                                      onPressed: () async {
+                                                                        await completeOrder(order['id']);
                                                                         // FCM를 사용하여 알림 보내기 (FCM 관련 코드 필요)
                                                                         // sendNotification(order);
+                                                                        Navigator.of(context).pop(); // 모달 닫기
                                                                       },
-                                                                      child: Text('알림 보내기'),
+                                                                      child: Text('확인',
+                                                                        style: TextStyle(
+                                                                          color: PRIMARY_COLOR,
+                                                                          fontSize: 30,
+                                                                        ),),
                                                                     ),
-                                                                ],
-                                                              ),
+                                                                    TextButton(
+                                                                      onPressed: () {
+                                                                        Navigator.of(context).pop(); // 모달 닫기
+                                                                      },
+                                                                      child: Text('취소',
+                                                                        style: TextStyle(
+                                                                          color: PRIMARY_COLOR,
+                                                                          fontSize: 30,
+                                                                        ),),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                // 완료 처리
-                                                                // completeOrder(order);
-                                                                Navigator.of(context).pop(); // 모달 닫기
-                                                              },
-                                                              child: Text('확인'),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
                                                 });
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    Color(0xFF4449BA),
+                                                backgroundColor: Color(0xFF4449BA),
                                                 minimumSize: Size(
                                                   40 * (deviceWidth / standardDeviceWidth),
                                                   60 * (deviceHeight / standardDeviceHeight),
                                                 ),
                                               ),
                                               child: Text(
-                                                 '완료' ,
+                                                '완료',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 18,
@@ -363,6 +512,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                               ),
                                             ),
                                           ),
+
                                         ],
                                       ),
                                     ),
