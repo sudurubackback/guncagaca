@@ -27,4 +27,9 @@ public class RedisUtil {
         return redisToken != null && redisToken.equals(refreshToken);
     }
 
+    // refresh token 삭제
+    public void deleteRefreshToken(String email) {
+        redisTemplate.opsForHash().delete("email:token", email);
+    }
+
 }
