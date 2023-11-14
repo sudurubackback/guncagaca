@@ -2,6 +2,7 @@ package com.sudurukbackx6.adminservice.domain.admin.entity;
 
 import com.sudurukbackx6.adminservice.common.entity.TimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,13 @@ public class Admin extends TimeEntity {
 
     @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     private String password;
+
+    @Builder
+    public Admin(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+
+    }
 }

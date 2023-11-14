@@ -1,6 +1,7 @@
 package com.sudurukbackx6.adminservice.domain.admin.service;
 
 import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignInReqDto;
+import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.response.AdminSignInResDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.response.BusinessListResDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.response.BusinessOneResDto;
@@ -31,4 +32,6 @@ public interface AdminService {
     List<BusinessListResDto> doneBusinessList();
 
     List<BusinessListResDto> waitingBusinessList();
+
+    void signUp(AdminSignUpReqDto reqDto);
 }

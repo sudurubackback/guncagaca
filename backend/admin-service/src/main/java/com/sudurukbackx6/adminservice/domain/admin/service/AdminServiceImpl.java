@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.model.Owner;
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignInReqDto;
+import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.response.AdminSignInResDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.response.BusinessListResDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.response.BusinessOneResDto;
@@ -147,6 +148,17 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return list;
+    }
+
+    @Override
+    public void signUp(AdminSignUpReqDto reqDto) {
+        Admin admin = Admin.builder()
+                .email(reqDto.getEmail())
+                .password(passwordEncoder.encode(reqDto.getPassword()))
+                .name(reqDto.getName())
+                .build();
+
+        adminRepository.save(admin);
     }
 
 
