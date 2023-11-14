@@ -6,8 +6,9 @@ part 'menuregistermodel.g.dart';
 class MenuRegisterRequest {
   final int id;
   final String name;
-  final int price;
   final String description;
+  final int price;
+  final String img;
   final Category category;
   final List<OptionsEntity> optionsList;
   final Status status;
@@ -15,8 +16,9 @@ class MenuRegisterRequest {
   MenuRegisterRequest({
     required this.id,
     required this.name,
-    required this.price,
     required this.description,
+    required this.price,
+    required this.img,
     required this.category,
     required this.optionsList,
     required this.status,
@@ -26,10 +28,12 @@ class MenuRegisterRequest {
     return MenuRegisterRequest(
       id: json['id'] as int,
       name: json['name'] as String,
-      price: json['price'] as int,
       description: json['description'] as String,
-      category: Category.values[json['category'] as int],
-      optionsList: (json['optionsList'] as List).map((i) => OptionsEntity.fromJson(i)).toList(),
+      price: json['price'] as int,
+      img: json['img'] as String,
+      category: convertStringToCategory(json['category']),
+      optionsList: List<OptionsEntity>.from(
+        json['optionsList'].map((options) => OptionsEntity.fromJson(options))),
       status: Status.values[json['status'] as int],
     );
   }
@@ -40,8 +44,8 @@ class MenuRegisterRequest {
       'name': name,
       'price': price,
       'description': description,
-      'category': category.index,
-      'optionsList': optionsList.map((option) => option.toJson()).toList(),
+      'category': category.toString().split('.').last,
+      'optionsList': optionsList.map((options) => options.toJson()).toList(),
       'status' : status.index,
     };
   }
@@ -58,32 +62,37 @@ class OptionsEntity {
 
   factory OptionsEntity.fromJson(Map<String, dynamic> json) {
     return OptionsEntity(
-      optionName: json['optionName'] as String,
-      detailsOptions: (json['detailsOptions'] as List).map((i) => DetailsOptionEntity.fromJson(i)).toList(),
+      optionName: json['optionName'],
+      detailsOptions: List<DetailsOptionEntity>.from(
+        json['detailsOptions'].map(
+              (detailsOptions) => DetailsOptionEntity.fromJson(detailsOptions),
+        ),
+      ),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'optionName': optionName,
-      'detailsOptions': detailsOptions.map((option) => option.toJson()).toList(),
+      'detailsOptions': detailsOptions.map((options) => options.toJson()).toList(),
     };
   }
 }
 
 @JsonSerializable()
 class DetailsOptionEntity {
-  final String detailOptionName;
-  late final int additionalPrice;
+  String detailOptionName;
+  int additionalPrice;
 
   DetailsOptionEntity({
     required this.detailOptionName,
-    required this.additionalPrice});
+    required this.additionalPrice,
+  });
 
   factory DetailsOptionEntity.fromJson(Map<String, dynamic> json) {
     return DetailsOptionEntity(
-      detailOptionName: json['detailOptionName'] as String,
-      additionalPrice: json['additionalPrice'] as int,
+      detailOptionName: json['detailOptionName'],
+      additionalPrice: json['additionalPrice'],
     );
   }
 
@@ -96,7 +105,34 @@ class DetailsOptionEntity {
 }
 
 enum Category {
-  COFFEE, OTHERS, SMOOTHIE, AID, TEA, DESSERT, DRINK
+  COFFEE,
+  OTHERS,
+  SMOOTHIE,
+  AID,
+  TEA,
+  DESSERT,
+  DRINK
+}
+// 카테고리 변환 함수
+Category convertStringToCategory(String categoryString) {
+  switch (categoryString) {
+    case 'COFFEE':
+      return Category.COFFEE;
+    case 'OTHERS':
+      return Category.OTHERS;
+    case 'SMOOTHIE':
+      return Category.SMOOTHIE;
+    case 'AID':
+      return Category.AID;
+    case 'TEA':
+      return Category.TEA;
+    case 'DESSERT':
+      return Category.DESSERT;
+    case 'DRINK':
+      return Category.DRINK;
+    default:
+      throw ArgumentError('Invalid category string: $categoryString');
+  }
 }
 
 enum Status {
