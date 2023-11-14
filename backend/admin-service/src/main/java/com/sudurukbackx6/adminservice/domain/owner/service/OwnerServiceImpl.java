@@ -153,6 +153,7 @@ public class OwnerServiceImpl implements OwnerService {
         StoreSaveEvent saveEvent = StoreSaveEvent.builder()
                 .storeId(store.getId())
                 .address(store.getAddress())
+                .storeName(store.getName())
                 .tel(store.getTel())
                 .description(store.getDescription())
                 .openTime(store.getOpenTime())
