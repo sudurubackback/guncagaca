@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 
@@ -271,57 +272,72 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                               Container(
                                 width: 40 * (deviceWidth / standardDeviceWidth),
                                 height: 60 * (deviceHeight / standardDeviceHeight),
-                                child:
-                                ElevatedButton(
+                                child:ElevatedButton(
                                   onPressed: () {
                                     if (!isSelected) {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            contentPadding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                            contentPadding: EdgeInsets.all(20),
                                             content: Container(
                                               width: 200 * (deviceWidth / standardDeviceWidth),
                                               height: 280 * (deviceHeight / standardDeviceHeight),
                                               child: SingleChildScrollView(
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start, // Align content to the left
                                                   children: [
                                                     // 모달 다이얼로그 내용
-                                                    Text('주문 정보:'),
-                                                    Text('주문 시간: ${order['orderTime']}'),
-                                                    Text('도착 시간: $formattedTime1'),
-                                                    Text('주문자 번호: ${order['memberId']}'),
-                                                    Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}'),
-                                                    Text('총 메뉴 수량: $totalQuantity'),
-                                                    Text('총 주문 가격: $formattedTotalPrice 원'),
+                                                    Text('주문 정보', style: TextStyle(fontSize: 25, height: 2)),
+                                                    Text('주문 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('도착 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('주문자 번호: ${order['memberId']}', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('총 메뉴 수량: $totalQuantity', style: TextStyle(fontSize: 20, height: 2)),
                                                     // 다른 주문 정보 출력...
 
                                                     // 메뉴 목록 출력
-                                                    Text('주문 메뉴 목록:'),
+                                                    Text('주문 메뉴 목록:', style: TextStyle(fontSize: 20, height: 2)),
+                                                    SizedBox(height: MediaQuery.of(context).size.height * 0.03 ,),
                                                     Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: order['menus'].map<Widget>((menu) {
                                                         String optionText = '';
-                                                        if (menu['options'] != null &&
-                                                            menu['options'].isNotEmpty) {
+                                                        if (menu['options'] != null && menu['options'].isNotEmpty) {
                                                           optionText = menu['options']
-                                                              .map<String>((option) =>
-                                                          '${option['optionName']} ${option['selectedOption']}')
+                                                              .map<String>((option) => '${option['optionName']} ${option['selectedOption']}')
                                                               .join(' ');
                                                         }
 
                                                         return Text(
-                                                          '${menu['menuName']} $optionText ${menu['quantity']}개',
-                                                          overflow: TextOverflow.ellipsis,
-                                                          maxLines: 1,
+                                                          '${menu['menuName']}\n(옵션) $optionText ${menu['quantity']}개',
+                                                          style: TextStyle(fontSize: 20, height: 2,color: PRIMARY_COLOR),
                                                         );
                                                       }).toList(),
                                                     ),
+                                                    Text('총 주문 가격: $formattedTotalPrice 원', style: TextStyle(fontSize: 27, height: 3)),
                                                   ],
                                                 ),
                                               ),
                                             ),
                                             actions: [
-                                              // 모달 다이얼로그 액션 버튼 등을 추가할 수 있습니다.
+                                              // 뒤로가기 버튼 추가
+                                              Positioned(
+                                                bottom: 10, // Adjust the distance from the bottom
+                                                right: 10, // Adjust the distance from the right
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('확인'),
+                                                  style: ElevatedButton.styleFrom(
+                                                    primary: PRIMARY_COLOR, // Set the button color
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(5.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
                                             ],
                                           );
                                         },
@@ -348,7 +364,10 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 ),
                               ),
 
-                              SizedBox(
+
+
+
+                                SizedBox(
                                 width: 2 * (deviceWidth / standardDeviceWidth),
                               ),
                               Container(

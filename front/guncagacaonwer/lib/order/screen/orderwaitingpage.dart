@@ -8,6 +8,7 @@ import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 
+import '../../common/const/colors.dart';
 import '../../common/dioclient.dart';
 
 class OrderWaitingPage extends StatefulWidget {
@@ -361,7 +362,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                         ),
                         // 두번째 컨테이너 (메뉴 총 개수, 메뉴-개수, 도착 예정 시간)
                         Container(
-                          width: 230 * (deviceWidth / standardDeviceWidth),
+                          width: 220 * (deviceWidth / standardDeviceWidth),
                           margin: EdgeInsets.only(top: 3 * (deviceHeight / standardDeviceHeight)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,59 +422,155 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          width: 24 * (deviceWidth / standardDeviceWidth),
-                        ),
                         // 세번째 컨테이너 (버튼)
-                        Container(
-                          child : Align(
-                            alignment: Alignment.centerRight,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    // 접수하기 버튼 클릭 시 수행할 동작 추가
-                                    await requestOrder(order['id']);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFF406AD6), // 버튼의 배경색
-                                    minimumSize: Size(
-                                        60 * (deviceWidth / standardDeviceWidth),
-                                        28 * (deviceHeight / standardDeviceHeight)), // 버튼의 최소 크기
+                        Row(children: [
+                          Container(
+                            width: 40 * (deviceWidth / standardDeviceWidth),
+                            height: 60 * (deviceHeight / standardDeviceHeight),
+                            child:ElevatedButton(
+                              onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        contentPadding: EdgeInsets.all(20),
+                                        content: Container(
+                                          width: 200 * (deviceWidth / standardDeviceWidth),
+                                          height: 280 * (deviceHeight / standardDeviceHeight),
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start, // Align content to the left
+                                              children: [
+                                                // 모달 다이얼로그 내용
+                                                Text('주문 정보', style: TextStyle(fontSize: 25, height: 2)),
+                                                Text('주문 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
+                                                Text('도착 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                Text('주문자 번호: ${order['memberId']}', style: TextStyle(fontSize: 20, height: 2)),
+                                                Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}', style: TextStyle(fontSize: 20, height: 2)),
+                                                Text('총 메뉴 수량: $totalQuantity', style: TextStyle(fontSize: 20, height: 2)),
+                                                // 다른 주문 정보 출력...
+
+                                                // 메뉴 목록 출력
+                                                Text('주문 메뉴 목록:', style: TextStyle(fontSize: 20, height: 2)),
+                                                SizedBox(height: MediaQuery.of(context).size.height * 0.03 ,),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: order['menus'].map<Widget>((menu) {
+                                                    String optionText = '';
+                                                    if (menu['options'] != null && menu['options'].isNotEmpty) {
+                                                      optionText = menu['options']
+                                                          .map<String>((option) => '${option['optionName']} ${option['selectedOption']}')
+                                                          .join(' ');
+                                                    }
+
+                                                    return Text(
+                                                      '${menu['menuName']}\n(옵션) $optionText ${menu['quantity']}개',
+                                                      style: TextStyle(fontSize: 20, height: 2,color: PRIMARY_COLOR),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                                Text('총 주문 가격: $formattedTotalPrice 원', style: TextStyle(fontSize: 27, height: 3)),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        actions: [
+                                          // 뒤로가기 버튼 추가
+                                          Positioned(
+                                            bottom: 10, // Adjust the distance from the bottom
+                                            right: 10, // Adjust the distance from the right
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('확인'),
+                                              style: ElevatedButton.styleFrom(
+                                                primary: PRIMARY_COLOR, // Set the button color
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5.0),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: Color(0xFFACACAC),
+                                    width: 1.0,
                                   ),
-                                  child: Text(
-                                    '접수하기',
-                                    style: TextStyle(
-                                      color: Colors.white, // 버튼 텍스트 색상
-                                      fontSize: 10 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
-                                    ),
-                                  ),
+                                  borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)), // 버튼 사이의 간격 조절
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // 주문 취소 버튼 클릭 시 수행할 동작 추가
-                                    showCancelDialog(order['id'],order['receiptId']);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFFD63737), // 버튼의 배경색
-                                    minimumSize: Size(
-                                      60 * (deviceWidth / standardDeviceWidth),
-                                      28 * (deviceHeight / standardDeviceHeight)), // 버튼의 최소 크기
-                                  ),
-                                  child: Text(
-                                    '주문 취소',
-                                    style: TextStyle(
-                                      color: Colors.white, // 버튼 텍스트 색상
-                                      fontSize: 10 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
-                                    ),
-                                  ),
+                              ),
+                              child: Text(
+                                '상세\n보기',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 3 * (deviceWidth / standardDeviceWidth),
+                          ),
+                          Container(
+                            child : Align(
+                              alignment: Alignment.centerRight,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      // 접수하기 버튼 클릭 시 수행할 동작 추가
+                                      await requestOrder(order['id']);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color(0xFF406AD6), // 버튼의 배경색
+                                      minimumSize: Size(
+                                          60 * (deviceWidth / standardDeviceWidth),
+                                          28 * (deviceHeight / standardDeviceHeight)), // 버튼의 최소 크기
+                                    ),
+                                    child: Text(
+                                      '접수하기',
+                                      style: TextStyle(
+                                        color: Colors.white, // 버튼 텍스트 색상
+                                        fontSize: 10 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 1 * (deviceHeight / standardDeviceHeight)), // 버튼 사이의 간격 조절
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // 주문 취소 버튼 클릭 시 수행할 동작 추가
+                                      showCancelDialog(order['id'],order['receiptId']);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color(0xFFD63737), // 버튼의 배경색
+                                      minimumSize: Size(
+                                          60 * (deviceWidth / standardDeviceWidth),
+                                          28 * (deviceHeight / standardDeviceHeight)), // 버튼의 최소 크기
+                                    ),
+                                    child: Text(
+                                      '주문 취소',
+                                      style: TextStyle(
+                                        color: Colors.white, // 버튼 텍스트 색상
+                                        fontSize: 10 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],),
+
                       ],
                     ),
                   ),
