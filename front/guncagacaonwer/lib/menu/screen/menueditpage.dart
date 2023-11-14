@@ -63,7 +63,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                       children: [
                         Expanded(
                           child: TextField(
-                            controller: TextEditingController(text: optionsList[index].optionName),
+                            key: ValueKey('optionName-$index'),
                             onChanged: (value) {
                               optionsList[index].optionName = value;
                             },
@@ -111,7 +111,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                     child: Container(
                       width: 150,
                       child: TextField(
-                        controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].detailOptionName),
+                        key: ValueKey('detailOptionName-$index-$detailIndex'),
                         onChanged: (value) {
                           optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                         },
@@ -125,14 +125,18 @@ class _MenuEditPageState extends State<MenuEditPage> {
                   Expanded(
                     child: Container(
                       width: 150,
-                      child: TextField(
-                        controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
-                        onChanged: (value) {
-                          optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                      child: ValueListenableBuilder(
+                        valueListenable: ValueNotifier(optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
+                        builder: (context, value, child) {
+                          return TextField(
+                            onChanged: (value) {
+                              optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                            },
+                            decoration: InputDecoration(
+                              hintText: '세부 옵션 가격',
+                            ),
+                          );
                         },
-                        decoration: InputDecoration(
-                          hintText: '세부 옵션 가격',
-                        ),
                       ),
                     ),
                   ),
@@ -158,7 +162,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
     });
   }
 
-// 옵션 위젯을 업데이트하는 메서드
+  // 옵션 위젯을 업데이트하는 메서드
   void _updateItemWidgets() {
     itemWidgets = optionsList.map((option) {
       int index = optionsList.indexOf(option);
@@ -173,7 +177,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: TextEditingController(text: option.optionName),
+                          key: ValueKey('optionName-$index'),
                           onChanged: (value) {
                             optionsList[index].optionName = value;
                           },
@@ -221,7 +225,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                   child: Container(
                     width: 150,
                     child: TextField(
-                      controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].detailOptionName),
+                      key: ValueKey('detailOptionName-$index-$detailIndex'),
                       onChanged: (value) {
                         optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                       },
@@ -235,14 +239,18 @@ class _MenuEditPageState extends State<MenuEditPage> {
                 Expanded(
                   child: Container(
                     width: 150,
-                    child: TextField(
-                      controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
-                      onChanged: (value) {
-                        optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                    child: ValueListenableBuilder(
+                      valueListenable: ValueNotifier(optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
+                      builder: (context, value, child) {
+                        return TextField(
+                          onChanged: (value) {
+                            optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                          },
+                          decoration: InputDecoration(
+                            hintText: '세부 옵션 가격',
+                          ),
+                        );
                       },
-                      decoration: InputDecoration(
-                        hintText: '세부 옵션 가격',
-                      ),
                     ),
                   ),
                 ),
