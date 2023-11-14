@@ -40,7 +40,7 @@ class _ReviewTabWidgetState extends State<MenuTabWidget> {
   Dio dio = DioClient.getInstance();
 
   Future<Map<String, List<Menu>>> fetchMenuList() async {
-    final String apiUrl = "$baseUrl/api/ceo/${widget.cafeId}/menu";
+    final String apiUrl = "$baseUrl/api/owner/${widget.cafeId}/menu";
     final response = await dio.get(apiUrl);
 
     if (response.statusCode == 200) {

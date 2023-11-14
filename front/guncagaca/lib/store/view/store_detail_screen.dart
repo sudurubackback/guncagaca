@@ -30,6 +30,7 @@ class StoreDetailScreen extends StatefulWidget {
 class _StoreDetailScreenState extends State<StoreDetailScreen> {
   bool? isLiked;
   bool? isOpen;
+  bool loading = true;
   late Future<StoreDetail?> storeDetailFuture;
   late SharedPreferences prefs;
   final token = TokenManager().token;
@@ -64,6 +65,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
       isLiked = response.data['liked'];
       isOpen = response.data['open'];
       widget.mainViewModel.updateTitle(response.data['cafeName']);
+      loading = false;
       return StoreDetail.fromMap(response.data);
     } else {
       throw Exception("Failed to fetch store detail.");
@@ -109,7 +111,9 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
           storeDetail = snapshot.data!;
           return Hero(
               tag: "store",
-              child: Scaffold(
+              child: loading
+                  ? Center(child: CircularProgressIndicator())
+                  : Scaffold(
                 appBar: CustomAppBar(title: storeDetail!.cafeName, mainViewModel: widget.mainViewModel,),
                 body: ListView(
                   children: [
