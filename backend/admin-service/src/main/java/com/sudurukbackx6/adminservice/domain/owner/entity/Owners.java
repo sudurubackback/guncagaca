@@ -31,7 +31,7 @@ public class Owners extends TimeEntity {
     private String tel;
 
     @OneToOne
-    @JoinColumn(name = "owners_id")  // 수정된 부분
+    @JoinColumn(name = "store_id")  // 수정된 부분
     private Store store;
 
     private boolean validation = false;
