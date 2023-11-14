@@ -40,10 +40,10 @@ public class StoreController {
     }
     
     //카페 정보 수정 //admin
-    @PutMapping(value = "/",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+    @PutMapping(value = "/info",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "카페 정보 수정", description = "tel, description, openTime, closeTime, file 필요", tags = { "Store Controller" })
-    public ResponseEntity<? extends BaseResponseBody> updateCafeInfo(@RequestPart(value="file", required = false) MultipartFile multipartFile, @RequestHeader("Email") String email, @ModelAttribute StoreUpdateReqDto storeUpdateReqDto) throws IOException {
-        storeService.updateCafeInfo(email, storeUpdateReqDto, multipartFile);
+    public ResponseEntity<? extends BaseResponseBody> updateCafeInfo(@RequestPart(value="file", required = false) MultipartFile multipartFile, @RequestHeader("Email") String email, @RequestPart StoreUpdateReqDto reqDto) throws IOException {
+        storeService.updateCafeInfo(email, reqDto, multipartFile);
         return ResponseEntity.status(200).body(new BaseResponseBody(200, "카페 정보 수정 성공"));
     }
 
