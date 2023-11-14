@@ -17,7 +17,11 @@ public enum ErrorCode {
 
 
     FAIL_SENDMAIL(HttpStatus.BAD_REQUEST, 400, "이메일 전송에 실패하였습니다."),
-    DONT_MATCH_CODE(HttpStatus.BAD_REQUEST, 400, "인증코드가 일치하지 않습니다.");
+    DONT_MATCH_CODE(HttpStatus.BAD_REQUEST, 400, "인증코드가 일치하지 않습니다."),
+
+    NOT_EXISTS_BUSINESS(HttpStatus.BAD_REQUEST, 400, "존재하지 않는 사업자입니다."),
+    NOT_EXISTS_OWNER(HttpStatus.BAD_REQUEST, 400, "존재 하지 않는 사용자입니다."),
+    NOT_EXISTS_ADDRESS(HttpStatus.BAD_REQUEST,400, "주소가 없습니다.");
 
     private HttpStatus httpStatus;
     private int errorCode;

@@ -21,4 +21,6 @@ public class BusinessValidReqDto {
     private String owner_name;
     private String open_date;
     private String account_number;  //계좌번호
+
+    private String tel;
 }

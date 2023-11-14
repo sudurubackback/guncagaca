@@ -84,10 +84,11 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void deleteOwner(String email, String password) {
-        //로그아웃, redis에서 해당 토큰을 지운다.
+        //회원탈퇴
         Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
         if (passwordEncoder.matches(password,owner.getPassword())) {
             redisUtil.deleteRefreshToken(email);
+            ownersRepository.deleteByEmail(email);
         } else {
             throw new BadRequestException(ErrorCode.NOT_MATCH);
         }
@@ -95,7 +96,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void signOut(String email) {
-        //회원탈퇴, redis에서 해당 토큰을 지운다
+        //로그아웃
         redisUtil.deleteRefreshToken(email);
     }
 
@@ -143,7 +144,7 @@ public class OwnerServiceImpl implements OwnerService {
                 .password(owner.getPassword())
                 .tel(owner.getTel())
                 .ip(owner.getIp())
-                .ddns(owner.getDdns())
+//                .ddns(owner.getDdns())
                 .build();
 
         kafkaEventService.publishbySignup("adminOwner", signupEvent);
@@ -202,7 +203,7 @@ public class OwnerServiceImpl implements OwnerService {
 
         return NetworkResDto.builder()
                 .ip(owner.getIp())
-                .ddns(owner.getDdns())
+//                .ddns(owner.getDdns())
                 .port(owner.getPort())
                 .build();
     }

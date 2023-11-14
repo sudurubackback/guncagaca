@@ -31,7 +31,7 @@ public class Owners extends TimeEntity {
     private String tel;
 
     @OneToOne
-    @JoinColumn(name = "owners_id")  // 수정된 부분
+    @JoinColumn(name = "store_id")  // 수정된 부분
     private Store store;
 
     private boolean validation = false;
@@ -41,7 +41,7 @@ public class Owners extends TimeEntity {
 
     private String port;
 
-    private String ddns;
+//    private String ddns;
 
     private Role role;
 
@@ -74,7 +74,6 @@ public class Owners extends TimeEntity {
 
     public void changeNetwork(String ip, String ddns, String port) {
         this.ip = ip;
-        this.ddns = ddns;
         this.port = port;
     }
 
