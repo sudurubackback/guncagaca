@@ -147,7 +147,7 @@ public class OrderService {
                     orderMenu = menus.get(0).getMenuName();
                 }
             }
-            publishOrderEvent(email, memberId, Status.COMPLETE, order.getStoreId(), null, orderMenu);
+            publishOrderEvent(email, memberId, Status.CANCELED, order.getStoreId(), null, orderMenu);
 
             return true;
         }
@@ -247,7 +247,7 @@ public class OrderService {
                 orderMenu = menus.get(0).getMenuName();
             }
         }
-        publishOrderEvent(email, memberId, Status.COMPLETE, order.getStoreId(), null, orderMenu);
+        publishOrderEvent(email, memberId, Status.REQUEST, order.getStoreId(), null, orderMenu);
 
         return "주문 접수가 완료되었습니다.";
     }
