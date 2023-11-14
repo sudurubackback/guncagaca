@@ -144,12 +144,6 @@ public class StoreServiceImpl implements StoreService {
 //        storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
         Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
         Store store = owner.getStore();
-
-        if (multipartFile == null || multipartFile.isEmpty()) {
-            store.update(storeUpdateReqDto,null);
-            return;
-        }
-
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         store.update(storeUpdateReqDto,upload);
     }
