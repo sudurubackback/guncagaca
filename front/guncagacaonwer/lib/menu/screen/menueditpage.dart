@@ -1,15 +1,15 @@
 import 'dart:convert';
-import 'dart:html' as html;
+import 'dart:html';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/menu/models/menueditmodel.dart' as request;
+import 'package:guncagacaonwer/menu/models/menueditmodel.dart';
 import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart' as response;
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
-import 'package:universal_html/html.dart' as html;
+import 'package:image_picker_for_web/image_picker_for_web.dart';
 
 
 class MenuEditPage extends StatefulWidget {
@@ -388,38 +388,72 @@ class _MenuEditPageState extends State<MenuEditPage> {
     }).toList();
   }
 
-  Uint8List? _imageBytes;
-  String _imageFileName = '';
+  // void uploadImage(void Function(Uint8List, String) onDataChanged) async {
+  //   // 이미지 업로드
+  //   FileUploadInputElement uploadInput = FileUploadInputElement();
+  //   uploadInput.click();
+  //
+  //   await for (var event in uploadInput.onChange) {
+  //     final files = uploadInput.files;
+  //     if (files != null && files.length == 1) {
+  //       final blob = files[0];
+  //       final reader = FileReader();
+  //       reader.readAsDataUrl(blob);
+  //       await for (var event in reader.onLoadEnd) {
+  //         final dataUrl = reader.result as String;
+  //         final base64 = dataUrl.split(',').last;
+  //         Uint8List data = base64Decode(base64);
+  //         onDataChanged(data, blob.name); // 파일명을 콜백으로 전달
+  //       }
+  //     }
+  //   }
+  // }
+  //
+  // Uint8List? _imageBytes; // 이미지 데이터를 저장할 변수
+  // String? _fileName; // 파일 이름을 저장할 변수
+  //
+  // void _loadImage() {
+  //   uploadImage((data, fileName) {
+  //     setState(() {
+  //       _imageBytes = data;
+  //       _fileName = fileName; // 파일 이름을 저장
+  //     });
+  //   });
+  // }
 
-  void _loadImage() {
-    final html.FileUploadInputElement input = html.FileUploadInputElement();
-    input.accept = 'image/*';
-    input.click();
+  // String selectFile = '';
+  // // XFile file;
+  // late Uint8List selectedImageInBytes;
+  //
+  // _loadImage(bool imageFrom) async {
+  //   FilePickerResult? fileResult = await FilePicker.platform.pickFiles();
+  //
+  //   if (fileResult != null) {
+  //     setState(() {
+  //       selectFile = fileResult.files.first.name;
+  //       selectedImageInBytes = fileResult.files.first.bytes!;
+  //     });
+  //
+  //   }
+  //   print(selectFile);
+  // }
 
-    input.onChange.listen((html.Event e) {
-      final html.File file = input.files!.first;
-      final html.FileReader reader = html.FileReader();
-
-      reader.onLoadEnd.listen((html.ProgressEvent e) {
-        setState(() {
-          _imageBytes = reader.result as Uint8List;
-
-          // 파일명을 저장
-          _imageFileName = file.name;
-
-          // 선택한 이미지를 selectedImage로 대체
-          selectedImage = _imageBytes != null ? _imageFileName : widget.menuInfo.img;
-
-          // Uint8List를 base64 인코딩하여 String으로 변환
-          String base64Image = base64Encode(_imageBytes as List<int>);
-
-          // 이후에 base64Image를 사용하여 필요한 곳에 전달 또는 처리합니다.
-        });
-      });
-      reader.readAsArrayBuffer(file);
-    });
-  }
-
+  // Future<Uint8List?> pickImage() async {
+  //   final ImagePickerPlugin _picker = ImagePickerPlugin();
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //
+  //   if (image != null) {
+  //     final Blob blob = await image.readAsBlob();
+  //     final reader = FileReader();
+  //     reader.readAsArrayBuffer(blob);
+  //     await reader.onLoad.first;
+  //     final Uint8List bytes = reader.result as Uint8List;
+  //     return bytes;
+  //   } else {
+  //     print("이미지가 선택되지 않았습니다.");
+  //     return null;
+  //   }
+  // }
 
   @override
   void initState() {
@@ -448,65 +482,101 @@ class _MenuEditPageState extends State<MenuEditPage> {
   }
 
   Future<void> _updateMenu() async {
+    var menuEditRequest = MenuEditRequest(
+      id: widget.menuInfo.id,
+      name: menunameController.text,
+      price: int.parse(menupriceController.text),
+      description: desController.text,
+      img: '',
+      category: selectedCategory!,
+      optionsList: optionsList,
+    );
+    // FormData 생성
+    FormData formData = FormData();
+
+    // 이미지 파일 추가
+    // formData.files.add(MapEntry(
+    //   'file',
+      // MultipartFile.fromBytes(
+      //   selectedImageInBytes,
+      //   filename: selectFile,
+      //   contentType: MediaType('image', 'jpeg'), // 필요한 경우 변경하세요
+      // ),
+    // ));
+
+    // JSON 데이터 추가
+    formData.fields.add(MapEntry(
+      'request',
+      jsonEncode(menuEditRequest.toJson()),
+    ));
+
+    // 요청 옵션 설정
+    var options = Options(
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'multipart/form-data',
+      },
+      method: 'PUT',
+    );
+
     try {
-      var requestUrl = 'https://k9d102.p.ssafy.io/api/owner/menu/edit';
-
-      // 메뉴 정보 생성
-      var menuEditRequest = request.MenuEditRequest(
-        id: widget.menuInfo.id,
-        name: menunameController.text,
-        price: int.parse(menupriceController.text),
-        description: desController.text,
-        img: "",
-        category: selectedCategory!,
-        optionsList: optionsList,
-      );
-
-      // JSON 데이터를 문자열로 변환
-      String jsonData = jsonEncode(menuEditRequest.toJson());
-
-      // FormData 생성
-      FormData formData = FormData.fromMap({
-        'file': MultipartFile.fromFile(
-          _imageBytes! as String,
-          filename: _imageFileName.isNotEmpty ? _imageFileName : 'menu_image.jpg',
-          contentType: MediaType('image', 'jpeg'),
-        ),
-        'request': jsonData, // JSON 데이터 추가
-      });
-
-      // 요청 데이터 출력
-      print('Request Data:');
-      print(jsonData);
-
-      // Dio로 PUT 요청
-      var response = await dio.put(
-        requestUrl,
+      // 요청 전송
+      var response = await dio.request(
+        'https://k9d102.p.ssafy.io/api/owner/menu/edit',
         data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $accessToken',
-            'Content-Type': 'application/json',          },
-        ),
+        options: options,
       );
-      print(response);
-
-      if (response.statusCode != 200) {
-        // 응답이 성공적이지 않으면 오류 처리
-        print('Response Data (Error):');
-        print(response.toString());
-        throw Exception('Failed to update menu');
+      if (response.statusCode == 200) {
+        // 성공시 처리
+        print('Success: ${response.statusMessage}');
       } else {
-        // 응답이 성공적이면 응답 데이터 출력
-        print('Response Data:');
-        print(response.toString());
+        // 실패시 처리
+        print('Failure: ${response.statusMessage}');
       }
-    } catch (error) {
-      // 오류 처리
-      print('Error updating menu: $error');
-      // 예: 사용자에게 오류 메시지 표시
+    } catch (e) {
+      print(formData.fields.toString());
+      print(e);
     }
   }
+
+  //     // JSON 데이터 생성
+  //     var data = {
+  //       'id': widget.menuInfo.id,
+  //       'name': menunameController.text,
+  //       'price': int.parse(menupriceController.text),
+  //       'description': desController.text,
+  //       'img': '', // Base64 인코딩된 이미지 데이터를 'img' 필드에 추가
+  //       'category': selectedCategory!.toString(),
+  //       'optionsList' : optionsList,
+  //     };
+  //
+  //     try {
+  //       // PUT 요청
+  //       http.Response response = await http.put(
+  //         Uri.parse('https://k9d102.p.ssafy.io/api/owner/menu/edit'),
+  //         headers: <String, String>{
+  //           'Content-Type': 'application/json; charset=UTF-8',
+  //           'Authorization': 'Bearer $accessToken',
+  //         },
+  //         body: jsonEncode(data), // JSON 데이터를 문자열로 변환하여 본문에 추가
+  //       );
+  //
+  //       if (response.statusCode == 200) {
+  //         // 성공시 처리
+  //         print('Success: ${response.body}');
+  //       } else {
+  //         // 실패시 처리
+  //         print('Failure: ${response.body}');
+  //       }
+  //     } catch (e) {
+  //       print(e);
+  //     }
+  //   }
+  // }
+
+  // updateMenu() async {
+  //   File imageFile =
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -546,7 +616,9 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           height: 3 * (deviceHeight / standardDeviceHeight),
                         ),
                         ElevatedButton(
-                          onPressed: _loadImage,
+                          onPressed: () {
+                            // _loadImage(true);
+                          },
                           child: Text('이미지 변경'),
                         ),
                       ],
@@ -554,17 +626,13 @@ class _MenuEditPageState extends State<MenuEditPage> {
                     SizedBox(
                       width: 5 * (deviceWidth / standardDeviceWidth),
                     ),
-                    _imageBytes != null
-                      ? Image.memory(
-                        _imageBytes!,
-                        width: 90 * (deviceWidth / standardDeviceWidth),
-                        height: 70 * (deviceHeight / standardDeviceHeight),
-                      )
-                      : Image.network(
-                        selectedImage, // 이미지 파일 경로
-                        width: 90 * (deviceWidth / standardDeviceWidth),
-                        height: 70 * (deviceHeight / standardDeviceHeight),
-                      ), // 이미지 표시
+                    // selectFile.isEmpty
+                    //   ? Image.network(
+                    //     selectedImage, // 이미지 파일 경로
+                    //     width: 90 * (deviceWidth / standardDeviceWidth),
+                    //     height: 70 * (deviceHeight / standardDeviceHeight),
+                    //   )
+                    // : Image.memory(selectedImageInBytes)// 이미지 표시
                   ],
                 ),
                 SizedBox(
