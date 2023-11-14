@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/store/api/review_api_service.dart';
 import 'package:guncagacaonwer/store/models/reviewmodel.dart';
@@ -15,10 +15,10 @@ class _ReviewPageState extends State<ReviewPage> {
   List<ReviewResponse> reviewData = [];
 
   late ApiService apiService;
-  static final storage = FlutterSecureStorage();
 
   Future<void> setupApiService() async {
-    String? accessToken = await storage.read(key: 'accessToken');
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));

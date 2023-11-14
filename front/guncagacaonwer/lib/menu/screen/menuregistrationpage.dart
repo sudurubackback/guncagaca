@@ -8,8 +8,8 @@ import 'package:guncagacaonwer/menu/api/menuallpage_api_service.dart';
 import 'package:guncagacaonwer/menu/models/menuregistermodel.dart' as request;
 import 'package:guncagacaonwer/menu/models/menuregistermodel.dart';
 import 'package:guncagacaonwer/menu/models/ownerinfomodel.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/menu/screen/menuallpage.dart';
+import 'package:shared\_preferences/shared\_preferences.dart';
 import 'package:guncagacaonwer/menu/screen/menupage.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -295,12 +295,11 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
   }
 
   late ApiService apiService;
-  static final storage = FlutterSecureStorage();
   String? accessToken;
 
   Future<void> setupApiService() async {
-    accessToken = await storage.read(key: 'accessToken');
-    print("여기 있음 ${accessToken}");
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));

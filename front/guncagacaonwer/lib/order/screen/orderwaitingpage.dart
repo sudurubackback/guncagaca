@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared\_preferences/shared\_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagacaonwer/order/api/waitingpage_api_service.dart';
 import 'package:guncagacaonwer/order/models/ordercancelmodel.dart';
@@ -20,13 +20,14 @@ class OrderWaitingPage extends StatefulWidget {
 class _OrderWaitingPageState extends State<OrderWaitingPage> {
   List<Map<String, dynamic>> orders = []; // ordersData 리스트 선언
   late ApiService apiService;
-  static final storage = FlutterSecureStorage();
+
 
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   Future<void> setupApiService() async {
-    String? accessToken = await storage.read(key: 'accessToken');
-    String? email = await storage.read(key: 'email');
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
+    String? email = prefs.getString('email');
     print("email : $email");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
@@ -86,21 +87,17 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   Future<void> requestOrder(String orderId) async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-      print("주문접수요청");
-      print(ownerResponse.email);
-      print(orderId);
-      // String email = ownerResponse.email;
-      print(await storage.read(key: 'accessToken'));
+      final prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
       if (orderId != null) {
         final response = await dio.post(
-            'https://k9d102.p.ssafy.io/api/order/request/$orderId',
+          'https://k9d102.p.ssafy.io/api/order/request/$orderId',
           options: Options(
-            headers: {'Authorization': 'Bearer ${await storage.read(key: 'accessToken')}',}, // 헤더에 이메일 추가
+            headers: {'Authorization': 'Bearer $accessToken'},
           ),
         );
 
         if (response.statusCode == 200) {
-
           print("주문성공");
           fetchOrders();
           Fluttertoast.showToast(
@@ -112,8 +109,9 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
+
           // 소리 재생
-          await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
+          await _audioPlayer.setAsset('assets/sound/sound1.mp3');
           await _audioPlayer.play();
           print("화면이 새로 고쳐집니다.");
         } else {
@@ -144,6 +142,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   }
 
 
+
   // 취소 사유 리스트
   List<String> cancelReasons = ['사유1', '사유2', '사유3'];
   String selectedReason = "";
@@ -152,16 +151,13 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
   Future<void> cancelOrder(String orderId,String receiptId,String reason) async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-      print("주문취소요청");
-      print(ownerResponse.email);
-      print(orderId);
-      // String email = ownerResponse.email;
-      print(await storage.read(key: 'accessToken'));
+      final prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
       if (orderId != null) {
         final response = await dio.post(
           'https://k9d102.p.ssafy.io/api/order/cancel',
           options: Options(
-            headers: {'Authorization': 'Bearer ${await storage.read(key: 'accessToken')}',}, // 헤더에 이메일 추가
+            headers: {'Authorization': 'Bearer ${accessToken}',}, // 헤더에 이메일 추가
           ),
           data: {'orderId': orderId,'receiptId': receiptId, 'reason': reason},
         );

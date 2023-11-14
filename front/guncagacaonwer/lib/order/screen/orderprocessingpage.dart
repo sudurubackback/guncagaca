@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:shared\_preferences/shared\_preferences.dart';
 
 import '../../common/dioclient.dart';
 import '../api/processingpage_api_service.dart';
@@ -24,10 +24,10 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
   late ApiService apiService;
 
   final AudioPlayer _audioPlayer = AudioPlayer();
-  static final storage = FlutterSecureStorage();
 
   Future<void> setupApiService() async {
-    String? accessToken = await storage.read(key: 'accessToken');
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));
@@ -86,14 +86,14 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
   Future<void> completeOrder(String orderId) async {
     try {
       final ownerResponse = await apiService.getOwnerInfo();
-      print("주문완료요청");
-      print(orderId);
-      print(await storage.read(key: 'accessToken'));
+      final prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
+
       if (orderId != null) {
         final response = await dio.post(
           'https://k9d102.p.ssafy.io/api/order/complete/$orderId',
           options: Options(
-            headers: {'Authorization': 'Bearer ${await storage.read(key: 'accessToken')}',}, // 헤더에 이메일 추가
+            headers: {'Authorization': 'Bearer ${accessToken}',}, // 헤더에 이메일 추가
           ),
         );
 

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared\_preferences/shared\_preferences.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:guncagacaonwer/menu/api/menuallpage_api_service.dart';
 import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart';
@@ -16,10 +16,10 @@ class _MenuAllPageState extends State<MenuAllPage> {
   int selectedButtonIndex = 0;
 
   late ApiService apiService;
-  static final storage = FlutterSecureStorage();
 
   Future<void> setupApiService() async {
-    String? accessToken = await storage.read(key: 'accessToken');
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
     print("여기 있음 ${accessToken}");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));

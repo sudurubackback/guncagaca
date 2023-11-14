@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:guncagacaonwer/login/api/siginin__api.dart';
 import 'package:guncagacaonwer/login/models/sign_in.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInApiService {
-  static final storage = FlutterSecureStorage(); // FlutterSecureStorage를 storage로 저장
   static final BaseOptions options = BaseOptions(
     baseUrl: Api.BASE_URL,
     connectTimeout: Duration(seconds: 5),
@@ -45,8 +44,9 @@ class SignInApiService {
 
   Future<bool> refresh() async {
     //header에 refreshtoken을 넣어서 보냄
-    String? refreshToken = await storage.read(key: 'refreshToken');
 
+    final pref = await SharedPreferences.getInstance();
+    String? refreshToken = pref.getString('refreshToken');
     dio.options.headers['Authorization'] = 'Bearer $refreshToken';
 
     try{
@@ -69,8 +69,17 @@ class SignInApiService {
   }
 
   Future<void> saveToken(TokenResult tokenResult) async {
-    storage.write(key: 'accessToken', value: tokenResult.accessToken);
-    storage.write(key: 'refreshToken', value: tokenResult.refreshToken);
+    final prefs = await SharedPreferences.getInstance();
+
+    // accessToken이 null이 아닌 경우에만 저장
+    if (tokenResult.accessToken != null) {
+      prefs.setString('accessToken', tokenResult.accessToken!);
+    }
+
+    // refreshToken이 null이 아닌 경우에만 저장
+    if (tokenResult.refreshToken != null) {
+      prefs.setString('refreshToken', tokenResult.refreshToken!);
+    }
   }
 
 }

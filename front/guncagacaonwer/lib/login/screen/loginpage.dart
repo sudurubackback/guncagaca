@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/login/api/siginin_api_service.dart';
 import 'package:guncagacaonwer/store/screen/storepage.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -24,9 +24,11 @@ class _LoginPageState extends State<LoginPage> {
 
   void _checkStorage() async {
     print("자동 로그인 시도했음");
-    String? refreshToken = await storage.read(key: 'refreshToken');
-    bool? autoLoginValue = (await storage.read(key: 'autoLogin')) == 'true';
 
+
+    final prefs = await SharedPreferences.getInstance();
+    String? refreshToken = prefs.getString('refreshToken');
+    bool? autoLoginValue = prefs.getBool('autoLogin')=='true';
     // Navigator.of(context).pushReplacement(MaterialPageRoute(
     //   builder: (context) => StorePage(),
     // ));
@@ -52,8 +54,6 @@ class _LoginPageState extends State<LoginPage> {
 
   var email = TextEditingController();
   var password = TextEditingController();
-
-  static final storage = FlutterSecureStorage(); // FlutterSecureStorage를 storage로 저장
 
   Color mainColor = Color(0xFF9B5748);
   bool loginState = false;
@@ -180,7 +180,9 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: () async {
                       bool result = await apiService.signin(email.text, password.text);
-                      await storage.write(key: 'autoLogin', value: loginState ? 'true' : 'false');
+
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('authLogin', loginState);
 
                       if(result == false) {
                         return;

@@ -1,4 +1,4 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared\_preferences/shared\_preferences.dart';
 import 'package:guncagacaonwer/order/models/ordercancelmodel.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
 import 'package:guncagacaonwer/order/models/orderrequestmodel.dart';
@@ -10,8 +10,6 @@ part 'waitingpage_api_service.g.dart';
 
 class AuthInterceptor extends Interceptor {
   final String? token;
-  static final storage = FlutterSecureStorage();
-
   AuthInterceptor(this.token);
 
   @override

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagacaonwer/order/api/trackingpage_api_service.dart';
 import 'package:guncagacaonwer/order/models/orderlistmodel.dart';
+import 'package:shared\_preferences/shared\_preferences.dart';
 import 'package:intl/intl.dart';
 
 import '../../common/const/colors.dart';
@@ -56,10 +56,11 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
   List<Map<String, dynamic>> orders = []; // ordersData 리스트 선언
   late ApiService apiService;
 
-  static final storage = FlutterSecureStorage();
+
 
   Future<void> setupApiService() async {
-    String? accessToken = await storage.read(key: 'accessToken');
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));

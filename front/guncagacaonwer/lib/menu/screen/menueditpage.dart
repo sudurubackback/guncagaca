@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared\_preferences/shared\_preferences.dart';
 import 'package:guncagacaonwer/menu/models/menueditmodel.dart' as request;
 import 'package:guncagacaonwer/menu/models/menueditmodel.dart';
 import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart' as response;
@@ -436,11 +436,12 @@ class _MenuEditPageState extends State<MenuEditPage> {
     setupDio();
   }
 
-  static final storage = FlutterSecureStorage();
+
   String? accessToken;
   Dio dio = Dio();
   Future<void> setupDio() async {
-    accessToken = await storage.read(key: 'accessToken');
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true, request: true));
     dio.options.headers['Authorization'] = 'Bearer $accessToken'; // 헤더에 토큰 추가
   }
