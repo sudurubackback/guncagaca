@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -51,31 +52,34 @@ public class OrderController {
         return orderService.getStoredOrder(storeId);
     }
 
-/*    @GetMapping("/store/{storeId}/orders/summary")
-    public ResponseEntity<SalesSummaryResponse> getSalesSummary(
-            @PathVariable Long storeId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+//   @GetMapping("/store/{storeId}/orders/summary")
+//    public ResponseEntity<SalesSummaryResponse> getSalesSummary(
+//            @PathVariable Long storeId,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+//
+//        if (startDate == null || endDate == null) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//
+//        SalesSummaryResponse summary = orderService.getSalesSummary(storeId, startDate, endDate);
+//        return ResponseEntity.ok(summary);
+//    }
 
-        if (startDate == null || endDate == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        SalesSummaryResponse summary = orderService.getSalesSummary(storeId, startDate, endDate);
-        return ResponseEntity.ok(summary);
-    }*/
-
-    @GetMapping("waitlist/{storeId}")
-    public ResponseEntity<BaseResponseBody> getWaitList(@PathVariable Long storeId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(200, "사업자 인증 성공"));
+    // 기간 설정해서 주문 조회
+    @GetMapping("list/{storeId}")
+    public BaseResponseBody<List<Order>> getWaitList(@PathVariable Long storeId,
+                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime  startDate,
+                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        return new BaseResponseBody<>(200, "주문 조회 성공",  orderService.getOrdersByDateTime(storeId, startDate, endDate));
     }
 
+    // 주문 상태별 주문 조회
     @GetMapping("/list/{storeId}/{status}")
-    public BaseResponseBody<List<OrderListResDto>> getOrderList(@PathVariable Long storeId, @PathVariable String status) {
-//        return ResponseEntity.ok(orderService.getOrdersByStoreId(storeId));
+    public BaseResponseBody<List<Order>> getOrderList(@PathVariable Long storeId, @PathVariable String status) {
         //status가 1일 경우 order 조회
         if (status.equals("1")) {
-            return new BaseResponseBody<>(200, "주문 조회 성공", orderService.getOrdersByStoreId(storeId));
+            return new BaseResponseBody<>(200, "ordered 조회 성공", orderService.getOrdersByStoreId(storeId));
         }
 
         //status가 2일 경우 preparing조회

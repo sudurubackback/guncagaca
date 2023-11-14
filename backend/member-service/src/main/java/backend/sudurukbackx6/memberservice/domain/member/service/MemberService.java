@@ -209,4 +209,14 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다."));
         return member.getFcmToken();
     }
+
+    public void getSignout(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 이메일을 찾을수 없습니다."));
+
+        // FCM 토큰 삭제
+        member.setFcmToken("");
+        // JWT 삭제
+        redisUtil.deleteRefreshToken(email);
+    }
 }
