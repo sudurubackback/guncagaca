@@ -1,6 +1,9 @@
 package com.sudurukbackx6.adminservice.domain.store.service;
 
+import com.sudurukbackx6.adminservice.common.code.ErrorCode;
+import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.OwnerInfoResponse;
+import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
 import com.sudurukbackx6.adminservice.domain.owner.repository.OwnersRepository;
 import com.sudurukbackx6.adminservice.domain.store.client.StoreGeocoding;
@@ -8,6 +11,7 @@ import com.sudurukbackx6.adminservice.domain.store.client.dto.GeocodingDto;
 import com.sudurukbackx6.adminservice.domain.store.entity.Store;
 import com.sudurukbackx6.adminservice.domain.store.repository.StoreRepository;
 import com.sudurukbackx6.adminservice.domain.store.service.dto.StoreRequest;
+import com.sudurukbackx6.adminservice.domain.store.service.dto.reponse.StoreInfoResDto;
 import com.sudurukbackx6.adminservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import com.sudurukbackx6.adminservice.global.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -131,13 +135,57 @@ public class StoreServiceImpl implements StoreService {
         log.info("description : {}", storeUpdateReqDto.getDescription());
         System.out.println(storeUpdateReqDto.getDescription());
 
-        if(multipartFile==null || multipartFile.isEmpty()) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
             Store store = storeRepository.findById(cafeId).orElseThrow();
             storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), store.getImg(), cafeId);
             return;
         }
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
+    }
+
+    @Override
+    public StoreInfoResDto getStoreInfo(String email) {
+        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+        Store store = owner.getStore();
+
+        return StoreInfoResDto.builder()
+                .img(store.getImg())
+                .tel(store.getTel())
+                .description(store.getDescription())
+                .openTime(store.getOpenTime())
+                .closeTime(store.getCloseTime())
+                .build();
+    }
+
+    @Override
+    public Long initStore(Long ownerId) {
+        Owners owner = ownersRepository.findById(ownerId).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
+        Business business = owner.getBusiness();
+        GeocodingDto.Response response = getCoordinate(owner.getBusiness().getAddress());
+
+        if (response.getAddresses().isEmpty()) {
+            throw new BadRequestException(ErrorCode.NOT_EXISTS_ADDRESS);
+        }
+
+
+        GeocodingDto.Response.Address firstAddress = response.getAddresses().get(0);
+        String longitude = firstAddress.getX();
+        String latitude = firstAddress.getY();
+
+
+        Store store = Store.builder().
+                name(business.getName())
+                .latitude(Double.valueOf(latitude))
+                .longitude(Double.valueOf(longitude))
+                .address(business.getAddress())
+                .tel(business.getTel())
+                .build();
+
+        storeRepository.saveAndFlush(store);
+        // owner에 store 등록
+        owner.changeStore(store);
+        return store.getId();
     }
 
     // 좌표변환

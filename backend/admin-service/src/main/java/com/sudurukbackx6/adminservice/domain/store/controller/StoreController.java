@@ -47,5 +47,12 @@ public class StoreController {
         return ResponseEntity.status(200).body(new BaseResponseBody(200, "카페 정보 수정 성공"));
     }
 
+    // 카페 정보 조회
+    @GetMapping(value = "/info")
+    @Operation(summary = "카페 정보 조회", description = "카페 정보 조회", tags = { "Store Controller" })
+    public ResponseEntity<? extends BaseResponseBody> getStoreInfo(@RequestHeader("Email") String email) {
+        return ResponseEntity.status(200).body(new BaseResponseBody(200, "카페 정보 조회 성공", storeService.getStoreInfo(email)));
+    }
+
 
 }
