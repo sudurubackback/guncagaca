@@ -66,9 +66,9 @@ class SSEController {
         // 특정 조건을 만족할 때 다이얼로그 표시
         print('알림 옴');
         // 소리 재생
+        _showOrderDialog();
         await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
         await _audioPlayer.play();
-        _showOrderDialog();
       } as EventListener?);
     } catch (e) {
       print('SSE 초기화 오류: $e');

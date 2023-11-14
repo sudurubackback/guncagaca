@@ -79,14 +79,19 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
     DateTime? endDate = endingDate;
 
     print("날짜");
-    print(startDate.toString());
-    print(endDate.toString());
+
 
     // 날짜가 없을 경우 토스트 메시지를 표시하고 함수 종료
     if (startDate == null || endDate == null) {
       showToast("날짜가 입력되지 않았습니다.");
       return;
     }
+
+    // endDate에 하루를 추가
+    // endDate = endDate.add(Duration(days: 1));
+
+    print(startDate.toString());
+    print(endDate.toString());
 
     // 가져온 날짜로 주문을 조회합니다.
     fetchOrders(startDate!, endDate!);
@@ -116,6 +121,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
       print(ownerResponse.email);
       int storeId = ownerResponse.storeId;
       print(storeId);
+      endDate=endDate.add(Duration(days: 1));
       if (storeId != null) {
         final response = await dio.get(
           "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId",
@@ -132,6 +138,8 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
             // 'data' 키에 해당하는 주문 목록을 가져옵니다.
             orders = List<Map<String, dynamic>>.from(jsonData['data']);
             print(orders);
+            print(startDate);
+            print(endDate);
 
             if (orders.isEmpty) {
               showToast("데이터가 없습니다.");
