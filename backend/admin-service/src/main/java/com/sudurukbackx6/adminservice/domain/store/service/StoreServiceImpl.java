@@ -1,5 +1,7 @@
 package com.sudurukbackx6.adminservice.domain.store.service;
 
+import com.sudurukbackx6.adminservice.common.code.ErrorCode;
+import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.OwnerInfoResponse;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
 import com.sudurukbackx6.adminservice.domain.owner.repository.OwnersRepository;
@@ -8,6 +10,7 @@ import com.sudurukbackx6.adminservice.domain.store.client.dto.GeocodingDto;
 import com.sudurukbackx6.adminservice.domain.store.entity.Store;
 import com.sudurukbackx6.adminservice.domain.store.repository.StoreRepository;
 import com.sudurukbackx6.adminservice.domain.store.service.dto.StoreRequest;
+import com.sudurukbackx6.adminservice.domain.store.service.dto.reponse.StoreInfoResDto;
 import com.sudurukbackx6.adminservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import com.sudurukbackx6.adminservice.global.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -138,6 +141,20 @@ public class StoreServiceImpl implements StoreService {
         }
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
+    }
+
+    @Override
+    public StoreInfoResDto getStoreInfo(String email) {
+        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
+        Store store = owner.getStore();
+
+        return StoreInfoResDto.builder()
+                .img(store.getImg())
+                .tel(store.getTel())
+                .description(store.getDescription())
+                .openTime(store.getOpenTime())
+                .closeTime(store.getCloseTime())
+                .build();
     }
 
     // 좌표변환
