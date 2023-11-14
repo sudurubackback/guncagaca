@@ -122,6 +122,8 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
       int storeId = ownerResponse.storeId;
       print(storeId);
       endDate=endDate.add(Duration(days: 1));
+      endDate = endDate.add(Duration(hours: 9));
+      startDate = startDate.add(Duration(hours: 9));
       if (storeId != null) {
         final response = await dio.get(
           "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId",
@@ -262,6 +264,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                 style: ElevatedButton.styleFrom(
                   primary: Color(0xFFE54816), // 버튼의 배경색
                   shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0), // 둥근 모서리 반지름
                     side: BorderSide(
                       color: Color(0xFFACACAC), // 외곽선 색상
                       width: 1.0, // 외곽선 두께
@@ -272,10 +275,11 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                   '적용',
                   style: TextStyle(
                     color: Colors.white, // 버튼 텍스트 색상
-                    fontSize: 12 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
+                    fontSize: 11 * (deviceWidth / standardDeviceWidth), // 버튼 텍스트 크기
                   ),
                 ),
               ),
+
               SizedBox(width: 10 * (deviceWidth / standardDeviceWidth))
             ],
           ),
