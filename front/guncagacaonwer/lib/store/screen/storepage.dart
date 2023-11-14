@@ -23,6 +23,7 @@ class _StorePageState extends State<StorePage> {
       case 1:
         return ReviewPage();
     // return Center(child: Text("나머지 영역의 내용"));
+
       default:
         return Center(child: Text("나머지 영역의 내용"));
     }
