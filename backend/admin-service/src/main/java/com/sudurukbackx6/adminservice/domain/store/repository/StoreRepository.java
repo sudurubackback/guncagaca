@@ -16,6 +16,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Store s SET s.description = :description, s.closeTime = :closeTime, s.openTime = :openTime, s.img = :img WHERE s.id = :storeId")
-    void updateStoreInfo(@Param("description") String description, @Param("closeTime") String closeTime, @Param("openTime") String openTime, @Param("img") String img, @Param("storeId") Long storeId);
+    @Query("UPDATE Store s SET s.description = :description, s.closeTime = :closeTime, " +
+            "s.openTime = :openTime, s.img = :img, s.tel = :tel WHERE s.id = :storeId")
+    void updateStoreInfo(@Param("description") String description, @Param("closeTime") String closeTime, @Param("openTime") String openTime, @Param("img") String img,@Param("tel") String tel, @Param("storeId") Long storeId);
 }

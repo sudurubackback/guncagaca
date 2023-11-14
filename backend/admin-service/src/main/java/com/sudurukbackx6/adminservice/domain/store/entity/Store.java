@@ -1,6 +1,7 @@
 package com.sudurukbackx6.adminservice.domain.store.entity;
 
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
+import com.sudurukbackx6.adminservice.domain.store.service.dto.request.StoreUpdateReqDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -63,7 +64,14 @@ public class Store {
         this.starPoint = 0.0;
         this.description = description;
         this.owner = owner;
-
     }
 
+    public void update(StoreUpdateReqDto reqDto, String img )
+    {
+        this.tel = reqDto.getTel();
+        this.description = reqDto.getDescription();
+        this.openTime = reqDto.getOpenTime();
+        this.closeTime = reqDto.getCloseTime();
+        this.img = img;
+    }
 }
