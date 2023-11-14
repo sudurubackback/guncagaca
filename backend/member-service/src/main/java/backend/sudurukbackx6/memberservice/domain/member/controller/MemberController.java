@@ -31,8 +31,9 @@ public class MemberController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<SignResponseDto> getSignout(@RequestHeader("Email") String email) {
-        return ResponseEntity.ok(memberService.getSignout(email));
+    public ResponseEntity<String> getSignout(@RequestHeader("Email") String email) {
+        memberService.getSignout(email);
+        return ResponseEntity.ok("로그아웃이 완료되었습니다.");
     }
 
     @PostMapping("/refresh")
