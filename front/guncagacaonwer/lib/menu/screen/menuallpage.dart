@@ -56,6 +56,18 @@ class _MenuAllPageState extends State<MenuAllPage> {
     await apiService.deleteMenu(menuId);
   }
 
+  void _openEditMenuPage(MenuEntity menu) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MenuEditPage(menuInfo: menu)),
+    );
+
+    // 수정 창이 닫히고 수정이 성공적으로 이루어진 경우
+    if (result != null && result == true) {
+      _fetchMenus();  // 데이터 갱신
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -131,9 +143,9 @@ class _MenuAllPageState extends State<MenuAllPage> {
                               imageUrl: menu.img, // 이미지 파일 경로
                               placeholder: (context, url) => CircularProgressIndicator(),
                               errorWidget: (context, url, error) => Icon(Icons.error),
-                              width: 90 * (deviceWidth / standardDeviceWidth),
+                              width: 80 * (deviceWidth / standardDeviceWidth),
                               height: 70 * (deviceHeight / standardDeviceHeight),
-                              // fit: BoxFit.cover,
+                              fit: BoxFit.cover,
                             ),
                             if (menu.status == 'SOLD_OUT')
                               Container(
@@ -169,14 +181,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                           // 첫 번째 버튼
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return MenuEditPage(menuInfo: menu); // MenuEditPage는 메뉴 수정 페이지의 위젯입니다.
-                                  },
-                                ),
-                              );
+                              _openEditMenuPage(menu);  // 수정 버튼을 누르면 _openEditMenuPage 함수가 실행됩니다.
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Color(0xFF038527),
@@ -197,8 +202,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
                                         onPressed: () {
                                           // "삭제" 버튼을 누를 때 해당 항목을 리스트에서 제거하고 화면을 업데이트
                                           deleteMenu(menu.id);
-                                          Navigator.of(context).pop();
                                           _fetchMenus();
+                                          Navigator.of(context).pop();
                                         },
                                         child: Text('삭제'),
                                       ),

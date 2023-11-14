@@ -10,8 +10,9 @@ MenuRegisterRequest _$MenuRegisterRequestFromJson(Map<String, dynamic> json) =>
     MenuRegisterRequest(
       id: json['id'] as int,
       name: json['name'] as String,
-      price: json['price'] as int,
       description: json['description'] as String,
+      price: json['price'] as int,
+      img: json['img'] as String,
       category: $enumDecode(_$CategoryEnumMap, json['category']),
       optionsList: (json['optionsList'] as List<dynamic>)
           .map((e) => OptionsEntity.fromJson(e as Map<String, dynamic>))
@@ -24,8 +25,9 @@ Map<String, dynamic> _$MenuRegisterRequestToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'price': instance.price,
       'description': instance.description,
+      'price': instance.price,
+      'img': instance.img,
       'category': _$CategoryEnumMap[instance.category]!,
       'optionsList': instance.optionsList,
       'status': _$StatusEnumMap[instance.status]!,
