@@ -96,6 +96,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
     return Scaffold(
       body: Column(
         children: [
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
           Row(
             children: [
               SizedBox(width: 20 * (deviceWidth / standardDeviceWidth)),
@@ -113,12 +114,14 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                       enabled: false,
                       controller: startingDateController,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero, // 내용의 여백 제거
                         hintText: startingDate != null ? DateFormat('yyyy-MM-dd').format(startingDate!) : '시작일 선택',
                       ),
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                        fontSize: 8 * (deviceWidth / standardDeviceWidth),
                       ),
+                      textAlign: TextAlign.center, // 텍스트를 가운데 정렬
                     ),
                   ),
                 ),
@@ -142,8 +145,9 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                       ),
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 9 * (deviceWidth / standardDeviceWidth),
+                        fontSize: 8 * (deviceWidth / standardDeviceWidth),
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -222,7 +226,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '주문 시간',
+                                '도 시간',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 9 * (deviceWidth / standardDeviceWidth),
@@ -279,7 +283,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Text(
-                                "도착 예정 시간: " + timeOfDay + ' $hour:${time.split(":")[1]}',
+                                "$formattedTime",
                                 style: TextStyle(
                                   fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                 ),

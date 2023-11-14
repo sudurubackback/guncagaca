@@ -20,6 +20,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
 
   Future<void> setupApiService() async {
     String? accessToken = await storage.read(key: 'accessToken');
+    print("여기 있음 ${accessToken}");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));
@@ -39,18 +40,21 @@ class _MenuAllPageState extends State<MenuAllPage> {
   void _fetchMenus() async {
     final ownerResponse = await apiService.getOwnerInfo();
     int storeId = ownerResponse.storeId;
-    categorizedMenus = await apiService.getMenues(storeId.toString());
+    categorizedMenus = await apiService.getMenues(storeId);
     setState(() {});
   }
 
   void changeMenuStatus(String menuId) async {
-    await apiService.updateMenuStatus({'menuId': menuId});
+    await apiService.updateMenuStatus(menuId);
+
+    setState(() {
+      _fetchMenus();
+    });
   }
 
   void deleteMenu(String menuId) async {
-    await apiService.deleteMenu({'menuId': menuId});
+    await apiService.deleteMenu(menuId);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +123,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                       // 이미지
                       GestureDetector(
                         onTap: () {
-                          // changeMenuStatus(menuId);
+                          changeMenuStatus(menu.id);
                         },
                         child: Stack(
                           children: [
@@ -130,13 +134,17 @@ class _MenuAllPageState extends State<MenuAllPage> {
                               width: 90 * (deviceWidth / standardDeviceWidth),
                               height: 70 * (deviceHeight / standardDeviceHeight),
                               // fit: BoxFit.cover,
-                              color: menu.status == 'SOLD_OUT' ? Color.fromRGBO(0, 0, 0, 0.4) : null,
                             ),
                             if (menu.status == 'SOLD_OUT')
-                              Center(
-                                child: Text(
-                                  'SOLD OUT',
-                                  style: TextStyle(color: Colors.red, fontSize: 30),
+                              Container(
+                                width: 90 * (deviceWidth / standardDeviceWidth),
+                                height: 70 * (deviceHeight / standardDeviceHeight),
+                                color: Color.fromRGBO(0, 0, 0, 0.4),
+                                child: Center(
+                                  child: Text(
+                                    '품절',
+                                    style: TextStyle(color: Colors.red, fontSize: 30),
+                                  ),
                                 ),
                               ),
                           ],
@@ -188,15 +196,9 @@ class _MenuAllPageState extends State<MenuAllPage> {
                                       TextButton(
                                         onPressed: () {
                                           // "삭제" 버튼을 누를 때 해당 항목을 리스트에서 제거하고 화면을 업데이트
-                                          // deleteMenu(menu);
-                                          // setState(() {
-                                          //   // 리스트에서 항목 삭제하는 코드 (여기서는 예시로 index를 이용)
-                                          //   int index = menulists.indexOf(menu); // menu는 삭제하려는 항목
-                                          //   if (index != -1) {
-                                          //     menulists.removeAt(index);
-                                          //   }
-                                          // });
-                                          // Navigator.of(context).pop();
+                                          deleteMenu(menu.id);
+                                          Navigator.of(context).pop();
+                                          _fetchMenus();
                                         },
                                         child: Text('삭제'),
                                       ),

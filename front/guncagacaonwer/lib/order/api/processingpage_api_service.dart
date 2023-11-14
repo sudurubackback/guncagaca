@@ -32,7 +32,7 @@ abstract class ApiService {
       );
 
   // 사장님 정보
-  @GET("/api/ceo/ownerInfo")
+  @GET("/api/owner/ownerInfo")
   Future<OwnerInfoResponse> getOwnerInfo();
 
   // 주문 완료 요청

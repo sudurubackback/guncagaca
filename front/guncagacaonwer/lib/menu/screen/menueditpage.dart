@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:html' as html;
-import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:guncagacaonwer/menu/models/menueditmodel.dart' as request;
 import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart' as response;
-import 'package:file_picker/file_picker.dart';
-import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+import 'package:universal_html/html.dart' as html;
 
 
 class MenuEditPage extends StatefulWidget {
@@ -27,239 +27,432 @@ class _MenuEditPageState extends State<MenuEditPage> {
   TextEditingController menupriceController = TextEditingController();
   TextEditingController desController = TextEditingController();
 
-  String selectedImage = ""; // 선택된 이미지의 파일 경로
-  String selectedImageName = ""; // 선택된 이미지의 파일 이름
   request.Category? selectedCategory ; // 선택된 카테고리를 저장할 변수
-
-  List<request.OptionsEntity> optionsList = []; // 옵션 목록을 저장할 리스트
+  String selectedImage = ""; // 선택된 이미지의 파일 경로
+  List<request.OptionsEntity> optionsList = [];
   List<Widget> itemWidgets = [];
 
+  // 옵션 추가
   void _addItem() {
-    TextEditingController optionController = TextEditingController();
-    TextEditingController priceController = TextEditingController();
-
     setState(() {
       int index = itemWidgets.length;
 
-      // 해당 항목의 데이터를 optionsList에 추가
+      // 새로운 옵션을 optionsList에 추가
       optionsList.add(request.OptionsEntity(
-        id: '',
-        optionName: '', // 초기값 설정
-        detailsOptions: [request.DetailsOptionEntity(
-          id: '',
-          detailOptionName: '',
-          additionalPrice: 0,
-        )],
-      ));
-
-      itemWidgets.add(Row(
-        children: [
-          Expanded(
-            child: Container(
-              width: 150,
-              child: TextField(
-                controller: optionController,
-                onChanged: (value) {
-                  optionsList[index].optionName = value; // 사용자가 입력한 옵션 이름 저장
-                },
-                decoration: InputDecoration(
-                  hintText: '옵션 명',
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 20),
-          Expanded(
-            child: Container(
-              width: 150,
-              child: TextField(
-                controller: priceController,
-                onChanged: (value) {
-                  optionsList[index].detailsOptions[0].additionalPrice = int.parse(value); // 사용자가 입력한 가격 저장
-                },
-                decoration: InputDecoration(
-                  hintText: '가격',
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.clear),
-            onPressed: () {
-              setState(() {
-                itemWidgets.removeAt(index); // 해당 항목을 삭제
-                optionsList.removeAt(index); // 해당 항목의 데이터도 삭제
-              });
-            },
+        optionName: '',
+        detailsOptions: [
+          request.DetailsOptionEntity(
+            detailOptionName: '',
+            additionalPrice: 0,
           ),
         ],
       ));
+
+      // 새로운 옵션을 itemWidgets에 추가
+      itemWidgets.add(
+        Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: 150,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: TextEditingController(text: optionsList[index].optionName),
+                            onChanged: (value) {
+                              optionsList[index].optionName = value;
+                            },
+                            decoration: InputDecoration(
+                              hintText: '옵션 명',
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            // 추가 버튼을 눌렀을 때 세부 옵션을 동적으로 추가
+                            setState(() {
+                              optionsList[index].detailsOptions.add(
+                                request.DetailsOptionEntity(
+                                  detailOptionName: '',
+                                  additionalPrice: 0,
+                                ),
+                              );
+                            });
+                            _updateItemWidgets(); // 옵션 위젯을 업데이트
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          onPressed: () {
+                            // 삭제 버튼을 눌렀을 때 해당 옵션을 제거
+                            setState(() {
+                              optionsList.removeAt(index);
+                              _updateItemWidgets(); // 옵션 위젯을 업데이트
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // 세부 옵션을 반복문을 통해 추가
+            for (int detailIndex = 0; detailIndex < optionsList[index].detailsOptions.length; detailIndex++)
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: 150,
+                      child: TextField(
+                        controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].detailOptionName),
+                        onChanged: (value) {
+                          optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
+                        },
+                        decoration: InputDecoration(
+                          hintText: '세부 옵션 명',
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Container(
+                      width: 150,
+                      child: TextField(
+                        controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
+                        onChanged: (value) {
+                          optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: '세부 옵션 가격',
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.remove),
+                    onPressed: () {
+                      // 삭제 버튼을 눌렀을 때 해당 세부 옵션을 제거
+                      setState(() {
+                        optionsList[index].detailsOptions.removeAt(detailIndex);
+                        _updateItemWidgets(); // 옵션 위젯을 업데이트
+                      });
+                    },
+                  ),
+                ],
+              ),
+            Divider(
+              color: Colors.black, // 실선의 색상
+              thickness: 1,         // 실선의 두께
+            ),
+          ],
+        ),
+      );
     });
   }
 
-  html.File? file;
-
-  Future<void> _pickImage() async {
-    if (kIsWeb) {
-      // 웹에서 실행되는 경우
-      html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-      uploadInput.click();
-
-      uploadInput.onChange.listen((e) {
-        final files = uploadInput.files;
-        if (files?.length == 1) {
-          final uploadedFile = files![0];
-          setState(() {
-            file = uploadedFile; // html.File 객체를 저장
-            selectedImageName = uploadedFile.name;
-          });
-        }
-      });
-    } else {
-      // 모바일/데스크톱에서 실행되는 경우
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'png', 'jpeg'],
+// 옵션 위젯을 업데이트하는 메서드
+  void _updateItemWidgets() {
+    itemWidgets = optionsList.map((option) {
+      int index = optionsList.indexOf(option);
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  width: 150,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: TextEditingController(text: option.optionName),
+                          onChanged: (value) {
+                            optionsList[index].optionName = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: '옵션 명',
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          // 추가 버튼을 눌렀을 때 세부 옵션을 동적으로 추가
+                          setState(() {
+                            optionsList[index].detailsOptions.add(
+                              request.DetailsOptionEntity(
+                                detailOptionName: '',
+                                additionalPrice: 0,
+                              ),
+                            );
+                          });
+                          _updateItemWidgets(); // 옵션 위젯을 업데이트
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () {
+                          // 삭제 버튼을 눌렀을 때 해당 옵션을 제거
+                          setState(() {
+                            optionsList.removeAt(index);
+                            _updateItemWidgets(); // 옵션 위젯을 업데이트
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // 세부 옵션을 반복문을 통해 추가
+          for (int detailIndex = 0; detailIndex < optionsList[index].detailsOptions.length; detailIndex++)
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: 150,
+                    child: TextField(
+                      controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].detailOptionName),
+                      onChanged: (value) {
+                        optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
+                      },
+                      decoration: InputDecoration(
+                        hintText: '세부 옵션 명',
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  child: Container(
+                    width: 150,
+                    child: TextField(
+                      controller: TextEditingController(text: optionsList[index].detailsOptions[detailIndex].additionalPrice.toString()),
+                      onChanged: (value) {
+                        optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
+                      },
+                      decoration: InputDecoration(
+                        hintText: '세부 옵션 가격',
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: () {
+                    // 삭제 버튼을 눌렀을 때 해당 세부 옵션을 제거
+                    setState(() {
+                      optionsList[index].detailsOptions.removeAt(detailIndex);
+                      _updateItemWidgets(); // 옵션 위젯을 업데이트
+                    });
+                  },
+                ),
+              ],
+            ),
+          Divider(
+            color: Colors.black, // 실선의 색상
+            thickness: 1,         // 실선의 두께
+          ),
+        ],
       );
-
-      if (result != null) {
-        PlatformFile file = result.files.first;
-
-        setState(() {
-          selectedImage = file.path!; // 선택한 이미지의 파일 경로를 저장
-          selectedImageName = file.name;
-        });
-      } else {
-        // 사용자가 취소를 누를 경우 처리
-      }
-    }
+    }).toList();
   }
 
-  static final storage = FlutterSecureStorage();
-  String? accessToken;
-  Dio dio = Dio();
-
-  @override
-  void initState() {
-    super.initState();
-    selectedImage = widget.menuInfo.img;
-
-    // 메뉴 정보를 가져와 각 필드를 초기화합니다.
-    menunameController.text = widget.menuInfo.name; // 메뉴 이름
-    menupriceController.text = widget.menuInfo.price.toString(); // 메뉴 가격
-    desController.text = widget.menuInfo.description;
-    selectedCategory = request.Category.values.firstWhere((e) => e.toString().split('.').last == widget.menuInfo.category);
-    selectedImage = widget.menuInfo.img;
-
+  // 옵션 데이터 초기화 메서드
+  void _initializeOptionData() {
     // 옵션 목록을 초기화합니다.
     optionsList = widget.menuInfo.optionsEntity.map((option) {
-      TextEditingController optionController = TextEditingController(text: option.optionName);
-      TextEditingController priceController = TextEditingController(text: option.detailsOptions[0].additionalPrice.toString());
       return request.OptionsEntity(
-        id: '', // ID 정보가 없으므로 초기값을 빈 문자열로 설정
         optionName: option.optionName,
-        detailsOptions: [request.DetailsOptionEntity(
-          id: '', // ID 정보가 없으므로 초기값을 빈 문자열로 설정
-          detailOptionName: option.optionName,
-          additionalPrice: option.detailsOptions[0].additionalPrice,
-        )],
+        detailsOptions: option.detailsOptions.map((detailOption) {
+          return request.DetailsOptionEntity(
+            detailOptionName: detailOption.detailOptionName,
+            additionalPrice: detailOption.additionalPrice,
+          );
+        }).toList(),
       );
     }).toList();
 
     // 옵션 위젯 목록을 초기화합니다.
     itemWidgets = optionsList.map((option) {
       int index = optionsList.indexOf(option);
-      TextEditingController optionController = TextEditingController(text: option.optionName);
-      TextEditingController priceController = TextEditingController(text: option.detailsOptions[0].additionalPrice.toString());
-
-      return Row(
+      return Column(
         children: [
-          Expanded(
-            child: Container(
-              width: 150,
-              child: TextField(
-                controller: optionController,
-                onChanged: (value) {
-                  optionsList[index].optionName = value;
-                },
-                decoration: InputDecoration(
-                  hintText: '옵션 명',
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  width: 150,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: TextEditingController(text: option.optionName),
+                          onChanged: (value) {
+                            optionsList[index].optionName = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: '옵션 명',
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          // 추가 버튼을 눌렀을 때 세부 옵션을 동적으로 추가
+                          setState(() {
+                            optionsList[index].detailsOptions.add(
+                              request.DetailsOptionEntity(
+                                detailOptionName: '',
+                                additionalPrice: 0,
+                              ),
+                            );
+                          });
+                          _updateItemWidgets(); // 옵션 위젯을 업데이트
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () {
+                          // 삭제 버튼을 눌렀을 때 해당 옵션을 제거
+                          setState(() {
+                            optionsList.removeAt(index);
+                            _updateItemWidgets(); // 옵션 위젯을 업데이트
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-          SizedBox(width: 20),
-          Expanded(
-            child: Container(
-              width: 150,
-              child: TextField(
-                controller: priceController,
-                onChanged: (value) {
-                  optionsList[index].detailsOptions[0].additionalPrice = int.parse(value);
-                },
-                decoration: InputDecoration(
-                  hintText: '가격',
+          // 세부 옵션을 반복문을 통해 초기화합니다.
+          for (var detailOption in option.detailsOptions)
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: 150,
+                    child: TextField(
+                      controller: TextEditingController(text: detailOption.detailOptionName),
+                      onChanged: (value) {
+                        detailOption.detailOptionName = value;
+                      },
+                      decoration: InputDecoration(
+                        hintText: '세부 옵션 명',
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(width: 20),
+                Expanded(
+                  child: Container(
+                    width: 150,
+                    child: TextField(
+                      controller: TextEditingController(text: detailOption.additionalPrice.toString()),
+                      onChanged: (value) {
+                        detailOption.additionalPrice = int.parse(value);
+                      },
+                      decoration: InputDecoration(
+                        hintText: '세부 옵션 가격',
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: () {
+                    // 삭제 버튼을 눌렀을 때 해당 세부 옵션을 제거
+                    setState(() {
+                      option.detailsOptions.remove(detailOption);
+                      _updateItemWidgets(); // 옵션 위젯을 업데이트
+                    });
+                  },
+                ),
+              ],
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.clear),
-            onPressed: () {
-              setState(() {
-                itemWidgets.removeAt(index);
-                optionsList.removeAt(index);
-              });
-            },
+          Divider(
+            color: Colors.black, // 실선의 색상
+            thickness: 1,         // 실선의 두께
           ),
         ],
       );
     }).toList();
+  }
 
+  Uint8List? _imageBytes;
+  String _imageFileName = '';
+
+  void _loadImage() {
+    final html.FileUploadInputElement input = html.FileUploadInputElement();
+    input.accept = 'image/*';
+    input.click();
+
+    input.onChange.listen((html.Event e) {
+      final html.File file = input.files!.first;
+      final html.FileReader reader = html.FileReader();
+
+      reader.onLoadEnd.listen((html.ProgressEvent e) {
+        setState(() {
+          _imageBytes = reader.result as Uint8List;
+
+          // 파일명을 저장
+          _imageFileName = file.name;
+
+          // 선택한 이미지를 selectedImage로 대체
+          selectedImage = _imageBytes != null ? _imageFileName : widget.menuInfo.img;
+
+          // Uint8List를 base64 인코딩하여 String으로 변환
+          String base64Image = base64Encode(_imageBytes as List<int>);
+
+          // 이후에 base64Image를 사용하여 필요한 곳에 전달 또는 처리합니다.
+        });
+      });
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    // 메뉴 정보를 이용하여 초기값 설정
+    menunameController.text = widget.menuInfo.name;
+    menupriceController.text = widget.menuInfo.price.toString();
+    desController.text = widget.menuInfo.description;
+    selectedCategory = request.convertStringToCategory(widget.menuInfo.category);
+    selectedImage = widget.menuInfo.img;
+
+    // 옵션 데이터 초기화
+    _initializeOptionData();
+
+    //Dio 설정
     setupDio();
   }
 
+  static final storage = FlutterSecureStorage();
+  String? accessToken;
+  Dio dio = Dio();
   Future<void> setupDio() async {
     accessToken = await storage.read(key: 'accessToken');
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true, request: true));
     dio.options.headers['Authorization'] = 'Bearer $accessToken'; // 헤더에 토큰 추가
   }
 
-  Future<void> updateMenu() async {
-    var requestUrl = 'https://k9d102.p.ssafy.io/api/ceo/menu/edit';
+  Future<void> _updateMenu() async {
+    try {
+      var requestUrl = 'https://k9d102.p.ssafy.io/api/owner/menu/edit';
 
-    String extension = selectedImageName.split('.').last;
-
-    MultipartFile multipartFile;
-
-    if (kIsWeb) {
-      // 웹에서 실행되는 경우
-      if (file != null) {
-        final reader = html.FileReader();
-        reader.readAsDataUrl(file!);
-        await reader.onLoad.first;
-        final encoded = reader.result as String;
-        final stripped = encoded.replaceFirst(RegExp(r'data:image/[^;]+;base64,'), '');
-        final content = base64.decode(stripped);
-        multipartFile = MultipartFile.fromBytes(
-          content,
-          filename: selectedImageName,
-          contentType: MediaType('image', extension),
-        );
-      } else {
-        throw Exception('No image selected');
-      }
-    } else {
-      // 모바일/데스크톱에서 실행되는 경우
-      multipartFile = await MultipartFile.fromFile(
-        selectedImage,
-        filename: selectedImageName,
-        contentType: MediaType('image', extension),  // 'Content-Type' 지정
-      );
-    }
-
-    var formData = FormData.fromMap({
-      'request': request.MenuEditRequest(
+      // 메뉴 정보 생성
+      var menuEditRequest = request.MenuEditRequest(
         id: widget.menuInfo.id,
         name: menunameController.text,
         price: int.parse(menupriceController.text),
@@ -267,22 +460,51 @@ class _MenuEditPageState extends State<MenuEditPage> {
         img: "",
         category: selectedCategory!,
         optionsList: optionsList,
-      ).toMap(),
-      'file': multipartFile,
-    });
+      );
 
-    var response = await dio.put(
-      requestUrl,
-      data: formData,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      ),
-    );
+      // JSON 데이터를 문자열로 변환
+      String jsonData = jsonEncode(menuEditRequest.toJson());
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update menu');
+      // FormData 생성
+      FormData formData = FormData.fromMap({
+        'file': MultipartFile.fromFile(
+          _imageBytes! as String,
+          filename: _imageFileName.isNotEmpty ? _imageFileName : 'menu_image.jpg',
+          contentType: MediaType('image', 'jpeg'),
+        ),
+        'request': jsonData, // JSON 데이터 추가
+      });
+
+      // 요청 데이터 출력
+      print('Request Data:');
+      print(jsonData);
+
+      // Dio로 PUT 요청
+      var response = await dio.put(
+        requestUrl,
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-Type': 'application/json',          },
+        ),
+      );
+      print(response);
+
+      if (response.statusCode != 200) {
+        // 응답이 성공적이지 않으면 오류 처리
+        print('Response Data (Error):');
+        print(response.toString());
+        throw Exception('Failed to update menu');
+      } else {
+        // 응답이 성공적이면 응답 데이터 출력
+        print('Response Data:');
+        print(response.toString());
+      }
+    } catch (error) {
+      // 오류 처리
+      print('Error updating menu: $error');
+      // 예: 사용자에게 오류 메시지 표시
     }
   }
 
@@ -324,7 +546,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           height: 3 * (deviceHeight / standardDeviceHeight),
                         ),
                         ElevatedButton(
-                          onPressed: _pickImage,
+                          onPressed: _loadImage,
                           child: Text('이미지 변경'),
                         ),
                       ],
@@ -332,11 +554,17 @@ class _MenuEditPageState extends State<MenuEditPage> {
                     SizedBox(
                       width: 5 * (deviceWidth / standardDeviceWidth),
                     ),
-                    Image.network(
-                      selectedImage, // 이미지 파일 경로
-                      width: 90 * (deviceWidth / standardDeviceWidth),
-                      height: 70 * (deviceHeight / standardDeviceHeight),
-                    ), // 이미지 표시
+                    _imageBytes != null
+                      ? Image.memory(
+                        _imageBytes!,
+                        width: 90 * (deviceWidth / standardDeviceWidth),
+                        height: 70 * (deviceHeight / standardDeviceHeight),
+                      )
+                      : Image.network(
+                        selectedImage, // 이미지 파일 경로
+                        width: 90 * (deviceWidth / standardDeviceWidth),
+                        height: 70 * (deviceHeight / standardDeviceHeight),
+                      ), // 이미지 표시
                   ],
                 ),
                 SizedBox(
@@ -509,7 +737,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            _addItem; // + 버튼 클릭 시 항목 추가
+                            _addItem(); // + 버튼 클릭 시 항목 추가
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Color(0xFFCDABA4)),
@@ -556,7 +784,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    updateMenu();
+                    _updateMenu();
                     Navigator.pop(context); // 이전 창으로 돌아가기
                   },
                   style: ButtonStyle(
