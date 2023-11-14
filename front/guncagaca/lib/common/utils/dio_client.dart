@@ -25,7 +25,7 @@ class DioClient {
           print("Error occurred: ${e.message}");
 
           // 401, 500 에러 발생 시 토큰 갱신 로직
-          if (e.response?.statusCode == 401 || e.response?.statusCode == 500) {
+          if (e.response?.statusCode == 401) {
             final originalRequest = e.requestOptions; // 원래의 요청 저장
 
             // 재시도 횟수 확인 및 제한
@@ -35,7 +35,7 @@ class DioClient {
             }
 
             try {
-              final newToken = await _refreshToken();
+              final newToken = await TokenManager().refreshToken();
               if (newToken != null) {
                 // 토큰을 성공적으로 갱신했을 때의 로직
                 TokenManager().setToken(newToken); // 갱신된 토큰 저장
@@ -67,30 +67,5 @@ class DioClient {
   static Future<String?> getRefreshTokenFromPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('refreshToken');
-  }
-
-  static Future<String?> _refreshToken() async {
-    String? email = await getEmailFromPreferences();
-    String? refreshToken = await getRefreshTokenFromPreferences();
-    String baseUrl = dotenv.env['BASE_URL']!;
-
-    // 토큰 갱신 API 호출 로직
-    try {
-      final response = await _dio.post('$baseUrl/api/member/refresh',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $refreshToken',
-            'Email': email,
-          },
-        ),
-      );
-      if (response.statusCode == 200) {
-        final newToken = response.data['accessToken'];
-        return newToken;
-      }
-    } catch (error) {
-      throw Exception("Failed to refresh token: $error");
-    }
-    return null;
   }
 }
