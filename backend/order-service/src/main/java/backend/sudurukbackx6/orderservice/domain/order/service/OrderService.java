@@ -173,45 +173,54 @@ public class OrderService {
         return storeOrderResponses;
     }
 
-    public List<OrderListResDto> getOrdersByStoreId(Long storeId) {
-        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
-        for(Order order : orders) {
-            OrderListResDto orderResponseDto = new OrderListResDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-        return orderResponseDtos;
+    public List<Order> getOrdersByStoreId(Long storeId) {
+//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
+//        for(Order order : orders) {
+//            OrderListResDto orderResponseDto = new OrderListResDto(order);
+//            orderResponseDtos.add(orderResponseDto);
+//        }
+//        return orderResponseDtos;
+        return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.ORDERED);
     }
 
-    public List<OrderListResDto> getDoneByStoreId(Long memberId) {
-        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(memberId, Status.COMPLETE);
-        for(Order order : orders) {
-            OrderListResDto orderResponseDto = new OrderListResDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-
-        return orderResponseDtos;
+    public List<Order> getDoneByStoreId(Long storeId) {
+//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.COMPLETE);
+//        for(Order order : orders) {
+//            OrderListResDto orderResponseDto = new OrderListResDto(order);
+//            orderResponseDtos.add(orderResponseDto);
+//        }
+//
+//        return orderResponseDtos;
+        return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.COMPLETE);
     }
 
-    public List<OrderListResDto> getPreparingByStoreId(Long storeId) {
-        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.REQUEST);
-        for(Order order : orders) {
-            OrderListResDto orderResponseDto = new OrderListResDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-        return orderResponseDtos;
+    public List<Order> getPreparingByStoreId(Long storeId) {
+//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.REQUEST);
+//        for(Order order : orders) {
+//            OrderListResDto orderResponseDto = new OrderListResDto(order);
+//            orderResponseDtos.add(orderResponseDto);
+//        }
+//        return orderResponseDtos;
+        return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.REQUEST);
     }
 
-    public List<OrderListResDto> getCancleByStoreId(Long storeId) {
-        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
-        for(Order order : orders) {
-            OrderListResDto orderResponseDto = new OrderListResDto(order);
-            orderResponseDtos.add(orderResponseDto);
-        }
-        return orderResponseDtos;
+    public List<Order> getCancleByStoreId(Long storeId) {
+//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
+//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
+//        for(Order order : orders) {
+//            OrderListResDto orderResponseDto = new OrderListResDto(order);
+//            orderResponseDtos.add(orderResponseDto);
+//        }
+//        return orderResponseDtos;
+        return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.CANCELED);
+    }
+
+    public List<Order> getOrdersByDateTime(Long storeId, LocalDateTime startTime, LocalDateTime endTime) {
+
+        return orderRepository.findByStoreIdAndOrderTimeBetweenOrderByOrderTimeDesc(storeId, startTime, endTime);
     }
 
 
