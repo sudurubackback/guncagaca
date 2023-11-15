@@ -361,7 +361,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                         }
 
                                                         return Text(
-                                                          '${menu['menuName']} ${optionText.isNotEmpty ? '\n$optionText' : ''} ${menu['quantity']}개',
+                                                          '${menu['menuName']} ${optionText.isNotEmpty ?'\n$optionText' : ''} ${menu['quantity']}개',
                                                           style: TextStyle(fontSize: 20, height: 2, color: PRIMARY_COLOR),
                                                         );
                                                       }).toList(),
@@ -369,23 +369,21 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                     Text('총 주문 가격: $formattedTotalPrice 원', style: TextStyle(fontSize: 27, height: 3)),
                                                   ],
                                                 ),
+
                                               ),
                                             ),
                                             actions: [
                                               // 뒤로가기 버튼 추가
-                                              Positioned(
-                                                bottom: 10, // Adjust the distance from the bottom
-                                                right: 10, // Adjust the distance from the right
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('확인'),
-                                                  style: ElevatedButton.styleFrom(
-                                                    primary: PRIMARY_COLOR, // Set the button color
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(5.0),
-                                                    ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('확인', style: TextStyle(fontSize: 18),),
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: PRIMARY_COLOR, // Set the button color
+                                                  fixedSize: Size(200, 50),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(5.0),
                                                   ),
                                                 ),
                                               ),

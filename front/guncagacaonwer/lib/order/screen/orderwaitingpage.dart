@@ -470,24 +470,22 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                                 Text('총 주문 가격: $formattedTotalPrice 원', style: TextStyle(fontSize: 27, height: 3)),
                                               ],
                                             ),
+
                                           ),
                                         ),
                                         actions: [
                                           // 뒤로가기 버튼 추가
-                                          Positioned(
-                                            bottom: 10, // Adjust the distance from the bottom
-                                            right: 10, // Adjust the distance from the right
-                                            child: ElevatedButton(
+                                          ElevatedButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
-                                              child: Text('확인'),
+                                              child: Text('확인', style: TextStyle(fontSize: 18),),
                                               style: ElevatedButton.styleFrom(
                                                 primary: PRIMARY_COLOR, // Set the button color
+                                                fixedSize: Size(200, 50),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(5.0),
                                                 ),
-                                              ),
                                             ),
                                           ),
                                         ],
