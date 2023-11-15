@@ -68,7 +68,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                               optionsList[index].optionName = value;
                             },
                             decoration: InputDecoration(
-                              hintText: '옵션 명',
+                              hintText: '  옵션 명',
                             ),
                           ),
                         ),
@@ -116,7 +116,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                         },
                         decoration: InputDecoration(
-                          hintText: '세부 옵션 명',
+                          hintText: '  세부 옵션 명',
                         ),
                       ),
                     ),
@@ -133,7 +133,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                               optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
                             },
                             decoration: InputDecoration(
-                              hintText: '세부 옵션 가격',
+                              hintText: '  세부 옵션 가격',
                             ),
                           );
                         },
@@ -182,7 +182,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                             optionsList[index].optionName = value;
                           },
                           decoration: InputDecoration(
-                            hintText: '옵션 명',
+                            hintText: '  옵션 명',
                           ),
                         ),
                       ),
@@ -230,7 +230,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                       },
                       decoration: InputDecoration(
-                        hintText: '세부 옵션 명',
+                        hintText: '  세부 옵션 명',
                       ),
                     ),
                   ),
@@ -247,7 +247,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                             optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
                           },
                           decoration: InputDecoration(
-                            hintText: '세부 옵션 가격',
+                            hintText: '  세부 옵션 가격',
                           ),
                         );
                       },
@@ -309,7 +309,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                             optionsList[index].optionName = value;
                           },
                           decoration: InputDecoration(
-                            hintText: '옵션 명',
+                            hintText: '  옵션 명',
                           ),
                         ),
                       ),
@@ -357,7 +357,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         detailOption.detailOptionName = value;
                       },
                       decoration: InputDecoration(
-                        hintText: '세부 옵션 명',
+                        hintText: '  세부 옵션 명',
                       ),
                     ),
                   ),
@@ -372,7 +372,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         detailOption.additionalPrice = int.parse(value);
                       },
                       decoration: InputDecoration(
-                        hintText: '세부 옵션 가격',
+                        hintText: '  세부 옵션 가격',
                       ),
                     ),
                   ),
@@ -733,7 +733,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         Text(
                           "옵션",
                           style: TextStyle(
-                            fontSize: 13 * (deviceWidth / standardDeviceWidth),
+                            fontSize: 10 * (deviceWidth / standardDeviceWidth),
                           ),
                         ),
                         SizedBox(
@@ -749,7 +749,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           child: Text(
                             '+',
                             style: TextStyle(
-                              fontSize: 14 * (deviceWidth / standardDeviceWidth),
+                              fontSize: 11 * (deviceWidth / standardDeviceWidth),
                               color: Colors.white,
                             ),
                           ),
@@ -770,16 +770,18 @@ class _MenuEditPageState extends State<MenuEditPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+
                 ElevatedButton(
-                  onPressed: () {
-                    // "취소" 버튼을 눌렀을 때의 동작 추가 (뒤로 가기)
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    updateMenu();
+                    Navigator.pop(context); // 이전 창으로 돌아가기
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    fixedSize: Size(200, 50), // 버튼의 크기 조절
                   ),
                   child: Text(
-                    '취소',
+                    '확인',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -787,15 +789,16 @@ class _MenuEditPageState extends State<MenuEditPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    updateMenu();
-                    Navigator.pop(context); // 이전 창으로 돌아가기
+                  onPressed: () {
+                    // "취소" 버튼을 눌렀을 때의 동작 추가 (뒤로 가기)
+                    Navigator.pop(context);
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
+                    fixedSize: Size(200, 50), // 버튼의 크기 조절
                   ),
                   child: Text(
-                    '확인',
+                    '취소',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,

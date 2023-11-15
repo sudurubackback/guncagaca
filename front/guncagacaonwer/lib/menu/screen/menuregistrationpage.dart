@@ -66,7 +66,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                               optionsList[index].optionName = value;
                             },
                             decoration: InputDecoration(
-                              hintText: '옵션 명',
+                              hintText: '  옵션 명',
                             ),
                           ),
                         ),
@@ -114,7 +114,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                           optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                         },
                         decoration: InputDecoration(
-                          hintText: '세부 옵션 명',
+                          hintText: '  세부 옵션 명',
                         ),
                       ),
                     ),
@@ -131,7 +131,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                               optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
                             },
                             decoration: InputDecoration(
-                              hintText: '세부 옵션 가격',
+                              hintText: '  세부 옵션 가격',
                             ),
                           );
                         },
@@ -180,7 +180,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                             optionsList[index].optionName = value;
                           },
                           decoration: InputDecoration(
-                            hintText: '옵션 명',
+                            hintText: '  옵션 명',
                           ),
                         ),
                       ),
@@ -228,7 +228,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                         optionsList[index].detailsOptions[detailIndex].detailOptionName = value;
                       },
                       decoration: InputDecoration(
-                        hintText: '세부 옵션 명',
+                        hintText: '  세부 옵션 명',
                       ),
                     ),
                   ),
@@ -245,7 +245,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                             optionsList[index].detailsOptions[detailIndex].additionalPrice = int.parse(value);
                           },
                           decoration: InputDecoration(
-                            hintText: '세부 옵션 가격',
+                            hintText: '  세부 옵션 가격',
                           ),
                         );
                       },
@@ -430,18 +430,18 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                 ),
                 Container(
                   width: 200 * (deviceWidth / standardDeviceWidth),
-                  height: 90 * (deviceHeight / standardDeviceHeight),
+                  height: 80 * (deviceHeight / standardDeviceHeight),
                   child: Column(
                       children: [
                         Container(
                           margin: EdgeInsets.only(left: 25 * (deviceWidth / standardDeviceWidth)),
-                          height: 22 * (deviceHeight / standardDeviceHeight),
+                          height: 20 * (deviceHeight / standardDeviceHeight),
                           child: Row(
                             children: [
                               Text(
                                 "카테고리",
                                 style: TextStyle(
-                                  fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(width: 20 * (deviceWidth / standardDeviceWidth)),
@@ -471,13 +471,13 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                         ),
                         Container(
                           margin: EdgeInsets.only(left: 25 * (deviceWidth / standardDeviceWidth)),
-                          height: 22 * (deviceHeight / standardDeviceHeight),
+                          height: 20 * (deviceHeight / standardDeviceHeight),
                           child: Row(
                             children: [
                               Text(
                                 "메뉴명",
                                 style: TextStyle(
-                                  fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(width: 28 * (deviceWidth / standardDeviceWidth)),
@@ -505,13 +505,13 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                         ),
                         Container(
                           margin: EdgeInsets.only(left: 25 * (deviceWidth / standardDeviceWidth)),
-                          height: 22 * (deviceHeight / standardDeviceHeight),
+                          height: 20 * (deviceHeight / standardDeviceHeight),
                           child: Row(
                             children: [
                               Text(
                                 "기본 가격",
                                 style: TextStyle(
-                                  fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                                  fontSize: 9 * (deviceWidth / standardDeviceWidth),
                                 ),
                               ),
                               SizedBox(width: 16.5 * (deviceWidth / standardDeviceWidth)),
@@ -547,7 +547,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                   Text(
                     "메뉴 소개",
                     style: TextStyle(
-                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                      fontSize: 8 * (deviceWidth / standardDeviceWidth),
                     ),
                   ),
                   SizedBox(width: 10 * (deviceWidth / standardDeviceWidth)),
@@ -559,7 +559,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                       borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                     ),
                     width: 250 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
-                    height: 30 * (deviceHeight / standardDeviceHeight),
+                    height: 25 * (deviceHeight / standardDeviceHeight),
                     child: TextField(
                       controller: desController, // 메뉴 소개를 위한 컨트롤러
                       decoration: InputDecoration(
@@ -587,7 +587,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                         Text(
                           "옵션",
                           style: TextStyle(
-                            fontSize: 13 * (deviceWidth / standardDeviceWidth),
+                            fontSize: 10 * (deviceWidth / standardDeviceWidth),
                           ),
                         ),
                         SizedBox(
@@ -619,27 +619,11 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ),
             ),
             SizedBox(
-              height: 10 * (deviceHeight / standardDeviceHeight),
+              height: 7 * (deviceHeight / standardDeviceHeight),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // "취소" 버튼을 눌렀을 때의 동작 추가 (뒤로 가기)
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.red),
-                  ),
-                  child: Text(
-                    '취소',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
                 ElevatedButton(
                   onPressed: () async {
                     registerMenu();
@@ -648,11 +632,29 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                       MaterialPageRoute(builder: (context) => MenuPage()), // MenuAllPage로 이동
                     );
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    fixedSize: Size(200, 50), // 버튼의 크기 조절
                   ),
                   child: Text(
                     '확인',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // "취소" 버튼을 눌렀을 때의 동작 추가 (뒤로 가기)
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red,
+                    fixedSize: Size(200, 50), // 버튼의 크기 조절
+                  ),
+                  child: Text(
+                    '취소',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
