@@ -64,13 +64,11 @@ class SSEController {
       eventSource?.addEventListener('message', (Event event) async {
         var eventData = jsonDecode((event as MessageEvent).data);
 
+        showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
+
         // 특정 조건을 만족할 때 다이얼로그 표시
         print('알림 옴');
-        // 소리 재생
         _showOrderDialog();
-        await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
-        await _audioPlayer.play();
-        showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
       } as EventListener?);
     } catch (e) {
       print('SSE 초기화 오류: $e');
@@ -134,8 +132,20 @@ class SSEController {
     );
   }
 
-  void showWebNotification(String title, String body) {
-    js.context.callMethod('showNotification', [title, {'body': body}]);
+  Future<void> showWebNotification(String title, String body) async {
+    print("백그라운드 메시지");
+    js.context.callMethod('showNotification', [title,   {
+      'body': body,
+      'sound':   {
+        'body': body,
+        'sound': 'assets/sound/sound1.mp3', // 소리 파일 경로에 맞게 수정
+      }, // 소리 파일 경로에 맞게 수정
+    }]);
+    // 소리 재생
+    await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
+    await _audioPlayer.play();
+    print("소리 출력");
+
   }
 
 }

@@ -40,6 +40,9 @@
   <script src="flutter.js" defer></script>
   <script>
     function showNotification(title, options) {
+      // 소리 추가
+      options.sound = 'assets/sound/sound1.mp3';  // 소리 파일 경로에 맞게 수정
+
       Notification.requestPermission().then(function(permission) {
         if (permission === 'granted') {
           new Notification(title, options);
@@ -49,7 +52,7 @@
   </script>
 </head>
 <body>
-  <script>
+<script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -64,6 +67,6 @@
       });
     });
   </script>
-  <script defer src="main.dart.js" type="application/javascript"></script>
+<script defer src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>
