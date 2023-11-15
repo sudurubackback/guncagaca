@@ -10,6 +10,7 @@ import 'basic/screen/landingpage.dart';
 import 'menu/api/menuallpage_api_service.dart';
 import 'order/screen/orderpage.dart';
 import 'order/screen/orderwaitingpage.dart';
+import 'dart:js' as js;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,11 +71,13 @@ class SSEController {
         _showOrderDialog();
         await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
         await _audioPlayer.play();
+        showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
       } as EventListener?);
     } catch (e) {
       print('SSE 초기화 오류: $e');
     }
   }
+
 
   void closeSSE() {
     eventSource?.close();
@@ -132,4 +135,10 @@ class SSEController {
     );
   }
 
+  void showWebNotification(String title, String body) {
+    js.context.callMethod('showNotification', [title, {'body': body}]);
+  }
+
 }
+
+

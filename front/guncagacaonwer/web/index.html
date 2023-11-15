@@ -38,6 +38,15 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <script>
+    function showNotification(title, options) {
+      Notification.requestPermission().then(function(permission) {
+        if (permission === 'granted') {
+          new Notification(title, options);
+        }
+      });
+    }
+  </script>
 </head>
 <body>
   <script>
@@ -55,5 +64,6 @@
       });
     });
   </script>
+  <script defer src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>
