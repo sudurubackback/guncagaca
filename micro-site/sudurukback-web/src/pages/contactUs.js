@@ -11,7 +11,7 @@ import kwon from "../assets/images/kwon.jpg";
 import two from "../assets/images/2.jpg";
 import eunjin from "../assets/images/eunjin.jpg";
 
-const ContactUs = () => {
+function ContactUs() {
   //모든 이미지들을 배열로 관리
   const images = [ming, kim, choi, kwon, two, eunjin];
   const names = ["강민승", "김제준", "촤영태", "권민재", "이기표", "서은진"];
@@ -80,5 +80,5 @@ const ContactUs = () => {
       </div>
     </div>
   );
-};
+}
 export default ContactUs;

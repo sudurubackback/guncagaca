@@ -1,6 +1,5 @@
 import * as React from "react";
 
-// components
 import Business from "../components/signUp/business.js";
 import SignUpInfo from "../components/signUp/signUpInfo.js";
 import SignUpComplete from "../components/signUp/signUpComplete.js";
@@ -8,7 +7,6 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Box from "@mui/material/Box";
-// import SignUp from "./signUp";
 
 const steps = ["사업자 인증", "회원가입", "완료"];
 

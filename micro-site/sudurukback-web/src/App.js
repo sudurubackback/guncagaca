@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"; // *BrowserRout
 
 import ResponsiveAppBar from "./components/responsiveAppBar.js";
 import ContactUs from "./pages/contactUs.js";
-import HowToUse from "./pages/howToUse";
 import Main from "./pages/main.js";
 import SignUp from "./pages/signUp.js";
 import SignIn from "./pages/signIn.js";
@@ -24,7 +23,6 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/im" element={<Im />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/how-to-use" element={<HowToUse />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/findpw" element={<FindPw />} />

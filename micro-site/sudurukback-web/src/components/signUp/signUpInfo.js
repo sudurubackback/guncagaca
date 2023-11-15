@@ -1,15 +1,9 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Grid from "@mui/material/Grid";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 import styles from "./signUpInfo.module.css";
-import Paper from "@mui/material/Paper";
 import axios from "axios";
 
 //components
@@ -80,6 +74,7 @@ function SignUpInfo({ handleNext, businessId }) {
       },
     })
       .then(() => {
+        setEmailCodeStatus(true);
         alert("인증번호 확인 성공");
       })
       .catch(() => {

@@ -19,15 +19,20 @@ import {
 } from "../store/reducers/user";
 
 import { useDispatch } from "react-redux";
-// const pages = ["서비스 소개", "사용방법", "개발자 소개", "로그인"];
 const pages = ["서비스 소개", "사용방법", "개발자 소개"];
-const url = ["/", "/#", "/contact-us"];
+const url = [
+  "/",
+  "https://bald-paper-b60.notion.site/14b71c8a2c8d40a9a41a2a024b677f7a?pvs=4",
+  "/contact-us",
+];
 
 function ResponsiveAppBar() {
-  //클릭한 pages의 인덱스 번호url로 이동
-
   const accessToken = useSelector((state) => state.user.accessToken);
   const dispatch = useDispatch();
+
+  const handleOpenNewTab = (url) => {
+    window.open(url, "_blank", "noopener, noreferrer");
+  };
 
   const renderAuthButton = () => {
     if (accessToken) {
@@ -48,7 +53,6 @@ function ResponsiveAppBar() {
               axios({
                 method: "post",
                 url: "https://k9d102.p.ssafy.io/api/ceo/signout",
-                // url: "http://localhost:9999/api/ceo/signout",
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
                 },
@@ -124,12 +128,19 @@ function ResponsiveAppBar() {
               <Button
                 key={page}
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => handleClick(pages.indexOf(page))}
                 style={{ fontFamily: "gmarketSans" }}
+                onClick={() => {
+                  if (page === "사용방법") {
+                    handleOpenNewTab(url[1]);
+                  } else {
+                    handleClick(pages.indexOf(page));
+                  }
+                }}
               >
                 {page}
               </Button>
             ))}
+
             {renderAuthButton()}
           </Box>
         </Toolbar>

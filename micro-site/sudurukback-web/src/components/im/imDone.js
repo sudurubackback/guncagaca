@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import styles from "./imDone.module.css";
 import Stack from "@mui/material/Stack";
@@ -39,8 +37,9 @@ const timeType = ["오전", "오후"];
 function ImDone() {
   const navigate = useNavigate();
 
+  const [file, setFile] = React.useState(null);
   const [description, setDescription] = React.useState("");
-  const [img, setImg] = React.useState(defaultImg);
+  const [img, setImg] = React.useState(null);
   const [openHour, setOpenHour] = React.useState(1);
   const [openMinute, setOpenMinute] = React.useState(0);
   const [openTimeType, setOpenTimeType] = React.useState("");
@@ -63,12 +62,10 @@ function ImDone() {
     axios({
       method: "get",
       url: "https://k9d102.p.ssafy.io/api/cafe/info",
-      // url: "http://localhost:9999/api/ceo/info",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => {
-      console.log(res.data.data);
       setTel(res.data.data.tel);
       setDescription(res.data.data.description);
       const openTimeData = parseTime(res.data.data.openTime);
@@ -84,33 +81,37 @@ function ImDone() {
 
       setImg(res.data.data.img);
     });
-  }, [navigate]);
+  }, [accessToken, navigate]);
 
-  const handleImg = (e) => {
-    setImg(e.target.files[0]);
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFile(file);
+      setImg(URL.createObjectURL(file));
+    }
   };
+
   const [openTime, setOpenTime] = React.useState(
     `${openHour}:${openMinute} ${openTimeType}`
+  );
+
+  const [closeTime, setCloseTime] = React.useState(
+    `${closeHour}:${closeMinute} ${closeTimeType}`
   );
 
   React.useEffect(() => {
     setOpenTime(`${openHour}:${openMinute} ${openTimeType}`);
     setCloseTime(`${closeHour}:${closeMinute} ${closeTimeType}`);
-
-    console.log(openTime);
-    console.log(closeTime);
   }, [
     closeHour,
     closeMinute,
+    closeTime,
     closeTimeType,
     openHour,
     openMinute,
+    openTime,
     openTimeType,
   ]);
-
-  const [closeTime, setCloseTime] = React.useState(
-    `${closeHour}:${closeMinute} ${closeTimeType}`
-  );
 
   const handleTel = (event) => {
     setTel(event.target.value);
@@ -155,15 +156,13 @@ function ImDone() {
   const onClickSave = () => {
     const formData = new FormData();
 
-    console.log(img);
-
     const data = {
       description: description,
       openTime: openTime,
       closeTime: closeTime,
       tel: tel,
     };
-    formData.append("file", img);
+    formData.append("file", file);
     formData.append(
       "reqDto",
       new Blob([JSON.stringify(data)], {
@@ -213,7 +212,7 @@ function ImDone() {
               }}
             >
               사진 등록
-              <VisuallyHiddenInput type="file" onChange={handleImg} />
+              <VisuallyHiddenInput type="file" onChange={handleFile} />
             </Button>
           </Stack>
         </Grid>

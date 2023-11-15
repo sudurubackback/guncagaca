@@ -1,8 +1,5 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
 import styles from "./changePort.module.css";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -23,7 +20,6 @@ function ChangePort() {
     axios({
       method: "get",
       url: "https://k9d102.p.ssafy.io/api/ceo/network",
-      // url: "http://localhost:9999/api/ceo/network",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -37,7 +33,7 @@ function ChangePort() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [accessToken]);
 
   const navigate = useNavigate();
 
@@ -45,7 +41,6 @@ function ChangePort() {
     axios({
       method: "post",
       url: "https://k9d102.p.ssafy.io/api/ceo/network",
-      // url: "http://localhost:9999/api/ceo/port",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

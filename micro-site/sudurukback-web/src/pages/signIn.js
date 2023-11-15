@@ -39,7 +39,6 @@ function SignIn() {
     axios({
       method: "post",
       url: "https://k9d102.p.ssafy.io/api/ceo/signin",
-      // url: "http://localhost:9999/api/ceo/signin",
       data: {
         email: email,
         password: password,
@@ -52,7 +51,6 @@ function SignIn() {
         console.log(res.data.data.approved);
         dispatch(setApproved(res.data.data.approved));
         console.log(res.data.data);
-        // dispatch(setApproved(true));
         setSignInStatus(true);
       })
       .catch(() => {

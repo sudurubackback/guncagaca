@@ -1,22 +1,14 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Grid from "@mui/material/Grid";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import TextField from "@mui/material/TextField";
+
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 import styles from "./signUpComplete.module.css";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 
 //이미지
-// import completeImg from "../assets/images/completeImg.png";
 import completeImg from "../../assets/images/completeImg.png";
-const steps = ["사업자 인증", "회원가입", "완료"];
 
 function SignUpComplete() {
   const navigate = useNavigate();
