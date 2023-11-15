@@ -12,6 +12,9 @@ import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/utils/dio_client.dart';
+import '../common/utils/oauth_token_manager.dart';
+import '../common/utils/sqlite_helper.dart';
+import '../store/models/store_ip.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -26,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    fetchDataFromApi();
     _initSharedPreferences().then((_) {
       _tryAutoLogin();
     });
@@ -88,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // 토큰
   Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     // String? firebaseToken = null;
@@ -114,6 +119,39 @@ class _LoginPageState extends State<LoginPage> {
       return tokens;
     } else {
       return null;
+    }
+  }
+
+
+  // ip목록 불러오기
+  void fetchDataFromApi() async {
+    final token = TokenManager().token;
+    final String apiUrl = "$baseUrl/api/ceo/ip";
+
+    final response = await dio.get(
+        apiUrl,
+        options: Options(
+            headers: {
+              'Authorization': "Bearer $token",
+            }
+        )
+    );
+
+    if (response.statusCode == 200) {
+      List<StoreIp> stores = List<StoreIp>.from(
+          response.data.map((store) => StoreIp.fromMap(store))
+      );
+
+      for (var store in stores) {
+        await SQLiteHelper.instance.insertOrUpdateStore(store);
+      }
+      List<StoreIp> fetchedStores = await SQLiteHelper.instance.fetchStores();
+      for (var store in fetchedStores) {
+        print('StoreId: ${store.storeId}, OwnerId: ${store.ownerId}, IP: ${store.ip}, Port: ${store.port}');
+      }
+    } else {
+      // 오류 처리
+      print('Failed to fetch stores. Status code: ${response.statusCode}');
     }
   }
 
