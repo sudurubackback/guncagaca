@@ -16,7 +16,7 @@ class DefaultLayout extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: MediaQuery.of(context).size.height * 0.08 * (deviceHeight / standardDeviceHeight),
+        toolbarHeight: MediaQuery.of(context).size.height * 0.06 * (deviceHeight / standardDeviceHeight),
         backgroundColor: BACK_COLOR,
         title: Row(
           children: [

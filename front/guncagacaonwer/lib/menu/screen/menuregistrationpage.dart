@@ -540,7 +540,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
+              margin: EdgeInsets.only(left: 37 * (deviceWidth / standardDeviceWidth)),
               height: 30 * (deviceHeight / standardDeviceHeight),
               child: Row(
                 children: [
@@ -558,7 +558,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                       border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                       borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                     ),
-                    width: 250 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
+                    width: 270 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
                     height: 25 * (deviceHeight / standardDeviceHeight),
                     child: TextField(
                       controller: desController, // 메뉴 소개를 위한 컨트롤러
@@ -571,8 +571,8 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
               ),
             ),
             Container(
-              width: 300 * (deviceWidth / standardDeviceWidth),
-              height: 110 * (deviceHeight / standardDeviceHeight),
+              width: 270 * (deviceWidth / standardDeviceWidth),
+              height: 120 * (deviceHeight / standardDeviceHeight),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.0),
               ),
@@ -587,7 +587,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                         Text(
                           "옵션",
                           style: TextStyle(
-                            fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                            fontSize: 7 * (deviceWidth / standardDeviceWidth),
                           ),
                         ),
                         SizedBox(
@@ -603,7 +603,7 @@ class _MenuRegistrationPageState extends State<MenuRegistrationPage> {
                           child: Text(
                             '+',
                             style: TextStyle(
-                              fontSize: 14 * (deviceWidth / standardDeviceWidth),
+                              fontSize: 7 * (deviceWidth / standardDeviceWidth),
                               color: Colors.white,
                             ),
                           ),

@@ -686,7 +686,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(left: 50 * (deviceWidth / standardDeviceWidth)),
+              margin: EdgeInsets.only(left: 65 * (deviceWidth / standardDeviceWidth)),
               height: 30 * (deviceHeight / standardDeviceHeight),
               child: Row(
                 children: [
@@ -704,7 +704,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                       border: Border.all(color: Colors.black, width: 1.0), // 외곽선 추가
                       borderRadius: BorderRadius.circular(5.0), // 모서리를 둥글게 만듭니다.
                     ),
-                    width: 300 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
+                    width: 270 * (deviceWidth / standardDeviceWidth), // 원하는 너비 설정
                     height: 30 * (deviceHeight / standardDeviceHeight),
                     child: TextField(
                       controller: desController, // 메뉴 소개를 위한 컨트롤러
@@ -717,8 +717,8 @@ class _MenuEditPageState extends State<MenuEditPage> {
               ),
             ),
             Container(
-              width: 300 * (deviceWidth / standardDeviceWidth),
-              height: 110 * (deviceHeight / standardDeviceHeight),
+              width: 270 * (deviceWidth / standardDeviceWidth),
+              height: 130 * (deviceHeight / standardDeviceHeight),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.0),
               ),
@@ -733,7 +733,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                         Text(
                           "옵션",
                           style: TextStyle(
-                            fontSize: 10 * (deviceWidth / standardDeviceWidth),
+                            fontSize: 7 * (deviceWidth / standardDeviceWidth),
                           ),
                         ),
                         SizedBox(
@@ -749,7 +749,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           child: Text(
                             '+',
                             style: TextStyle(
-                              fontSize: 11 * (deviceWidth / standardDeviceWidth),
+                              fontSize: 7 * (deviceWidth / standardDeviceWidth),
                               color: Colors.white,
                             ),
                           ),
@@ -783,7 +783,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                   child: Text(
                     '확인',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
                       color: Colors.white,
                     ),
                   ),
@@ -800,7 +800,7 @@ class _MenuEditPageState extends State<MenuEditPage> {
                   child: Text(
                     '취소',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10 * (deviceWidth / standardDeviceWidth),
                       color: Colors.white,
                     ),
                   ),
