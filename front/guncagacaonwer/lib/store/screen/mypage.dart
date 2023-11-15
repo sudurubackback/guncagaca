@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TextInfo {
   final String text;
@@ -12,17 +13,17 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
-  String userName = "아비꼬"; // 통신을 통해 불러 올 사용자 이름
+  String userName = "커피비치"; // 통신을 통해 불러 올 사용자 이름
 
   List<TextInfo> textInfoList = [
     TextInfo("정산 예정일"),
-    TextInfo("두 번째 줄"),
+    TextInfo("매주 월, 목"),
     TextInfo("누적 판매총액"),
-    TextInfo("네 번째 줄"),
+    TextInfo("102,000 원"),
     TextInfo("수수료"),
-    TextInfo("여섯 번째 줄"),
+    TextInfo("1,530 원"),
     TextInfo("실 수령액"),
-    TextInfo("여덟 번째 줄"),
+    TextInfo("100,470 원"),
   ];
 
   @override

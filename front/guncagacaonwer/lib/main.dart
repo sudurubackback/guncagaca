@@ -42,7 +42,6 @@ class SSEController {
     final prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
     String? email = prefs.getString('email');
-
     print("email : $email");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
