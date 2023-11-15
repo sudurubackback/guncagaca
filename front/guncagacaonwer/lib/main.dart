@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:html';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'basic/screen/landingpage.dart';
 import 'menu/api/menuallpage_api_service.dart';
 import 'order/screen/orderpage.dart';
@@ -35,12 +35,13 @@ class SSEController {
   EventSource? eventSource;
   late ApiService apiService;
   late int storeId;
-  static final storage = FlutterSecureStorage();
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   Future<void> setupApiService() async {
-    String? accessToken = await storage.read(key: 'accessToken');
-    String? email = await storage.read(key: 'email');
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
+    String? email = prefs.getString('email');
+
     print("email : $email");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
