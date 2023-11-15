@@ -11,6 +11,7 @@ import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.NetworkResDto;
+import com.sudurukbackx6.adminservice.domain.owner.dto.response.OwnerIpListResponseDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Owners;
@@ -29,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service("OwnerService")
 @Transactional
@@ -209,4 +212,11 @@ public class OwnerServiceImpl implements OwnerService {
                 .build();
     }
 
+
+    @Override
+    public List<OwnerIpListResponseDto> getIpList(String email) {
+        List<Owners> owners = ownersRepository.findAll();
+
+        return owners.stream().map(OwnerIpListResponseDto::new).collect(Collectors.toList());
+    }
 }

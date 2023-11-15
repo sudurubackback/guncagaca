@@ -6,10 +6,12 @@ import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.NetworkResDto;
+import com.sudurukbackx6.adminservice.domain.owner.dto.response.OwnerIpListResponseDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.response.SignResponseDto;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.List;
 
 public interface OwnerService {
 
@@ -49,4 +51,5 @@ public interface OwnerService {
     boolean auth(String email, String password);
 
     NetworkResDto getNetwork(String email);
+    List<OwnerIpListResponseDto> getIpList(String email);
 }
