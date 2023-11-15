@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/login/api/siginin_api_service.dart';
-import 'package:guncagacaonwer/store/screen/storepage.dart';
+import 'package:guncagacaonwer/order/screen/orderpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
         // print();
         toggleLoginState();
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => StorePage(),
+          builder: (context) => OrderPage(),
         ));
       } else {
         print('자동 로그인 실패');
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                       toggleLoginState();
 
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => StorePage(),
+                        builder: (context) => OrderPage(),
                       ));
                     },
                     style: ButtonStyle(

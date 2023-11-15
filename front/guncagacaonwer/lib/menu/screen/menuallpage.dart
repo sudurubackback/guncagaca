@@ -6,6 +6,9 @@ import 'package:guncagacaonwer/menu/api/menuallpage_api_service.dart';
 import 'package:guncagacaonwer/menu/models/menuresponsemodel.dart';
 import 'package:guncagacaonwer/menu/screen/menueditpage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 
 class MenuAllPage extends StatefulWidget {
   @override
@@ -20,7 +23,6 @@ class _MenuAllPageState extends State<MenuAllPage> {
   Future<void> setupApiService() async {
     final prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
-    print("여기 있음 ${accessToken}");
     Dio dio = Dio();
     dio.interceptors.add(AuthInterceptor(accessToken));
     dio.interceptors.add(LogInterceptor(responseBody: true));
@@ -66,6 +68,12 @@ class _MenuAllPageState extends State<MenuAllPage> {
     if (result != null && result == true) {
       _fetchMenus();  // 데이터 갱신
     }
+  }
+
+  Future<String?> imageToBase64(String imageUrl) async {
+    http.Response response = await http.get(Uri.parse(imageUrl));
+    final bytes = response?.bodyBytes;
+    return (bytes != null ? base64Encode(bytes) : null);
   }
 
   @override
@@ -139,10 +147,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
                         },
                         child: Stack(
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: menu.img, // 이미지 파일 경로
-                              placeholder: (context, url) => CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
+                            Image.network(
+                              menu.img, // 이미지 파일 경로
                               width: 80 * (deviceWidth / standardDeviceWidth),
                               height: 70 * (deviceHeight / standardDeviceHeight),
                               fit: BoxFit.cover,
