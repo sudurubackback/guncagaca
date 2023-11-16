@@ -50,14 +50,14 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   "$userName 사장님 환영합니다.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 14 * (deviceWidth / standardDeviceWidth),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ), // 상단의 텍스트
             SizedBox(
-              height: 10 * (deviceHeight / standardDeviceHeight),
+              height: 25 * (deviceHeight / standardDeviceHeight),
             ),
             Wrap(
               alignment: WrapAlignment.start,

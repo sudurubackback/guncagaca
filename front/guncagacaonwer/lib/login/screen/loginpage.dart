@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 12 * (deviceHeight / standardDeviceHeight)),
                   Row(
                     children: <Widget>[
-                      SizedBox(width: 140 * (deviceWidth / standardDeviceWidth)), // 왼쪽 여백 조절
+                      SizedBox(width: 145 * (deviceWidth / standardDeviceWidth)), // 왼쪽 여백 조절
                       Container(
                         child: InkWell(
                           onTap: () {
@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     style: ButtonStyle(
                       // 버튼의 최소 크기 설정
-                      minimumSize: MaterialStateProperty.all(Size(200 * (deviceWidth / standardDeviceWidth), 30 * (deviceHeight / standardDeviceHeight))), // 가로 150, 세로 50
+                      minimumSize: MaterialStateProperty.all(Size(203 * (deviceWidth / standardDeviceWidth), 30 * (deviceHeight / standardDeviceHeight))), // 가로 150, 세로 50
 
                       // 버튼의 배경 색상 설정
                       backgroundColor: MaterialStateProperty.all(Color(0xFF9B5748).withOpacity(0.5)), // 배경 색상

@@ -419,6 +419,18 @@ class _MenuEditPageState extends State<MenuEditPage> {
     }
   }
 
+  void _loadImageFromUrl(String imageUrl) async {
+    final response = await http.get(Uri.parse(imageUrl));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        image = response.bodyBytes;
+      });
+    } else {
+      throw Exception('Failed to load image');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -434,6 +446,8 @@ class _MenuEditPageState extends State<MenuEditPage> {
 
     //Dio 설정
     setupDio();
+
+    _loadImageFromUrl(selectedImage);
   }
 
 
@@ -562,13 +576,6 @@ class _MenuEditPageState extends State<MenuEditPage> {
                           ],
                         ),
                       ),
-                    // selectFile.isEmpty
-                    //   ? Image.network(
-                    //     selectedImage, // 이미지 파일 경로
-                    //     width: 90 * (deviceWidth / standardDeviceWidth),
-                    //     height: 70 * (deviceHeight / standardDeviceHeight),
-                    //   )
-                    // : Image.memory(selectedImageInBytes)// 이미지 표시
                   ],
                 ),
                 SizedBox(
