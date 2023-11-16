@@ -117,10 +117,13 @@ class SSEController {
         ),
         ElevatedButton(
           onPressed: () {
-            if (Get.currentRoute != '/#OrderPage') { // '/OrderPage'는 OrderPage의 라우트 이름으로 수정해야 합니다.
+            if (Get.currentRoute != 'OrderPage') { // '/OrderPage'는 OrderPage의 라우트 이름으로 수정해야 합니다.
+              print(Get.currentRoute);
+              print("order페이지가 아님");
               Get.back();
             } else {
               Get.off(OrderPage()); // OrderPage 객체를 새로 생성하여 페이지를 새로 고침
+              print("order페이지입니다.");
             }
           },
           style: ElevatedButton.styleFrom(
