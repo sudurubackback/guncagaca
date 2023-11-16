@@ -4,11 +4,8 @@ import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
 import backend.sudurukbackx6.orderservice.client.StoreServiceClient;
 import backend.sudurukbackx6.orderservice.config.KafkaEventService;
 import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
-import backend.sudurukbackx6.orderservice.domain.order.client.MemberFeignClient;
 import backend.sudurukbackx6.orderservice.domain.order.client.dto.response.MemberInfoResponse;
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
-import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
-import backend.sudurukbackx6.orderservice.client.OwnerServiceClient;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Status;
 import backend.sudurukbackx6.orderservice.domain.order.repository.OrderRepository;
@@ -42,7 +39,7 @@ public class OrderService {
     private final KafkaEventService kafkaEventService;
     private final StoreServiceClient storeServiceClient;
     private final SseService sseService;
-    private final MemberFeignClient memberFeignClient;
+    private final MemberServiceClient memberFeignClient;
 
     @Value("${bootpay.clientId}")
     private String CLIENT_ID;
