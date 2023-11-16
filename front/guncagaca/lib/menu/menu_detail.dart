@@ -174,48 +174,63 @@ class _DetailState extends State<DetailPage> {
             ListView(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Image.network(
-                        widget.menu.imagePath,
-                        fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.04),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Image.network(
+                          widget.menu.imagePath,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: PRIMARY_COLOR,
-                      width: 2.0,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),
+                  child:
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: PRIMARY_COLOR,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(widget.menu.name),
-                          Text(widget.menu.initPrice.toString()),
-                        ],
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.04),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
-                          widget.menu.description,
-                          style: TextStyle(fontSize: 15, color: Color(0xffD9A57F)),
-                          textAlign: TextAlign.center,
+                    child:
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),
+                      child:
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),
+                        child: Column(
+                      children: [
+                        SizedBox(height:  MediaQuery.of(context).size.width * 0.03,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(widget.menu.name, style: TextStyle(fontSize: 18),),
+                            Text('${widget.menu.initPrice.toString()} 원', style: TextStyle(fontSize: 18)),
+                          ],
                         ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Text(
+                            widget.menu.description,
+                            style: TextStyle(fontSize: 15, color: Color(0xffD9A57F)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
