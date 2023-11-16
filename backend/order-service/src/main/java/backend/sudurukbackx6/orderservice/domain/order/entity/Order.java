@@ -48,6 +48,8 @@ public class Order {
 
     private int price;
 
+    private String nickname;
+
     public void updateStatus(Status status) {
         this.status = status;
     }
