@@ -63,7 +63,7 @@ class SSEController {
       // SSE 이벤트 수신 시 처리 로직
       eventSource?.addEventListener('message', (Event event) async {
         var eventData = jsonDecode((event as MessageEvent).data);
-
+        print("eventData: $eventData");
         showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
 
         // 특정 조건을 만족할 때 다이얼로그 표시

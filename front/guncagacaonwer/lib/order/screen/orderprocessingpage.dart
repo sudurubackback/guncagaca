@@ -261,13 +261,13 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                 height: 6 * (deviceHeight / standardDeviceHeight),
                               ),
                               Row(children: [
-                              Text(
-                              '주문자 번호 : ${order['memberId']}  ',
-                                style: TextStyle(
-                                  fontSize: 8 * (deviceWidth / standardDeviceWidth),
-                                  color: Color(0xFF9B5748),
+                                Text(
+                                  '주문자 : ${order['nickname'] != null ? "${order['nickname']}" : "고객님"}  ',
+                                  style: TextStyle(
+                                    fontSize: 8 * (deviceWidth / standardDeviceWidth),
+                                    color: Color(0xFF9B5748),
+                                  ),
                                 ),
-                              ),
                                 Container(
                                   width: 30 * (deviceWidth / standardDeviceWidth),
                                   decoration: BoxDecoration(
@@ -340,9 +340,10 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                                   children: [
                                                     // 모달 다이얼로그 내용
                                                     Text('주문 정보', style: TextStyle(fontSize: 25, height: 2)),
-                                                    Text('주문 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
-                                                    Text('도착 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('주문 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('도착 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
                                                     Text('주문자 번호: ${order['memberId']}', style: TextStyle(fontSize: 20, height: 2)),
+                                                    Text('주문자 : ${order['nickname'] != null ? "${order['nickname']}" : "고객님"}  ', style: TextStyle(fontSize: 20, height: 2)),
                                                     Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}', style: TextStyle(fontSize: 20, height: 2)),
                                                     Text('총 메뉴 수량: $totalQuantity', style: TextStyle(fontSize: 20, height: 2)),
                                                     // 다른 주문 정보 출력...
@@ -412,9 +413,6 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
                                   ),
                                 ),
                               ),
-
-
-
 
                                 SizedBox(
                                 width: 2 * (deviceWidth / standardDeviceWidth),

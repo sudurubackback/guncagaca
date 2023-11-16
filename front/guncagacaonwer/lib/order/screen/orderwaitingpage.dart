@@ -441,9 +441,10 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
                                               children: [
                                                 // 모달 다이얼로그 내용
                                                 Text('주문 정보', style: TextStyle(fontSize: 25, height: 2)),
-                                                Text('주문 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
-                                                Text('도착 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                Text('주문 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                Text('도착 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
                                                 Text('주문자 번호: ${order['memberId']}', style: TextStyle(fontSize: 20, height: 2)),
+                                                Text('주문자 : ${order['nickname'] != null ? "${order['nickname']}" : "고객님"}  ', style: TextStyle(fontSize: 20, height: 2)),
                                                 Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}', style: TextStyle(fontSize: 20, height: 2)),
                                                 Text('총 메뉴 수량: $totalQuantity', style: TextStyle(fontSize: 20, height: 2)),
                                                 // 다른 주문 정보 출력...

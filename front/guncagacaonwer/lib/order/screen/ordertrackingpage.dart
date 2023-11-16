@@ -30,6 +30,18 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2010, 1, 1),
       lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: PRIMARY_COLOR,
+              onPrimary: Colors.white,
+            ),
+            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child!,
+        );
+      },
     ))!;
 
     if (picked != null && picked != selectedDate) {
@@ -398,7 +410,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                               ),
                               Row(children: [
                                 Text(
-                                  '주문자 번호 : ${order['memberId']}  ',
+                                  '주문자 : ${order['nickname'] != null ? "${order['nickname']}" : "고객님"}  ',
                                   style: TextStyle(
                                     fontSize: 8 * (deviceWidth / standardDeviceWidth),
                                     color: Color(0xFF9B5748),
@@ -482,9 +494,10 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
                                                 children: [
                                                   // 모달 다이얼로그 내용
                                                   Text('주문 정보', style: TextStyle(fontSize: 25, height: 2)),
-                                                  Text('주문 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
-                                                  Text('도착 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                  Text('주문 시간: $formattedTime1', style: TextStyle(fontSize: 20, height: 2)),
+                                                  Text('도착 시간: $formattedTime', style: TextStyle(fontSize: 20, height: 2)),
                                                   Text('주문자 번호: ${order['memberId']}', style: TextStyle(fontSize: 20, height: 2)),
+                                                  Text('주문자 : ${order['nickname'] != null ? "${order['nickname']}" : "고객님"}  ', style: TextStyle(fontSize: 20, height: 2)),
                                                   Text('매장/포장: ${order['takeoutYn'] ? '매장' : '포장'}', style: TextStyle(fontSize: 20, height: 2)),
                                                   Text('총 메뉴 수량: $totalQuantity', style: TextStyle(fontSize: 20, height: 2)),
                                                   // 다른 주문 정보 출력...
