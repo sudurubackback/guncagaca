@@ -146,7 +146,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                   height: 300 * (deviceHeight / standardDeviceHeight), // 각 박스의 높이
                   child: Column(
                     children: [
-                      SizedBox(height: 2 * (deviceHeight / standardDeviceHeight)),
+                      SizedBox(height: 10 * (deviceHeight / standardDeviceHeight)),
                       // 이미지
                       GestureDetector(
                         onTap: () {
@@ -154,11 +154,14 @@ class _MenuAllPageState extends State<MenuAllPage> {
                         },
                         child: Stack(
                           children: [
-                            Image.network(
-                              menu.img, // 이미지 파일 경로
-                              width: 95 * (deviceWidth / standardDeviceWidth),
-                              height: 110 * (deviceHeight / standardDeviceHeight),
-                              fit: BoxFit.cover,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0), // 원하는 모서리 반지름을 지정
+                              child: Image.network(
+                                menu.img, // 이미지 파일 경로
+                                width: 95 * (deviceWidth / standardDeviceWidth),
+                                height: 100 * (deviceHeight / standardDeviceHeight),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                             if (menu.status == 'SOLD_OUT')
                               Container(
@@ -177,15 +180,15 @@ class _MenuAllPageState extends State<MenuAllPage> {
                       ),
                       // 텍스트 중앙에 위치
                       SizedBox(
-                        height: 5 * (deviceHeight / standardDeviceHeight),
+                        height: 7 * (deviceHeight / standardDeviceHeight),
                       ),
                       Text(
                         menu.name, // 박스에 할당된 텍스트 출력
                         textAlign: TextAlign.center, // 텍스트 중앙 정렬
-                        style: TextStyle(fontSize: 12 * (deviceWidth / standardDeviceWidth)),
+                        style: TextStyle(fontSize: 10 * (deviceWidth / standardDeviceWidth)),
                       ),
                       SizedBox(
-                        height: 2 * (deviceHeight / standardDeviceHeight),
+                        height: 7 * (deviceHeight / standardDeviceHeight),
                       ),
                       // 버튼들을 나란히 배치하는 Row
                       Row(
@@ -194,8 +197,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
                           // 첫 번째 버튼
                           // 첫 번째 버튼
                           Container(
-                            width: 40 * (deviceWidth / standardDeviceWidth), // 원하는 너비로 조절
-                            height: 25 * (deviceHeight / standardDeviceHeight), // 원하는 높이로 조절
+                            width: 35 * (deviceWidth / standardDeviceWidth), // 원하는 너비로 조절
+                            height: 20 * (deviceHeight / standardDeviceHeight), // 원하는 높이로 조절
                             child: ElevatedButton(
                               onPressed: () {
                                 _openEditMenuPage(menu);
@@ -210,8 +213,8 @@ class _MenuAllPageState extends State<MenuAllPage> {
                           ),
 // 두 번째 버튼
                           Container(
-                            width: 40 * (deviceWidth / standardDeviceWidth), // 원하는 너비로 조절
-                            height: 25 * (deviceHeight / standardDeviceHeight), // 원하는 높이로 조절
+                            width: 35 * (deviceWidth / standardDeviceWidth), // 원하는 너비로 조절
+                            height: 20 * (deviceHeight / standardDeviceHeight), // 원하는 높이로 조절
                             child: ElevatedButton(
                               onPressed: () {
                                 showDialog(

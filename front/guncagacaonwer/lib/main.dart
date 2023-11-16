@@ -145,13 +145,9 @@ class SSEController {
     await _audioPlayer.setAsset('assets/sound/knock.mp3'); // 소리 파일 경로에 맞게 수정
     await _audioPlayer.play();
     print("백그라운드 메시지");
-    js.context.callMethod('showNotification', [title,   {
+    js.context.callMethod('showNotification', [title, js.JsObject.jsify({
       'body': body,
-      'sound':   {
-        'body': body,
-        'sound': 'assets/sound/knock.mp3', // 소리 파일 경로에 맞게 수정
-      }, // 소리 파일 경로에 맞게 수정
-    }]);
+    })]);
 
 
   }
