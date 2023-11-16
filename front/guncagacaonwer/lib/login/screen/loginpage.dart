@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:guncagacaonwer/login/api/siginin_api_service.dart';
 import 'package:guncagacaonwer/order/screen/orderpage.dart';
+import 'package:guncagacaonwer/store/screen/storepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -190,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                       toggleLoginState();
 
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => OrderPage(),
+                        builder: (context) => StorePage(),
                       ));
                     },
                     style: ButtonStyle(

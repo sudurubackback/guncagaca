@@ -117,7 +117,11 @@ class SSEController {
         ),
         ElevatedButton(
           onPressed: () {
-            Get.back();
+            if (Get.currentRoute != '/#OrderPage') { // '/OrderPage'는 OrderPage의 라우트 이름으로 수정해야 합니다.
+              Get.back();
+            } else {
+              Get.off(OrderPage()); // OrderPage 객체를 새로 생성하여 페이지를 새로 고침
+            }
           },
           style: ElevatedButton.styleFrom(
             primary: PRIMARY_COLOR,
@@ -133,21 +137,20 @@ class SSEController {
   }
 
   Future<void> showWebNotification(String title, String body) async {
+    print("소리 출력");
+    // 소리 재생
+    await _audioPlayer.setAsset('assets/sound/knock.mp3'); // 소리 파일 경로에 맞게 수정
+    await _audioPlayer.play();
     print("백그라운드 메시지");
     js.context.callMethod('showNotification', [title,   {
       'body': body,
       'sound':   {
         'body': body,
-        'sound': 'assets/sound/sound1.mp3', // 소리 파일 경로에 맞게 수정
+        'sound': 'assets/sound/knock.mp3', // 소리 파일 경로에 맞게 수정
       }, // 소리 파일 경로에 맞게 수정
     }]);
-    // 소리 재생
-    await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
-    await _audioPlayer.play();
-    print("소리 출력");
+
 
   }
 
 }
-
-
