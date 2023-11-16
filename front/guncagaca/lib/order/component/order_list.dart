@@ -251,7 +251,8 @@ class _OrderListState extends State<OrderList> {
                   ],
                 ),
                 SizedBox(height: 10),
-                Column(
+                  if (storeOrders[index]['status'] == 'COMPLETE')
+                    Column(
                   children: [
                     SizedBox(height: 10),
                     Row(

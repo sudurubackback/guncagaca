@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:guncagaca/common/layout/custom_appbar.dart';
 import '../common/const/colors.dart';
 import '../common/utils/dio_client.dart';
@@ -51,8 +52,18 @@ class _ReviewCreateState extends State<ReviewCreatePage> {
 
     if (reviewResponse.statusCode == 200) {
       print('리뷰 작성 성공 : ${reviewResponse.data}');
+      Fluttertoast.showToast(
+        msg: "리뷰 작성 완료",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
     } else {
       print('리뷰 작성 실패: ${reviewResponse.data}');
+      Fluttertoast.showToast(
+        msg: "리뷰 작성 실패",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
     }
   }
 
