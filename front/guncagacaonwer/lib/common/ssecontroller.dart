@@ -118,7 +118,7 @@ class SSEController {
 
   Future<void> showWebNotification(String title, String body) async {
     print("소리 출력");
-    _audioPlayer.setAsset('assets/sound/sound1.mp3');
+    _audioPlayer.setAsset('assets/sound/knock.mp3');
     _audioPlayer.play();
 
     print("백그라운드 메시지");
