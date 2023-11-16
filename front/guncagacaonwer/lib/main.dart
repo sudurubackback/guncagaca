@@ -141,15 +141,14 @@ class SSEController {
 
   Future<void> showWebNotification(String title, String body) async {
     print("소리 출력");
+
     // 소리 재생
-    await _audioPlayer.setAsset('assets/sound/knock.mp3'); // 소리 파일 경로에 맞게 수정
-    await _audioPlayer.play();
+    _audioPlayer.setAsset('assets/sound/knock.mp3'); // 소리 파일 경로에 맞게 수정
+    _audioPlayer.play(); // 소리 재생을 기다리지 않음
+
     print("백그라운드 메시지");
-    js.context.callMethod('showNotification', [title, js.JsObject.jsify({
-      'body': body,
-    })]);
-
-
+    js.context.callMethod('showNotification', [title, js.JsObject.jsify({'body': body})]);
   }
+
 
 }

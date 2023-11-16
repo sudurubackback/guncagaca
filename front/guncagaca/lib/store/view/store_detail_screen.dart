@@ -146,9 +146,16 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Text(
+                          //   "${storeDetail!.cafeName}",
+                          //   style: TextStyle(fontSize: 25),
+                          //   overflow: TextOverflow.ellipsis,
+                          // ),
+                          SizedBox(height: 10,),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               // 별점
                               RatingBar.builder(
@@ -157,7 +164,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                                 direction: Axis.horizontal,
                                 allowHalfRating: true,
                                 itemCount: 5,
-                                itemSize: 24.0,
+                                itemSize: 20.0,
                                 ignoreGestures: true,
                                 itemBuilder: (context, _) => Icon(
                                   Icons.star,
@@ -166,11 +173,11 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                                 onRatingUpdate: (rating) {},
                               ),
                               SizedBox(width: 8),
-                              Text('${storeDetail!.starTotal.toStringAsFixed(2)}/5', style: TextStyle(fontSize: 12)),
-                              SizedBox(width: 25),
-                              Text(" 리뷰 ${storeDetail!.reviewCount} 개", style: TextStyle(fontSize: 12)),
+                              Text('${storeDetail!.starTotal.toStringAsFixed(2)}/5', style: TextStyle(fontSize: 17)),
                               SizedBox(width: 20),
-                              Text(" 찜", style: TextStyle(fontSize: 12)),
+                              Text(" 리뷰 ${storeDetail!.reviewCount} 개", style: TextStyle(fontSize: 17)),
+                              SizedBox(width: 20),
+                              Text(" 찜", style: TextStyle(fontSize: 17)),
                               SizedBox(width: 5),
                               // 찜 toggle
                               GestureDetector(
