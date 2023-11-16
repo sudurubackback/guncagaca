@@ -1,0 +1,6 @@
+.btnContainer {
+  display: flex; /* Flex container 활성화 */
+  flex-direction: column; /* 자식 요소들을 세로로 쌓음 */
+  align-items: center; /* 가로 축 중앙 정렬 */
+  justify-content: center; /* 세로 축 중앙 정렬, 필요한 경우에만 사용 */
+}

@@ -122,30 +122,16 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void updateCafeInfo(String email, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
-//        Optional<Owners> optionalOwners = ownersRepository.findByEmail(email);
-//        Owners owner = optionalOwners.get();
-//        OwnerInfoResponse ownerInfo = OwnerInfoResponse.builder()
-//                .email(owner.getEmail())
-//                .tel(owner.getTel())
-//                .storeId(owner.getStore().getId())
-//                .build();
-//
-//        Long cafeId = ownerInfo.getStoreId();
-//
-//        log.info("description : {}", storeUpdateReqDto.getDescription());
-//        System.out.println(storeUpdateReqDto.getDescription());
-//
-//        if (multipartFile == null || multipartFile.isEmpty()) {
-//            Store store = storeRepository.findById(cafeId).orElseThrow();
-//            storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), store.getImg(), cafeId);
-//            return;
-//        }
-//        String upload = s3Uploader.upload(multipartFile, "StoreImages");
-//        storeRepository.updateStoreInfo(storeUpdateReqDto.getDescription(), storeUpdateReqDto.getCloseTime(), storeUpdateReqDto.getOpenTime(), upload, cafeId);
+
         Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
         Store store = owner.getStore();
-        String upload = s3Uploader.upload(multipartFile, "StoreImages");
-        store.update(storeUpdateReqDto,upload);
+
+        if(multipartFile != null) {
+            String upload = s3Uploader.upload(multipartFile, "StoreImages");
+            store.update(storeUpdateReqDto,upload);
+        }else{
+            store.update(storeUpdateReqDto,store.getImg());
+        }
     }
 
     @Override

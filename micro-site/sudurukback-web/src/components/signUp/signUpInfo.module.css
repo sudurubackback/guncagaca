@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  margin: 100px;
+  overflow: hidden;
+}
+.emailContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.button {
+  height: 40px;
+}
+
+.submitBtn {
+  margin-top: 40px !important;
+  height: 50px !important;
+  font-weight: bolder;
+  padding: 10px;
+}
