@@ -1,0 +1,61 @@
+.container {
+  font-family: "GmarketSans";
+  background-color: "#FFE5C6";
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+}
+
+.introImg {
+  width: 100%;
+  height: 100%;
+}
+
+.bottom {
+  background-image: url("../assets/images/main_background.png");
+}
+
+.textBox {
+  padding-top: 160px !important;
+  margin-bottom: 20vh;
+}
+
+.titleIntro {
+  font-size: 30px;
+  font-size: "GmarketSans";
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.smallIntro {
+  font-size: 20px;
+  font-size: "GmarketSans";
+  margin-bottom: 20px;
+  line-height: 2;
+}
+
+/* .button {
+}
+
+
+
+.title {
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-family: "GmarketSans";
+}
+
+.middle-title {
+  font-size: 30px;
+  margin-bottom: 20px;
+  font-family: "Jalnan";
+}
+
+.contents {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-family: "Jalnan";
+} */

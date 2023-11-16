@@ -1,0 +1,8 @@
+.container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 방향 중앙 정렬 */
+  align-items: center;
+  gap: 20px;
+}
