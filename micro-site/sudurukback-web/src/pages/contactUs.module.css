@@ -1,0 +1,9 @@
+.intro_container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 방향 중앙 정렬 */
+  align-items: center;
+  gap: 15px;
+  height: 45vh; /* 화면 높이만큼의 높이 */
+}

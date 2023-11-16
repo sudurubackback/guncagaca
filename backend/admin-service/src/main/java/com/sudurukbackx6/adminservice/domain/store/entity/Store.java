@@ -5,7 +5,6 @@ import com.sudurukbackx6.adminservice.domain.store.service.dto.request.StoreUpda
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
@@ -74,4 +73,5 @@ public class Store {
         this.closeTime = reqDto.getCloseTime();
         this.img = img;
     }
+    
 }
