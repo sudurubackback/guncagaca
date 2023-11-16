@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:html';
+import 'dart:html' as html;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,10 +47,6 @@ class SSEController {
         var eventData = jsonDecode((event as MessageEvent).data);
         print("eventData: $eventData");
         showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
-
-        // 특정 조건을 만족할 때 다이얼로그 표시
-        print('알림 옴');
-        _showOrderDialog();
       } as EventListener?);
     } catch (e) {
       print('SSE 초기화 오류: $e');
@@ -70,7 +67,7 @@ class SSEController {
       content: Column(
         children: [
           Image.asset(
-            'assets/coffees.png',
+            'assets/test.png',
             height: 150,
             width: 150,
           ),
@@ -121,10 +118,26 @@ class SSEController {
 
   Future<void> showWebNotification(String title, String body) async {
     print("소리 출력");
-    _audioPlayer.setAsset('assets/sound/knock.mp3');
+    _audioPlayer.setAsset('assets/sound/sound1.mp3');
     _audioPlayer.play();
 
     print("백그라운드 메시지");
-    js.context.callMethod('showNotification', [title, js.JsObject.jsify({'body': body})]);
+    if (html.Notification.supported) {
+      html.Notification.requestPermission().then((permission) {
+        if (permission == 'granted') {
+          html.Notification(title, body: body);
+        } else {
+          print('알림 권한이 거부되었습니다.');
+        }
+      });
+    } else {
+      print('브라우저가 알림을 지원하지 않습니다.');
+    }
+
+    // 특정 조건을 만족할 때 다이얼로그 표시
+    print('알림 옴');
+    _showOrderDialog();
   }
+
+
 }
