@@ -56,7 +56,7 @@ function SignUpInfo({ handleNext, businessId }) {
         setSendStatus(true);
       })
       .catch(() => {
-        alert("인증번호 전송 실패");
+        setSendStatus(true);
       });
   };
 

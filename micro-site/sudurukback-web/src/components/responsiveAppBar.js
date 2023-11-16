@@ -19,10 +19,20 @@ import {
 } from "../store/reducers/user";
 
 import { useDispatch } from "react-redux";
-const pages = ["서비스 소개", "사용방법", "개발자 소개"];
+const pages = [
+  "서비스소개",
+  "포팅메뉴얼",
+  "사용방법",
+  "고객앱다운로드",
+  "개발자소개",
+];
+
+const privatePages = ["포팅메뉴얼", "사용방법"];
 const url = [
   "/",
-  "https://bald-paper-b60.notion.site/14b71c8a2c8d40a9a41a2a024b677f7a?pvs=4",
+  "https://bald-paper-b60.notion.site/Deploy-52f68c7b7f7b4816a941f90ad55531e6?pvs=4",
+  "https://bald-paper-b60.notion.site/07471eaefe88485abbe94ba5e2242853?pvs=4",
+  "/download",
   "/contact-us",
 ];
 
@@ -124,22 +134,32 @@ function ResponsiveAppBar() {
               justifyContent: "flex-end",
             }}
           >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                sx={{ my: 2, color: "white", display: "block" }}
-                style={{ fontFamily: "gmarketSans" }}
-                onClick={() => {
-                  if (page === "사용방법") {
-                    handleOpenNewTab(url[1]);
-                  } else {
-                    handleClick(pages.indexOf(page));
-                  }
-                }}
-              >
-                {page}
-              </Button>
-            ))}
+            {pages.map((page) => {
+              // 로그인하지 않았고, 페이지가 privatePages에 있는 경우 렌더링하지 않음
+              if (!accessToken && privatePages.includes(page)) {
+                return null;
+              }
+
+              return (
+                <Button
+                  key={page}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                  style={{ fontFamily: "gmarketSans" }}
+                  onClick={() => {
+                    if (
+                      pages.indexOf(page) === 1 ||
+                      pages.indexOf(page) === 2
+                    ) {
+                      handleOpenNewTab(url[pages.indexOf(page)]);
+                    } else {
+                      handleClick(pages.indexOf(page));
+                    }
+                  }}
+                >
+                  {page}
+                </Button>
+              );
+            })}
 
             {renderAuthButton()}
           </Box>

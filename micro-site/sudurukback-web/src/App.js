@@ -9,6 +9,7 @@ import SignIn from "./pages/signIn.js";
 import Im from "./pages/im.js";
 import FindPw from "./pages/findPw.js";
 import Setting from "./pages/setting.js";
+import Download from "./pages/download.js";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/findpw" element={<FindPw />} />
           <Route path="/im/setting" element={<Setting />} />
+          <Route path="/download" element={<Download />} />
         </Routes>
       </div>
     </BrowserRouter>

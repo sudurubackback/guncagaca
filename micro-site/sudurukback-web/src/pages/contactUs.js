@@ -8,7 +8,7 @@ import ming from "../assets/images/ming.jpg";
 import kim from "../assets/images/kim.png";
 import choi from "../assets/images/choi.jpg";
 import kwon from "../assets/images/kwon.jpg";
-import two from "../assets/images/2.jpg";
+import two from "../assets/images/3.png";
 import eunjin from "../assets/images/eunjin.jpg";
 
 function ContactUs() {

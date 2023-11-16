@@ -30,7 +30,6 @@ function ChangePw({ password }) {
       axios({
         method: "put",
         url: "https://k9d102.p.ssafy.io/api/ceo/password",
-        // url: "http://localhost:9999/api/ceo/password",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
