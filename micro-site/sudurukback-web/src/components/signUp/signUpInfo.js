@@ -151,7 +151,6 @@ function SignUpInfo({ handleNext, businessId }) {
                 이메일 중복 확인
               </Button>
             </Grid>
-            {/* 이메일 인증 코드 전송*/}
             <Grid item xs={12} md={7}>
               <TextField
                 id="email"
