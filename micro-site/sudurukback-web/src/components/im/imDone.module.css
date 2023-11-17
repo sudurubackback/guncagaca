@@ -1,0 +1,70 @@
+.container {
+  margin: 50px 100px;
+}
+
+.imgContainer {
+  width: 400px;
+}
+
+.rightContainer {
+  align-items: center;
+  padding-left: 30px;
+}
+
+.leftContainer {
+  align-items: center;
+}
+
+.imgBtn {
+  width: 200px;
+  height: 50px;
+  font-weight: bolder;
+  font-size: 20px;
+}
+
+.privateBtn {
+  width: 250px;
+  height: 45px;
+  font-weight: bolder !important;
+  font-size: 20px !important;
+  background-color: #9b5748 !important;
+  margin-bottom: 20px !important;
+}
+
+.description {
+  font-size: 20px !important;
+  margin: 10px 0px;
+  background-color: antiquewhite;
+  color: black;
+  height: 150px;
+  width: 80%;
+  padding: 10px;
+  font-family: "GmarketSans";
+}
+
+.changeBtn {
+  width: 200px;
+  height: 50px;
+  font-weight: bolder;
+  font-size: 20px;
+  background-color: #9b5748 !important;
+}
+.cancleBtn {
+  width: 200px;
+  height: 50px;
+  font-weight: bolder;
+  font-size: 20px;
+  color: #9b5748 !important;
+  margin-left: 20px;
+  border-color: #9b5748 !important;
+}
+
+.selectBox {
+  width: 100px;
+}
+
+.timeText {
+  align-items: center;
+  font-size: 20px;
+  justify-self: center !important;
+}
