@@ -111,8 +111,8 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
             fontSize: 16.0,
           );
           // 소리 재생
-          await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
-          await _audioPlayer.play();
+          // await _audioPlayer.setAsset('assets/sound/sound1.mp3'); // 소리 파일 경로에 맞게 수정
+          // await _audioPlayer.play();
           print("화면이 새로 고쳐집니다.");
         } else {
           print('데이터 로드 실패, 상태 코드: ${response.statusCode}');

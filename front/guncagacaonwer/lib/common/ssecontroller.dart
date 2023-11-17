@@ -67,7 +67,7 @@ class SSEController {
       content: Column(
         children: [
           Image.asset(
-            'assets/test.png',
+            'assets/barista.png',
             height: 150,
             width: 150,
           ),
@@ -118,26 +118,26 @@ class SSEController {
 
   Future<void> showWebNotification(String title, String body) async {
     print("소리 출력");
-    _audioPlayer.setAsset('assets/sound/knock.mp3');
+    _audioPlayer.setAsset('assets/sound/sound1.mp3');
     _audioPlayer.play();
 
     print("백그라운드 메시지");
     if (html.Notification.supported) {
-      html.Notification.requestPermission().then((permission) {
-        if (permission == 'granted') {
-          html.Notification(title, body: body);
-        } else {
-          print('알림 권한이 거부되었습니다.');
-        }
-      });
+      // 알림 권한 요청
+     await html.Notification.requestPermission();
+
+
+        // 사용자가 알림 권한을 허용한 경우에만 알림 생성
+        html.Notification(title, body: body);
+        // 특정 조건을 만족할 때 다이얼로그 표시
+        print('알림 옴');
+        _showOrderDialog();
+
     } else {
       print('브라우저가 알림을 지원하지 않습니다.');
     }
-
-    // 특정 조건을 만족할 때 다이얼로그 표시
-    print('알림 옴');
-    _showOrderDialog();
   }
+
 
 
 }
