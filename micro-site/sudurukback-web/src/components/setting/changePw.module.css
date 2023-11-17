@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  margin-bottom: 300px;
+  overflow: hidden;
+}
+.boxContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+}
+.changeBtn {
+  width: 200px;
+  height: 50px;
+  font-weight: bolder;
+  font-size: 20px;
+  background-color: #9b5748 !important;
+}
+.cancleBtn {
+  width: 200px;
+  height: 50px;
+  font-weight: bolder;
+  font-size: 20px;
+  color: #9b5748 !important;
+  margin-left: 20px;
+  border-color: #9b5748 !important;
+}
+.btnContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px !important;
+}
+.gridContainer {
+  padding: 70px;
+}
