@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "494149121366",
+    "project_id": "guncagaca",
+    "storage_bucket": "guncagaca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494149121366:android:a3bbc5d7bfd9d6299312f7",
+        "android_client_info": {
+          "package_name": "com.example.guncagaca"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxyG9uF1YkOS3dKueXhXzbjIKE9nmZuYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
