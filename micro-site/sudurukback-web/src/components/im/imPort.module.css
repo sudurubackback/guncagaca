@@ -1,0 +1,33 @@
+.textField {
+  width: 500px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px;
+  background-color: "#DBBE93" !important;
+}
+
+.signInBtn {
+  margin-top: 40px !important;
+  height: 50px !important;
+  font-weight: bolder;
+  padding: 20px;
+  /* background-color: "#9B5748" !important; */
+}
+
+.btnContainer {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.linkContainer {
+  display: flex;
+  justify-content: center;
+  width: inherit;
+  margin-top: 20px;
+}
