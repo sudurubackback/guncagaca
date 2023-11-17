@@ -93,7 +93,6 @@ function Business({ handleNext, handleBusinessId }) {
       })
       .catch(() => {
         alert("사업자 인증에 실패하였습니다.");
-        handleNext();
       });
   };
 

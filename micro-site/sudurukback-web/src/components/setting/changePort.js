@@ -25,14 +25,11 @@ function ChangePort() {
       },
     })
       .then((res) => {
-        console.log(res.data);
         setDdns(res.data.data.ddns);
         setPort(res.data.data.port);
         setIp(res.data.data.ip);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(() => {});
   }, [accessToken]);
 
   const navigate = useNavigate();
@@ -53,10 +50,7 @@ function ChangePort() {
       .then(() => {
         navigate("/im");
       })
-      .catch((err) => {
-        console.log();
-        console.log(err);
-      });
+      .catch(() => {});
   };
 
   const handleCancleClick = () => {

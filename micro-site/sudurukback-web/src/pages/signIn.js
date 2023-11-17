@@ -48,9 +48,7 @@ function SignIn() {
         dispatch(setAccessToken(res.data.data.accessToken));
         dispatch(setRefreshToken(res.data.data.refreshToken));
         dispatch(setNetworkStatus(res.data.data.setNetwork));
-        console.log(res.data.data.approved);
         dispatch(setApproved(res.data.data.approved));
-        console.log(res.data.data);
         setSignInStatus(true);
       })
       .catch(() => {
@@ -97,7 +95,7 @@ function SignIn() {
             onChange={handleEmail}
           />
           <TextField
-            id="email"
+            id="password"
             label="비밀번호"
             variant="filled"
             borderColor="#9B5748"

@@ -183,7 +183,6 @@ function ImDone() {
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
         alert("수정 실패. 다시 시도해주세요.");
       });
   };

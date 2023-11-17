@@ -23,14 +23,12 @@ function ChangePw({ password }) {
     setPasswordConfirm(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    console.log(password);
+  const handleSubmit = () => {
     if (newPassword === passwordConfirm) {
       //비밀번호 변경
       axios({
         method: "put",
         url: "https://k9d102.p.ssafy.io/api/ceo/password",
-        // url: "http://localhost:9999/api/ceo/password",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -43,9 +41,7 @@ function ChangePw({ password }) {
           alert("비밀번호가 변경되었습니다.");
           navigate("/im");
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(() => {});
     } else {
       alert("비밀번호가 일치하지 않습니다.");
     }

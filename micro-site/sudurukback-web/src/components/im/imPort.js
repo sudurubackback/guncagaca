@@ -49,10 +49,7 @@ function ImPort({ changePortStatus }) {
         changePortStatus(true);
         dispatch(setNetworkStatus(true));
       })
-      .catch((err) => {
-        console.log();
-        console.log(err);
-      });
+      .catch(() => {});
   };
 
   return (
