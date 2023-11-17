@@ -25,7 +25,7 @@ function FindPw() {
         email: email,
       },
     })
-      .then((res) => {
+      .then(() => {
         setFindStatus(true);
       })
       .catch(() => {
