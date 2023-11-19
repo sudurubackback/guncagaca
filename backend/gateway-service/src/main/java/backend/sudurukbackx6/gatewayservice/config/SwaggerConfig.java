@@ -25,6 +25,7 @@ public class SwaggerConfig {
         apis.add(createGroupedOpenApi("주문", "/api/order/**"));
         apis.add(createGroupedOpenApi("결제", "/api/pay/**"));
         apis.add(createGroupedOpenApi("관리자", "/api/admin/**"));
+        apis.add(createGroupedOpenApi("관리자", "/api/ceo/**"));
         return apis;
     }
     private GroupedOpenApi createGroupedOpenApi(String groupName, String pathsToMatch) {
