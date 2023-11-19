@@ -98,7 +98,6 @@ function SignIn() {
             id="password"
             label="비밀번호"
             variant="filled"
-            borderColor="#9B5748"
             type="password"
             onChange={handlePassword}
           />
