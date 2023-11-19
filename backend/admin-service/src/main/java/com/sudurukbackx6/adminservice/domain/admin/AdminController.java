@@ -3,9 +3,7 @@ package com.sudurukbackx6.adminservice.domain.admin;
 import com.sudurukbackx6.adminservice.common.dto.BaseResponseBody;
 import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignUpReqDto;
-import com.sudurukbackx6.adminservice.domain.admin.dto.response.AdminSignInResDto;
 import com.sudurukbackx6.adminservice.domain.admin.service.AdminService;
-import com.sudurukbackx6.adminservice.domain.owner.dto.request.ToggleApprovalRequestDto;
 import com.sudurukbackx6.adminservice.domain.owner.entity.Business;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,12 +40,6 @@ public class AdminController {
     public ResponseEntity<List<Business>> getOwnerInfo(@RequestHeader("Email") String email) {
         return ResponseEntity.ok(adminService.getOwnerInfo(email));
     }
-
-//    @PostMapping("/approval")
-//    public ResponseEntity<String> toggleApproval(@RequestBody ToggleApprovalRequestDto toggleApprovalRequestDto) {
-//        adminService.toggleApproval(toggleApprovalRequestDto);
-//        return ResponseEntity.ok("Approval 상태가 토글되었습니다.");
-//    }
 
     @PostMapping("/approval")
     public ResponseEntity<? extends BaseResponseBody> toggleApproval(@RequestBody Map<String, Long> map) {

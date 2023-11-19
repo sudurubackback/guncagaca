@@ -1,6 +1,5 @@
 package com.sudurukbackx6.adminservice.domain.admin.service;
 
-import com.amazonaws.services.s3.model.Owner;
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignInReqDto;
@@ -90,13 +89,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<BusinessListResDto> businessList() {
         List<Business> businessList = businessRepository.findAll();
-        List<BusinessListResDto> list = new ArrayList<>();
-        for (Business b : businessList) {
-            list.add(new BusinessListResDto(b));
-        }
-
-        return list;
-
+        return convertBusinessList(businessList);
     }
 
     @Override
@@ -131,23 +124,14 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<BusinessListResDto> doneBusinessList() {
         List<Business> businessList = businessRepository.findByApprovalTrue();
-        List<BusinessListResDto> list = new ArrayList<>();
-        for (Business b : businessList) {
-            list.add(new BusinessListResDto(b));
-        }
-
-        return list;
+        return convertBusinessList(businessList);
     }
 
     @Override
     public List<BusinessListResDto> waitingBusinessList() {
         List<Business> businessList = businessRepository.findByApprovalFalse();
-        List<BusinessListResDto> list = new ArrayList<>();
-        for (Business b : businessList) {
-            list.add(new BusinessListResDto(b));
-        }
 
-        return list;
+        return convertBusinessList(businessList);
     }
 
     @Override
@@ -159,6 +143,19 @@ public class AdminServiceImpl implements AdminService {
                 .build();
 
         adminRepository.save(admin);
+    }
+
+    public List<BusinessListResDto> convertBusinessList(List<Business> businessList) {
+        List<BusinessListResDto> list = new ArrayList<>();
+        for (Business b : businessList) {
+            if (b.getOwners() == null) {
+//                businessRepository.delete(b);
+                continue;
+            }
+            list.add(new BusinessListResDto(b));
+        }
+
+        return list;
     }
 
 

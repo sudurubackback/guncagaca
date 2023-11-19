@@ -70,6 +70,8 @@ public class MailSenderServiceImpl implements MailSenderService {
     public String sendPassword(String email) throws MessagingException {
         SimpleMailMessage message = new SimpleMailMessage();
         String code = makeRandomCode();
+        System.out.println("임시 비밀번호 : ");
+        System.out.println(code);
         message.setTo(email);
         message.setSubject("근카 가카 임시 비밀번호 입니다.");
         message.setText("임시 비밀번호 : " + code);

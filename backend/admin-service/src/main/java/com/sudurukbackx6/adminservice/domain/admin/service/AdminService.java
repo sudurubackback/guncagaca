@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface AdminService {
     List<Business> getOwnerInfo(String email);
-    void toggleApproval(ToggleApprovalRequestDto toggleApprovalRequestDto);
+//    void toggleApproval(ToggleApprovalRequestDto toggleApprovalRequestDto);
 
     //1. 로그인
     AdminSignInResDto signIn(AdminSignInReqDto adminSignInReqDto);
