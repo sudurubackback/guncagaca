@@ -22,6 +22,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping("/api/ceo")
 public class OwnerController {
 
