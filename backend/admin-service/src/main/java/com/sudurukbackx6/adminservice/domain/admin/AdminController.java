@@ -43,12 +43,6 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getOwnerInfo(email));
     }
 
-//    @PostMapping("/approval")
-//    public ResponseEntity<String> toggleApproval(@RequestBody ToggleApprovalRequestDto toggleApprovalRequestDto) {
-//        adminService.toggleApproval(toggleApprovalRequestDto);
-//        return ResponseEntity.ok("Approval 상태가 토글되었습니다.");
-//    }
-
     @PostMapping("/approval")
     public ResponseEntity<? extends BaseResponseBody> toggleApproval(@RequestBody Map<String, Long> map) {
         adminService.toggleApproval(map.get("owner_id"));

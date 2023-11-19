@@ -90,8 +90,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<BusinessListResDto> businessList() {
         List<Business> businessList = businessRepository.findAll();
+
+
         List<BusinessListResDto> list = new ArrayList<>();
         for (Business b : businessList) {
+            if (b.getOwners() == null) continue;
             list.add(new BusinessListResDto(b));
         }
 
@@ -132,7 +135,9 @@ public class AdminServiceImpl implements AdminService {
     public List<BusinessListResDto> doneBusinessList() {
         List<Business> businessList = businessRepository.findByApprovalTrue();
         List<BusinessListResDto> list = new ArrayList<>();
+
         for (Business b : businessList) {
+            if (b.getOwners() == null) continue;
             list.add(new BusinessListResDto(b));
         }
 
@@ -144,6 +149,7 @@ public class AdminServiceImpl implements AdminService {
         List<Business> businessList = businessRepository.findByApprovalFalse();
         List<BusinessListResDto> list = new ArrayList<>();
         for (Business b : businessList) {
+            if (b.getOwners() == null) continue;
             list.add(new BusinessListResDto(b));
         }
 
