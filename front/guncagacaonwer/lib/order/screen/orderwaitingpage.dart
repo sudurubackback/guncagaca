@@ -72,7 +72,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
             Map<String, dynamic> jsonData = response.data;
             // 'data' 키에 해당하는 주문 목록을 가져옵니다.
             orders = List<Map<String, dynamic>>.from(jsonData['data']);
-            // print(orders);
+            print(orders);
 
             // orders를 활용하여 주문 목록을 처리하는 로직을 작성하세요.
             // 예를 들어, 주문 목록을 화면에 출력하거나 다른 작업을 수행할 수 있습니다.
