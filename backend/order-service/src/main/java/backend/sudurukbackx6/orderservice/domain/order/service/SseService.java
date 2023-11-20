@@ -46,6 +46,7 @@ public class SseService {
         SseEmitter emitter = emitterMap.get(storeId);
         if(emitter != null) {
             try {
+                log.info("주문 전송");
                 emitter.send(data);
             } catch (IOException e) {
                 emitterMap.remove(storeId);
