@@ -4,9 +4,8 @@ import backend.sudurukbackx6.orderservice.client.MemberServiceClient;
 import backend.sudurukbackx6.orderservice.client.StoreServiceClient;
 import backend.sudurukbackx6.orderservice.config.KafkaEventService;
 import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
+import backend.sudurukbackx6.orderservice.domain.order.client.dto.response.MemberInfoResponse;
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
-import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
-import backend.sudurukbackx6.orderservice.client.OwnerServiceClient;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Order;
 import backend.sudurukbackx6.orderservice.domain.order.entity.Status;
 import backend.sudurukbackx6.orderservice.domain.order.repository.OrderRepository;
@@ -40,6 +39,7 @@ public class OrderService {
     private final KafkaEventService kafkaEventService;
     private final StoreServiceClient storeServiceClient;
     private final SseService sseService;
+    private final MemberServiceClient memberFeignClient;
 
     @Value("${bootpay.clientId}")
     private String CLIENT_ID;
@@ -47,11 +47,10 @@ public class OrderService {
     @Value("${bootpay.secretKey}")
     private String PRIVATE_KEY;
 
-
     // 주문 등록
     public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
         Long memberId = memberServiceClient.getId(email);
-
+        MemberInfoResponse memberInfo = memberFeignClient.getMemberInfo(email);
         Order newOrder = Order.builder()
                 .orderTime(LocalDateTime.now())
                 .memberId(memberId)
@@ -64,6 +63,7 @@ public class OrderService {
                 .eta(orderRequestDto.getEta())
                 .price(orderRequestDto.getTotalOrderPrice())
                 .menus(orderRequestDto.getMenus())
+                .nickname(memberInfo.getNickname())
                 .build();
 
         orderRepository.save(newOrder);

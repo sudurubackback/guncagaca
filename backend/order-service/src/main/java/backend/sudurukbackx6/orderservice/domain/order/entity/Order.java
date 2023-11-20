@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.orderservice.domain.order.entity;
 
+
 import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -47,6 +48,8 @@ public class Order {
     private List<Menu> menus;
 
     private int price;
+
+    private String nickname;
 
     public void updateStatus(Status status) {
         this.status = status;

@@ -6,6 +6,7 @@ import com.sudurukbackx6.adminservice.domain.owner.dto.request.ChangePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignUpReqDto;
+import com.sudurukbackx6.adminservice.domain.owner.dto.response.OwnerIpListResponseDto;
 import com.sudurukbackx6.adminservice.domain.owner.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 
@@ -121,7 +123,7 @@ public class OwnerController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<? extends BaseResponseBody> auth(@RequestHeader("Email") String email, @RequestBody Map<String, String> map) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> auth (@RequestHeader("Email") String email, @RequestBody Map<String, String> map) throws IOException {
         if(map.get("password")==null)
             throw new IOException("비밀번호를 입력해주세요");
 
@@ -129,6 +131,12 @@ public class OwnerController {
 
         if(!flag) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseBody<>(400, "인증 실패"));
         return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseBody<>(200, "인증 성공"));
+    }
+
+    // 가게 ip 정보 가져오기
+    @GetMapping("/ip")
+    public ResponseEntity<List<OwnerIpListResponseDto>> getIpList (@RequestHeader("Email") String email){
+        return ResponseEntity.ok(ownerService.getIpList(email));
     }
 
 }
