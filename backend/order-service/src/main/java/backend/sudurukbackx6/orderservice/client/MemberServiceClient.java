@@ -11,7 +11,16 @@ import java.util.List;
 public interface MemberServiceClient {
 
     @GetMapping("/api/member/id")
+
     Long getId(@RequestHeader("Email") String email);
+    @GetMapping("/api/member/firebaseToken/{memberId}")
+    String getFirebaseTokenByMemberId(@PathVariable Long memberId);
+
+    @GetMapping("/api/member/memberInfo")
+    MemberInfoResponse getMemberInfo(@RequestHeader("Email") String email);
+
+    @PostMapping("/api/member/memberInfo/bulk")
+    List<MemberInfoResponse> getMemberInfo(@RequestHeader("Email") String email, @RequestBody List<Long> memberIds);
 
     @GetMapping("/api/member/firebaseToken/{memberId}")
     String getFirebaseTokenByMemberId(@PathVariable Long memberId);
