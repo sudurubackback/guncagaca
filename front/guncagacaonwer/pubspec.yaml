@@ -44,7 +44,6 @@ dependencies:
   retrofit: ^4.0.3
   retrofit_generator: ^8.0.3
   dio: ^5.3.3
-  sse_client: ^0.1.0
   http: ^0.13.5
   json_annotation: ^4.8.1
   cached_network_image: ^3.3.0
