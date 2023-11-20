@@ -42,6 +42,7 @@ public class SseService {
     }
 
     public void sendToStoreClients(Long storeId, Object data) {
+        log.info("주문 생성됨");
         SseEmitter emitter = emitterMap.get(storeId);
         if(emitter != null) {
             try {
