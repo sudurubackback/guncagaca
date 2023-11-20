@@ -44,20 +44,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //자동 로그인 시도
-  void _tryAutoLogin() {
+  void _tryAutoLogin() async {
     final accessToken = prefs.getString('accessToken');
     final refreshToken = prefs.getString('refreshToken');
     print(accessToken);
+    print(refreshToken);
     if (accessToken != null && refreshToken != null) {
-      // 저장된 토큰을 사용해 로그인 시도
-      // 예: 서버로 토큰을 보내 인증 수행
       // 인증이 성공하면 홈 화면으로 이동
       // 실패하면 로그인 화면으로 유지
-      Get.offAll(() => DefaultLayout(
-            child: RootTab(mainViewModel: mainViewModel,),
-            mainViewModel: mainViewModel,
-        )
-      );
+      // 저장된 리프레시 토큰을 사용해 로그인 갱신
+      String? newToken = await TokenManager().refreshToken();
+      if (newToken != null) {
+        // 토큰 갱신이 성공했을 때만 화면 전환
+        Get.offAll(() => DefaultLayout(
+          child: RootTab(mainViewModel: mainViewModel),
+          mainViewModel: mainViewModel,
+        ));
+      } else {
+        // 토큰 갱신 실패 시 처리, 예: 로그인 화면으로 이동
+        print("토큰 갱신 실패");
+      }
     }
   }
 
