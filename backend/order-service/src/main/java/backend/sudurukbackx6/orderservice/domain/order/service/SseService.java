@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.orderservice.domain.order.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -11,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class SseService {
 
     private final Map<Long, SseEmitter> emitterMap = new ConcurrentHashMap<>();
@@ -33,6 +35,7 @@ public class SseService {
     }
 
     public SseEmitter createEmitter(Long storeId) {
+        log.info("sse 등록");
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitterMap.put(storeId, emitter);
         return emitter;
