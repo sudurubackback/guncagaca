@@ -35,7 +35,7 @@ public class SseService {
     }
 
     public SseEmitter createEmitter(Long storeId) {
-        log.info("sse 등록");
+        log.info("sse 등록 {}", storeId);
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitterMap.put(storeId, emitter);
         return emitter;
