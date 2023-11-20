@@ -1,4 +1,4 @@
-import qr from "../assets/images/qr.jpeg";
+import qr from "../assets/images/qr.png";
 
 function Download() {
   return (
@@ -7,7 +7,8 @@ function Download() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        marginTop: "5vh",
+        height: "60vh",
       }}
     >
       <img
