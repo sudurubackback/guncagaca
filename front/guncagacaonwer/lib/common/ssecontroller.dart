@@ -3,6 +3,8 @@ import 'dart:html';
 import 'dart:html' as html;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:get/get.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:just_audio/just_audio.dart';
@@ -17,10 +19,9 @@ import '../order/screen/orderpage.dart';
 class SSEController {
   EventSource? eventSource;
   late ApiService apiService;
-  late int storeId;
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-  Future<void> setupApiService() async {
+  Future<int?> setupApiService() async {
     final prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
     String? email = prefs.getString('email');
@@ -32,28 +33,50 @@ class SSEController {
 
     // storeId 초기화
     final ownerResponse = await apiService.getOwnerInfo();
-    storeId = ownerResponse.storeId ?? 0;
+    return ownerResponse.storeId ?? 0;
   }
 
   Future<void> initSSE() async {
+    int? storeId = await setupApiService();
+    final prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
     try {
-      await setupApiService();
-      final prefs = await SharedPreferences.getInstance();
-      String? accessToken = prefs.getString('accessToken');
-      print("스토어아이디");
-      print(storeId);
-      eventSource = EventSource('http://k9d102.p.ssafy.io:8083/api/order/sse/$storeId');
-
-      // SSE 이벤트 수신 시 처리 로직
-      eventSource?.addEventListener('message', (Event event) async {
-        var eventData = jsonDecode((event as MessageEvent).data);
-        print("eventData: $eventData");
-        showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
-      } as EventListener?);
+      SSEClient.subscribeToSSE(
+          method: SSERequestType.GET,
+          url:
+          'https://k9d102.p.ssafy.io/api/order/sse/$storeId',
+          header: {
+            "Authorization" : "Bearer $accessToken",
+            "Accept": "text/event-stream",
+            "Cache-Control": "no-cache",
+          }).listen((event) {
+        print('Id: ' + event.id!);
+        print('Event: ' + event.event!);
+        print('Data: ' + event.data!);
+      });
     } catch (e) {
       print('SSE 초기화 오류: $e');
     }
   }
+
+  // Future<void> initSSE() async {
+  //   try {
+  //     int? storeId = await setupApiService();
+  //     final prefs = await SharedPreferences.getInstance();
+  //     String? accessToken = prefs.getString('accessToken');
+  //     print("스토어아이디 : $storeId" );
+  //     eventSource = EventSource('https://k9d102.p.ssafy.io/api/order/sse/$storeId');
+  //
+  //     // SSE 이벤트 수신 시 처리 로직
+  //     eventSource?.addEventListener('message', (Event event) async {
+  //       var eventData = jsonDecode((event as MessageEvent).data);
+  //       print("eventData: $eventData");
+  //       showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
+  //     } as EventListener?);
+  //   } catch (e) {
+  //     print('SSE 초기화 오류: $e');
+  //   }
+  // }
 
   void closeSSE() {
     eventSource?.close();

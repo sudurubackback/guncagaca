@@ -58,6 +58,7 @@ dependencies:
   http_parser: ^4.0.2
   mime_type: ^1.0.0
   just_audio: ^0.9.36
+  flutter_client_sse: ^2.0.0
   js: ^0.6.7
 dev_dependencies:
   flutter_test:
