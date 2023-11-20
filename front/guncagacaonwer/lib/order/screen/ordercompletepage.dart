@@ -48,9 +48,14 @@ class _OrderCompletePageState extends State<OrderCompletePage> {
       print(ownerResponse.email);
       int storeId = ownerResponse.storeId;
       print(storeId);
+      final prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
       if (storeId != null) {
         final response = await dio.get(
-          "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId/3",
+          "$baseUrl/api/order/list/$storeId/3",
+          options: Options(
+            headers: {'Authorization': 'Bearer $accessToken',}, // 헤더에 이메일 추가
+          ),
         );
 
         if (response.statusCode == 200) {

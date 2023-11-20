@@ -38,6 +38,8 @@ class SSEController {
   Future<void> initSSE() async {
     try {
       await setupApiService();
+      final prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
       print("스토어아이디");
       print(storeId);
       eventSource = EventSource('http://k9d102.p.ssafy.io:8083/api/order/sse/$storeId');
