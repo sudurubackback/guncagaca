@@ -50,7 +50,7 @@ function ResponsiveAppBar() {
         <>
           <Button
             sx={{ my: 2, color: "white", display: "block" }}
-            onClick={() => handleClick(navigate("/im"))}
+            onClick={() => navigate("/im")}
             style={{ fontFamily: "gmarketSans" }}
           >
             내 정보
@@ -98,7 +98,6 @@ function ResponsiveAppBar() {
 
   const navigate = useNavigate();
   const handleClick = (index) => {
-    console.log("Clicked index:", index);
     navigate(url[index]);
   };
 
