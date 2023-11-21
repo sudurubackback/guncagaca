@@ -91,6 +91,7 @@ function SignIn() {
             id="email"
             label="이메일"
             variant="filled"
+            color="warning"
             style={{ color: "#9B5748" }}
             onChange={handleEmail}
           />
@@ -99,6 +100,7 @@ function SignIn() {
             label="비밀번호"
             variant="filled"
             type="password"
+            color="warning"
             onChange={handlePassword}
           />
         </Stack>
