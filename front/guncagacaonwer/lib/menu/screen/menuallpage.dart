@@ -124,7 +124,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
               physics: NeverScrollableScrollPhysics(), // ListView 안의 GridView 스크롤 방지
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3, // 4개씩 표시
-                // childAspectRatio: (deviceWidth / standardDeviceWidth) / (deviceHeight / standardDeviceHeight),
+                childAspectRatio: (deviceWidth /(1.5 * standardDeviceWidth)) / (deviceHeight / standardDeviceHeight),
               ),
               itemCount: menus.length, // 메뉴 목록의 길이에 따라 박스 수 조정
               itemBuilder: (BuildContext context, int menuIndex) {
@@ -146,7 +146,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                   height: 300 * (deviceHeight / standardDeviceHeight), // 각 박스의 높이
                   child: Column(
                     children: [
-                      SizedBox(height: 10 * (deviceHeight / standardDeviceHeight)),
+                      SizedBox(height: 3 * (deviceHeight / standardDeviceHeight)),
                       // 이미지
                       GestureDetector(
                         onTap: () {
@@ -155,7 +155,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                         child: Stack(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0), // 원하는 모서리 반지름을 지정
+                              borderRadius: BorderRadius.circular(5), // 원하는 모서리 반지름을 지정
                               child: Image.network(
                                 menu.img, // 이미지 파일 경로
                                 width: 95 * (deviceWidth / standardDeviceWidth),
@@ -166,7 +166,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                             if (menu.status == 'SOLD_OUT')
                               Container(
                                 width: 95 * (deviceWidth / standardDeviceWidth),
-                                height: 110 * (deviceHeight / standardDeviceHeight),
+                                height: 100 * (deviceHeight / standardDeviceHeight),
                                 color: Color.fromRGBO(0, 0, 0, 0.4),
                                 child: Center(
                                   child: Text(
@@ -180,7 +180,7 @@ class _MenuAllPageState extends State<MenuAllPage> {
                       ),
                       // 텍스트 중앙에 위치
                       SizedBox(
-                        height: 7 * (deviceHeight / standardDeviceHeight),
+                        height: 4 * (deviceHeight / standardDeviceHeight),
                       ),
                       Text(
                         menu.name, // 박스에 할당된 텍스트 출력
