@@ -74,7 +74,7 @@ class _OrderProcessingPageState extends State<OrderProcessingPage> {
 
             setState(() {});
 
-            print(orders);
+            // print(orders);
             print("api 호출 화면이 새로 고쳐집니다.");
           } else {
             print('API 응답 형식이 예상과 다릅니다: $response.data');

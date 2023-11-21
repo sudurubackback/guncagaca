@@ -9,7 +9,7 @@ void main() async {
   runApp(MyApp());
   // SSE 초기화
   SSEController sseController = SSEController();
-  await sseController.setupApiService();
+  // await sseController.setupApiService();
   await sseController.initSSE();
 }
 
