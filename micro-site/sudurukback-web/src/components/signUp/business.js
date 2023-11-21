@@ -120,6 +120,7 @@ function Business({ handleNext, handleBusinessId }) {
                 margin="normal"
                 fullWidth
                 onChange={handleBusinessName}
+                color="warning"
               />
               <TextField
                 id="outlined-basic"
@@ -128,6 +129,7 @@ function Business({ handleNext, handleBusinessId }) {
                 margin="normal"
                 fullWidth
                 onChange={handleAddress}
+                color="warning"
               />
               <TextField
                 id="outlined-basic"
@@ -136,6 +138,7 @@ function Business({ handleNext, handleBusinessId }) {
                 margin="normal"
                 fullWidth
                 onChange={handleBusinessNumber}
+                color="warning"
               />
               <TextField
                 id="outlined-basic"
@@ -144,6 +147,7 @@ function Business({ handleNext, handleBusinessId }) {
                 margin="normal"
                 fullWidth
                 onChange={handleOwnerName}
+                color="warning"
               />
               <TextField
                 id="outlined-basic"
@@ -153,6 +157,7 @@ function Business({ handleNext, handleBusinessId }) {
                 margin="normal"
                 fullWidth
                 onChange={handleOpenDate}
+                color="warning"
               />
               <TextField
                 id="outlined-basic"
@@ -162,6 +167,7 @@ function Business({ handleNext, handleBusinessId }) {
                 margin="normal"
                 fullWidth
                 onChange={handleAccountNumber}
+                color="warning"
               />
               <TextField
                 id="outlined-basic"
@@ -171,6 +177,7 @@ function Business({ handleNext, handleBusinessId }) {
                 margin="normal"
                 fullWidth
                 onChange={handleTel}
+                color="warning"
               />
             </Box>
           </Grid>
@@ -192,7 +199,7 @@ function Business({ handleNext, handleBusinessId }) {
                 startIcon={<CloudUploadIcon />}
                 style={{
                   marginTop: "20px",
-                  backgroundColor: "#FFB549",
+                  backgroundColor: "#9B594A",
                   color: "white",
                   width: "100%",
                   height: "80px",
@@ -209,6 +216,7 @@ function Business({ handleNext, handleBusinessId }) {
                 size="large"
                 style={{ marginTop: "50px" }}
                 onClick={onclickCheckBusiness}
+                color="warning"
               >
                 사업자 인증 하기
               </Button>
