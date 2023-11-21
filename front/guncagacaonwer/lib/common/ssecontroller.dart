@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 import 'dart:html' as html;
@@ -17,32 +18,65 @@ import '../order/screen/orderpage.dart';
 
 
 class SSEController {
-  EventSource? eventSource;
+  // EventSource? eventSource;
   late ApiService apiService;
   late int storeId;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final html.EventSource eventSource;
+  final StreamController<String> streamController;
 
+  SSEController._internal(this.eventSource, this.streamController) {
+    // 이벤트 리스너 설정
+    eventSource.addEventListener('message', (html.Event message) {
+      final eventData = (message as html.MessageEvent).data as String;
+      streamController.add(eventData);
+      onMessageReceived(eventData); // 새로운 이벤트 처리 메소드 호출
+    });
 
-  Future<void> setupApiService() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? accessToken = prefs.getString('accessToken');
-    String? email = prefs.getString('email');
-    print("email : $email");
-    Dio dio = Dio();
-    dio.interceptors.add(AuthInterceptor(accessToken));
-    dio.interceptors.add(LogInterceptor(responseBody: true));
-    apiService = ApiService(dio);
-
-    // storeId 초기화
-    final ownerResponse = await apiService.getOwnerInfo();
-    storeId = ownerResponse.storeId ?? 0;
+    eventSource.onError.listen((event) {
+      closeSSE();
+    });
   }
+
+  void onMessageReceived(String eventData) {
+    // 이벤트 데이터 처리
+    showWebNotification("주문 도착!", "새로운 주문이 도착했어요.");
+  }
+  // Future<void> setupApiService() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   String? accessToken = prefs.getString('accessToken');
+  //   String? email = prefs.getString('email');
+  //   print("email : $email");
+  //   Dio dio = Dio();
+  //   dio.interceptors.add(AuthInterceptor(accessToken));
+  //   dio.interceptors.add(LogInterceptor(responseBody: true));
+  //   apiService = ApiService(dio);
+  //
+  //   // storeId 초기화
+  //   final ownerResponse = await apiService.getOwnerInfo();
+  //   storeId = ownerResponse.storeId ?? 0;
+  // }
+
+  factory SSEController.connect({
+    bool withCredentials = false,
+    bool closeOnError = true,
+  }) {
+    final streamController = StreamController<String>();
+    final eventSource = html.EventSource('http://k9d102.p.ssafy.io:8083/api/order/sse/8', withCredentials: withCredentials);
+
+    return SSEController._internal(eventSource, streamController);
+  }
+
+  Stream get stream => streamController.stream;
+
+  bool isClosed() => streamController.isClosed;
+
 
   // Future<void> initSSE() async {
   //   try {
   //     await setupApiService();
   //     print("스토어아이디 $storeId");
-  //     eventSource = EventSource('https://k9d102.p.ssafy.io/api/order/sse/$storeId');
+  //     eventSource = EventSource('http://k9d102.p.ssafy.io:8083/api/order/sse/$storeId');
   //
   //     // SSE 이벤트 수신 시 처리 로직
   //     eventSource?.addEventListener('message', (Event event) async {
@@ -55,54 +89,55 @@ class SSEController {
   //   }
   // }
 
-  Future<void> initSSE() async {
-    await setupApiService();
-    print("sse 가게 $storeId");
-    final prefs = await SharedPreferences.getInstance();
-    String? accessToken = prefs.getString('accessToken');
+  // Future<void> initSSE() async {
+  //   await setupApiService();
+  //   print("sse 가게 $storeId");
+  //   final prefs = await SharedPreferences.getInstance();
+  //   String? accessToken = prefs.getString('accessToken');
+  //
+  //   _connectToSSE(storeId, accessToken);
+  // }
+  //
+  // void _connectToSSE(int? storeId, String? accessToken) {
+  //   try {
+  //     SSEClient.subscribeToSSE(
+  //       method: SSERequestType.GET,
+  //       url: 'http://k9d102.p.ssafy.io:8083/api/order/sse/$storeId',
+  //       header: {
+  //         "Authorization": "Bearer $accessToken",
+  //         "Accept": "text/event-stream",
+  //         "Cache-Control": "no-cache",
+  //       },
+  //     ).listen(
+  //           (event) {
+  //         // 이벤트 처리
+  //         print('Id: ' + event.id!);
+  //         print('Event: ' + event.event!);
+  //         print('Data: ' + event.data!);
+  //         var eventData = jsonDecode((event as MessageEvent).data);
+  //         print("eventData: $eventData");
+  //         showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
+  //       },
+  //       onDone: () {
+  //         // 연결이 종료될 때 재연결 시도
+  //         print("SSE 연결 종료됨. 재연결 시도.");
+  //         _connectToSSE(storeId, accessToken);
+  //       },
+  //       onError: (error) {
+  //         // 오류 발생 시 재연결 시도
+  //         print("SSE 연결 오류: $error. 재연결 시도.");
+  //         _connectToSSE(storeId, accessToken);
+  //       },
+  //     );
+  //   } catch (e) {
+  //     print('SSE 초기화 오류: $e');
+  //   }
+  // }
 
-    _connectToSSE(storeId, accessToken);
-  }
 
-  void _connectToSSE(int? storeId, String? accessToken) {
-    try {
-      SSEClient.subscribeToSSE(
-        method: SSERequestType.GET,
-        url: 'https://k9d102.p.ssafy.io/api/order/sse/$storeId',
-        header: {
-          "Authorization": "Bearer $accessToken",
-          "Accept": "text/event-stream",
-          "Cache-Control": "no-cache",
-        },
-      ).listen(
-            (event) {
-          // 이벤트 처리
-          print('Id: ' + event.id!);
-          print('Event: ' + event.event!);
-          print('Data: ' + event.data!);
-          var eventData = jsonDecode((event as MessageEvent).data);
-          print("eventData: $eventData");
-          showWebNotification("주문 도착!","새로운 주문이 도착했어요.");
-        },
-        onDone: () {
-          // 연결이 종료될 때 재연결 시도
-          print("SSE 연결 종료됨. 재연결 시도.");
-          _connectToSSE(storeId, accessToken);
-        },
-        onError: (error) {
-          // 오류 발생 시 재연결 시도
-          print("SSE 연결 오류: $error. 재연결 시도.");
-          _connectToSSE(storeId, accessToken);
-        },
-      );
-    } catch (e) {
-      print('SSE 초기화 오류: $e');
-    }
-  }
-
-
-      void closeSSE() {
-    eventSource?.close();
+  void closeSSE() {
+    eventSource.close();
+    streamController.close();
   }
 
   void _showOrderDialog() {
