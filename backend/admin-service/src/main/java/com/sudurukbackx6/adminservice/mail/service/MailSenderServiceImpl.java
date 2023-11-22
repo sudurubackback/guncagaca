@@ -89,38 +89,17 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Override
     public void sendInfoMail(String email) throws MessagingException {
-
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(email);
-//        message.setSubject("근카 가카 가입 서류 안내");
-//
-//        String sb = "<h1>" + "근카 가카 가입 서류 안내" + "<h1><br>" +
-//                "사업자 인증 서류, 신분증 사본을 본 이메일로 회신 바랍니다.<br><br>";
-//
-//        message.setText(sb);
-//
-//
-//        try {
-//            mailSender.send(message);
-//
-//        } catch (RuntimeException e) {
-//            log.debug("MailService.sendEmail exception occur email: {}, ",
-//                    email);
-//            throw new BadRequestException(ErrorCode.FAIL_SENDMAIL);
-//        }
-
         MimeMessage message = mailSender.createMimeMessage();
 
-        // true parameter indicates that we want to use multipart (it's necessary for html emails)
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(email);
         helper.setSubject("근카 가카 가입 서류 안내");
 
-        String htmlContent = "<h1>근카 가카 가입 서류 안내</h1><br>" +  // Here, closing tag for h1 was corrected from <h1> to </h1>
+        String htmlContent = "<h1>근카 가카 가입 서류 안내</h1><br>" +
                 "사업자 인증 서류, 신분증 사본을 본 이메일로 회신 바랍니다.<br><br>";
 
-        helper.setText(htmlContent, true); // true to activate HTML format
+        helper.setText(htmlContent, true);
 
         try {
             mailSender.send(message);

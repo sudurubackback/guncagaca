@@ -27,7 +27,6 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public long checkBusinessValidation(BusinessValidReqDto reqDto, MultipartFile multipartFile) throws URISyntaxException, IOException {
         int isValidate = vendorService.checkVendorValidation(reqDto);
-        log.info("isValidate : {}", isValidate);
 
         if (isValidate == 1) {
             //사업자 등록이 되어있는지 확인

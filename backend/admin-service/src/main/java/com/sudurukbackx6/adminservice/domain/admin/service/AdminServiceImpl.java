@@ -1,6 +1,5 @@
 package com.sudurukbackx6.adminservice.domain.admin.service;
 
-import com.amazonaws.services.s3.model.Owner;
 import com.sudurukbackx6.adminservice.common.code.ErrorCode;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
 import com.sudurukbackx6.adminservice.domain.admin.dto.request.AdminSignInReqDto;

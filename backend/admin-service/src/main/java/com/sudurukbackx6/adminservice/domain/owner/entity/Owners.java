@@ -20,8 +20,6 @@ public class Owners extends TimeEntity {
     @Column(name = "owner_id")
     private Long ownerId;
 
-    /*    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-        private */
     @OneToOne
     @JoinColumn(name = "business_Id")
     private Business business;
@@ -40,8 +38,6 @@ public class Owners extends TimeEntity {
     private String ip;
 
     private String port;
-
-//    private String ddns;
 
     private Role role;
 

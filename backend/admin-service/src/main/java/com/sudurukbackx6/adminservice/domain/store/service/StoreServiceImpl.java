@@ -64,8 +64,6 @@ public class StoreServiceImpl implements StoreService {
             String upload = s3Uploader.upload(multipartFile, "StoreImages");
             GeocodingDto.Response response = getCoordinate(request.getAddress());
 
-            log.info("주소 : {}", request.getAddress());
-
             String latitude = null;
             String longitude = null;
 
@@ -78,9 +76,6 @@ public class StoreServiceImpl implements StoreService {
                 // 좌표가 없을 때 예외 처리
                 throw new RuntimeException("좌표를 추출할 수 없습니다.");
             }
-
-            log.info("위도 : {}", latitude);
-            log.info("경도 : {}", longitude);
 
             Store store = Store.builder()
                     .name(request.getStoreName())
