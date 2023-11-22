@@ -39,7 +39,7 @@ function Main() {
               variant="contained"
               size="large"
               style={{
-                backgroundColor: "#C19480",
+                backgroundColor: "#9B5748",
                 textAlign: "center",
                 fontWeight: "bold",
               }}
@@ -51,7 +51,7 @@ function Main() {
           </Grid>
 
           <Grid item xs>
-            <img src={phone} alt="phone" />
+            <img src={phone} alt="phone" className={styles.phone} />
           </Grid>
         </Grid>
       </div>
