@@ -24,9 +24,6 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public int checkVendorValidation(VendorValidateReqDto reqDto) throws URISyntaxException {
 
-//        VendorReqDto request = new VendorReqDto(reqDto.getBusiness_number(), reqDto.getOpen_date(), reqDto.getOwner_name());
-//        ArrayList<VendorReqDto> list = new ArrayList<>();   //list형식으로 전달해야하기 때문이다.
-//        list.add(request);
 
         String requestBody = "{\n" +
                 "  \"businesses\": [\n" +

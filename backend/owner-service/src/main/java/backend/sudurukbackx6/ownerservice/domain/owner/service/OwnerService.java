@@ -7,7 +7,6 @@ import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.UpdatePwReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.response.SignInResDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.entity.Owners;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.mail.MessagingException;
 import java.io.IOException;

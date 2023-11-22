@@ -137,7 +137,7 @@ public class OwnerServiceImpl implements OwnerService {
         //refresh token이 살아있는지 확인하고 accesstoken을 발급한다.
         String email = jwtProvider.extractEmail(header);
         String redisToken = redisUtil.getRefreshTokens(email);
-        System.out.println("redisToken : "+redisToken);
+
         if(redisToken==null || redisToken.isEmpty() || !redisUtil.isMatchToken(email, header)){
             throw new BadRequestException(ErrorCode.NOT_VALID_REFRESH_TOKEN);
         }
@@ -198,10 +198,4 @@ public class OwnerServiceImpl implements OwnerService {
         owners.setStoreId(request.getStoreId());
         return request.getStoreId();
     }
-    /*@Override
-    public void toggleValidStatus(String email) {
-        Owners owner = ownersRepository.findByEmail(email).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_OWNER));
-        owner.changeValidation();
-    }
-*/
 }

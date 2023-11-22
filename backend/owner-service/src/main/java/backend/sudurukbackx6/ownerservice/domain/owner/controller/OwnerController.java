@@ -2,7 +2,6 @@ package backend.sudurukbackx6.ownerservice.domain.owner.controller;
 
 import backend.sudurukbackx6.ownerservice.common.dto.BaseResponseBody;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.ChangeOwnerStoreIdRequest;
-import backend.sudurukbackx6.ownerservice.domain.owner.dto.GetTodaySellingResponse;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.OwnerInfoResponse;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignInReqDto;
 import backend.sudurukbackx6.ownerservice.domain.owner.dto.request.SignUpReqDto;
