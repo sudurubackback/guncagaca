@@ -51,13 +51,13 @@ function ResponsiveAppBar() {
           <Button
             sx={{ my: 2, color: "white", display: "block" }}
             onClick={() => navigate("/im")}
-            style={{ fontFamily: "gmarketSans" }}
+            style={{ fontFamily: "gmarketSans", fontSize: "18px" }}
           >
             내 정보
           </Button>
           <Button
             sx={{ my: 2, color: "white", display: "block" }}
-            style={{ fontFamily: "gmarketSans" }}
+            style={{ fontFamily: "gmarketSans", fontSize: "18px" }}
             onClick={() => {
               dispatch(deleteAll());
               axios({
@@ -87,7 +87,7 @@ function ResponsiveAppBar() {
       return (
         <Button
           sx={{ my: 2, color: "white", display: "block" }}
-          style={{ fontFamily: "gmarketSans" }}
+          style={{ fontFamily: "gmarketSans", fontSize: "18px" }}
           onClick={() => navigate("/signin")}
         >
           로그인
@@ -143,7 +143,7 @@ function ResponsiveAppBar() {
                 <Button
                   key={page}
                   sx={{ my: 2, color: "white", display: "block" }}
-                  style={{ fontFamily: "gmarketSans" }}
+                  style={{ fontFamily: "gmarketSans", fontSize: "18px" }}
                   onClick={() => {
                     if (
                       pages.indexOf(page) === 1 ||
