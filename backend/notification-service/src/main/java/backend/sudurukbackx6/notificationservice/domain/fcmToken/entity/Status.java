@@ -1,7 +1,7 @@
 package backend.sudurukbackx6.notificationservice.domain.fcmToken.entity;
 
 import lombok.Getter;
-    import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor

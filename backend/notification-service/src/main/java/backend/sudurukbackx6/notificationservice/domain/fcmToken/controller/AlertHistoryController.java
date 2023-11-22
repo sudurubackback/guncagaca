@@ -21,22 +21,10 @@ public class AlertHistoryController {
 		return ResponseEntity.ok(alertHistoryService.getAlertHistory(email));
 	}
 
-//	@GetMapping("/history")
-//	public ResponseEntity<List<AlertHistoryDto>> getAlertHistory(@MemberInfo MembersInfo membersInfo) {
-//		return ResponseEntity.ok(alertHistoryService.getAlertHistory(membersInfo.getId()));
-//	}
-//
 	// 알림 단일 삭제
 	@DeleteMapping("/history/{alertId}")
 	public ResponseEntity<String> deleteAlertHistory(@RequestHeader("Email") String email, @PathVariable Long alertId) {
 		alertHistoryService.deleteAlertHistory(email, alertId);
 		return ResponseEntity.ok(String.format("%d번 알림 삭제", alertId));
 	}
-//
-//	// 알림 전체 삭제
-//	@DeleteMapping("/history/all")
-//	public ResponseEntity<String> deleteAlertHistory(@MemberInfo MembersInfo membersInfo) {
-//		alertHistoryService.deleteAllAlertHistory(membersInfo.getId());
-//		return ResponseEntity.ok("알림 전체 삭제");
-//	}
 }

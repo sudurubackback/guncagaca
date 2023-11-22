@@ -2,7 +2,6 @@ package backend.sudurukbackx6.notificationservice.domain.fcmToken.controller;
 
 import backend.sudurukbackx6.notificationservice.common.dto.BaseResponseBody;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.FCMNotificationService;
-import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.FCMNotificationRequestDto;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.NotificationEvent;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
