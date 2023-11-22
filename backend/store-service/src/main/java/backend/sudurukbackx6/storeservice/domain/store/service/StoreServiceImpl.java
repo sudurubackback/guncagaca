@@ -67,8 +67,6 @@ public class StoreServiceImpl implements StoreService {
         String upload = s3Uploader.upload(multipartFile, "StoreImages");
         GeocodingDto.Response response = getCoordinate(request.getAddress());
 
-        log.info("주소 : {}", request.getAddress());
-
         String latitude = null;
         String longitude = null;
 
@@ -78,8 +76,6 @@ public class StoreServiceImpl implements StoreService {
             longitude = firstAddress.getX();
             latitude = firstAddress.getY();
         } // TODO : 좌표 없을 때 예외 처리
-        log.info("위도 : {}", latitude);
-        log.info("경도 : {}", longitude);
 
         Store store = Store.builder()
                 .name(request.getStoreName())
@@ -115,9 +111,6 @@ public class StoreServiceImpl implements StoreService {
     public void updateCafeInfo(String email, StoreUpdateReqDto storeUpdateReqDto, MultipartFile multipartFile) throws IOException {
         OwnerInfoResponse ownerInfo = ownerServiceClient.getOwnerInfo(email);
         Long cafeId = ownerInfo.getStoreId();
-
-        log.info("description : {}", storeUpdateReqDto.getDescription());
-        System.out.println(storeUpdateReqDto.getDescription());
 
         if(multipartFile==null || multipartFile.isEmpty()) {
             Store store = storeRepository.findById(cafeId).orElseThrow();

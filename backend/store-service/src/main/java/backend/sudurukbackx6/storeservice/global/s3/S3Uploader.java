@@ -66,9 +66,7 @@ public class S3Uploader {
     public void deleteFile(String key) {
         try {
             amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, key));
-            System.out.println("S3 파일 삭제 성공: " + key);
         } catch (AmazonServiceException e) {
-            System.err.println("S3 파일 삭제 실패: " + key);
             e.printStackTrace();
         }
     }

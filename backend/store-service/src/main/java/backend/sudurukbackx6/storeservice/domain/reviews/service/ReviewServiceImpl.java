@@ -45,7 +45,6 @@ public class ReviewServiceImpl implements ReviewService{
         Store store = storeRepository.findById(cafeId).orElseThrow(()-> new NotFoundException("해당 가게를 찾을 수 없습니다."));
         MemberInfoResponse memberInfo = memberServiceClient.getMemberInfo(email);
 
-        log.info("memberInfo={}", memberInfo.getEmail());
         Review review = Review.builder()
                 .star(request.getStar())
                 .comment(request.getComment())

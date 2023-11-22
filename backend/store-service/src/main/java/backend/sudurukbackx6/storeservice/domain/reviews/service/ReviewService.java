@@ -1,6 +1,5 @@
 package backend.sudurukbackx6.storeservice.domain.reviews.service;
 
-import backend.sudurukbackx6.storeservice.domain.reviews.entity.Review;
 import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.MyReviewResponse;
 import backend.sudurukbackx6.storeservice.domain.reviews.service.dto.ReviewDto;
 
