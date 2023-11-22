@@ -35,18 +35,15 @@ public class SseService {
     }
 
     public SseEmitter createEmitter(Long storeId) {
-        log.info("sse 등록 {}", storeId);
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitterMap.put(storeId, emitter);
         return emitter;
     }
 
     public void sendToStoreClients(Long storeId, Object data) {
-        log.info("주문 생성됨");
         SseEmitter emitter = emitterMap.get(storeId);
         if(emitter != null) {
             try {
-                log.info("주문 전송");
                 emitter.send(data);
             } catch (IOException e) {
                 emitterMap.remove(storeId);

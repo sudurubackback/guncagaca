@@ -2,7 +2,6 @@ package backend.sudurukbackx6.orderservice.domain.order.controller;
 
 
 import backend.sudurukbackx6.orderservice.domain.order.dto.*;
-import backend.sudurukbackx6.orderservice.domain.order.dto.response.OrderListResDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderCancelRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderRequestDto;
 import backend.sudurukbackx6.orderservice.domain.order.dto.OrderResponseDto;
@@ -14,12 +13,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
