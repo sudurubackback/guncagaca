@@ -160,8 +160,8 @@ class PaymentService{
     payload.iosApplicationId = iosApplicationId; // ios application id
 
 
-    payload.pg = '나이스페이먼츠';
-    payload.method = '삼성페이';
+    // payload.pg = '나이스페이먼츠';
+    // payload.method = '삼성페이';
     // payload.methods = ['card', 'phone', 'vbank', 'bank', 'kakao'];
     payload.orderName = getOrderName(itemList);
     payload.price = cartController.totalPrice.toDouble(); //정기결제시 0 혹은 주석
