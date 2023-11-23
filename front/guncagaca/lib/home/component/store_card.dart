@@ -89,6 +89,7 @@ class StoreCard extends StatelessWidget {
                     _IconText(icon: Icons.receipt, label: '${store.storeDetail.reviewCount} 개')
                   ],
                 ),
+                SizedBox(height: 8.0),
               ],
             ),
           ),

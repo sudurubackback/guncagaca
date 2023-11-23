@@ -11,9 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
 
 import 'cart/controller/cart_controller.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'common/fcm/fcmsetting.dart'; // fcmSetting 함수를 호출할 파일을 import
 
 
 Future<void> requestMultiplePermissions() async {
