@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     _initSharedPreferences().then((_) {
       _tryAutoLogin();
     });
-    // initAsync();
+    initAsync();
   }
 
   Future<void> initAsync() async {
@@ -109,9 +109,9 @@ class _LoginPageState extends State<LoginPage> {
 
   // 토큰
   Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
-    // FirebaseMessaging messaging = FirebaseMessaging.instance;
-    String? firebaseToken = null;
-    // String? firebaseToken = await messaging.getToken();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // String? firebaseToken = null;
+    String? firebaseToken = await messaging.getToken();
     print("로그인 fcm토큰 : $firebaseToken");
     final String apiUrl = "$baseUrl/api/member/sign";
 
