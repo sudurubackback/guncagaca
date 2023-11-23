@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:html';
 import 'dart:html' as html;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
-import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:get/get.dart';
 import 'package:guncagacaonwer/common/const/colors.dart';
 import 'package:just_audio/just_audio.dart';
@@ -30,7 +27,20 @@ class SSEController {
     eventSource.addEventListener('message', (html.Event message) {
       final eventData = (message as html.MessageEvent).data as String;
       streamController.add(eventData);
-      onMessageReceived(eventData); // 새로운 이벤트 처리 메소드 호출
+      // 알림 권한 요청
+      window.navigator.permissions?.query({"name": "notifications"}).then((result) {
+        if (result.state == "granted") {
+          // 권한이 허용된 경우
+          onMessageReceived(eventData);
+        } else if (result.state == "prompt") {
+          // 권한 요청
+          html.Notification.requestPermission().then((permission) {
+            if (permission == "granted") {
+              onMessageReceived(eventData);
+            }
+          });
+        }
+      });
     });
 
     eventSource.onError.listen((event) {
@@ -40,7 +50,7 @@ class SSEController {
 
   void onMessageReceived(String eventData) {
     // 이벤트 데이터 처리
-    showWebNotification("주문 도착!", "새로운 주문이 도착했어요.");
+    showWebNotification();
   }
   // Future<void> setupApiService() async {
   //   final prefs = await SharedPreferences.getInstance();
@@ -199,7 +209,7 @@ class SSEController {
     );
   }
 
-  Future<void> showWebNotification(String title, String body) async {
+  Future<void> showWebNotification() async {
     print("소리 출력");
     _audioPlayer.setAsset('assets/sound/sound1.mp3');
     _audioPlayer.play();
@@ -211,7 +221,7 @@ class SSEController {
 
 
         // 사용자가 알림 권한을 허용한 경우에만 알림 생성
-        html.Notification(title, body: body);
+        html.Notification("주문", body: "주문이 들어왔습니다 !", icon: 'web/icons/assets/guncagaca-icon.png');
         // 특정 조건을 만족할 때 다이얼로그 표시
         print('알림 옴');
         _showOrderDialog();
