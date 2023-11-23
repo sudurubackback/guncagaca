@@ -7,6 +7,7 @@ import 'package:guncagaca/common/const/colors.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:guncagaca/login/landingpage.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../common/utils/oauth_token_manager.dart' as KakaoTokenManager;
 
 import 'cart/controller/cart_controller.dart';
@@ -14,12 +15,29 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'common/fcm/fcmsetting.dart'; // fcmSetting 함수를 호출할 파일을 import
 
+
+Future<void> requestMultiplePermissions() async {
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.location,
+    Permission.camera,
+  ].request();
+
+  // 각 권한에 대한 상태 확인
+  if (statuses[Permission.location]?.isGranted ?? false) {
+    // 위치 권한 허용됨
+  }
+  if (statuses[Permission.notification]?.isGranted ?? false) {
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await dotenv.load(fileName: ".env"); // .env 파일 Path
+
+  // 위치 권한 및 알림 권한 요청
+  await requestMultiplePermissions();
+
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_SDK_NATIVE_KEY']);
-  await fcmSetting(); // FCM 설정 초기화
   await KakaoTokenManager.TokenManager().initialize();
   await NaverMapSdk.instance.initialize(
       clientId: dotenv.env['NAVER_MAP_CLIENT_ID'],
@@ -30,7 +48,6 @@ void main() async {
   runApp(const MyApp());
   initializeDateFormatting();
   // await KakaoTokenManager.TokenManager().refreshToken();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
 class MyApp extends StatelessWidget {

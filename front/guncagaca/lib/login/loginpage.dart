@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,9 +12,11 @@ import 'package:guncagaca/kakao/kakao_login.dart';
 import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common/fcm/fcmsetting.dart';
 import '../common/utils/dio_client.dart';
 import '../common/utils/oauth_token_manager.dart';
 import '../common/utils/sqlite_helper.dart';
+import '../firebase_options.dart';
 import '../store/models/store_ip.dart';
 
 
@@ -33,6 +36,12 @@ class _LoginPageState extends State<LoginPage> {
     _initSharedPreferences().then((_) {
       _tryAutoLogin();
     });
+    // initAsync();
+  }
+
+  Future<void> initAsync() async {
+    await fcmSetting(); // FCM 설정 초기화
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
@@ -100,9 +109,9 @@ class _LoginPageState extends State<LoginPage> {
 
   // 토큰
   Future<Map<String, dynamic>?> _fetchTokens(String? nickname, String? email) async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    // String? firebaseToken = null;
-    String? firebaseToken = await messaging.getToken();
+    // FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? firebaseToken = null;
+    // String? firebaseToken = await messaging.getToken();
     print("로그인 fcm토큰 : $firebaseToken");
     final String apiUrl = "$baseUrl/api/member/sign";
 
