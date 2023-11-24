@@ -27,7 +27,7 @@ class StoreCardList extends StatelessWidget {
       itemCount: filteredStores.length,  // <-- stores.length 대신에 filteredStores.length를 사용
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: StoreCard(
             store: filteredStores[index],  // <-- stores[index] 대신에 filteredStores[index]를 사용
             mainViewModel: mainViewModel,

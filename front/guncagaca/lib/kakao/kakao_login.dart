@@ -6,6 +6,8 @@ class KakaoLogin implements SocialLogin {
   @override
   Future<bool> login() async{
     try {
+      print("해시");
+      print(await KakaoSdk.origin);
       bool isInstalled = await isKakaoTalkInstalled();
       if (isInstalled) {
         try {

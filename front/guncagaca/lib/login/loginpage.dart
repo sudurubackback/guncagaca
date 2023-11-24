@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,9 +12,11 @@ import 'package:guncagaca/kakao/kakao_login.dart';
 import 'package:guncagaca/kakao/main_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common/fcm/fcmsetting.dart';
 import '../common/utils/dio_client.dart';
 import '../common/utils/oauth_token_manager.dart';
 import '../common/utils/sqlite_helper.dart';
+import '../firebase_options.dart';
 import '../store/models/store_ip.dart';
 
 
@@ -33,6 +36,12 @@ class _LoginPageState extends State<LoginPage> {
     _initSharedPreferences().then((_) {
       _tryAutoLogin();
     });
+    initAsync();
+  }
+
+  Future<void> initAsync() async {
+    await fcmSetting(); // FCM 설정 초기화
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   }
 
   String baseUrl = dotenv.env['BASE_URL']!;
@@ -44,20 +53,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //자동 로그인 시도
-  void _tryAutoLogin() {
+  void _tryAutoLogin() async {
     final accessToken = prefs.getString('accessToken');
     final refreshToken = prefs.getString('refreshToken');
     print(accessToken);
+    print(refreshToken);
     if (accessToken != null && refreshToken != null) {
-      // 저장된 토큰을 사용해 로그인 시도
-      // 예: 서버로 토큰을 보내 인증 수행
       // 인증이 성공하면 홈 화면으로 이동
       // 실패하면 로그인 화면으로 유지
-      Get.offAll(() => DefaultLayout(
-            child: RootTab(mainViewModel: mainViewModel,),
-            mainViewModel: mainViewModel,
-        )
-      );
+      // 저장된 리프레시 토큰을 사용해 로그인 갱신
+      String? newToken = await TokenManager().refreshToken();
+      if (newToken != null) {
+        // 토큰 갱신이 성공했을 때만 화면 전환
+        Get.offAll(() => DefaultLayout(
+          child: RootTab(mainViewModel: mainViewModel),
+          mainViewModel: mainViewModel,
+        ));
+      } else {
+        // 토큰 갱신 실패 시 처리, 예: 로그인 화면으로 이동
+        print("토큰 갱신 실패");
+      }
     }
   }
 

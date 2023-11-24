@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/utils/dio_client.dart';
 import '../../common/utils/location_service.dart';
 import '../../common/utils/oauth_token_manager.dart';
 import '../../kakao/main_view_model.dart';
+import '../../store/view/store_detail_screen.dart';
 import '../component/store_card_list.dart';
 import '../../store/models/store.dart';
 
@@ -45,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     dotenv.load(fileName: '.env');
     _permission();
     _initCurrentLocationAndFetchCafes();
+
   }
 
   void _permission() async {
@@ -141,13 +146,13 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         // 마커 터치시 이동하고 다이얼로그 창 실행
         marker.setOnTapListener((overlay) {
           final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: marker.position, zoom: 15);
-          cameraUpdate.setAnimation(animation: NCameraAnimation.easing, duration: Duration(seconds: 1));
+          cameraUpdate.setAnimation(animation: NCameraAnimation.easing, duration: Duration(milliseconds: 100));
           _controller?.updateCamera(cameraUpdate).then((_) {
             _showStoreInfoDialog(store);
           });
         });
         markers.add(marker);
-      } else {
+      } else { // 찜 가게 아닌 경우
         marker = NMarker(
           id: store.storeDetail.storeId.toString(),
           position: NLatLng(store.latitude, store.longitude),
@@ -175,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     }
   }
 
-        // 마커 터치시 이동하고 다이얼로그 창 실행
+  // 마커 터치시 이동하고 다이얼로그 창 실행
   void _showStoreInfoDialog(Store store) {
     showDialog(
       context: context,
@@ -225,8 +230,24 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text('닫기', style: TextStyle(color: PRIMARY_COLOR)),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Get.to(() => StoreDetailScreen(
+                  mainViewModel: widget.mainViewModel,
+                  storeId: store.storeDetail.storeId,
+                ));
+              },
+              style: ElevatedButton.styleFrom(
+                primary: PRIMARY_COLOR,
+              ),
+              child: Text('가게로 이동', style: TextStyle(color: Colors.white)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: PRIMARY_COLOR,
+              ),
+              child: Text('닫기', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -237,9 +258,23 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     );
   }
 
+  Future<void> _launchURL(String url) async {
+    try {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        // 사용자에게 URL을 열 수 없음을 알림
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return GestureDetector(
       onTap: () {
@@ -248,72 +283,124 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: refreshContent,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                margin: EdgeInsets.all(16.0),
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 8.0,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  margin: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.symmetric(horizontal: 12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8.0,
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: searchController,
+                    onChanged: (value) {
+                      setState(() {
+                        searchKeyword = value;
+                        filterMarkers();
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      hintText: '검색...',
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search),
                     ),
-                  ],
-                ),
-                child: TextField(
-                  controller: searchController,
-                  onChanged: (value) {
-                    setState(() {
-                      searchKeyword = value;
-                      filterMarkers();
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    hintText: '검색...',
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: loading
-                    ? Center(child: CircularProgressIndicator())
-                    : NaverMap(
-                  options: NaverMapViewOptions(
-                    locationButtonEnable: true,
-                    initialCameraPosition: NCameraPosition(target: nLatLng, zoom: 15),
-                  ),
-                  onMapReady: (controller) async {
-                    _controller = controller;
-                    await _controller?.setLocationTrackingMode(NLocationTrackingMode.follow);
+                Container(
+                  height: screenHeight / 3,
+                  child: loading
+                  ? Center(child: CircularProgressIndicator())
+                  : NaverMap(
+                    forceGesture: true,
+                      options: NaverMapViewOptions(
+                        locationButtonEnable: true,
+                        initialCameraPosition: NCameraPosition(target: nLatLng, zoom: 15),
+                      ),
+                      onMapReady: (controller) async {
+                        _controller = controller;
+                        await _controller?.setLocationTrackingMode(NLocationTrackingMode.follow);
 
-                    if(markers.isNotEmpty){
-                      await _controller?.addOverlayAll(markers);
-                    }
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: StoreCardList(
-                      stores: storeData,
-                      mainViewModel: widget.mainViewModel,
-                      searchKeyword: searchKeyword,
+                        if(markers.isNotEmpty){
+                          await _controller?.addOverlayAll(markers);
+                        }
+                      },
+                    ),
+                  ),
+                SizedBox(height: 20),
+                Container(
+                  height: screenHeight / 2,
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: StoreCardList(
+                        stores: storeData,
+                        mainViewModel: widget.mainViewModel,
+                        searchKeyword: searchKeyword,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  width: double.infinity,
+                  // constraints: BoxConstraints( // 최대 높이 제한
+                  //   maxHeight: MediaQuery.of(context).size.height * 0.1, // 예를 들어 화면 높이의 30%로 제한
+                  // ),
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => _launchURL('https://sites.google.com/view/guncagaca/%ED%99%88'),
+                        child: Text(
+                          '개인정보처리방침',
+                          style: TextStyle(
+                            color: Colors.black,
+                            decoration: TextDecoration.underline,
+                            fontSize: 10
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text('상호명 : 근카가카 | 대표자명 : 최성우 ',
+                          style: TextStyle(fontSize: 7)),
+                      SizedBox(height: 8),
+                      Text('담당자: 최영태 | 이메일 : dudxo7721@naver.com',
+                          style: TextStyle(fontSize: 7)),
+                      SizedBox(height: 8),
+                      Text('소재지 : 대구시 달서구 죽전1길 82',
+                          style: TextStyle(fontSize: 7)),
+                      Text('사업자번호: 668-09-02525',
+                          style: TextStyle(fontSize: 7)),
+                      Text('통신판매업신고번호: 2023-대구달서-00000',
+                          style: TextStyle(fontSize: 7)),
+                      Text('고객센터번호: 070-8018-6553',
+                          style: TextStyle(fontSize: 7)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }

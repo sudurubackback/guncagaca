@@ -54,9 +54,16 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
       print(ownerResponse.email);
       int storeId = ownerResponse.storeId;
       print(storeId);
+
+      final prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
+
       if (storeId != null) {
         final response = await dio.get(
-          "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId/1",
+          "$baseUrl/api/order/list/$storeId/1",
+          options: Options(
+            headers: {'Authorization': 'Bearer $accessToken',}, // 헤더에 이메일 추가
+          ),
         );
 
         if (response.statusCode == 200) {
@@ -65,7 +72,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
             Map<String, dynamic> jsonData = response.data;
             // 'data' 키에 해당하는 주문 목록을 가져옵니다.
             orders = List<Map<String, dynamic>>.from(jsonData['data']);
-            print(orders);
+            // print(orders);
 
             // orders를 활용하여 주문 목록을 처리하는 로직을 작성하세요.
             // 예를 들어, 주문 목록을 화면에 출력하거나 다른 작업을 수행할 수 있습니다.
@@ -159,7 +166,7 @@ class _OrderWaitingPageState extends State<OrderWaitingPage> {
         final response = await dio.post(
           'https://k9d102.p.ssafy.io/api/order/cancel',
           options: Options(
-            headers: {'Authorization': 'Bearer ${accessToken}',}, // 헤더에 이메일 추가
+            headers: {'Authorization': 'Bearer $accessToken',}, // 헤더에 이메일 추가
           ),
           data: {'orderId': orderId,'receiptId': receiptId, 'reason': reason},
         );

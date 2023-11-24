@@ -137,9 +137,16 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
       endDate=endDate.add(Duration(days: 1));
       endDate = endDate.add(Duration(hours: 9));
       startDate = startDate.add(Duration(hours: 9));
+
+      final prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
+
       if (storeId != null) {
         final response = await dio.get(
-          "http://k9d102.p.ssafy.io:8083/api/order/list/$storeId",
+          "$baseUrl/api/order/list/$storeId",
+          options: Options(
+            headers: {'Authorization': 'Bearer $accessToken',}, // 헤더에 이메일 추가
+          ),
           queryParameters: {
             'startDate': startDate.toUtc().toIso8601String(), // UTC 시간으로 변환하여 ISO 8601 형식으로 전송
             'endDate': endDate.toUtc().toIso8601String(),
@@ -152,7 +159,7 @@ class _OrderTrackingPageState extends State<OrderTrackingPage> {
             Map<String, dynamic> jsonData = response.data;
             // 'data' 키에 해당하는 주문 목록을 가져옵니다.
             orders = List<Map<String, dynamic>>.from(jsonData['data']);
-            print(orders);
+            // print(orders);
             print(startDate);
             print(endDate);
 

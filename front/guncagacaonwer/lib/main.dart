@@ -8,9 +8,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
   // SSE 초기화
-  SSEController sseController = SSEController();
-  await sseController.setupApiService();
-  await sseController.initSSE();
+  // SSEController sseController = SSEController();
+  // await SSEController.setupApiService();
+  await SSEController.connect();
 }
 
 class MyApp extends StatelessWidget {
