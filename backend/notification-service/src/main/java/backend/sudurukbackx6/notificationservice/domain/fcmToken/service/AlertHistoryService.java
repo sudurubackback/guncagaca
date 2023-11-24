@@ -7,9 +7,7 @@ import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.AlertHis
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.repository.AlertHistoryRepository;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.NotificationDto;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.NotificationEvent;
-import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
-import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

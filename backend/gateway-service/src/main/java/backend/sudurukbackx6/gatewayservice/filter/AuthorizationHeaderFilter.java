@@ -1,9 +1,6 @@
 package backend.sudurukbackx6.gatewayservice.filter;
 
 import backend.sudurukbackx6.gatewayservice.util.JwtUtil;
-import backend.sudurukbackx6.gatewayservice.util.RedisUtil;
-import io.jsonwebtoken.Claims;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;

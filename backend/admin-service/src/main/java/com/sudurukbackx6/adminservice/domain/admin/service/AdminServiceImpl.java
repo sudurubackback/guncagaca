@@ -89,7 +89,13 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<BusinessListResDto> businessList() {
         List<Business> businessList = businessRepository.findAll();
-        return convertBusinessList(businessList);
+        List<BusinessListResDto> list = new ArrayList<>();
+        for (Business b : businessList) {
+            list.add(new BusinessListResDto(b));
+        }
+
+        return list;
+
     }
 
     @Override
@@ -124,14 +130,23 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<BusinessListResDto> doneBusinessList() {
         List<Business> businessList = businessRepository.findByApprovalTrue();
-        return convertBusinessList(businessList);
+        List<BusinessListResDto> list = new ArrayList<>();
+        for (Business b : businessList) {
+            list.add(new BusinessListResDto(b));
+        }
+
+        return list;
     }
 
     @Override
     public List<BusinessListResDto> waitingBusinessList() {
         List<Business> businessList = businessRepository.findByApprovalFalse();
+        List<BusinessListResDto> list = new ArrayList<>();
+        for (Business b : businessList) {
+            list.add(new BusinessListResDto(b));
+        }
 
-        return convertBusinessList(businessList);
+        return list;
     }
 
     @Override
@@ -143,19 +158,6 @@ public class AdminServiceImpl implements AdminService {
                 .build();
 
         adminRepository.save(admin);
-    }
-
-    public List<BusinessListResDto> convertBusinessList(List<Business> businessList) {
-        List<BusinessListResDto> list = new ArrayList<>();
-        for (Business b : businessList) {
-            if (b.getOwners() == null) {
-//                businessRepository.delete(b);
-                continue;
-            }
-            list.add(new BusinessListResDto(b));
-        }
-
-        return list;
     }
 
 

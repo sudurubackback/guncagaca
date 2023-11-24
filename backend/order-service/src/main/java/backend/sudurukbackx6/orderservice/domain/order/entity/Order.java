@@ -1,5 +1,6 @@
 package backend.sudurukbackx6.orderservice.domain.order.entity;
 
+
 import backend.sudurukbackx6.orderservice.domain.menu.entity.Menu;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;

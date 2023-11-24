@@ -1,9 +1,7 @@
 package backend.sudurukbackx6.gatewayservice.config;
 
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Configuration
 public class SwaggerConfig {
@@ -25,7 +22,6 @@ public class SwaggerConfig {
         apis.add(createGroupedOpenApi("주문", "/api/order/**"));
         apis.add(createGroupedOpenApi("결제", "/api/pay/**"));
         apis.add(createGroupedOpenApi("관리자", "/api/admin/**"));
-        apis.add(createGroupedOpenApi("관리자", "/api/ceo/**"));
         return apis;
     }
     private GroupedOpenApi createGroupedOpenApi(String groupName, String pathsToMatch) {

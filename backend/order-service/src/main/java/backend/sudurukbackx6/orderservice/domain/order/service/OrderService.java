@@ -47,7 +47,6 @@ public class OrderService {
     @Value("${bootpay.secretKey}")
     private String PRIVATE_KEY;
 
-
     // 주문 등록
     public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
         Long memberId = memberServiceClient.getId(email);
@@ -82,10 +81,7 @@ public class OrderService {
         Order order = getOrder(orderId);
         if (!order.isReviewYn()) {
             order.setReviewYn(true);
-            log.info("작성완료 {}", orderId);
             orderRepository.save(order);
-        } else {
-            log.info("이미 작성됨 {}", orderId);
         }
     }
 
@@ -101,24 +97,19 @@ public class OrderService {
         try {
             Bootpay bootpay = new Bootpay(CLIENT_ID, PRIVATE_KEY);
 
-            log.info("부트페이 호출");
             HashMap<String, Object> token = bootpay.getAccessToken();
             if(token.get("error_code") != null) { //failed
                 return false;
             }
-            log.info("token획득");
             Cancel cancel = new Cancel();
             cancel.receiptId = receiptId;
             cancel.cancelMessage = reason;
             cancel.cancelUsername = email;
 
-            log.info("취소생성");
             HashMap<String, Object> res = bootpay.receiptCancel(cancel);
             if(res.get("error_code") == null) { //success
-                log.info("receiptCancel success: " + res);
                 return true;
             } else {
-                log.info("receiptCancel false: " + res);
                 return false;
             }
         } catch (Exception e) {
@@ -179,47 +170,18 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByStoreId(Long storeId) {
-//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.ORDERED);
-//        for(Order order : orders) {
-//            OrderListResDto orderResponseDto = new OrderListResDto(order);
-//            orderResponseDtos.add(orderResponseDto);
-//        }
-//        return orderResponseDtos;
         return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.ORDERED);
     }
 
     public List<Order> getDoneByStoreId(Long storeId) {
-//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.COMPLETE);
-//        for(Order order : orders) {
-//            OrderListResDto orderResponseDto = new OrderListResDto(order);
-//            orderResponseDtos.add(orderResponseDto);
-//        }
-//
-//        return orderResponseDtos;
         return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.COMPLETE);
     }
 
     public List<Order> getPreparingByStoreId(Long storeId) {
-//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.REQUEST);
-//        for(Order order : orders) {
-//            OrderListResDto orderResponseDto = new OrderListResDto(order);
-//            orderResponseDtos.add(orderResponseDto);
-//        }
-//        return orderResponseDtos;
         return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.REQUEST);
     }
 
     public List<Order> getCancleByStoreId(Long storeId) {
-//        List<OrderListResDto> orderResponseDtos = new ArrayList<>();
-//        List<Order> orders = orderRepository.findByStoreIdAndStatus(storeId, Status.CANCELED);
-//        for(Order order : orders) {
-//            OrderListResDto orderResponseDto = new OrderListResDto(order);
-//            orderResponseDtos.add(orderResponseDto);
-//        }
-//        return orderResponseDtos;
         return orderRepository.findByStoreIdAndStatusOrderByOrderTimeDesc(storeId, Status.CANCELED);
     }
 
@@ -234,7 +196,6 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
 
         Long memberId = order.getMemberId();
-        log.info(memberId.toString());
 
         order.setStatus(Status.REQUEST);
         orderRepository.save(order);
@@ -258,7 +219,6 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
 
         Long memberId = order.getMemberId();
-        log.info(memberId.toString());
 
         order.setStatus(Status.COMPLETE);
         orderRepository.save(order);

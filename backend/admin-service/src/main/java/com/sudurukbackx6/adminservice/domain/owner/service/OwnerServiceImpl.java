@@ -6,7 +6,6 @@ import com.sudurukbackx6.adminservice.common.config.KafkaEventService;
 import com.sudurukbackx6.adminservice.common.dto.SignupEvent;
 import com.sudurukbackx6.adminservice.common.dto.StoreSaveEvent;
 import com.sudurukbackx6.adminservice.common.exception.BadRequestException;
-import com.sudurukbackx6.adminservice.domain.admin.dto.response.AdminSignInResDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.ChangePwReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.NetworkReqDto;
 import com.sudurukbackx6.adminservice.domain.owner.dto.request.OwnerSignInReqDto;
@@ -68,36 +67,22 @@ public class OwnerServiceImpl implements OwnerService {
     public SignResponseDto signIn(OwnerSignInReqDto signinInfo) {
 
         Owners owner = ownersRepository.findByEmail(signinInfo.getEmail()).orElseThrow(() -> new BadRequestException(ErrorCode.NOT_EXISTS_EMAIL));
-//        if (passwordEncoder.matches(signinInfo.getPassword(), owner.getPassword())) {
-//
-//            TokenDto accessToken = jwtProvider.createAccessToken(owner.getBusiness().getName(), owner.getEmail());
-//            TokenDto refreshToken = jwtProvider.createRefreshToken(owner.getBusiness().getName(), owner.getEmail());
-//
-//            redisUtil.saveRefreshToken(owner.getEmail(), refreshToken.getToken());
-//
-//
-//            return SignResponseDto.builder()
-//                    .accessToken(accessToken.getToken())
-//                    .refreshToken(refreshToken.getToken())
-//                    .owner(owner)
-//                    .build();
-//        } else {
-//            throw new BadRequestException(ErrorCode.NOT_MATCH);
-//        }
-        if (!passwordEncoder.matches(signinInfo.getPassword(), owner.getPassword())) {
-            throw new BadRequestException(ErrorCode.NOT_MATCH);
-        }
+        if (passwordEncoder.matches(signinInfo.getPassword(), owner.getPassword())) {
 
-        TokenDto accessToken = jwtProvider.createAccessToken(owner.getBusiness().getName(), owner.getEmail());
-        TokenDto refreshToken = jwtProvider.createRefreshToken(owner.getBusiness().getName(), owner.getEmail());
+            TokenDto accessToken = jwtProvider.createAccessToken(owner.getBusiness().getName(), owner.getEmail());
+            TokenDto refreshToken = jwtProvider.createRefreshToken(owner.getBusiness().getName(), owner.getEmail());
 
-        redisUtil.saveRefreshToken(owner.getEmail(), refreshToken.getToken());
+            redisUtil.saveRefreshToken(owner.getEmail(), refreshToken.getToken());
 
-        return SignResponseDto.builder()
+
+            return SignResponseDto.builder()
                     .accessToken(accessToken.getToken())
                     .refreshToken(refreshToken.getToken())
                     .owner(owner)
                     .build();
+        } else {
+            throw new BadRequestException(ErrorCode.NOT_MATCH);
+        }
     }
 
     @Override

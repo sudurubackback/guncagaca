@@ -3,11 +3,6 @@ package backend.sudurukbackx6.notificationservice.domain.fcmToken.service;
 import backend.sudurukbackx6.notificationservice.common.error.code.ErrorCode;
 import backend.sudurukbackx6.notificationservice.common.error.exception.BadRequestException;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.MemberFeignClient;
-import backend.sudurukbackx6.notificationservice.domain.fcmToken.client.dto.response.MemberResDto;
-import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.AlertHistory;
-import backend.sudurukbackx6.notificationservice.domain.fcmToken.entity.Status;
-import backend.sudurukbackx6.notificationservice.domain.fcmToken.repository.AlertHistoryRepository;
-import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.FCMNotificationRequestDto;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.NotificationDto;
 import backend.sudurukbackx6.notificationservice.domain.fcmToken.service.dto.NotificationEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -54,7 +49,6 @@ public class FCMNotificationService {
 	public void sendFCM(NotificationEvent notificationEvent) throws FirebaseMessagingException {
 
 		String firebaseToken = memberFeignClient.getFirebaseTokenByMemberId(notificationEvent.getMemberId());
-		log.info(firebaseToken);
 
 		if(firebaseToken==null){
 			throw new BadRequestException(ErrorCode.EMPTY_FIREBASE_TOKEN);

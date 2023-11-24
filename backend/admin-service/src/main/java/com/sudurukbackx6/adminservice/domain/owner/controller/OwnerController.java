@@ -20,9 +20,10 @@ import java.util.List;
 import java.util.Map;
 
 
-@RequiredArgsConstructor
-@RestController
 @Slf4j
+@RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:3000"})
+@RestController
 @RequestMapping("/api/ceo")
 public class OwnerController {
 

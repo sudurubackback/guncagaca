@@ -17,7 +17,6 @@ public class BusinessOneResDto {
     private final String address; //주소
     private final LocalDate open_date; //개업일
     private final long owner_id; //사장님 id
-    private final String account_number; //계좌번호
 
     public BusinessOneResDto(Business business, long ownerId) {
         this.business_id = business.getBusinessId();
@@ -29,7 +28,6 @@ public class BusinessOneResDto {
         this.address = business.getAddress();
         this.open_date = business.getOpenDate();
         this.owner_id = ownerId;
-        this.account_number = business.getAccountNum();
     }
 
 }
