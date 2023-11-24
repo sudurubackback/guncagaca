@@ -39,12 +39,6 @@ out/
 ### VS Code ###
 .vscode/
 
-front/
-frontend/
-
-Frontend/
-Front/
-
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,flutter,dart,xcode
 
@@ -498,9 +492,6 @@ fabric.properties
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
-
-Front/
-Frontend/
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,flutter,dart,xcode
 
