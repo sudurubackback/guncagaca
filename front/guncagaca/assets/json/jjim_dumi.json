@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "근카가카 구미인동점",
+    "img" : "https://mblogthumb-phinf.pstatic.net/MjAyMTEyMTRfODUg/MDAxNjM5NDgwMjE3MTM2.LtR9jiHgER2fi572LaPgIX5ZkVCcsc8ZXuNLWIeui4og.nn8VAWHT-92I-JHC5bQprfKFLC7He7_Zvb5GFqmo8V0g.JPEG.wlsl8869/IMG_7516.jpg?type=w800",
+    "memberId": 1
+  },
+  {
+    "id": 2,
+    "name": "커피비치 구미인동점",
+    "img" : "https://wimg.mk.co.kr/meet/neds/2020/12/image_readtop_2020_1248229_16070484024458376.jpg",
+    "memberId": 1
+  },
+  {
+    "id": 3,
+    "name": "Nerd 교동점",
+    "img" : "https://www.issueinfact.com/news/photo/201911/13148_10028_325.jpg",
+    "memberId": 1
+  }
+]
